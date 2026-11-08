@@ -1,0 +1,185 @@
+/* NASA Data Projects · shared look · © 2026 Malcolm Syme · mcsyme11@gmail.com
+ *
+ * The "old money" look of the Flight Deck Suite and Hot Mic (navy, brass and cream, serif type, thin brass rules),
+ * with a night-sky twist for space data. Every page links this file; see docs/DESIGN.md for the rules.
+ */
+
+:root {
+  /* colour (the suite's values) */
+  --bg: #141B26;          /* navy page */
+  --bg2: #0F1520;         /* bars */
+  --card: #1A2333;        /* cards */
+  --deep: #0C1119;        /* charts, maps, image frames */
+  --line: #2A3446;        /* hairlines */
+  --line2: #3A465C;       /* stronger borders */
+  --brass: #C0A062;
+  --brass-bright: #E2C88E;
+  --brass-dim: #7E6A45;
+  --ink: #EDE6D3;         /* cream text */
+  --ink2: #B4AFA2;        /* secondary */
+  --muted: #98A0AB;       /* notes */
+  --faint: #5E6775;       /* disabled */
+  --on-brass: #141B26;
+
+  /* status */
+  --green: #8FB996;
+  --red: #C9675A;
+  --amber: #D1A956;
+  --blue: #8AA9C9;
+
+  /* chart series, in order (see docs/DESIGN.md › Charts) */
+  --s1: #C0A062;  /* brass */
+  --s2: #8AA9C9;  /* blue */
+  --s3: #8FB996;  /* green */
+  --s4: #C9784A;  /* copper */
+  --s5: #B79AC8;  /* lilac */
+  --s6: #D1A956;  /* amber */
+
+  /* type */
+  --font: Georgia, "Palatino", "Palatino Linotype", "Book Antiqua", serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* shape */
+  --r-btn: 3px;
+  --r-card: 6px;
+  --gutter: 16px;
+  --max: 1440px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  background:
+    radial-gradient(800px 420px at 50% -160px, rgba(192, 160, 98, .10), transparent 70%),
+    var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 var(--font);
+  font-variant-numeric: lining-nums tabular-nums;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: rgba(192, 160, 98, .35); }
+
+a { color: var(--brass); text-decoration: none; }
+a:hover { color: var(--brass-bright); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+code, .mono { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+
+/* ---- layout ---- */
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  height: 64px;
+  background: rgba(15, 21, 32, .97);
+  border-bottom: 1px solid var(--brass-dim);
+}
+.topbar .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); font-size: 18px; }
+.brand .emblem { color: var(--brass); }
+.nav { display: flex; gap: 22px; }
+.nav a {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: var(--ink2);
+  padding: 22px 0 20px; border-bottom: 2px solid transparent;
+}
+.nav a:hover { color: var(--brass); }
+.nav a[aria-current="page"] { color: var(--brass); border-bottom-color: var(--brass); }
+
+/* ---- page head ---- */
+.phead { padding: 40px 0 18px; border-bottom: 1px solid var(--brass-dim); margin-bottom: 28px; }
+.eyebrow {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .42em; color: var(--brass);
+}
+h1 { font-size: 34px; font-weight: 400; letter-spacing: .01em; margin: 6px 0 0; }
+h2 {
+  font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: .32em; color: var(--brass);
+  margin: 24px 0 10px;
+}
+.lede { color: var(--ink2); font-size: 17px; max-width: 62ch; margin: 10px 0 0; }
+.note { color: var(--muted); font-style: italic; font-size: 13px; }
+
+/* section header: eyebrow left, italic aside right */
+.shead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 24px 0 10px; }
+.shead h2 { margin: 0; }
+.shead .aside { color: var(--muted); font-style: italic; font-size: 13px; }
+
+/* ---- cards and tiles ---- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top-color: var(--brass-dim);
+  border-radius: var(--r-card);
+  padding: 22px;
+}
+.grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+.tiles { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.tile { background: var(--card); padding: 16px 18px; }
+.tile .label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
+.tile .value { font-size: 26px; letter-spacing: .01em; margin: 4px 0 2px; white-space: nowrap; }
+.tile .note { font-size: 12.5px; }
+
+/* ---- buttons and controls ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 20px;
+  font: 14px var(--font); text-transform: uppercase; letter-spacing: .2em;
+  border-radius: var(--r-btn); cursor: pointer;
+  background: linear-gradient(#CDB27A, #B3935A); color: var(--on-brass); border: 1px solid #B3935A;
+}
+.btn:hover { color: var(--on-brass); filter: brightness(1.06); }
+.btn.ghost { background: transparent; color: var(--brass); border-color: var(--brass-dim); }
+.btn.ghost:hover { border-color: var(--brass); }
+.btn[disabled] { opacity: .45; cursor: default; }
+
+.chip {
+  display: inline-flex; align-items: center; height: 36px; padding: 0 14px;
+  border: 1px solid var(--line); border-radius: var(--r-btn);
+  background: transparent; color: var(--ink2); font: 14px var(--font); cursor: pointer;
+}
+.chip[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); }
+
+input[type="text"], input[type="search"], input[type="date"], input[type="password"], select {
+  height: 44px; padding: 0 12px; width: 100%;
+  background: var(--deep); color: var(--ink); font: 16px var(--font);
+  border: 1px solid var(--line); border-radius: var(--r-btn);
+}
+input:focus, select:focus { border-color: var(--brass); outline: none; }
+
+.pill {
+  display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .22em;
+  padding: 2px 10px; border: 1px solid currentColor; border-radius: 999px;
+}
+.pill.good { color: var(--green); } .pill.bad { color: var(--red); } .pill.warn { color: var(--amber); } .pill.info { color: var(--blue); }
+
+.tag { font-style: italic; font-size: 12px; padding: 1px 8px; border: 1px solid currentColor; border-radius: var(--r-btn); }
+
+.notice { display: flex; gap: 12px; border: 1px solid var(--line); border-radius: var(--r-card); padding: 14px 16px; color: var(--ink2); }
+.notice.warn { border-color: var(--amber); }
+
+/* ---- charts, maps, image frames ---- */
+.frame { background: var(--deep); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; }
+
+/* ---- footer ---- */
+.footer {
+  margin-top: 56px; padding: 22px 0 40px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 13px; font-style: italic;
+}
+.footer .credit { font-style: normal; color: var(--ink2); }
+
+/* ---- small screens ---- */
+@media (max-width: 760px) {
+  .nav { display: none; }
+  h1 { font-size: 28px; }
+  .btn { width: 100%; }
+}
+
+/* never rely on motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

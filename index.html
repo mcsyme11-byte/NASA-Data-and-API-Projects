@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!-- NASA Data Projects · home page · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>NASA Data Projects</title>
+  <meta name="description" content="Three ways to learn and explore with real NASA data: an asteroid tracker, a Mars data study and a NASA image explorer.">
+  <meta name="theme-color" content="#141B26">
+  <link rel="icon" href="shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="shared/theme.css">
+  <style>
+    .hero { padding: 72px 0 40px; text-align: center; border-bottom: 1px solid var(--brass-dim); }
+    .hero .medal { width: 88px; height: 88px; color: var(--brass); margin: 0 auto 18px; display: block; }
+    .hero h1 { font-size: 44px; margin-top: 10px; }
+    .hero .lede { margin: 14px auto 0; }
+    .promises { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; margin-top: 26px; }
+    .promises span { font-size: 11px; text-transform: uppercase; letter-spacing: .28em; color: var(--brass); }
+
+    .project { display: flex; flex-direction: column; gap: 12px; }
+    .project .num { font-size: 11px; text-transform: uppercase; letter-spacing: .32em; color: var(--brass); }
+    .project h3 { font-size: 24px; font-weight: 400; margin: 0; }
+    .project p { margin: 0; color: var(--ink2); }
+    .project .src { font-size: 13px; color: var(--muted); font-style: italic; }
+    .project .foot { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .project svg.icon { width: 34px; height: 34px; color: var(--brass); }
+
+    .stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5; }
+  </style>
+</head>
+<body>
+  <svg class="stars" aria-hidden="true" id="stars"></svg>
+
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="./">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="shared/emblem.svg#e"/></svg>
+        NASA Data Projects
+      </a>
+      <nav class="nav" aria-label="Projects">
+        <a href="./" aria-current="page">Home</a>
+        <a href="asteroid-tracker/">Asteroids</a>
+        <a href="mars-data/">Mars</a>
+        <a href="image-explorer/">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <svg class="medal" viewBox="0 0 64 64" aria-hidden="true"><use href="shared/emblem.svg#e"/></svg>
+      <div class="eyebrow">Learn and explore with real data</div>
+      <h1>NASA Data Projects</h1>
+      <p class="lede">Three ways to explore space and Earth using data straight from NASA: the rocks passing Earth this week, the weather on Mars, and the planet seen from orbit.</p>
+      <div class="promises" aria-label="What these projects are">
+        <span>Real NASA data</span><span>Free</span><span>Runs in your browser</span><span>Open to learn from</span>
+      </div>
+    </section>
+
+    <div class="shead"><h2>The projects</h2><span class="aside">three streams, one repository</span></div>
+    <div class="grid">
+      <article class="card project">
+        <svg class="icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M9 18c-1-4 1-8 5-9s8 0 9 4-1 8-5 9-8 0-9-4z"/><circle cx="14" cy="14" r="1.4"/><circle cx="19" cy="18" r="1"/>
+          <path d="M3 29l6-6M6 30l3-3M2 25l3-3" stroke-linecap="round"/>
+        </svg>
+        <div class="num">Project 1</div>
+        <h3>Asteroid Tracker</h3>
+        <p>Every near-Earth object passing us this week, sorted by size and distance, with graphs you can explore. Distances in Moon distances, so the numbers mean something.</p>
+        <div class="src">NASA NeoWs · JPL close-approach data</div>
+        <div class="foot"><span class="pill info">Planned</span><a class="btn ghost" href="asteroid-tracker/">Open</a></div>
+      </article>
+
+      <article class="card project">
+        <svg class="icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="16" cy="16" r="11"/><path d="M8 11c3 1 5 0 7 2s5 1 8 0M7 19c4-1 6 1 9 0s5 1 9 1" stroke-linecap="round"/>
+        </svg>
+        <div class="num">Project 2</div>
+        <h3>Mars Data</h3>
+        <p>Weather measured on the surface of Mars, cleaned up and organised by time and place, with statistics and charts that show the patterns of a Martian year.</p>
+        <div class="src">NASA Planetary Data System · Curiosity's weather station</div>
+        <div class="foot"><span class="pill info">Planned</span><a class="btn ghost" href="mars-data/">Open</a></div>
+      </article>
+
+      <article class="card project">
+        <svg class="icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <rect x="4" y="6" width="24" height="20" rx="2"/><circle cx="16" cy="16" r="6"/><path d="M10 16h12M16 10c2 2 2 10 0 12M16 10c-2 2-2 10 0 12"/>
+        </svg>
+        <div class="num">Project 3</div>
+        <h3>Image Explorer</h3>
+        <p>Search and filter NASA's pictures by date, place and mission, and slide through time over the whole Earth with daily satellite imagery.</p>
+        <div class="src">NASA GIBS · NASA Image and Video Library</div>
+        <div class="foot"><span class="pill info">Planned</span><a class="btn ghost" href="image-explorer/">Open</a></div>
+      </article>
+    </div>
+
+    <footer class="footer">
+      <p>Data courtesy of NASA. Satellite imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data and Information System (ESDIS). This is an independent project and isn't endorsed by NASA.</p>
+      <p class="credit"><strong>NASA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
+    </footer>
+  </main>
+
+  <script>
+    // a quiet field of brass and cream stars behind the page (decoration only)
+    (function () {
+      const svg = document.getElementById('stars');
+      const w = 1440, h = 900; svg.setAttribute('viewBox', `0 0 ${w} ${h}`); svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+      let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      let out = '';
+      for (let i = 0; i < 140; i++) {
+        const r = rnd() < .9 ? .6 + rnd() * .6 : 1.3;
+        out += `<circle cx="${(rnd() * w).toFixed(1)}" cy="${(rnd() * h).toFixed(1)}" r="${r.toFixed(2)}" fill="${rnd() < .25 ? '#C0A062' : '#EDE6D3'}" opacity="${(.15 + rnd() * .45).toFixed(2)}"/>`;
+      }
+      svg.innerHTML = out;
+    })();
+  </script>
+</body>
+</html>

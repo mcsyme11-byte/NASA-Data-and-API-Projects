@@ -1,0 +1,26 @@
+## Secrets: never commit an API key
+.env
+.env.*
+!.env.example
+
+## Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+## Downloaded raw data (large; re-downloaded by the scripts). Small cleaned summaries in */data/ are committed.
+mars-data/raw/
+*.zip
+*.tar.gz
+
+## Node (if ever used)
+node_modules/
+
+## Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
