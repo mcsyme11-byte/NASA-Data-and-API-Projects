@@ -5,10 +5,7 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 0. Repository (set up Nov 8, 2026)
 
-- [ ] **Turn on GitHub Pages** (one setting, see PROJECT-NOTES › Publishing), so the home page goes live.
-- [ ] **Get a personal NASA API key** at api.nasa.gov (free) for testing beyond the demo key's 50 requests a day.
-- [ ] **Create the Claude project's chats:** one per project, using the instructions in
-      [CLAUDE-PROJECT-SETUP.md](CLAUDE-PROJECT-SETUP.md).
+- [ ] **Create the Claude project's chats:** one per project (the project's instructions are in place).
 - [ ] Optional: a **Project Record** PDF rebuilt automatically after every push, as in the Flight Deck Suite and Hot Mic.
 
 ## 1. Asteroid Tracker (first)

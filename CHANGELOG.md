@@ -1,5 +1,12 @@
 # Change log
 
+## November 8, 2026 — the site is live
+
+- **GitHub Pages switched on:** the home page is at https://mcsyme11-byte.github.io/NASA-Data-and-API-Projects/
+  (checked: the page and its three projects load).
+- The developer has a personal NASA API key (kept only in the browser and a local `.env`, never in the repository).
+- The Claude project's instructions are in place.
+
 ## November 8, 2026 — repository set up
 
 - **The repository's structure:** a folder for each project (Asteroid Tracker, Mars Data, Image Explorer), `shared/`

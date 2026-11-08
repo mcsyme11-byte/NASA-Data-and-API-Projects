@@ -41,6 +41,8 @@ JavaScript modules on `file://`.)
 
 ## Publishing (GitHub Pages)
 
+Live since Nov 8, 2026: https://mcsyme11-byte.github.io/NASA-Data-and-API-Projects/
+
 One-time setting, done on github.com: the repository's **Settings › Pages › Build and deployment**, Source
 "Deploy from a branch", Branch **main**, folder **/ (root)**, Save. The site then appears at
 `https://mcsyme11-byte.github.io/NASA-Data-and-API-Projects/` a minute or two after each push.
