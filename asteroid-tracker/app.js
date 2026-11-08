@@ -85,7 +85,8 @@ function toObject(o) {
 async function loadWeek() {
   const start = state.weekStart, end = start + 6 * DAY_MS;
   state.week = null; state.weekError = null; state.selected = null; state.showAll = false;
-  $('#weekLabel').textContent = `${dateText(start)} – ${dateText(end)}, ${new Date(end).getUTCFullYear()}`;
+  const sameMonth = new Date(start).getUTCMonth() === new Date(end).getUTCMonth();
+  $('#weekLabel').textContent = (sameMonth ? `${dateText(start)}–${new Date(end).getUTCDate()}` : `${dateText(start)} – ${dateText(end)}`) + `, ${new Date(end).getUTCFullYear()}`;
   $('#thisWeek').setAttribute('aria-pressed', start === sundayOf(todayStart()));
   notice('#weekNotice', '');
   loadingTiles('#weekTiles', ['Passing Earth', 'Closest', 'Biggest', 'Fastest', 'Potentially hazardous']);
@@ -206,7 +207,7 @@ function detailHtml(o) {
   ];
   return `<div class="dwrap"><div class="tiles">${t.map((x) => `<div class="tile"><div class="label">${x.label}</div><div class="value">${x.value}</div><div class="note">${x.note}</div></div>`).join('')}</div>
     <p class="note">Sizes are estimates from how bright the object looks: a dark object is larger than a shiny one of the same brightness, so NASA gives a range.</p>
-    <p class="dlinks"><a class="btn" href="object.html?id=${encodeURIComponent(o.id)}&amp;t=${o.t}">Open this asteroid's page ›</a><span class="note">its orbit around the Sun and every pass by Earth</span></p></div>`;
+    <p class="dlinks"><a class="btn" href="object.html?id=${encodeURIComponent(o.id)}&amp;t=${o.t}">Open its page ›</a><span class="note">its orbit around the Sun and every pass by Earth</span></p></div>`;
 }
 
 // week controls

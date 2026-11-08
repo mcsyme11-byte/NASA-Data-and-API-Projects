@@ -86,26 +86,26 @@
           <div class="shead" style="margin-top:0"><h2>Size against miss distance</h2><span class="aside">each line is a size range</span></div>
           <div class="frame"><svg id="cScatter" class="chart" role="img" aria-label="Estimated size of each object against its miss distance"></svg></div>
           <figcaption class="note">Diameter estimated from brightness, drawn min to max. ◆ flagged potentially hazardous. Source: NASA NeoWs.</figcaption>
-          <div class="howto"><span class="label">How to read this</span>
+          <details class="howto"><summary>How to read this</summary>
             <p>Each mark is one asteroid: <b>left to right</b> is how far away it passes, <b>bottom to top</b> how big it is. The line through each dot is its size range (NASA knows sizes only roughly). Everything left of the dashed line passed <b>closer than the Moon</b>.</p>
             <p>The scales grow by about ×3 a step (0.3, 1, 3, 10…), so near and far objects fit on one chart. <b>Top left = big and close</b>; bottom right = small and far.</p>
-          </div>
+          </details>
         </figure>
         <figure class="card chartcard">
           <div class="shead" style="margin-top:0"><h2>Approaches per day</h2></div>
           <div class="frame"><svg id="cDays" class="chart" role="img" aria-label="Number of close approaches each day"></svg></div>
           <figcaption class="note">Hatched: flagged potentially hazardous. Source: NASA NeoWs.</figcaption>
-          <div class="howto"><span class="label">How to read this</span>
+          <details class="howto"><summary>How to read this</summary>
             <p>One bar per day; its height is how many asteroids pass Earth that day. The striped part is how many of those NASA flags. Example: a bar of 9 with 2 striped means 9 passed and 2 were flagged.</p>
-          </div>
+          </details>
         </figure>
         <figure class="card chartcard">
           <div class="shead" style="margin-top:0"><h2>The week's biggest</h2></div>
           <div class="frame"><svg id="cBig" class="chart" role="img" aria-label="The largest objects of the week, as estimated size ranges"></svg></div>
           <figcaption class="note">Estimated diameter range, metres. ◆ flagged potentially hazardous. Source: NASA NeoWs.</figcaption>
-          <div class="howto"><span class="label">How to read this</span>
+          <details class="howto"><summary>How to read this</summary>
             <p>The week's 7 largest, biggest at the top. Each bar runs from the smallest to the largest likely size. Example: a bar from 700 to 1,700 means between 0.7 and 1.7 km wide.</p>
-          </div>
+          </details>
         </figure>
       </div>
 
@@ -160,9 +160,9 @@
         <div class="shead" style="margin-top:0"><h2 id="yearChartTitle">Every close approach this year</h2><span class="aside">filled: passed · outlined: coming up</span></div>
         <div class="frame"><svg id="cYear" class="chart" role="img" aria-label="Close approaches through the year by date and distance"></svg></div>
         <figcaption class="note">Dot size shows estimated size. The dashed line is the Moon's distance. Source: NASA/JPL close-approach data, refreshed daily. <span id="yearUpdated"></span></figcaption>
-        <div class="howto"><span class="label">How to read this</span>
+        <details class="howto"><summary>How to read this</summary>
           <p>Each dot is one close approach: <b>left to right</b> is the date, <b>bottom to top</b> how far away it passed. <b>Filled</b> dots have passed, <b>hollow</b> dots are still to come, and the solid line is today. Bigger dots are bigger asteroids. A dot near the bottom passed very close. Tap a dot for its name, size and distance.</p>
-        </div>
+        </details>
       </figure>
 
       <div class="grid2">
@@ -180,9 +180,9 @@
         <div class="shead" style="margin-top:0"><h2>Close approaches found, year by year</h2><span class="aside" id="perYearAside">within 1 LD</span></div>
         <div class="frame"><svg id="cYears" class="chart" role="img" aria-label="Number of close approaches each year"></svg></div>
         <figcaption class="note">Tap a bar to open that year. Source: NASA/JPL close-approach data.</figcaption>
-        <div class="howto"><span class="label">How to read this</span>
+        <details class="howto"><summary>How to read this</summary>
           <p>One bar per year: how many close approaches within the chosen distance are known for that year. The rise over time comes mostly from <b>better telescopes and sky surveys finding more small asteroids</b>, not from more asteroids arriving. Next year's bar holds only the approaches already predicted, so it grows as new objects are found.</p>
-        </div>
+        </details>
       </figure>
     </section>
 

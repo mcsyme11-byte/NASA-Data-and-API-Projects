@@ -1,5 +1,13 @@
 # Change log
 
+## November 8, 2026 — Asteroid Tracker: tidier notes and layout
+
+- "How to read this" notes are now closed by default and open with a tap.
+- Layout fixes found in a check of every page at 320 to 1440 px: the "Open its page" button no longer breaks onto
+  two lines; the week bar keeps its dates on one or two neat lines on phones (and reads "Nov 8–14, 2026"); the
+  orbit diagram's time buttons fit on one line at 320 px; the legend lines up on small screens.
+- Turning the orbit diagram redraws at most once per screen refresh, so dragging stays smooth.
+
 ## November 8, 2026 — Asteroid Tracker: each asteroid's page, the orbit diagram, past years
 
 - **A page for each asteroid** (`object.html?id=…`, 1 NASA request): size, length of its year, distance from the Sun,

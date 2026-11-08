@@ -68,6 +68,11 @@ export class OrbitView {
   }
 
   setDate(jd) { this.jd = jd; this.draw(); }
+  // redraw on the next screen refresh, once, however many drag events arrive in between
+  requestDraw() {
+    if (this._raf) return;
+    this._raf = requestAnimationFrame(() => { this._raf = null; this.draw(); this.onViewChange && this.onViewChange(); });
+  }
   setView({ tilt, spin }) { if (tilt !== undefined) this.tilt = Math.max(0, Math.min(90, tilt)); if (spin !== undefined) this.spin = spin; this.draw(); }
 
   // ---- drawing ----
@@ -310,8 +315,7 @@ export class OrbitView {
       if (!d.moved) { d.moved = true; try { svg.setPointerCapture(e.pointerId); } catch { /* not supported */ } svg.classList.add('dragging'); this.tip && this.tip.hide(); }
       this.spin = d.spin + dx * 0.4;
       if (e.pointerType === 'mouse') this.tilt = Math.max(0, Math.min(90, d.tilt + dy * 0.35));
-      this.draw();
-      this.onViewChange && this.onViewChange();
+      this.requestDraw();
     });
     const end = (e) => { if (this.dragging && this.dragging.id === e.pointerId) { this.dragging = null; svg.classList.remove('dragging'); } };
     svg.addEventListener('pointerup', end);
