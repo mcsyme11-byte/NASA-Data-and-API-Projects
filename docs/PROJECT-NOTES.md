@@ -13,13 +13,18 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
 - **Suggested order (Nov 8, 2026):** Asteroid Tracker, then Image Explorer, then Mars Data.
 - **Each project is built in its own chat** inside the Claude project "NASA Data Projects"; a general chat is for
   questions and exploring.
+- **Decided Nov 8, 2026 (Asteroid Tracker):** charts are hand-drawn SVG (no library), the "This year" view (JPL
+  close-approach data) is part of version 1, and the page was built from an approved mock-up.
+- **Decided Nov 8, 2026 (Asteroid Tracker):** the JPL close-approach API blocks calls from web pages, so GitHub
+  Actions fetches the year's data once a day and commits `asteroid-tracker/data/close-approaches.json` when it has
+  changed (one automatic commit a day at most, "Asteroid data: daily close-approach update").
 
 ## How it's built (starting plan; each project's chat confirms it)
 
 | Part | Built with | Why |
 |---|---|---|
 | Web pages | Plain HTML, CSS and JavaScript modules, no build step | Free hosting on GitHub Pages; easy to read and learn from |
-| Charts | A small charting library from a CDN, or hand-drawn SVG/canvas, styled to DESIGN.md | Chosen per project |
+| Charts | Hand-drawn SVG, styled to DESIGN.md (Asteroid Tracker); chosen per project | No library to load; matches the look exactly |
 | Maps (Image Explorer) | A web map library (for example Leaflet or OpenLayers) showing GIBS tiles | GIBS serves standard map tiles |
 | Mars analysis | Python 3 (pandas, matplotlib) in `mars-data/analysis/` | Cleaning and statistics are easiest in Python; it writes small summary files the web page reads |
 
@@ -55,6 +60,9 @@ One-time setting, done on github.com: the repository's **Settings › Pages › 
 - no NASA API key.
 
 Run it by hand: `python3 dev/check_wording.py`.
+
+`.github/workflows/asteroid-data.yml` runs once a day (06:17 UTC) and on demand (Actions › Asteroid data › Run
+workflow): it refreshes the Asteroid Tracker's year of close approaches from JPL and commits the file if it changed.
 
 ## Writing style
 

@@ -8,15 +8,14 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] **Create the Claude project's chats:** one per project (the project's instructions are in place).
 - [ ] Optional: a **Project Record** PDF rebuilt automatically after every push, as in the Flight Deck Suite and Hot Mic.
 
-## 1. Asteroid Tracker (first)
+## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
-- [ ] Confirm the plan in its own chat (features, chart library).
-- [ ] This week's close approaches from NeoWs: a table sorted by size or distance.
-- [ ] Miss distance in Moon distances (LD) and km; diameter as a min–max range.
-- [ ] Filters: hazardous only, size, distance, date.
-- [ ] Graphs: size against miss distance; approaches per day; the week's biggest.
-- [ ] Key settings: add or remove your own key; requests left.
-- [ ] Longer ranges by joining weeks, or the JPL close-approach API.
+- [ ] **Developer testing**, at the developer's own pace: the live page with real data on a computer and a phone;
+  both views, the filters, sorting, row details, key settings (save and remove the personal key).
+- [ ] Confirm the first daily run of the "Asteroid data" workflow the following morning (a new commit, or "No
+  change" in its log).
+- [ ] Ideas for later (not yet decided): a page for one object (all its approaches, from `neo/{id}`); past years in
+  the "This year" view; an orbit diagram.
 
 ## 2. Image Explorer (second)
 

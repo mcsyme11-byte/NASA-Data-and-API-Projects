@@ -29,7 +29,8 @@ export function setKey(key) {
 
 export function usingDemoKey() { return getKey() === DEMO_KEY; }
 
-// The last rate-limit numbers NASA sent back (from the X-RateLimit headers), for a "requests left" note.
+// The last rate-limit numbers NASA sent back (from the X-RateLimit headers). Checked Nov 8, 2026: NASA does not expose
+// these headers to web pages, so in a browser they stay null; kept for scripts and in case that changes.
 export const rateLimit = { limit: null, remaining: null };
 
 export class NasaError extends Error {

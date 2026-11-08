@@ -1,5 +1,20 @@
 # Change log
 
+## November 8, 2026 — Asteroid Tracker, version 1
+
+- **This week** (live from NASA NeoWs, 1 request per week shown): tiles for the number passing Earth, the closest,
+  the biggest, the fastest and those flagged potentially hazardous; previous and next weeks.
+- **Filters:** potentially hazardous only, size, distance and day. **Sorting** by any column (a "Sort by" menu on
+  phones). Each row opens its details with sizes, distances and speeds people can picture.
+- **Three graphs,** hand-drawn SVG in the project's look: size against miss distance (each size a min–max range),
+  approaches per day, and the week's biggest. Tooltips on hover or tap.
+- **This year** (NASA/JPL close-approach data): every approach within 1, 5 or 10 Moon distances on a timeline, the
+  closest of the year and the ones coming up. The data file is refreshed daily by a new GitHub Actions workflow,
+  because the JPL API cannot be called from a web page.
+- **Key settings:** add or remove a personal NASA key (kept in the browser only); the page shows which key is in use.
+- Loading, empty and error states (NASA out of reach, demo key used up, data file missing), checked at 320 to 1440 px.
+- Docs: the checked facts about NeoWs and the JPL API, and the size-from-brightness rule, in DATA-SOURCES.
+
 ## November 8, 2026 — documentation tone
 
 - **New rule:** all documentation is written in a professional tone, as project documentation, never in the tone of an

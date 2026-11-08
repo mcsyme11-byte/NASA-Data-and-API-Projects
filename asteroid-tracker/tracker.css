@@ -1,0 +1,113 @@
+/* NASA Data Projects · Asteroid Tracker page styles, on top of shared/theme.css · © 2026 Malcolm Syme · mcsyme11@gmail.com */
+[hidden] { display: none !important; }
+
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 8px; }
+.keystat { display: flex; align-items: center; gap: 12px; }
+.linkbtn { background: none; border: 0; padding: 6px 0; color: var(--brass); font: 14px var(--font); cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--brass-dim); text-underline-offset: 3px; }
+.linkbtn:hover { color: var(--brass-bright); }
+
+.keycard { margin-bottom: 22px; }
+.keyrow { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; }
+
+.weeknav { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; }
+.weeklabel { display: flex; flex-direction: column; min-width: 190px; text-align: center; }
+.weeklabel strong { font-weight: 400; font-size: 18px; }
+.weeknav .chip:last-child { margin-left: auto; }
+
+.tile .value small { font-size: 15px; color: var(--ink2); }
+.tile .sub { font-size: 13px; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile.hazard .value { color: var(--red); }
+
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.filters label { display: flex; align-items: center; gap: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); }
+.filters select { width: auto; min-width: 150px; text-transform: none; letter-spacing: 0; }
+
+.charts { display: grid; gap: 22px; grid-template-columns: 1fr 1fr; margin-top: 22px; }
+.chartcard { margin: 0; }
+.chartcard.wide { grid-column: 1 / -1; }
+.chartcard figcaption { margin-top: 10px; }
+.chart { display: block; width: 100%; height: auto; }
+.chart text { font-family: var(--font); font-size: 11px; fill: var(--muted); }
+.chart .axt { fill: var(--brass); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; }
+.chart .grid line { stroke: var(--line); }
+.chart .hit { cursor: pointer; }
+.chart .dim { opacity: .25; }
+
+.tablecard { padding: 0; overflow: hidden; }
+table.neo { width: 100%; border-collapse: collapse; }
+table.neo th { text-align: left; font-weight: 400; font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em;
+  color: var(--brass); padding: 14px 16px; border-bottom: 1px solid var(--brass-dim); white-space: nowrap; cursor: pointer; user-select: none; }
+table.neo th[aria-sort="ascending"]::after { content: " ▲"; font-size: 9px; }
+table.neo th[aria-sort="descending"]::after { content: " ▼"; font-size: 9px; }
+table.neo td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.neo tbody tr { cursor: pointer; }
+table.neo tbody tr:hover, table.neo tbody tr[aria-selected="true"] { background: rgba(192, 160, 98, .07); }
+table.neo tbody tr[aria-selected="true"] td:first-child { box-shadow: inset 2px 0 0 var(--brass); }
+table.neo tbody tr:last-child td { border-bottom: 0; }
+table.neo .num { text-align: right; }
+table.neo .s { display: block; font-size: 12.5px; color: var(--muted); font-style: italic; }
+.tag.haz { color: var(--red); }
+
+.more { display: flex; justify-content: center; margin-top: 16px; }
+table.neo tr.drow { cursor: default; background: rgba(192, 160, 98, .04); }
+table.neo tr.drow > td { padding: 4px 16px 18px; }
+.dwrap .tiles { margin-top: 8px; }
+.dwrap .note { margin: 12px 0 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+
+.gloss { margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.gloss dt { color: var(--brass); font-size: 11px; text-transform: uppercase; letter-spacing: .22em; margin-bottom: 6px; }
+.gloss dd { margin: 0; color: var(--ink2); font-size: 14.5px; }
+
+.tip { position: fixed; z-index: 50; pointer-events: none; background: var(--bg2); border: 1px solid var(--brass-dim);
+  border-radius: var(--r-btn); padding: 8px 12px; font-size: 13px; line-height: 1.45; max-width: 260px; color: var(--ink); }
+.tip b { font-weight: 400; color: var(--brass-bright); }
+
+@media (max-width: 1024px) {
+  .charts { grid-template-columns: 1fr; }
+  .gloss { grid-template-columns: 1fr; }
+  .grid2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .keyrow { grid-template-columns: 1fr; }
+  .weeklabel { min-width: 0; flex: 1; }
+  .weeknav .chip:last-child { margin-left: 0; }
+  .filters label { width: 100%; justify-content: space-between; }
+  .filters select { flex: 1; max-width: 240px; }
+  /* table rows become small cards */
+  table.neo thead { display: none; }
+  table.neo, table.neo tbody, table.neo tr, table.neo td { display: block; }
+  table.neo tr { padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  table.neo td { border: 0; padding: 2px 0; text-align: left !important; display: flex; justify-content: space-between; gap: 12px; }
+  table.neo td::before { content: attr(data-label); font-size: 10px; text-transform: uppercase; letter-spacing: .2em; color: var(--brass); padding-top: 3px; }
+  table.neo td:first-child { font-size: 17px; }
+  table.neo td:first-child::before { content: none; }
+  table.neo .s { display: inline; margin-left: 6px; }
+  table.neo td.num > span { text-align: right; }
+  table.neo td.empty { display: none; }
+  table.neo tr.drow > td { display: block; padding: 4px 0 6px; }
+  table.neo tr.drow > td::before { content: none; }
+  .card { padding: 16px; }
+  .tablecard { padding: 0; }
+  .tiles .tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+
+/* states: loading, empty, error */
+.state { display: flex; align-items: center; justify-content: center; min-height: 220px; padding: 22px; text-align: center;
+  color: var(--muted); font-style: italic; }
+.state.small { min-height: 120px; }
+.notice { margin-bottom: 18px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+.notice .btn { min-height: 36px; }
+.loading .value { color: var(--faint); }
+.updated { margin-top: 10px; }
+th[tabindex]:focus-visible, tr[tabindex]:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+table.neo tbody tr.msg, table.neo tbody tr.static { cursor: default; }
+table.neo tbody tr.msg:hover { background: none; }
+table.neo tr.msg td::before { content: none; }
+.sortsel { display: none; margin-bottom: 12px; }
+@media (max-width: 760px) {
+  .sortsel { display: flex; }
+  .hide-sm { display: none; }
+}

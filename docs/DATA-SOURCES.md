@@ -45,11 +45,47 @@ Example: one week's feed
 https://api.nasa.gov/neo/rest/v1/feed?start_date=2026-11-01&end_date=2026-11-07&api_key=DEMO_KEY
 ```
 
+Checked Nov 8, 2026 (live requests from the published site):
+- **Browsers may call it** (CORS allowed), so the Asteroid Tracker requests the week's feed from the page.
+- **The rate-limit headers are not readable from a web page** (NASA does not expose them to browsers), so the page
+  cannot show "requests left"; it shows which key is in use and that key's limits instead.
+- `close_approach_data[].epoch_date_close_approach` is the close-approach time in milliseconds, UTC
+  (1794183300000 = 2026-11-09 00:15 UTC, matching `close_approach_date_full`). Speed used:
+  `relative_velocity.kilometers_per_second`.
+- `estimated_diameter.meters` gives min and max; the range corresponds to albedos of about 0.25 and 0.05 (see the
+  size rule below).
+- A typical week: 42 close approaches, 5 flagged potentially hazardous (Nov 8–14, 2026).
+
 ### JPL Close-Approach Data API
 
 `https://ssd-api.jpl.nasa.gov/cad.api` (no key). Close approaches over any date range, past and future, filtered by
 distance (`dist-max`, for example `10LD`) and date (`date-min`, `date-max`). Suited to "the closest approaches of
 the year" and to history beyond NeoWs's 7-day window.
+
+Checked Nov 8, 2026 against the API's documentation (version 1.5) and live answers:
+- **No CORS headers:** browsers block a web page from calling it. The Asteroid Tracker therefore reads a file,
+  `asteroid-tracker/data/close-approaches.json`, written once a day by `asteroid-tracker/fetch_close_approaches.py`
+  on GitHub Actions (`.github/workflows/asteroid-data.yml`).
+- **Defaults:** `date-min=now`, `date-max=+60` (days), `dist-max=0.05` (au), NEOs only, Earth, sorted by date.
+- **Useful options:** `diameter=true`, `fullname=true`, `sort` (`date`, `dist`, `-dist`, …), `limit`,
+  `total-only=true` (the count only).
+- **Each row is an array** in the order given by `fields`: `des`, `orbit_id`, `jd`, `cd` (calendar time, TDB, about
+  69 s from UTC), `dist`, `dist_min`, `dist_max` (au), `v_rel`, `v_inf` (km/s), `t_sigma_f`, `h` (absolute
+  magnitude), then `diameter` and `diameter_sigma` (km, usually null) and `fullname` when asked for.
+- An empty answer is HTTP 200 with `count` 0. Errors: 400, 405, 500, 503.
+- Counts for 2026: 1,053 close approaches within 10 LD and 144 within 1 LD
+  from Jan 1 to Nov 8, 2026; 1,558 within 0.05 au over the whole year.
+
+### Size from brightness (when no measured diameter is given)
+
+```
+D (km) = 1329 ÷ √p × 10^(−H ÷ 5)
+```
+- H: absolute magnitude (brightness; a larger H means a smaller object). p: albedo (how much light the surface
+  reflects).
+- **p = 0.25** (bright surface) gives the **smallest** likely size; **p = 0.05** (dark) the **largest**.
+- Example: H = 22 → 106 m to 237 m. This is the range NeoWs reports; the Asteroid Tracker applies the same rule to
+  JPL's data (`asteroid-tracker/format.js`).
 
 ## Mars Data
 

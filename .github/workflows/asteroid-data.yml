@@ -1,0 +1,40 @@
+# NASA Data Projects · Asteroid Tracker daily data · © 2026 Malcolm Syme · mcsyme11@gmail.com
+#
+# Once a day, fetches the year's close approaches from the NASA/JPL close-approach API
+# (asteroid-tracker/fetch_close_approaches.py) and commits asteroid-tracker/data/close-approaches.json when it has
+# changed. GitHub Pages then republishes the site. The JPL API blocks direct calls from web pages (no CORS), which is
+# why the data is fetched here. Can also be run by hand: Actions › Asteroid data › Run workflow.
+
+name: Asteroid data
+
+on:
+  schedule:
+    - cron: '17 6 * * *'   # 06:17 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: asteroid-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the year's close approaches
+        run: python3 asteroid-tracker/fetch_close_approaches.py
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- asteroid-tracker/data/ && [ -z "$(git status --porcelain asteroid-tracker/data/)" ]; then
+            echo "No change in the data."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add asteroid-tracker/data/close-approaches.json
+          git commit -m "Asteroid data: daily close-approach update"
+          git push

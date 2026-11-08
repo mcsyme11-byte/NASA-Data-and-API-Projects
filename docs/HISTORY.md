@@ -15,3 +15,12 @@ How NASA Data Projects came about, in order.
   API key ever committed.
 - The repository was set up with the shared look of the developer's other projects, a NASA API helper, a home page,
   placeholder pages and the documents in `docs/`.
+
+## November 8, 2026 — Asteroid Tracker, version 1
+
+- The plan was confirmed in the project's own chat: hand-drawn SVG charts, the year view from JPL data in version 1,
+  and a mock-up first. The mock-up (with made-up data) was approved the same day.
+- Checking the live services showed two limits: the JPL close-approach API cannot be called from a web page, and
+  NeoWs's rate-limit headers cannot be read by one. The year view therefore reads a file refreshed daily by GitHub
+  Actions, and the key settings show the key's limits instead of the requests left.
+- The page went live on GitHub Pages with the week view, filters, three graphs, the year view and key settings.
