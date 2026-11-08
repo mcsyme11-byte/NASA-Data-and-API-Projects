@@ -73,8 +73,8 @@ Checked Nov 8, 2026 against the API's documentation (version 1.5) and live answe
   69 s from UTC), `dist`, `dist_min`, `dist_max` (au), `v_rel`, `v_inf` (km/s), `t_sigma_f`, `h` (absolute
   magnitude), then `diameter` and `diameter_sigma` (km, usually null) and `fullname` when asked for.
 - An empty answer is HTTP 200 with `count` 0. Errors: 400, 405, 500, 503.
-- Counts for 2026: 1,053 close approaches within 10 LD and 144 within 1 LD
-  from Jan 1 to Nov 8, 2026; 1,558 within 0.05 au over the whole year.
+- Counts for the whole of 2026, as known on Nov 8, 2026: 1,053 close approaches within 10 LD and 144 within 1 LD
+  (about 50 KB as the daily file); 1,558 within 0.05 au.
 
 ### Size from brightness (when no measured diameter is given)
 
