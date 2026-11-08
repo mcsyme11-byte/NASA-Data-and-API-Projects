@@ -78,7 +78,7 @@ function render() {
     { label: 'Year length', value: years >= 2 ? fmt(years, 1) + ' <small>years</small>' : fmt(k.period) + ' <small>days</small>', note: `one trip around the Sun · Earth: 365 days` },
     { label: 'From the Sun', value: `${fmt(k.q, 2)}–${fmt(k.Q, 2)} <small>au</small>`, note: `${fmt(k.q * 149.6)}–${fmt(k.Q * 149.6)} million km · Earth: 1 au` },
     { label: 'Orbit tilt', value: fmt(k.i * 180 / Math.PI, 1) + '°', note: 'slant against the plane of Earth\'s orbit' },
-    { label: 'Closest its orbit gets to Earth\'s', value: fmt(moidAu / LD_AU, moidAu / LD_AU < 10 ? 1 : 0) + ' <small>LD</small>', note: `${fmt(moidAu, 4)} au · ${fmt(moidAu * AU_KM)} km` },
+    { label: 'Closest its orbit gets to Earth\'s', value: fmt(moidAu / LD_AU, moidAu / LD_AU < 1 ? 2 : moidAu / LD_AU < 10 ? 1 : 0) + ' <small>LD</small>', note: `${fmt(moidAu, 4)} au · ${fmt(moidAu * AU_KM)} km` },
   ]);
 
   // every Earth approach from NASA
@@ -133,7 +133,7 @@ function readouts() {
   const dE = dist(earth, ast), r = Math.hypot(...ast);
   const speed = Math.sqrt(GM_SUN * (2 / (r * AU_KM) - 1 / (k.a * AU_KM)));   // vis-viva: v² = GM (2/r − 1/a)
   tiles('#readouts', [
-    { label: 'From Earth', value: dE / LD_AU < 100 ? fmt(dE / LD_AU, 1) + ' <small>LD</small>' : fmt(dE, 2) + ' <small>au</small>', note: `${fmt(dE, 3)} au · ${fmt(dE * AU_KM / 1e6, 1)} million km` },
+    { label: 'From Earth', value: dE / LD_AU < 1000 ? fmt(dE / LD_AU, dE / LD_AU < 1 ? 2 : 1) + ' <small>LD</small>' : fmt(dE, 2) + ' <small>au</small>', note: `${fmt(dE, 3)} au · ${fmt(dE * AU_KM / 1e6, 1)} million km` },
     { label: 'From the Sun', value: fmt(r, 3) + ' <small>au</small>', note: `${fmt(r * 149.6, 0)} million km` },
     { label: 'Speed around the Sun', value: fmt(speed, 1) + ' <small>km/s</small>', note: `Earth: about 29.8 km/s` },
     { label: 'Height above Earth\'s orbit plane', value: (ast[2] >= 0 ? '+' : '−') + fmt(Math.abs(ast[2]), 3) + ' <small>au</small>', note: ast[2] >= 0 ? 'above (north)' : 'below (south)' },
@@ -152,7 +152,7 @@ function readouts() {
   const sel = state.sel;
   if (sel && Math.abs(msFromJd(jd) - sel.t) < 2 * DAY) {
     $('#approachNote').innerHTML = `Close approach on ${dateText(sel.t, true)} UTC. <b>NASA/JPL: ${fmt(sel.ld, 2)} LD</b> (${fmt(sel.km)} km) at ${fmt(sel.v, 1)} km/s. ` +
-      `This diagram: ${fmt(dE / LD_AU, 1)} LD.`;
+      `This diagram: ${fmt(dE / LD_AU, dE / LD_AU < 10 ? 2 : 1)} LD${sel.ld < 1 ? ' (so close that Earth\'s own pull, left out of the diagram, bends the path)' : ''}.`;
   } else {
     const next = state.approaches.find((a) => a.t > msFromJd(jd) + DAY);
     $('#approachNote').innerHTML = next ? `Next close approach after this date: ${dateText(next.t)} ${new Date(next.t).getUTCFullYear()}, ${fmt(next.ld, 1)} LD (NASA/JPL).` : '';

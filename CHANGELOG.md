@@ -15,6 +15,10 @@
 - **Past years:** the year view ("By year") covers 2000 to next year, with a year picker, links such as
   `#year-2012`, tiles suited to past, current and next year, and a chart of the approaches found each year.
 - The daily data job now writes one file per year plus an index (`data/years.json`).
+- Checked with real data after publishing: for Apophis's December 2027 pass the diagram gives 114.5 LD against
+  NASA's 114.22 LD. In the "Near Earth" view the time ticks follow the asteroid's speed (hourly for a fast close
+  pass such as Apophis's on April 13, 2029, every few days for a slow distant one). For passes closer than the Moon
+  the page notes that Earth's own pull, left out of the diagram, bends the path.
 
 ## November 8, 2026 — Asteroid Tracker: charts explained
 

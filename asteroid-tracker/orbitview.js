@@ -222,28 +222,30 @@ export class OrbitView {
     const [ex, ey] = this._proj(earth), [ux, uy] = this._proj(sunPt);
     el('line', { x1: ex, y1: ey, x2: ux, y2: uy, stroke: C.brass, 'stroke-width': 1, 'stroke-dasharray': '1 4', opacity: 0.7 }, g);
     const st = el('text', { x: ux, y: uy - 6, 'text-anchor': 'middle', fill: C.brass, 'font-size': 11 }, g); st.textContent = 'towards the Sun ☉';
-    // the asteroid's path relative to Earth over ±120 days, where it is inside the view
+    // the asteroid's path relative to Earth. Time span and tick spacing follow its speed past Earth, so a fast
+    // close pass gets hourly ticks and a slow distant one ticks every few days.
+    const rel = (j) => { const e = planetPosition('Earth', j), a = asteroidPosition(this.k, j); return [a[0] - e[0], a[1] - e[1], a[2] - e[2]]; };
+    const v = Math.max(1e-6, dist(rel(jd + 0.01), rel(jd)) / 0.01);          // au per day relative to Earth
+    const pxDay = v * this.s;
+    const ticks = [1 / 24, 3 / 24, 6 / 24, 0.5, 1, 2, 5, 10, 20];
+    const tick = ticks.find((t) => t * pxDay >= 30) || 20;
+    const span = Math.min(150, Math.max(2, (3 * R) / v)), step = Math.max(1 / 96, span / 600);
     const col = this.hazardous ? C.red : C.brass, pts = [];
-    for (let d = -120; d <= 120; d += 0.25) {
-      const j = jd + d, e = planetPosition('Earth', j), a = asteroidPosition(this.k, j);
-      pts.push([a[0] - e[0] + earth[0], a[1] - e[1] + earth[1], a[2] - e[2] + earth[2], d]);
-    }
+    for (let d = -span; d <= span + 1e-9; d += step) { const r = rel(jd + d); pts.push([r[0] + earth[0], r[1] + earth[1], r[2] + earth[2], d]); }
     let seg = [];
     const flush = () => { if (seg.length > 1) el('path', { d: this._path(seg), fill: 'none', stroke: col, 'stroke-width': 1.6, opacity: 0.85 }, g); seg = []; };
     for (const p of pts) { if (dist(p, earth) < R * 1.6) seg.push(p); else flush(); }
     flush();
-    // a dot every 5 days along the path; day labels where there is room
     const [ex0, ey0] = this._proj(earth), [ax0, ay0] = this._proj(ast);
     this._occupy(ex0, ey0, 10); this._occupy(ax0, ay0, 10);
-    for (const p of pts) {
-      if (p[3] % 5 !== 0 || p[3] === 0 || dist(p, earth) > R * 1.25) continue;
+    const fmtT = (d) => (d > 0 ? '+' : '−') + (tick < 1 ? Math.round(Math.abs(d) * 24) + ' h' : Math.round(Math.abs(d)) + ' d');
+    for (let n = -Math.floor(span / tick); n <= Math.floor(span / tick); n++) {
+      if (n === 0) continue;
+      const d = n * tick, r = rel(jd + d), p = [r[0] + earth[0], r[1] + earth[1], r[2] + earth[2]];
+      if (dist(p, earth) > R * 1.2) continue;
       const [x, y] = this._proj(p);
-      el('circle', { cx: x, cy: y, r: 2, fill: col }, g);
-    }
-    for (const p of pts) {
-      if (p[3] % 10 !== 0 || p[3] === 0 || dist(p, earth) > R * 1.15) continue;
-      const [x, y] = this._proj(p);
-      this._label(g, x, y, (p[3] > 0 ? '+' : '−') + Math.abs(p[3]) + ' d', C.muted, 5, false, 10);
+      el('circle', { cx: x, cy: y, r: 2.2, fill: col }, g);
+      if (n % 2 === 0) this._label(g, x, y, fmtT(d), C.muted, 5, false, 10);
     }
     // Earth and the asteroid now
     const [ax, ay] = this._proj(ast);
