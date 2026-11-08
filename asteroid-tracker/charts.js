@@ -57,7 +57,7 @@ const yTitle = (svg, H, m, s) =>
 // ---- 1. size against miss distance (log–log, each object a min–max line) ----
 export function scatter(svg, list, emptyMsg = 'No objects match these filters.') {
   if (!list.length) return emptyChart(svg, emptyMsg);
-  const W = frameWidth(svg), H = W < 600 ? Math.round(W * 0.95) : 380, m = { l: 58, r: 14, t: 18, b: 48 };
+  const W = frameWidth(svg), H = W < 600 ? Math.round(W * 0.95) : 390, m = { l: 58, r: 14, t: 26, b: 48 };
   const g = start(svg, W, H);
   // axis ranges: whole decades (and 3s) that cover the data
   const ticks = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30, 100, 300, 1000];
@@ -75,9 +75,12 @@ export function scatter(svg, list, emptyMsg = 'No objects match these filters.')
   text(svg, { x: (W + m.l) / 2, y: H - 8, 'text-anchor': 'middle', class: 'axt' }, W < 600 ? 'Miss distance, LD' : 'Miss distance, Moon distances (LD)');
   yTitle(svg, H, m, 'Diameter, est.');
   if (xt[0] < 1 && xt[xt.length - 1] > 1) {
+    el('rect', { x: m.l, y: m.t, width: X(1) - m.l, height: H - m.t - m.b, fill: BRASS, opacity: 0.06 }, svg);
     el('line', { x1: X(1), x2: X(1), y1: m.t, y2: H - m.b, stroke: BRIGHT, 'stroke-dasharray': '4 4', opacity: 0.7 }, svg);
-    text(svg, { x: X(1) + 6, y: m.t + 12, fill: BRIGHT }, 'the Moon');
+    text(svg, { x: X(1) + 6, y: m.t - 8, fill: BRIGHT }, 'the Moon');
+    text(svg, { x: X(1) - 6, y: m.t - 8, fill: BRIGHT, 'text-anchor': 'end', 'font-style': 'italic' }, W < 600 ? 'closer' : 'closer than the Moon');
   }
+  text(svg, { x: W - m.r, y: m.t - 8, 'text-anchor': 'end', 'font-style': 'italic' }, 'bigger ↑ · farther →');
   // hazardous last, so they sit on top
   [...list].sort((a, b) => a.haz - b.haz).forEach((o) => {
     const c = o.haz ? RED : BRASS, x = X(o.ld), gm = Math.sqrt(o.dmin * o.dmax);

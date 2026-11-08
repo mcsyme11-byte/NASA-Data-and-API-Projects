@@ -111,3 +111,7 @@ table.neo tr.msg td::before { content: none; }
   .sortsel { display: flex; }
   .hide-sm { display: none; }
 }
+.howto { margin-top: 12px; padding: 12px 14px; border-left: 2px solid var(--brass-dim); background: rgba(192, 160, 98, .04); }
+.howto .label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
+.howto p { margin: 6px 0 0; font-size: 14px; color: var(--ink2); }
+.howto b { font-weight: 400; color: var(--ink); }

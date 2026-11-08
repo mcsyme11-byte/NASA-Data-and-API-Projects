@@ -1,5 +1,11 @@
 # Change log
 
+## November 8, 2026 — Asteroid Tracker: charts explained
+
+- Each chart now has a short "How to read this" note with an example.
+- The size-against-distance chart shades the area closer than the Moon and labels its directions ("closer than the
+  Moon", "bigger ↑ · farther →") above the plot, where they never cover data.
+
 ## November 8, 2026 — Asteroid Tracker, version 1
 
 - **This week** (live from NASA NeoWs, 1 request per week shown): tiles for the number passing Earth, the closest,
