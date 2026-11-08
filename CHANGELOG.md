@@ -1,5 +1,21 @@
 # Change log
 
+## November 8, 2026 — Asteroid Tracker: each asteroid's page, the orbit diagram, past years
+
+- **A page for each asteroid** (`object.html?id=…`, 1 NASA request): size, length of its year, distance from the Sun,
+  orbit tilt and the closest its orbit comes to Earth's; every close approach to Earth from 1900 to 2200 on a chart
+  and in a list; facts about how its orbit was worked out. Opened from a row's details in the week view, and from
+  numbered asteroids in the year tables.
+- **The orbit diagram:** the Sun, Mercury to Mars (and Jupiter for far-reaching orbits) and the asteroid, drawn to
+  scale and placed at any date from 1900 to 2050. Top, Tilted and Side views, drag to turn, zoom, and "Near Earth"
+  (the path past Earth over ±120 days, with the Moon's orbit for scale). Play, step by day or month, a two-year
+  slider, today and the next close approach. Readings for the date: distance from Earth and the Sun, speed around
+  the Sun, height above Earth's orbital plane; NASA's official figures beside the diagram's at a close approach,
+  and a plain statement of how exact the drawing is for the date shown.
+- **Past years:** the year view ("By year") covers 2000 to next year, with a year picker, links such as
+  `#year-2012`, tiles suited to past, current and next year, and a chart of the approaches found each year.
+- The daily data job now writes one file per year plus an index (`data/years.json`).
+
 ## November 8, 2026 — Asteroid Tracker: charts explained
 
 - Each chart now has a short "How to read this" note with an example.

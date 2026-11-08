@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!-- NASA Data Projects · Asteroid Tracker · one asteroid · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asteroid · Asteroid Tracker · NASA Data Projects</title>
+  <meta name="description" content="One near-Earth asteroid: its size, its orbit around the Sun drawn to scale, and every close approach to Earth.">
+  <meta name="theme-color" content="#141B26">
+  <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../shared/theme.css">
+  <link rel="stylesheet" href="tracker.css">
+  <script type="module" src="object.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg>
+        NASA Data Projects
+      </a>
+      <nav class="nav" aria-label="Projects">
+        <a href="../">Home</a>
+        <a href="./" aria-current="page">Asteroids</a>
+        <a href="../mars-data/">Mars</a>
+        <a href="../image-explorer/">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="phead">
+      <div class="eyebrow"><a href="./">Asteroid Tracker</a> · Asteroid</div>
+      <h1 id="name">Loading…</h1>
+      <p class="lede" id="lede">Its size, its path around the Sun, and every time it passes Earth.</p>
+      <div class="pills" id="pills"></div>
+    </div>
+
+    <div id="notice"></div>
+
+    <div id="content" hidden>
+      <div class="tiles" id="facts"></div>
+
+      <!-- ===================== ORBIT DIAGRAM ===================== -->
+      <section class="card orbitcard" aria-labelledby="orbitTitle">
+        <div class="shead" style="margin-top:0"><h2 id="orbitTitle">Its orbit around the Sun</h2><span class="aside">drawn to scale · drag to turn</span></div>
+
+        <div class="orbitbar">
+          <div class="seg" role="group" aria-label="View">
+            <button class="chip" data-tilt="0" aria-pressed="true">Top</button>
+            <button class="chip" data-tilt="58" aria-pressed="false">Tilted</button>
+            <button class="chip" data-tilt="90" aria-pressed="false">Side</button>
+          </div>
+          <div class="seg" role="group" aria-label="Zoom">
+            <button class="chip" id="zoomOut" aria-label="Zoom out">−</button>
+            <button class="chip" id="zoomFit">Fit</button>
+            <button class="chip" id="zoomIn" aria-label="Zoom in">+</button>
+            <button class="chip" id="zoomEarth" aria-pressed="false">Near Earth</button>
+          </div>
+        </div>
+
+        <div class="orbitlayout">
+          <div class="orbitmain">
+            <div class="frame orbitframe">
+              <svg id="orbit" class="chart orbit" role="img" aria-label="Orbit diagram"></svg>
+              <div class="ovl ovl-date" aria-live="polite"><span class="eyebrow">Date (UTC)</span><strong id="oDate">—</strong><span class="note" id="oAcc"></span></div>
+            </div>
+            <div class="timebar">
+              <div class="seg" role="group" aria-label="Step through time">
+                <button class="chip" data-step="-30" aria-label="Back 30 days">« 30 d</button>
+                <button class="chip" data-step="-1" aria-label="Back 1 day">‹ 1 d</button>
+                <button class="chip play" id="play" aria-pressed="false">▶ Play</button>
+                <button class="chip" data-step="1" aria-label="Forward 1 day">1 d ›</button>
+                <button class="chip" data-step="30" aria-label="Forward 30 days">30 d »</button>
+              </div>
+              <label class="speed">Speed <select id="speed"><option value="15">Slow</option><option value="60" selected>Normal</option><option value="240">Fast</option></select></label>
+            </div>
+            <div class="slider">
+              <input type="range" id="slider" min="0" max="730" step="0.25" value="365" aria-label="Date">
+              <div class="ends"><span id="sMin"></span><span id="sMax"></span></div>
+            </div>
+            <div class="timebar">
+              <div class="seg">
+                <button class="chip" id="toToday">Today</button>
+                <button class="chip" id="toApproach">Next close approach ›</button>
+              </div>
+              <label class="speed">Go to <input type="date" id="goDate" min="1900-01-01" max="2050-12-31" aria-label="Go to date"></label>
+            </div>
+          </div>
+          <aside class="orbitside" aria-label="Readings for the date shown">
+            <div class="tiles readouts" id="readouts"></div>
+            <p class="note" id="approachNote"></p>
+
+            <div class="legend" aria-label="Legend">
+              <span><i class="lg sun"></i>Sun</span>
+              <span><i class="lg earth"></i>Earth and its orbit</span>
+              <span><i class="lg ast"></i>Asteroid's orbit, above Earth's orbital plane</span>
+              <span><i class="lg ast below"></i>below it</span>
+              <span><i class="lg node"></i>crosses Earth's orbital plane</span>
+              <span><i class="lg peri"></i>closest to / farthest from the Sun</span>
+              <span><i class="lg planet"></i>other planets</span>
+            </div>
+          </aside>
+        </div>
+
+        <div class="howto"><span class="label">How to read this</span>
+          <p><b>Top view:</b> the solar system seen from above. The Sun is in the middle; the blue ring is Earth's orbit (1 au, 150 million km). The brass line is the asteroid's orbit. Everything moves anticlockwise. Press <b>Play</b> or move the slider to watch Earth and the asteroid travel; the dashed line between them gives their distance.</p>
+          <p><b>Tilted</b> and <b>Side</b> show that most asteroid orbits are slanted: the solid part of its orbit is above the plane of Earth's orbit, the dashed part below. It can only come really close to Earth near the two ✕ marks, where it crosses that plane. <b>Near Earth</b> zooms in around Earth.</p>
+          <p id="accNote"></p>
+        </div>
+      </section>
+
+      <!-- ===================== EVERY APPROACH ===================== -->
+      <section>
+        <div class="shead"><h2>Every close approach to Earth</h2><span class="aside" id="caAside"></span></div>
+        <figure class="card chartcard wide" style="margin:0">
+          <div class="frame"><svg id="cApproaches" class="chart" role="img" aria-label="Every close approach to Earth by date and distance"></svg></div>
+          <figcaption class="note">Tap a dot to show that date in the orbit diagram. Source: NASA NeoWs (computed by NASA/JPL).</figcaption>
+          <div class="howto"><span class="label">How to read this</span>
+            <p>Each dot is one pass by Earth: <b>left to right</b> is the year, <b>bottom to top</b> how far away it passed, in Moon distances (each step up is ×10 farther). Filled dots have happened, hollow dots are predictions. The ringed dot is the one shown in the diagram; the grey area lies outside the diagram's range (1900 to 2050).</p>
+          </div>
+        </figure>
+        <div class="shead"><h2>The list</h2><span class="aside">tap a row to show it in the diagram</span></div>
+        <div class="card tablecard">
+          <table class="neo" id="caTable">
+            <thead><tr><th>Date (UTC)</th><th class="num">Distance</th><th class="num">Speed</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="more" id="caMore" hidden><button class="btn ghost" id="caMoreBtn">Show all</button></div>
+      </section>
+
+      <div class="shead"><h2>About this orbit</h2></div>
+      <dl class="card gloss" id="about"></dl>
+    </div>
+
+    <footer class="footer">
+      <p>Data courtesy of NASA (NeoWs, with orbits and approaches computed by NASA/JPL). Planet positions from JPL's approximate planetary elements. This is an independent project and isn't endorsed by NASA.</p>
+      <p class="credit"><strong>NASA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
+    </footer>
+  </main>
+  <div class="tip" id="tip" hidden></div>
+</body>
+</html>

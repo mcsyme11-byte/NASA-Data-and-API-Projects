@@ -39,7 +39,7 @@
     <div class="toolbar">
       <div class="seg" role="group" aria-label="View">
         <button class="chip" aria-pressed="true" data-view="week">This week</button>
-        <button class="chip" aria-pressed="false" data-view="year">This year</button>
+        <button class="chip" aria-pressed="false" data-view="year">By year</button>
       </div>
       <div class="keystat">
         <span class="pill warn" id="keyPill">Demo key</span>
@@ -137,6 +137,13 @@
 
     <!-- ===================== THIS YEAR ===================== -->
     <section id="view-year" hidden>
+      <div class="weeknav">
+        <button class="chip" id="prevYear" aria-label="Previous year">‹ Prev</button>
+        <div class="weeklabel"><span class="eyebrow">Year</span>
+          <select id="yearSel" aria-label="Year"></select></div>
+        <button class="chip" id="nextYear" aria-label="Next year">Next ›</button>
+        <button class="chip" id="thisYear" aria-pressed="true">This year</button>
+      </div>
       <div id="yearNotice"></div>
       <div class="tiles" id="yearTiles"></div>
 
@@ -150,24 +157,33 @@
       </div>
 
       <figure class="card chartcard wide" style="margin-top:22px">
-        <div class="shead" style="margin-top:0"><h2>Every close approach this year</h2><span class="aside">filled: passed · outlined: coming up</span></div>
+        <div class="shead" style="margin-top:0"><h2 id="yearChartTitle">Every close approach this year</h2><span class="aside">filled: passed · outlined: coming up</span></div>
         <div class="frame"><svg id="cYear" class="chart" role="img" aria-label="Close approaches through the year by date and distance"></svg></div>
         <figcaption class="note">Dot size shows estimated size. The dashed line is the Moon's distance. Source: NASA/JPL close-approach data, refreshed daily. <span id="yearUpdated"></span></figcaption>
         <div class="howto"><span class="label">How to read this</span>
-          <p>Each dot is one close approach: <b>left to right</b> is the date, <b>bottom to top</b> how far away it passed. <b>Filled</b> dots have passed, <b>hollow</b> dots are still to come, and the solid line is today. Bigger dots are bigger asteroids. A dot near the bottom passed very close.</p>
+          <p>Each dot is one close approach: <b>left to right</b> is the date, <b>bottom to top</b> how far away it passed. <b>Filled</b> dots have passed, <b>hollow</b> dots are still to come, and the solid line is today. Bigger dots are bigger asteroids. A dot near the bottom passed very close. Tap a dot for its name, size and distance.</p>
         </div>
       </figure>
 
       <div class="grid2">
         <div>
-          <div class="shead"><h2>Closest of the year</h2></div>
+          <div class="shead"><h2 id="leftTitle">Closest of the year</h2></div>
           <div class="card tablecard"><table class="neo" id="yearTable"><thead><tr><th>Name</th><th>Date</th><th class="num">Size, est.</th><th class="num">Distance</th></tr></thead><tbody></tbody></table></div>
         </div>
         <div>
-          <div class="shead"><h2>Coming up</h2></div>
+          <div class="shead"><h2 id="rightTitle">Coming up</h2></div>
           <div class="card tablecard"><table class="neo" id="nextTable"><thead><tr><th>Name</th><th>Date</th><th class="num">Size, est.</th><th class="num">Distance</th></tr></thead><tbody></tbody></table></div>
         </div>
       </div>
+
+      <figure class="card chartcard wide" style="margin-top:22px">
+        <div class="shead" style="margin-top:0"><h2>Close approaches found, year by year</h2><span class="aside" id="perYearAside">within 1 LD</span></div>
+        <div class="frame"><svg id="cYears" class="chart" role="img" aria-label="Number of close approaches each year"></svg></div>
+        <figcaption class="note">Tap a bar to open that year. Source: NASA/JPL close-approach data.</figcaption>
+        <div class="howto"><span class="label">How to read this</span>
+          <p>One bar per year: how many close approaches within the chosen distance are known for that year. The rise over time comes mostly from <b>better telescopes and sky surveys finding more small asteroids</b>, not from more asteroids arriving. Next year's bar holds only the approaches already predicted, so it grows as new objects are found.</p>
+        </div>
+      </figure>
     </section>
 
     <div class="shead"><h2>Words on this page</h2></div>

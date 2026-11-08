@@ -56,6 +56,20 @@ Checked Nov 8, 2026 (live requests from the published site):
   size rule below).
 - A typical week: 42 close approaches, 5 flagged potentially hazardous (Nov 8–14, 2026).
 
+`neo/{id}`, checked Nov 8, 2026 (used by the Asteroid Tracker's page for one asteroid, 1 request per page):
+- Top level: `id`, `neo_reference_id`, `name`, `designation`, `absolute_magnitude_h`, `estimated_diameter`,
+  `is_potentially_hazardous_asteroid`, `is_sentry_object`, `nasa_jpl_url`, `close_approach_data`, `orbital_data`.
+- `close_approach_data`: every computed approach, 1900–2200 (for example 36 for 1998 VE31, all to Earth); same fields
+  as in the feed.
+- `orbital_data` (numbers given as strings): `semi_major_axis` (au), `eccentricity`, `inclination`,
+  `ascending_node_longitude`, `perihelion_argument`, `mean_anomaly` (degrees, J2000 ecliptic), `mean_motion`
+  (degrees per day), `epoch_osculation` (Julian date of these elements), `perihelion_distance`, `aphelion_distance`,
+  `orbital_period` (days), `minimum_orbit_intersection` (MOID, au), `orbit_class` (type, description, range),
+  `observations_used`, `first_observation_date`, `last_observation_date`, `data_arc_in_days`,
+  `orbit_determination_date`, `orbit_uncertainty` (0 best to 9).
+- **Ids:** an unnumbered object has a 7-digit id (3092201 for 1998 VE31); a numbered asteroid's id is
+  2,000,000 + its number (433 Eros = 2000433).
+
 ### JPL Close-Approach Data API
 
 `https://ssd-api.jpl.nasa.gov/cad.api` (no key). Close approaches over any date range, past and future, filtered by
@@ -63,9 +77,11 @@ distance (`dist-max`, for example `10LD`) and date (`date-min`, `date-max`). Sui
 the year" and to history beyond NeoWs's 7-day window.
 
 Checked Nov 8, 2026 against the API's documentation (version 1.5) and live answers:
-- **No CORS headers:** browsers block a web page from calling it. The Asteroid Tracker therefore reads a file,
-  `asteroid-tracker/data/close-approaches.json`, written once a day by `asteroid-tracker/fetch_close_approaches.py`
-  on GitHub Actions (`.github/workflows/asteroid-data.yml`).
+- **No CORS headers:** browsers block a web page from calling it. The Asteroid Tracker therefore reads files,
+  `asteroid-tracker/data/YYYY.json` (one per year, 2000 to next year, approaches within 10 LD) and
+  `asteroid-tracker/data/years.json` (the years and their counts within 1, 5 and 10 LD), written by
+  `asteroid-tracker/fetch_close_approaches.py` on GitHub Actions (`.github/workflows/asteroid-data.yml`): daily for
+  this year and next year and any missing year; every year when run by hand with "all".
 - **Defaults:** `date-min=now`, `date-max=+60` (days), `dist-max=0.05` (au), NEOs only, Earth, sorted by date.
 - **Useful options:** `diameter=true`, `fullname=true`, `sort` (`date`, `dist`, `-dist`, …), `limit`,
   `total-only=true` (the count only).
@@ -75,6 +91,18 @@ Checked Nov 8, 2026 against the API's documentation (version 1.5) and live answe
 - An empty answer is HTTP 200 with `count` 0. Errors: 400, 405, 500, 503.
 - Counts for the whole of 2026, as known on Nov 8, 2026: 1,053 close approaches within 10 LD and 144 within 1 LD
   (about 50 KB as the daily file); 1,558 within 0.05 au.
+
+### Planet positions (JPL approximate elements)
+
+`https://ssd.jpl.nasa.gov/planets/approx_pos.html`, Table 1 (valid 1800–2050, mean ecliptic and equinox J2000),
+checked Nov 8, 2026 and copied into `asteroid-tracker/orbit.js`: each planet's a, e, I, L, ϖ, Ω and their rates per
+century, with the procedure (elements at the date → ω = ϖ − Ω and M = L − ϖ → Kepler's equation → in-plane
+coordinates → rotation into the ecliptic). The orbit diagram therefore covers 1900–2050.
+
+Checks of `orbit.js` (Nov 8, 2026): Earth 0.98330 au from the Sun at the 2026 perihelion and 1.01670 au at aphelion;
+1998 VE31 0.1785 au from Earth on 2026-11-09 00:15 UTC (NeoWs: 0.1784980 au), with the computed closest moment within
+half an hour of NASA's. A century from the elements' epoch the two-body model drifts (1927 approach: 0.190 au
+computed against 0.151 au), which the page states as "good", "approximate" or "rough" for the date shown.
 
 ### Size from brightness (when no measured diameter is given)
 

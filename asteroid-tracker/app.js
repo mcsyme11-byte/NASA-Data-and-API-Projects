@@ -3,13 +3,13 @@
 // Two views:
 //   This week  live from NASA NeoWs (/neo/rest/v1/feed, at most 7 days per request; 1 request per week shown),
 //              through shared/nasa.js, which keeps the visitor's key in their browser and caches answers per visit.
-//   This year  from data/close-approaches.json, written daily by fetch_close_approaches.py on GitHub Actions
-//              (the JPL close-approach API blocks direct calls from web pages).
+//   By year    from data/years.json and data/YYYY.json (2000 to next year), written by fetch_close_approaches.py on
+//              GitHub Actions once a day (the JPL close-approach API blocks direct calls from web pages).
 // Charts are in charts.js; units and the size-from-brightness rule in format.js.
 
 import { nasaGet, getKey, setKey, usingDemoKey, isoDate } from '../shared/nasa.js';
 import { fmt, sizeText, dateText, sizePicture, diameterM, LD_KM, DAY_MS } from './format.js';
-import { scatter, perDay, biggest, yearChart, hideTip } from './charts.js';
+import { scatter, perDay, biggest, yearChart, perYear, hideTip } from './charts.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -26,7 +26,7 @@ const state = {
   weekError: null,
   filter: { haz: false, size: 0, dist: Infinity, day: '' },
   sortKey: 't', sortDir: 1, selected: null, showAll: false,
-  year: null, yearError: null, maxLd: 1,
+  year: null, yearError: null, maxLd: 1, index: null, yearShown: null,
 };
 
 // ---------------------------------------------------------------- tiles and notices
@@ -49,8 +49,8 @@ function showKeyState() {
   $('#keyPill').className = 'pill ' + (demo ? 'warn' : 'good');
   $('#keyPill').textContent = demo ? 'Demo key' : 'Your key';
   $('#keyNote').innerHTML = demo
-    ? 'This page is using NASA\'s shared demo key: 30 requests an hour and 50 a day for your connection. A free key from <a href="https://api.nasa.gov/" target="_blank" rel="noopener">api.nasa.gov</a> allows 1,000 an hour. Each week shown costs 1 request; the "This year" view costs none.'
-    : 'Your own key is saved in this browser only (never sent anywhere but NASA): 1,000 requests an hour. Each week shown costs 1 request. Remove it to go back to the demo key.';
+    ? 'This page is using NASA\'s shared demo key: 30 requests an hour and 50 a day for your connection. A free key from <a href="https://api.nasa.gov/" target="_blank" rel="noopener">api.nasa.gov</a> allows 1,000 an hour. Each week shown costs 1 request, and so does each asteroid\'s page; the "By year" view costs none.'
+    : 'Your own key is saved in this browser only (never sent anywhere but NASA): 1,000 requests an hour. Each week shown costs 1 request, and so does each asteroid\'s page. Remove it to go back to the demo key.';
   $('#keyRemove').disabled = demo;
 }
 function toggleKeyCard(open = $('#keyCard').hidden) {
@@ -205,7 +205,8 @@ function detailHtml(o) {
     { label: 'Closest', value: dateText(o.t), note: new Date(o.t).toISOString().slice(11, 16) + ' UTC' },
   ];
   return `<div class="dwrap"><div class="tiles">${t.map((x) => `<div class="tile"><div class="label">${x.label}</div><div class="value">${x.value}</div><div class="note">${x.note}</div></div>`).join('')}</div>
-    <p class="note">Sizes are estimates from how bright the object looks: a dark object is larger than a shiny one of the same brightness, so NASA gives a range.${o.url ? ` <a href="${esc(o.url)}" target="_blank" rel="noopener">Full orbit at JPL ›</a>` : ''}</p></div>`;
+    <p class="note">Sizes are estimates from how bright the object looks: a dark object is larger than a shiny one of the same brightness, so NASA gives a range.</p>
+    <p class="dlinks"><a class="btn" href="object.html?id=${encodeURIComponent(o.id)}&amp;t=${o.t}">Open this asteroid's page ›</a><span class="note">its orbit around the Sun and every pass by Earth</span></p></div>`;
 }
 
 // week controls
@@ -254,31 +255,53 @@ $('#moreBtn').addEventListener('click', () => { state.showAll = !state.showAll; 
 // buttons inside notices and empty states
 document.addEventListener('click', (e) => {
   const act = e.target.closest('[data-act]')?.dataset.act;
-  if (act === 'retry') state.view === 'year' ? loadYear() : loadWeek();
+  if (act === 'retry') state.view === 'year' ? loadYear(state.yearShown) : loadWeek();
   if (act === 'key') toggleKeyCard(true);
   if (act === 'clear') clearFilters();
 });
 
-// ---------------------------------------------------------------- this year
-async function loadYear() {
+// ---------------------------------------------------------------- by year
+// data/years.json lists the years with their counts; data/YYYY.json holds one year's approaches within 10 LD.
+const yearCache = new Map();
+const thisYearNow = () => new Date().getUTCFullYear();
+
+async function loadIndex() {
+  if (state.index) return state.index;
+  const res = await fetch('data/years.json', { cache: 'no-cache' });
+  if (!res.ok) throw new Error('status ' + res.status);
+  state.index = await res.json();
+  const sel = $('#yearSel');
+  sel.innerHTML = state.index.years.map((y) => `<option value="${y.year}">${y.year}</option>`).join('');
+  return state.index;
+}
+
+function toYearObject([name, t, ld, H, dkm, des]) {
+  const o = { name, t, ld, H, des };
+  if (dkm) { o.dmin = o.dmax = dkm * 1000; o.measured = true; }
+  else if (H !== null && H !== undefined) { o.dmin = diameterM(H, 0.25); o.dmax = diameterM(H, 0.05); }
+  else { o.dmin = o.dmax = NaN; }
+  return o;
+}
+
+async function loadYear(year = state.yearShown || thisYearNow()) {
   state.yearError = null;
+  state.yearShown = year;
   notice('#yearNotice', '');
-  loadingTiles('#yearTiles', ['Within 1 LD', 'Closest of the year', 'Still to come', 'Next one']);
+  loadingTiles('#yearTiles', ['Close approaches', 'Closest', '…', '…']);
   loadingChart('#cYear');
   try {
-    const res = await fetch('data/close-approaches.json', { cache: 'no-cache' });
-    if (!res.ok) throw new Error('status ' + res.status);
-    const data = await res.json();
-    state.year = {
-      year: data.year, updated: data.updated,
-      rows: data.rows.map(([name, t, ld, H, dkm]) => {
-        const o = { name, t, ld, H };
-        if (dkm) { o.dmin = o.dmax = dkm * 1000; o.measured = true; }
-        else if (H !== null) { o.dmin = diameterM(H, 0.25); o.dmax = diameterM(H, 0.05); }
-        else { o.dmin = o.dmax = NaN; }
-        return o;
-      }),
-    };
+    const index = await loadIndex();
+    const years = index.years.map((y) => y.year);
+    if (!years.includes(year)) year = state.yearShown = years.includes(thisYearNow()) ? thisYearNow() : years[years.length - 1];
+    $('#yearSel').value = year;
+    if (!yearCache.has(year)) {
+      const res = await fetch(`data/${year}.json`, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('status ' + res.status);
+      const data = await res.json();
+      yearCache.set(year, { year: data.year, updated: data.updated, rows: data.rows.map(toYearObject) });
+    }
+    if (year !== state.yearShown) return;   // the user picked another year meanwhile
+    state.year = yearCache.get(year);
   } catch {
     state.yearError = true;
   }
@@ -288,68 +311,120 @@ async function loadYear() {
 function renderYear() {
   $('#yearTiles').classList.remove('loading');
   if (state.yearError || !state.year) {
-    notice('#yearNotice', 'The year\'s close-approach data could not be loaded. Try again in a moment.', '<button class="btn ghost" data-act="retry">Try again</button>');
-    tiles('#yearTiles', [{ label: 'This year', value: '—', note: 'not loaded' }]);
+    notice('#yearNotice', 'The close-approach data could not be loaded. Try again in a moment.', '<button class="btn ghost" data-act="retry">Try again</button>');
+    tiles('#yearTiles', [{ label: 'Close approaches', value: '—', note: 'not loaded' }]);
     loadingChart('#cYear', 'No data.');
     $('#yearTable tbody').innerHTML = $('#nextTable tbody').innerHTML = '';
     return;
   }
-  const { year, updated, rows } = state.year, now = Date.now(), max = state.maxLd;
+  const { year, updated, rows } = state.year, now = Date.now(), max = state.maxLd, current = thisYearNow();
+  const kind = year < current ? 'past' : year > current ? 'future' : 'current';
   const list = rows.filter((o) => o.ld <= max);
   const closest = [...list].sort((a, b) => a.ld - b.ld);
   const upcoming = list.filter((o) => o.t >= now).sort((a, b) => a.t - b.t);
+  const biggest = list.filter((o) => o.dmax > 0).sort((a, b) => b.dmax - a.dmax);
   const within = max === 1 ? 'closer than the Moon' : `within ${max} times the Moon's distance`;
-  tiles('#yearTiles', [
-    { label: `Within ${max} LD in ${year}`, value: fmt(list.length), note: within },
-    closest[0]
-      ? { label: 'Closest of the year', value: fmt(closest[0].ld * LD_KM) + ' <small>km</small>', note: esc(closest[0].name) + ' · ' + dateText(closest[0].t), sub: 1 }
-      : { label: 'Closest of the year', value: '—', note: 'none yet' },
-    { label: 'Still to come', value: fmt(upcoming.length), note: `known so far, between today and Dec 31` },
-    upcoming[0]
-      ? { label: 'Next one', value: dateText(upcoming[0].t), note: esc(upcoming[0].name) + ' · ' + fmt(upcoming[0].ld, 2) + ' LD', sub: 1 }
-      : { label: 'Next one', value: '—', note: 'none known yet this year' },
-  ]);
+
+  const tClosest = closest[0]
+    ? { label: kind === 'future' ? 'Closest expected' : 'Closest of the year', value: fmt(closest[0].ld * LD_KM) + ' <small>km</small>', note: esc(closest[0].name) + ' · ' + dateText(closest[0].t), sub: 1 }
+    : { label: 'Closest of the year', value: '—', note: 'none known' };
+  const tBiggest = biggest[0]
+    ? { label: 'Biggest', value: sizeText(biggest[0]), note: esc(biggest[0].name) + ' · ' + dateText(biggest[0].t), sub: 1 }
+    : { label: 'Biggest', value: '—', note: 'none known' };
+  const tNext = upcoming[0]
+    ? { label: 'Next one', value: dateText(upcoming[0].t), note: esc(upcoming[0].name) + ' · ' + fmt(upcoming[0].ld, 2) + ' LD', sub: 1 }
+    : { label: 'Next one', value: '—', note: 'none known yet' };
+  const first = [
+    { label: `Within ${max} LD in ${year}`, value: fmt(list.length), note: kind === 'future' ? within + ' · known so far' : within },
+    tClosest,
+  ];
+  if (kind === 'current') tiles('#yearTiles', [...first, { label: 'Still to come', value: fmt(upcoming.length), note: 'known so far, between today and Dec 31' }, tNext]);
+  else if (kind === 'future') tiles('#yearTiles', [...first, tBiggest, tNext]);
+  else {
+    const months = Array(12).fill(0); list.forEach((o) => months[new Date(o.t).getUTCMonth()]++);
+    const bm = months.indexOf(Math.max(...months));
+    tiles('#yearTiles', [...first, tBiggest, list.length
+      ? { label: 'Busiest month', value: new Date(Date.UTC(year, bm, 1)).toLocaleDateString('en-CA', { month: 'long', timeZone: 'UTC' }), note: `${months[bm]} close approach${months[bm] === 1 ? '' : 'es'}` }
+      : { label: 'Busiest month', value: '—', note: 'none known' }]);
+  }
+
+  $('#yearChartTitle').textContent = kind === 'current' ? 'Every close approach this year' : `Every close approach in ${year}`;
   yearChart($('#cYear'), list, { year, now, maxLd: max });
   $('#yearUpdated').textContent = updated ? `Last updated ${updated.slice(0, 10)}, ${updated.slice(11, 16)} UTC.` : '';
-  smallTable('#yearTable', closest.slice(0, 6), 'None yet.');
-  smallTable('#nextTable', upcoming.slice(0, 6), 'None known yet. New objects are found every week.');
+  $('#leftTitle').textContent = kind === 'future' ? 'Closest expected' : 'Closest of the year';
+  smallTable('#yearTable', closest.slice(0, 6), 'None known.');
+  if (kind === 'past') {
+    $('#rightTitle').textContent = 'Biggest of the year';
+    smallTable('#nextTable', biggest.slice(0, 6), 'None known.');
+  } else {
+    $('#rightTitle').textContent = 'Coming up';
+    smallTable('#nextTable', upcoming.slice(0, 6), 'None known yet. New objects are found every week.');
+  }
+  $('#thisYear').setAttribute('aria-pressed', year === current);
+  const yrs = state.index.years.map((y) => y.year);
+  $('#prevYear').disabled = year <= yrs[0];
+  $('#nextYear').disabled = year >= yrs[yrs.length - 1];
+  $('#perYearAside').textContent = `within ${max} LD`;
+  perYear($('#cYears'), state.index.years, { maxLd: max, selected: year, current, onPick: (y) => goYear(y) });
+}
+
+// A link for an object in the year tables: the asteroid's own page when NASA's id can be worked out (numbered
+// asteroids: NeoWs id = 2,000,000 + number), otherwise JPL's page for the designation.
+function objectLink(o) {
+  const num = /^\s*(\d+)\s/.exec(o.name);
+  if (num) return `object.html?id=${2000000 + Number(num[1])}&t=${o.t}`;
+  return `https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=${encodeURIComponent(o.des || o.name.replace(/[()]/g, ''))}`;
 }
 
 function smallTable(sel, list, empty) {
   $(sel + ' tbody').innerHTML = list.length
-    ? list.map((o) => `<tr class="static"><td data-label="Name">${esc(o.name)}</td><td data-label="Date">${dateText(o.t)}</td><td data-label="Size, est." class="num"><span>${sizeText(o)}</span></td><td data-label="Distance" class="num"><span>${fmt(o.ld, 2)} LD<span class="s">${fmt(o.ld * LD_KM)} km</span></span></td></tr>`).join('')
+    ? list.map((o) => {
+      const href = objectLink(o), ext = href.startsWith('http');
+      return `<tr class="static"><td data-label="Name"><a href="${esc(href)}"${ext ? ' target="_blank" rel="noopener"' : ''}>${esc(o.name)}</a></td><td data-label="Date">${dateText(o.t)}</td><td data-label="Size, est." class="num"><span>${sizeText(o)}</span></td><td data-label="Distance" class="num"><span>${fmt(o.ld, 2)} LD<span class="s">${fmt(o.ld * LD_KM)} km</span></span></td></tr>`;
+    }).join('')
     : `<tr class="msg"><td colspan="4"><div class="state small">${empty}</div></td></tr>`;
 }
 
+function goYear(y) {
+  history.replaceState(null, '', y === thisYearNow() ? '#year' : `#year-${y}`);
+  loadYear(y);
+}
 $$('[data-ld]').forEach((b) => b.addEventListener('click', () => {
   state.maxLd = Number(b.dataset.ld);
   $$('[data-ld]').forEach((x) => x.setAttribute('aria-pressed', x === b));
   renderYear();
 }));
+$('#yearSel').addEventListener('change', (e) => goYear(Number(e.target.value)));
+$('#prevYear').addEventListener('click', () => goYear(state.yearShown - 1));
+$('#nextYear').addEventListener('click', () => goYear(state.yearShown + 1));
+$('#thisYear').addEventListener('click', () => goYear(thisYearNow()));
 
-// ---------------------------------------------------------------- views (#year opens the year view)
-function setView(v) {
+// ---------------------------------------------------------------- views (#year, or #year-2019 for a past year)
+const hashYear = () => { const m = /^#year(?:-(\d{4}))?$/.exec(location.hash); return m ? Number(m[1] || thisYearNow()) : null; };
+function setView(v, year) {
   state.view = v;
   $$('[data-view]').forEach((x) => x.setAttribute('aria-pressed', x.dataset.view === v));
   $('#view-week').hidden = v !== 'week';
   $('#view-year').hidden = v !== 'year';
   hideTip();
-  if (v === 'year') { if (!state.year && !state.yearError) loadYear(); else renderYear(); }
+  if (v === 'year') { if (year || !state.year) loadYear(year || state.yearShown); else renderYear(); }
   else if (state.week) renderFiltered();
 }
 $$('[data-view]').forEach((b) => b.addEventListener('click', () => {
-  history.replaceState(null, '', b.dataset.view === 'year' ? '#year' : location.pathname);
-  setView(b.dataset.view);
+  const v = b.dataset.view;
+  history.replaceState(null, '', v === 'year' ? (state.yearShown && state.yearShown !== thisYearNow() ? `#year-${state.yearShown}` : '#year') : location.pathname);
+  setView(v);
 }));
-addEventListener('hashchange', () => setView(location.hash === '#year' ? 'year' : 'week'));
+addEventListener('hashchange', () => { const y = hashYear(); setView(y ? 'year' : 'week', y); });
 
 let resizeTimer;
 addEventListener('resize', () => {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => { if (state.view === 'week') renderFiltered(); else if (state.year) renderYear(); }, 150);
+  resizeTimer = setTimeout(() => { if (state.view === 'week') renderFiltered(); else if (state.year || state.yearError) renderYear(); }, 150);
 });
 
 // ---------------------------------------------------------------- start
 showKeyState();
+if (location.hash === '#key') toggleKeyCard(true);
 loadWeek();
-setView(location.hash === '#year' ? 'year' : 'week');
+setView(hashYear() ? 'year' : 'week', hashYear());

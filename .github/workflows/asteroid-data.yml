@@ -1,9 +1,10 @@
 # NASA Data Projects · Asteroid Tracker daily data · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
-# Once a day, fetches the year's close approaches from the NASA/JPL close-approach API
-# (asteroid-tracker/fetch_close_approaches.py) and commits asteroid-tracker/data/close-approaches.json when it has
-# changed. GitHub Pages then republishes the site. The JPL API blocks direct calls from web pages (no CORS), which is
-# why the data is fetched here. Can also be run by hand: Actions › Asteroid data › Run workflow.
+# Once a day, refreshes the Asteroid Tracker's close-approach files from the NASA/JPL close-approach API
+# (asteroid-tracker/fetch_close_approaches.py): this year, next year, and any missing year since 2000, plus the
+# index data/years.json. Commits the files when they have changed; GitHub Pages then republishes the site.
+# The JPL API blocks direct calls from web pages (no CORS), which is why the data is fetched here.
+# Run by hand: Actions › Asteroid data › Run workflow ("all" refreshes every year).
 
 name: Asteroid data
 
@@ -11,6 +12,11 @@ on:
   schedule:
     - cron: '17 6 * * *'   # 06:17 UTC daily
   workflow_dispatch:
+    inputs:
+      all:
+        description: 'Refresh every year, not only this year, next year and missing years'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -22,19 +28,19 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch the year's close approaches
-        run: python3 asteroid-tracker/fetch_close_approaches.py
+      - name: Fetch close approaches
+        run: python3 asteroid-tracker/fetch_close_approaches.py ${{ inputs.all && '--all' || '' }}
       - name: Commit if changed
         run: |
-          if git diff --quiet -- asteroid-tracker/data/ && [ -z "$(git status --porcelain asteroid-tracker/data/)" ]; then
+          git add -A asteroid-tracker/data/
+          if git diff --cached --quiet; then
             echo "No change in the data."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add asteroid-tracker/data/close-approaches.json
           git commit -m "Asteroid data: daily close-approach update"
           git push

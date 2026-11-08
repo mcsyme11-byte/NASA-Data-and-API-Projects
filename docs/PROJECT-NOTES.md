@@ -18,6 +18,12 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
 - **Decided Nov 8, 2026 (Asteroid Tracker):** the JPL close-approach API blocks calls from web pages, so GitHub
   Actions fetches the year's data once a day and commits `asteroid-tracker/data/close-approaches.json` when it has
   changed (one automatic commit a day at most, "Asteroid data: daily close-approach update").
+- **Decided Nov 8, 2026 (Asteroid Tracker):** after version 1, three additions: a page for each asteroid (every
+  approach, from `neo/{id}`), past years in the year view (2000 to next year) and an orbit diagram, with the orbit
+  diagram to be done with particular care. The developer allowed building these without separate mock-ups.
+- **Decided Nov 8, 2026 (Asteroid Tracker):** the orbit diagram computes positions itself (two-body Kepler orbits from
+  NASA's elements; planets from JPL's approximate elements), so it works offline from the one NeoWs answer. Its
+  limits are shown on the page; NASA's official close-approach figures are shown beside it.
 
 ## How it's built (starting plan; each project's chat confirms it)
 
@@ -62,7 +68,8 @@ One-time setting, done on github.com: the repository's **Settings › Pages › 
 Run it by hand: `python3 dev/check_wording.py`.
 
 `.github/workflows/asteroid-data.yml` runs once a day (06:17 UTC) and on demand (Actions › Asteroid data › Run
-workflow): it refreshes the Asteroid Tracker's year of close approaches from JPL and commits the file if it changed.
+workflow, with "all" to refresh every year): it refreshes the Asteroid Tracker's close-approach files from JPL and
+commits them if they changed.
 
 ## Writing style
 

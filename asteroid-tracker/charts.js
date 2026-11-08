@@ -33,6 +33,8 @@ function hoverTip(node, html) {
   node.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') tip().hidden = true; });
 }
 export function hideTip() { const t = tip(); if (t) t.hidden = true; }
+export const tipApi = { show(html, e) { const t = tip(); t.innerHTML = html; t.hidden = false; place(e); }, hide: hideTip };
+export { hoverTip };
 addEventListener('scroll', hideTip, { passive: true });
 document.addEventListener('pointerdown', (e) => { if (!e.target.closest('.hit')) hideTip(); });
 
@@ -168,5 +170,31 @@ export function yearChart(svg, list, { year, now, maxLd }) {
     const r = o.dmax > 0 ? Math.max(2, (2.5 + Math.log10(Math.sqrt(o.dmin * o.dmax)) * 1.6) * scale) : 2.5, past = o.t < now;
     const c = el('circle', { cx: X(o.t), cy: Y(o.ld), r, fill: past ? BRASS : 'transparent', stroke: BRASS, 'stroke-width': 1.5, opacity: past ? 0.7 : 1 }, svg);
     hoverTip(c, tipFor(o));
+  });
+}
+
+// ---- 5. close approaches found, year by year (bars; tap one to open that year) ----
+export function perYear(svg, years, { maxLd, selected, current, onPick }) {
+  const W = frameWidth(svg), H = 230, m = { l: 44, r: 12, t: 22, b: 34 };
+  const g = start(svg, W, H);
+  const counts = years.map((y) => y.counts[String(maxLd)] || 0);
+  const raw = Math.max(4, ...counts), step = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000].find((s) => raw / s <= 5) || 2000;
+  const top = Math.ceil(raw / step) * step;
+  const bw = (W - m.l - m.r) / years.length, Y = (v) => H - m.b - v / top * (H - m.t - m.b);
+  for (let v = 0; v <= top; v += step) { el('line', { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v) }, g); text(svg, { x: m.l - 8, y: Y(v) + 4, 'text-anchor': 'end' }, fmt(v)); }
+  const every = bw >= 34 ? 1 : bw >= 16 ? 2 : 5;
+  years.forEach((y, i) => {
+    const n = counts[i], x = m.l + i * bw, w = Math.max(2, bw * 0.7), cx = x + bw / 2, grp = el('g', {}, svg);
+    const sel = y.year === selected, fut = y.year > current;
+    el('rect', { x, y: m.t, width: bw, height: H - m.t - m.b, fill: 'transparent' }, grp);
+    el('rect', { x: cx - w / 2, y: Y(n), width: w, height: Math.max(0, Y(0) - Y(n)), rx: 1.5,
+      fill: fut ? 'transparent' : sel ? BRIGHT : BRASS, stroke: sel ? BRIGHT : BRASS, 'stroke-width': fut ? 1.5 : 0, 'stroke-dasharray': fut ? '3 2' : '',
+      opacity: sel || fut ? 1 : 0.6 }, grp);
+    if (sel) text(svg, { x: cx, y: Y(n) - 6, 'text-anchor': 'middle', fill: INK }, fmt(n));
+    const near = Math.abs(y.year - selected) <= (every > 1 ? 2 : 0);
+    if (sel) text(svg, { x: cx, y: H - m.b + 16, 'text-anchor': 'middle', fill: BRIGHT }, y.year);
+    else if (y.year % every === 0 && !near) text(svg, { x: cx, y: H - m.b + 16, 'text-anchor': 'middle' }, every > 1 ? "'" + String(y.year).slice(2) : y.year);
+    hoverTip(grp, `<b>${y.year}</b><br>${fmt(n)} close approach${n === 1 ? '' : 'es'} within ${maxLd} LD${fut ? '<br>predicted so far' : ''}`);
+    grp.addEventListener('click', () => onPick(y.year));
   });
 }

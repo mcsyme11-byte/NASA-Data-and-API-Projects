@@ -12,10 +12,13 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 - [ ] **Developer testing**, at the developer's own pace: the live page with real data on a computer and a phone;
   both views, the filters, sorting, row details, key settings (save and remove the personal key).
+- [ ] **Developer testing of the additions:** an asteroid's page (open one from a row's details), the orbit
+  diagram (Top / Tilted / Side, drag to turn, Play, the slider, Near Earth, tapping an approach), and past years
+  in the "By year" view.
 - [ ] Confirm the first daily run of the "Asteroid data" workflow the following morning (a new commit, or "No
   change" in its log).
-- [ ] Ideas for later (not yet decided): a page for one object (all its approaches, from `neo/{id}`); past years in
-  the "This year" view; an orbit diagram.
+- [ ] Ideas (not decided): the asteroid's page reachable from every row of the "By year" tables (needs NASA's id
+  for unnumbered objects, which JPL's close-approach data does not give); a short animation of a famous close pass.
 
 ## 2. Image Explorer (second)
 

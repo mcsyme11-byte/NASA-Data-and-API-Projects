@@ -24,3 +24,10 @@ How NASA Data Projects came about, in order.
   NeoWs's rate-limit headers cannot be read by one. The year view therefore reads a file refreshed daily by GitHub
   Actions, and the key settings show the key's limits instead of the requests left.
 - The page went live on GitHub Pages with the week view, filters, three graphs, the year view and key settings.
+
+## November 8, 2026 — Asteroid Tracker: each asteroid's page, the orbit diagram, past years
+
+- After version 1 the charts gained "How to read this" notes, and three additions were built the same evening: a
+  page for each asteroid, past years in the year view, and an orbit diagram, the one singled out for particular care.
+- The orbit maths was checked before the diagram was drawn: Earth's distance from the Sun at perihelion and
+  aphelion, and an asteroid's distance from Earth on the day of a close approach, matched NASA's figures.
