@@ -2,7 +2,7 @@
 # NASA Data Projects · the wording and secrets check · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Checks the repository against CLAUDE.md's rules: neutral wording ("the developer", never a first name on its own),
-# no chat narrating its own work, no personal paths or user names, and no NASA API key in any file (the repository is
+# no chat narrating its own work, no chat tone, no personal paths or user names, and no NASA API key in any file (the repository is
 # public). Run by GitHub after every push (.github/workflows/checks.yml) and by hand:
 #   python3 dev/check_wording.py        (exit 1 lists every problem)
 # Left out on purpose: docs/CLAUDE-PROJECT-SETUP.md (the Claude project's instructions, kept word for word).
@@ -22,6 +22,9 @@ RULES = [
     ('chat narration', re.compile(r'\bClaude\s+(copies|copied|runs|ran|installs|installed|will|wrote|writes|did|does|'
                                   r'checks|checked|built|builds|made|makes|moved|fixed|added|asks|asked|reads|read|'
                                   r'says|said|thinks|tried)\b'), {'CLAUDE.md'}),
+    # the tone of an AI assistant talking to a person (decided Nov 8, 2026: documentation is professional)
+    ('chat tone', re.compile(r"(?i)\b(I'll|I've|I'm|we'll|we've|let's|happy to help|feel free|great question|"
+                             r"hope this helps|let me know|sounds good)\b|^\s*(hi|hey|hello)\b"), {'CLAUDE.md'}),
     # personal paths and user names
     ('personal path', re.compile(r'(?i)\bmcsym\b|C:\\Users\\(?!Pilot\\|User\\)|/Users/(?!user/)|/home/(?!claude/|user/)'), set()),
     # a NASA API key (a long letters-and-digits value given to api_key / NASA_API_KEY); DEMO_KEY is fine

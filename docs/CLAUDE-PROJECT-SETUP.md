@@ -39,6 +39,8 @@ Standing rules:
 - Look: the Flight Deck Suite's "old money" style (docs/DESIGN.md). New pages
   start as mock-ups Malcolm approves.
 - Keep every pending to-do in docs/ROADMAP.md; Malcolm tests at his own pace.
+- All documentation in the repo is written in a professional tone, as project
+  documentation, never in the tone of an AI talking to a person.
 - Explain with examples and clear, concise, correct notes; when teaching a
   method, give a clear set of rules for which formula to use when.
 ```

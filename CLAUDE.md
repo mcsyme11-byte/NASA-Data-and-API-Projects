@@ -43,6 +43,11 @@ inside its own folder.
 
 ## Writing style
 
+**Rule (decided Nov 8, 2026): all documentation is written in a professional tone, as project documentation, never
+in the tone of an AI assistant talking to a person.** No greetings, no "I'll", "we'll", "let's", "happy to", "great
+question" or exclamation marks; no addressing the developer; no narrating what a chat did. State facts, decisions,
+steps and limits plainly.
+
 Documents, commit messages and code comments are neutral, professional project documentation, not conversation:
 "the developer" for Malcolm Syme (his full name and email stay in every credit line), "the user" or "you" in text for
 people using the pages. Record decisions as dated facts ("Decided Nov 8, 2026: …"), and describe work by what was

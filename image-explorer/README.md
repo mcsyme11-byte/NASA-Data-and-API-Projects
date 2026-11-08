@@ -12,7 +12,7 @@ search, filter and explore those images by details like date, location and missi
 | **Earth, day by day** | NASA GIBS (Global Imagery Browse Services) | Pick a date and a layer (true colour, fires, snow, night lights…), then pan and zoom the whole planet. Slide through time to watch a storm move. |
 | **NASA's picture library** | NASA Image and Video Library (`images-api.nasa.gov`) | Search by keyword, mission (Apollo, Hubble, Webb…), centre and year; open a picture with its description and date. |
 
-Why both: GIBS is satellite imagery **of Earth**, arranged by date and layer, but it has no "mission" to filter by.
+Reason for using both sources: GIBS is satellite imagery **of Earth**, arranged by date and layer, but it has no "mission" to filter by.
 The Image Library has the mission photos. Together they cover date, location and mission.
 
 ## Data notes

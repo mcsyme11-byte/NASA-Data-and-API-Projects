@@ -33,7 +33,7 @@ NASA-Data-and-API-Projects/
 
 ## Getting started (developers)
 
-1. Get a free NASA API key at **api.nasa.gov** (a minute, by email).
+1. Get a free NASA API key at **api.nasa.gov** (issued by email).
 2. For the Python analysis: copy `.env.example` to `.env` and paste the key in.
 3. To try the pages on your own computer, serve the folder (modules don't load from `file://`):
    ```

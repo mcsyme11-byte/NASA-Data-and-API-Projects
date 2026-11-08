@@ -58,6 +58,10 @@ Run it by hand: `python3 dev/check_wording.py`.
 
 ## Writing style
 
+**Decided Nov 8, 2026:** all documentation is written in a professional tone, as project documentation, never in the
+tone of an AI assistant talking to a person (no greetings, first-person phrases, sign-offs or exclamation marks;
+no addressing the developer; no narrating what a chat did). `dev/check_wording.py` checks for the common phrases.
+
 Documents, commit messages and code comments are neutral, professional project documentation. The developer is
 "the developer" (his name and email stay in every credit line); people using the pages are "the user" or "you" in
 user-facing text. Decisions are recorded as dated facts ("Decided Nov 8, 2026: …").

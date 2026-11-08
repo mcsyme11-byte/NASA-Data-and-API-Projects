@@ -1,5 +1,12 @@
 # Change log
 
+## November 8, 2026 — documentation tone
+
+- **New rule:** all documentation is written in a professional tone, as project documentation, never in the tone of an
+  AI assistant talking to a person (CLAUDE.md, PROJECT-NOTES, the Claude project's instructions).
+- The documents were reviewed against it and the remaining informal lines reworded.
+- `dev/check_wording.py` now also flags common chat phrases (first-person promises, greetings and sign-offs).
+
 ## November 8, 2026 — the site is live
 
 - **GitHub Pages switched on:** the home page is at https://mcsyme11-byte.github.io/NASA-Data-and-API-Projects/

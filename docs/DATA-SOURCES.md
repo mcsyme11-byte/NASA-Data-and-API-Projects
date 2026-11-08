@@ -48,8 +48,8 @@ https://api.nasa.gov/neo/rest/v1/feed?start_date=2026-11-01&end_date=2026-11-07&
 ### JPL Close-Approach Data API
 
 `https://ssd-api.jpl.nasa.gov/cad.api` (no key). Close approaches over any date range, past and future, filtered by
-distance (`dist-max`, for example `10LD`) and date (`date-min`, `date-max`). Good for "the closest approaches of
-the year" and history beyond NeoWs's 7-day window.
+distance (`dist-max`, for example `10LD`) and date (`date-min`, `date-max`). Suited to "the closest approaches of
+the year" and to history beyond NeoWs's 7-day window.
 
 ## Mars Data
 
@@ -82,7 +82,7 @@ the year" and history beyond NeoWs's 7-day window.
   For a normal web map use `epsg3857` with a `GoogleMapsCompatible_LevelN` tile set (N is the layer's deepest zoom).
 - **Layer list and dates:** the GetCapabilities document,
   `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/wmts.cgi?SERVICE=WMTS&REQUEST=GetCapabilities`.
-- **Watch out:** each layer has its own image format, deepest zoom and date range; asking outside them gives blank
+- **Limits:** each layer has its own image format, deepest zoom and date range; asking outside them gives blank
   tiles or errors.
 - **Required acknowledgement** (NASA asks every user of GIBS to show it):
   > We acknowledge the use of imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of
