@@ -187,7 +187,7 @@ input:focus, select:focus { border-color: var(--brass); outline: none; }
 .sitelinks .ext { color: var(--brass-dim); letter-spacing: 0; margin-left: 2px; }
 
 /* ---- reading pages (About, Privacy, Terms, Credits) ---- */
-.prose { max-width: 72ch; }
+.prose { max-width: none; }
 .prose p, .prose li { color: var(--ink2); }
 .prose p { margin: 0 0 14px; }
 .prose ul { margin: 0 0 14px; padding-left: 20px; }
@@ -197,8 +197,6 @@ input:focus, select:focus { border-color: var(--brass); outline: none; }
 .prose h2 { margin-top: 34px; }
 .prose a { border-bottom: 1px solid var(--brass-dim); }
 .prose a:hover { border-bottom-color: var(--brass); }
-.prose-wide { max-width: 1100px; }
-.prose-wide > p, .prose-wide > .summary { max-width: 72ch; }
 .tablewrap { overflow-x: auto; margin: 0 0 16px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--card); }
 table.credits { width: 100%; border-collapse: collapse; font-size: 14.5px; table-layout: fixed; }
 table.credits th { text-align: left; font-weight: 400; font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em;
@@ -207,6 +205,15 @@ table.credits td { padding: 12px 16px; border-bottom: 1px solid var(--line); ver
 table.credits tr:last-child td { border-bottom: 0; }
 table.credits th:nth-child(1) { width: 42%; } table.credits th:nth-child(2) { width: 30%; }
 .ack { font-style: italic; color: var(--muted); font-size: 14px; }
+
+/* back to the previous page: a clear button above the page heading (wired by shared/footer.js) */
+.backlink { display: inline-flex; align-items: center; min-height: 40px; margin-top: 18px; padding: 0 16px 0 12px;
+  border: 1px solid var(--brass-dim); border-radius: 999px; color: var(--brass); font-size: 15px; text-decoration: none; }
+.backlink:hover { border-color: var(--brass); color: var(--brass-bright); }
+.backlink:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+.backlink[hidden] { display: none; }
+.backlink:not([hidden]) + .phead { padding-top: 18px; }
+.backlink:not([hidden]) + .contact { padding-top: 28px; }
 @media (max-width: 760px) {
   table.credits, table.credits tbody, table.credits tr, table.credits td { display: block; width: auto; }
   table.credits { table-layout: auto; }

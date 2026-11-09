@@ -3,6 +3,7 @@
 // Adds one row of links (About, Privacy, Terms, Credits, Contact, the licence and the source code) to the top of the page's
 // <footer class="footer">, so the links are written in one place for every page. Each page loads it with
 //   <script type="module" src="<path to>/shared/footer.js"></script>
+// It also sets up the "‹ Back" button on pages that have one (see wireBack below).
 // Links are worked out from this file's own address, so they are right at any folder depth.
 
 const REPO = 'https://github.com/mcsyme11-byte/NASA-Data-and-API-Projects';
@@ -44,5 +45,31 @@ function addLinks() {
   footer.prepend(nav);
 }
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addLinks);
-else addLinks();
+// A "‹ Back" button (<a class="backlink" id="back" href="<home>">‹ Home</a>) above the heading. When the previous page in
+// this tab is a page of this site, it is named for that page and uses the browser's own Back, so that page returns
+// where it was left; otherwise it keeps its fallback, the home page.
+const NAMES = [
+  [/\/asteroid-tracker\/map\.html$/, 'the map'], [/\/asteroid-tracker\/object\.html$/, 'the asteroid'],
+  [/\/asteroid-tracker\/(index\.html)?$/, 'the Asteroid Tracker'], [/\/image-explorer\//, 'the Image Explorer'],
+  [/\/mars-data\//, 'Mars Data'], [/\/about\//, 'About'], [/\/privacy\//, 'Privacy'], [/\/terms\//, 'Terms'],
+  [/\/credits\//, 'Credits'], [/\/contact\//, 'Contact'],
+];
+function wireBack() {
+  const el = document.getElementById('back');
+  if (!el || !el.classList.contains('backlink')) return;
+  let ref = null;
+  try { ref = new URL(document.referrer); } catch { /* no referrer */ }
+  if (!ref || ref.origin !== location.origin || ref.pathname === location.pathname) return;
+  const p = ref.pathname;
+  const hit = NAMES.find(([rx]) => rx.test(p));
+  const name = hit ? hit[1] : (p === root.pathname || p === root.pathname + 'index.html' ? 'the home page' : null);
+  el.textContent = '‹ ' + (name ? 'Back to ' + name : 'Back');
+  el.href = ref.href;
+  el.addEventListener('click', (e) => {
+    if (history.length > 1 && !e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) { e.preventDefault(); history.back(); }
+  });
+}
+
+function start() { addLinks(); wireBack(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+else start();

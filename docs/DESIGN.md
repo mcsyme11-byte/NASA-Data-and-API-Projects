@@ -78,7 +78,8 @@ The classes in `shared/theme.css`:
 | Chart / map / image frame | `.frame` | Deep navy with a hairline |
 | Footer | `.footer`, `.credit` | Site links (added by `shared/footer.js`), data acknowledgements, then the credit |
 | Site links | `.sitelinks` | About · Privacy · Terms · Credits · Contact · Licence (MIT) ↗ · Source code ↗; every page loads `shared/footer.js` |
-| Reading page | `.prose`, `.summary`, `.updated`, `table.credits` | About, Privacy, Terms and Credits: 72-character lines, a brass-ruled summary, the date of the last update |
+| Reading page | `.prose`, `.summary`, `.updated`, `table.credits` | About, Privacy, Terms and Credits: the full content width (decided Nov 9, 2026), a brass-ruled summary, the date of the last update |
+| Back button | `.backlink#back` | "‹ Back to …" above the heading, named for the previous page and using the browser's Back; "‹ Home" when the page was opened directly (wired by `shared/footer.js`) |
 
 ## 6. Charts
 

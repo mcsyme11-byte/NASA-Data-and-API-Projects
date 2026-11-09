@@ -1,5 +1,12 @@
 # Change log
 
+## November 9, 2026 — site pages: full width and Back buttons
+
+- **Full width:** About, Privacy, Terms and Credits now use the page's full content width, like the other pages.
+- **Back buttons:** About, Privacy, Terms, Credits, Contact and the Mars Data page have a "‹ Back" button above the
+  heading. It is named for the page it returns to ("‹ Back to the Asteroid Tracker") and returns there the way the
+  browser's Back does; opened directly, it reads "‹ Home".
+
 ## November 9, 2026 — Asteroid Tracker: closest pass on the home page, size comparisons, three more famous passes
 
 - **Home page:** a line under the live map shows the closest asteroid pass of the next 7 days, in the visitor's time
