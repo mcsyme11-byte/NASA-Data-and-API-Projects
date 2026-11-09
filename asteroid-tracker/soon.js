@@ -28,7 +28,7 @@ export async function mountSoon(el, url, base) {
   const href = id ? `${base}object.html?id=${encodeURIComponent(id)}&t=${t}`
     : `https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=${encodeURIComponent(des)}`;
   const ext = id ? '' : ' target="_blank" rel="noopener"';
-  const when = new Date(t).toLocaleString('en-CA', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+  const when = new Date(t).toLocaleString('en-CA', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + ' your time';
   const km = ld * LD_KM;
   const size = h !== null && h !== undefined ? compareSize(diameterM(h, 0.25), diameterM(h, 0.05)) : '';
   el.innerHTML = `<span class="eyebrow">Closest pass, next 7 days</span>
