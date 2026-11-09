@@ -1,5 +1,10 @@
 # Change log
 
+## November 9, 2026 — Image Explorer: searching message names the libraries
+
+- While a search runs, the Picture library says which libraries it is asking, following From: "Searching NASA's and
+  ESA's libraries…", "Searching NASA's library…" or "Searching ESA's archives…" (it said NASA's library in every case).
+
 ## November 9, 2026 — README brought up to date
 
 - The README links the live site, gives the projects' status in the order of work, names NASA and ESA sources in

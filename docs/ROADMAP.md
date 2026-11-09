@@ -61,8 +61,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   The build was tested on pages copied from ESA's markup of Nov 9, 2026; the workspace used for the build cannot
   reach ESA's sites.
 - [ ] Picture library: ESA's videos (esawebb.org/videos, esahubble.org/videos) beside NASA's, if wanted.
-- [ ] Delete the branch `esa-probe` on GitHub (Branches page): it held a one-off probe of ESA's archives on Nov 9,
-  2026.
 - [ ] Picture library: tune the ranking further as the developer reviews searches (the weights are in `scoreOf` in
   `image-explorer/app.js`).
 - [ ] Polar views: a sea ice layer that works through the polar night. GIBS's microwave sea-ice records ended

@@ -789,7 +789,10 @@ async function libSearch(append = false, opt = {}) {
   if (!typed) { resetLib('Type a mission, a planet, a galaxy or a place, or pick a mission. Results appear as you type.'); return; }
   lib.busy = true;
   const page = append ? lib.page + 1 : 1, q = append ? lib.q : typed;
-  if (!append) { $('libCount').textContent = 'Searching NASA’s library…'; if (!PICS.length) say($('gallery'), 'Searching NASA’s library…'); }
+  if (!append) {                                   /* names the libraries the From setting asks */
+    const wait = { both: 'Searching NASA’s and ESA’s libraries…', nasa: 'Searching NASA’s library…', esa: 'Searching ESA’s archives…' }[fromSel()];
+    $('libCount').textContent = wait; if (!PICS.length) say($('gallery'), wait);
+  }
   try {
     let r = await runSearch(q, page, append ? lib.st : null), used = q, fixed = false;
     if (my !== lib.seq) return;
