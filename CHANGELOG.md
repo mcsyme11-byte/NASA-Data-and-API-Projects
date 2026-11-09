@@ -1,5 +1,20 @@
 # Change log
 
+## November 9, 2026 — Asteroid Tracker: ESA's impact-risk list and close approaches
+
+- **Impact risk tab:** every object on ESA's risk list (NEO Coordination Centre, with its special risk list) or
+  NASA/JPL's Sentry list, side by side: each centre's chance, Palermo and Torino values and most likely impact date,
+  with filters (which list, size, name), sorting, row details linking to both centres' pages, and the rules for
+  reading the chance, Torino, Palermo and why the two lists differ.
+- **Asteroid page:** an "Impact risk" section with ESA's and NASA's figures, or "Not listed"; the selected approach
+  shows ESA's distance when ESA lists the same pass.
+- **Week details:** ESA's miss distance and the impact chance, when ESA has them.
+- **Map:** an "On a risk list" filter, and arrow buttons for panning that appear with ✥ (tap to move, hold to glide).
+- **Data job:** `fetch_risk.py` writes `data/risk.json` and `data/esa_close.json` twice a day; a change in ESA's
+  format keeps the previous file instead of writing wrong figures.
+- ESA's credit ("ESA NEO Coordination Centre (©ESA)") on every page that shows its figures; ESA NEOCC and NASA/JPL
+  Sentry in `CREDITS.md`, on the Credits page and in `docs/DATA-SOURCES.md`.
+
 ## November 9, 2026 — Image Explorer: ESA picture archives checked; mock-up
 
 - ESA/Webb and ESA/Hubble picture archives checked (search, paging, fields, credit lines, licence, browser access);

@@ -9,6 +9,7 @@ import { fmt, sizeText, sizePicture, diameterM, LD_KM } from './format.js';
 import { loadMapData } from './mapdata.js';
 import { searchNames, neowsId, decodeName } from './search.js';
 import { backLink, placeKeeper, scrollBack } from './back.js';
+import { riskDesignations } from './esa.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -72,6 +73,7 @@ function restorePlace(p) {
   if (Array.isArray(p.craft) && p.craft.length === map.spacecraft.length) { map.spacecraft.forEach((c, i) => (c.show = p.craft[i])); buildCraft(); }
   if ([...$('#speed').options].some((o) => o.value === p.speed)) $('#speed').value = p.speed;
   if (['all', 'haz', 'big', 'km'].includes(p.filter)) map.filter = p.filter;
+  else if (p.filter === 'risk') setFilter('risk');
   if (p.foundBy && Number(p.foundBy) !== Number($('#foundBy').value)) { $('#foundBy').value = p.foundBy; $('#foundBy').dispatchEvent(new Event('input')); }
   if (p.closeIn) pendingCloseIn = p.closeIn;
   if (Number.isFinite(p.ms)) setDate(p.ms);
@@ -179,14 +181,56 @@ function syncPan() {
   $('#recentre').hidden = !off;
   $('#panBtn').setAttribute('aria-pressed', map.panMode);
   $('#map').classList.toggle('panmode', map.panMode);
+  $('#panPad').hidden = !map.panMode;
 }
-$('#panBtn').addEventListener('click', () => { map.panMode = !map.panMode; syncPan(); });
+$('#panBtn').addEventListener('click', () => { map.panMode = !map.panMode; syncPan(); $('#hint').classList.add('gone'); });
+// The arrow pad (shown while the pan button is on): a tap moves a fifth of the view; holding glides, about half the
+// view a second, until released. Enter or Space on a focused arrow also moves a fifth.
+const PAN_DIR = { up: [0, 1], down: [0, -1], left: [-1, 0], right: [1, 0] };
+function nudge(dir, f) { const [x, y] = PAN_DIR[dir]; map.panX += x * f * map.viewR; map.panY += y * f * map.viewR; map.request(); syncPan(); $('#hint').classList.add('gone'); }
+$$('[data-pan]').forEach((b) => {
+  let glide = null, byPointer = false;
+  const halt = () => { if (glide) cancelAnimationFrame(glide.raf); glide = null; };
+  b.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    byPointer = true; nudge(b.dataset.pan, 0.2);
+    const t0 = performance.now(); let last = t0;
+    const step = (t) => { if (!glide) return; if (t - t0 > 350) nudge(b.dataset.pan, 0.5 * (t - last) / 1000); last = t; glide.raf = requestAnimationFrame(step); };
+    glide = { raf: requestAnimationFrame(step) };
+  });
+  for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) b.addEventListener(ev, halt);
+  b.addEventListener('click', () => { if (byPointer) { byPointer = false; return; } nudge(b.dataset.pan, 0.2); });
+});
 $('#recentre').addEventListener('click', () => { animateTo({ panX: 0, panY: 0 }, 500); setTimeout(syncPan, 520); });
 $$('[data-c]').forEach((b) => b.addEventListener('click', () => {
   if (b.dataset.c === 'sel') { if (selected) centre(selected.kind === 'asteroid' ? { asteroid: selected.k } : selected.kind === 'craft' ? { craft: selected.i } : selected.name); }
   else centre(b.dataset.c);
 }));
-$$('[data-f]').forEach((b) => b.addEventListener('click', () => { map.filter = b.dataset.f; map.request(); syncButtons(); }));
+// "On a risk list": the objects on ESA's or NASA's impact-risk list (data/risk.json), loaded on first use
+let riskLoad = null;
+async function setFilter(f) {
+  if (f === 'risk' && !map.riskSet) {
+    const chip = $('[data-f="risk"]');
+    chip.textContent = 'Loading…';
+    riskLoad = riskLoad || riskDesignations();
+    const des = await riskLoad;
+    if (!des) {
+      riskLoad = null;
+      chip.textContent = 'Risk list unavailable';
+      chip.title = 'The impact-risk list could not be loaded. Press to try again.';
+      f = map.filter === 'risk' ? 'all' : map.filter;
+      map.filter = f; map.request(); syncButtons();
+      return;
+    }
+    const byDes = new Map(data.rows.map((r, k) => [String(r[COL.pdes]), k]));
+    map.riskSet = new Set();
+    des.forEach((d) => { const k = byDes.get(d); if (k !== undefined) map.riskSet.add(k); });
+    chip.textContent = `On a risk list (${fmt(map.riskSet.size)})`;
+    chip.title = "Asteroids on ESA's or NASA's impact-risk list";
+  }
+  map.filter = f; map.request(); syncButtons();
+}
+$$('[data-f]').forEach((b) => b.addEventListener('click', () => setFilter(b.dataset.f)));
 $('#zIn').addEventListener('click', () => animateTo({ viewR: map.viewR / 1.8 }, 300));
 $('#zOut').addEventListener('click', () => animateTo({ viewR: map.viewR * 1.8 }, 300));
 $('#craftBtn').addEventListener('click', (e) => {

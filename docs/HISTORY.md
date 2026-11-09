@@ -83,3 +83,11 @@ How NASA and ESA Data Projects came about, in order.
   moved to https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/.
 - Project-wide rules for ESA sources were added (check ESA's documentation first, credit ESA wherever its data appears,
   never ESA's logo, free to run), and every page now says the project isn't endorsed by NASA or ESA.
+
+## November 9, 2026 — ESA's data in the Asteroid Tracker
+
+- The Asteroid Tracker became the first project to show ESA's data beside NASA's: the impact-risk lists of ESA's NEO
+  Coordination Centre and NASA/JPL's Sentry, side by side in a new Impact risk tab, on each asteroid's page and on the
+  map. Neither centre's server answers web pages directly, so the twice-daily data job copies both lists.
+- The first run showed a speed given as "nan", which made the file unreadable in a browser; the job now keeps only
+  finite numbers.

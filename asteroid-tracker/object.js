@@ -12,6 +12,8 @@ import { hoverTip, tipApi, hideTip } from './charts.js';
 import { asteroidElements, asteroidPosition, planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM } from './orbit.js';
 import { OrbitView } from './orbitview.js';
 import { decodeName } from './search.js';
+import { esaApproach, riskOf } from './esa.js';
+import { chanceText } from './risk.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -64,6 +66,7 @@ document.addEventListener('click', (e) => { if (e.target.closest('[data-act=retr
 // ---------------------------------------------------------------- render
 function render() {
   const n = state.neo, od = n.orbital_data, k = state.k = asteroidElements(od);
+  showRisk(n);
   const m = n.estimated_diameter.meters, size = { dmin: m.estimated_diameter_min, dmax: m.estimated_diameter_max };
   document.title = `${n.name} · Asteroid Tracker · NASA and ESA Data Projects`;
   $('#name').textContent = n.name;
@@ -135,6 +138,7 @@ function setDate(jd) {
   readouts();
 }
 
+const esaFor = new Map();   // ESA's figure for each selected approach (null: none, or still loading)
 function readouts() {
   const k = state.k, jd = state.jd;
   const earth = planetPosition('Earth', jd), ast = asteroidPosition(k, jd);
@@ -156,10 +160,13 @@ function readouts() {
     `Within about 10 years of that date the drawing is good; further away it drifts, because the planets' pull slowly changes the orbit. ` +
     `It shows the shape and timing of a close pass, not its exact distance: NASA's own figures are in the list below. This date is ${fmt(yrs, 1)} years from ${measured}: <b>${acc}</b>.`;
 
-  // the selected approach: NASA's figure beside the diagram's
+  // the selected approach: NASA's figure beside the diagram's, and ESA's when it lists the same pass
   const sel = state.sel;
   if (sel && Math.abs(msFromJd(jd) - sel.t) < 2 * DAY) {
+    if (!esaFor.has(sel.t)) { esaFor.set(sel.t, null); esaApproach(state.neo.name, sel.t).then((a) => { esaFor.set(sel.t, a); if (a && state.sel === sel) readouts(); }); }
+    const ea = esaFor.get(sel.t);
     $('#approachNote').innerHTML = `Close approach on ${dateText(sel.t, true)} UTC. <b>NASA/JPL: ${fmt(sel.ld, 2)} LD</b> (${fmt(sel.km)} km) at ${fmt(sel.v, 1)} km/s. ` +
+      (ea ? `<b>ESA NEOCC: ${fmt(ea.ld, 2)} LD</b> (${fmt(ea.km)} km). ` : '') +
       `This diagram: ${fmt(dE / LD_AU, dE / LD_AU < 10 ? 2 : 1)} LD${sel.ld < 1 ? ' (so close that Earth\'s own pull, left out of the diagram, bends the path)' : ''}.`;
   } else if (sel && sel.t >= MIN_MS && sel.t <= MAX_MS) {
     // a countdown to the selected approach, which the rings on the diagram mark
@@ -322,5 +329,22 @@ function renderAbout() {
 }
 
 load();
+
+// ---------------------------------------------------------------- impact risk: ESA NEOCC and NASA/JPL Sentry
+function showRisk(n) {
+  const box = $('#riskCard');
+  box.innerHTML = '<p class="note">Checking both impact-risk lists…</p>';
+  riskOf(n.name).then((r) => {
+    if (!r) { box.innerHTML = '<p class="note">The impact-risk lists could not be loaded. Reload the page to try again.</p>'; return; }
+    const day = (d) => (d ? new Date(d + 'T00:00:00Z').toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) : '');
+    const side = (who, c, none) => c
+      ? `<div class="tile"><div class="label">${who}</div><div class="value">${chanceText(c.ip)}</div><div class="note">chance of its most likely impact, on ${day(c.date)}${c.years ? `; possible impacts ${esc(String(c.years).replace("-", "–"))}` : ''}. Palermo ${c.ps === null ? 'not given' : (c.ps < 0 ? '−' : '+') + Math.abs(c.ps).toFixed(2)}${c.ts !== null && c.ts !== undefined ? `, Torino ${c.ts}` : ''}.</div></div>`
+      : `<div class="tile"><div class="label">${who}</div><div class="value none">Not listed</div><div class="note">${none}</div></div>`;
+    const any = r.esa || r.nasa;
+    box.innerHTML = `<div class="tiles two">${side('ESA NEOCC', r.esa, 'ESA has found no chance of an impact.')}${side('NASA/JPL Sentry', r.nasa, 'NASA has found no chance of an impact.')}</div>
+      <p class="note">${any ? 'An impact chance is a measure of how uncertain the orbit still is; it almost always falls to zero as more observations come in. ' : 'Neither centre has found any chance of this object hitting Earth. '}Both lists are checked daily. <a href="./#risk">Every object on the lists, and how to read the scales ›</a><br>
+      Impact-risk data: ESA NEO Coordination Centre (©ESA), list of ${esc(r.esaUpdated || 'an unknown date')}; NASA/JPL Sentry.</p>`;
+  });
+}
 
 backLink(document.getElementById('back'));

@@ -11,7 +11,7 @@ there in the same change.
 | Source | Used for | Terms |
 |---|---|---|
 | NASA NeoWs (api.nasa.gov) | Asteroid Tracker: close approaches, sizes, the hazard flag | NASA data; generally not under copyright in the United States |
-| NASA/JPL Solar System Dynamics: Close-Approach Data, Small-Body Database, Horizons, approximate planetary elements | Asteroid Tracker: approaches, orbits, spacecraft and planet positions | NASA/JPL data |
+| NASA/JPL Solar System Dynamics: Close-Approach Data, Small-Body Database, Horizons, approximate planetary elements, Sentry | Asteroid Tracker: approaches, orbits, spacecraft and planet positions, NASA's impact-risk list | NASA/JPL data |
 | NASA GIBS (Global Imagery Browse Services), including Blue Marble | Image Explorer: the Earth map, the polar views, the globe's surface | NASA imagery; acknowledgement required (below) |
 | NASA Image and Video Library | Image Explorer: the picture library | NASA material; some items carry their own credit or rights, shown with each item |
 | NASA EONET (Earth Observatory Natural Event Tracker) | Image Explorer: events on the globe | NASA data |
@@ -32,7 +32,7 @@ with its exact credit line, in the same change that adds it, and ESA's credit is
 
 | Source | Used for | Terms |
 |---|---|---|
-| (none on the site yet) | | |
+| ESA NEO Coordination Centre (NEOCC, neo.ssa.esa.int): risk list, special risk list, close approaches | Asteroid Tracker: ESA's impact-risk list beside NASA's, and ESA's close-approach distances | ESA's terms for educational and informational use; credit "ESA NEO Coordination Centre (©ESA)" |
 
 **ESA's terms:** some ESA images, videos and other works are released, where expressly stated, under the Creative
 Commons Attribution-ShareAlike 3.0 IGO licence (CC BY-SA 3.0 IGO): the source is credited in ESA's own form (for

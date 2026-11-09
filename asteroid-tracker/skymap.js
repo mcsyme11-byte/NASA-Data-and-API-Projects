@@ -182,7 +182,8 @@ export class SolarMap {
     this.center = 'Sun';                               // 'Sun', 'Earth', or { asteroid: k }, or { craft: i }
     this.panX = 0; this.panY = 0;                      // pan: how far the view is moved off the centre, in au across and up the screen
     this.panMode = false;                              // the pan button: a plain drag pans instead of turning the view
-    this.filter = 'all';                               // 'all' | 'haz' | 'big' | 'km'
+    this.filter = 'all';                               // 'all' | 'haz' | 'big' | 'km' | 'risk'
+    this.riskSet = null;                               // Set of row indexes on an impact-risk list (ESA or NASA)
     this.foundMax = 9999;                              // show only objects found by the end of this year
     this.only = null;                                  // a Set of indices: show only these (close passes in a year)
     this.colorBy = 'class';                            // 'class' | 'plain'
@@ -275,11 +276,12 @@ export class SolarMap {
       const big = (s > 0 && this.viewR < 0.6) || (this.only && this.only.size < 3000) ? 2 : 1;   // zoomed in, or a short list: 2-pixel dots
       const amt = this.viewR > 8 ? 0.55 : 0.8;                   // fainter when far out, so the cloud doesn't glare
       const W4 = W * 4;
-      const fmax = this.foundMax, fnd = A.found, only = this.only;
+      const fmax = this.foundMax, fnd = A.found, only = this.only, rs = this.riskSet;
       const skip = this.tour && this.tourAst(this.jd) ? this.tour.k : -1;
       const fresh = fmax < 9999 ? fmax : -1;             // found in the year shown: drawn brighter
       for (let k = 0; k < A.n; k++) {
         if (f === 'haz' && !haz[k]) continue;
+        if (f === 'risk' && !(rs && rs.has(k))) continue;
         if (Hm[k] > hmax) continue;
         if (fnd[k] > fmax) continue;
         if (only && !only.has(k)) continue;
@@ -483,7 +485,7 @@ export class SolarMap {
     const { cf, sf, ct, st, cx, cy, s, c } = this._p, A = this.ast, f = this.filter, hmax = f === 'big' ? 22 : f === 'km' ? 17.75 : 99;
     let bk = -1;
     for (let k = 0; k < A.n; k++) {
-      if ((f === 'haz' && !A.haz[k]) || A.H[k] > hmax || A.found[k] > this.foundMax || (this.only && !this.only.has(k))) continue;
+      if ((f === 'haz' && !A.haz[k]) || (f === 'risk' && !(this.riskSet && this.riskSet.has(k))) || A.H[k] > hmax || A.found[k] > this.foundMax || (this.only && !this.only.has(k))) continue;
       const x = A.x[k] - c[0], y = A.y[k] - c[1], z = A.z[k] - c[2];
       const x1 = x * cf - y * sf, y1 = x * sf + y * cf;
       const d = (cx + x1 * s - X) ** 2 + (cy - (y1 * ct + z * st) * s - Y) ** 2;

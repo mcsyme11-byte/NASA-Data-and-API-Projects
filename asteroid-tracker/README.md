@@ -47,6 +47,8 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
 | JPL approximate planetary elements | The orbit diagram's and the map's planets | none | Copied into `orbit.js` (valid 1800–2050) |
 | NASA/JPL Small-Body Database Query API | Map and search | none | Daily file `data/neos.json` (and `data/preview.json`) |
 | NASA/JPL Horizons | The map's spacecraft and famous close passes | none | Daily file `data/spacecraft.json`; monthly `data/famous.json` |
+| NASA/JPL Sentry (`ssd-api.jpl.nasa.gov/sentry.api`) | Impact risk (NASA's list) | none | Daily file `data/risk.json` |
+| ESA NEO Coordination Centre (`neo.ssa.esa.int`) | Impact risk (ESA's list), ESA's close-approach distances | none | Daily files `data/risk.json` and `data/esa_close.json` (ESA's server blocks calls from web pages) |
 
 Limits: the `feed` covers at most 7 days per request; `DEMO_KEY` allows 30 requests an hour and 50 a day per
 connection, a personal key 1,000 an hour. Details: [docs/DATA-SOURCES.md](../docs/DATA-SOURCES.md).
@@ -76,8 +78,11 @@ asteroid-tracker/
 ├── format.js                    units, the size rule and number formatting
 ├── compare.js                   sizes next to familiar objects ("about the length of a school bus"), with its rules
 ├── soon.js                      the home page's "closest pass, next 7 days"
+├── risk.js                      the Impact risk tab: ESA's and NASA's lists side by side, filters, sorting, details
+├── esa.js                       reads ESA's close approaches and both risk lists for the week's details, the asteroid page and the map
 ├── fetch_close_approaches.py    writes data/YYYY.json and data/years.json (daily, GitHub Actions)
 ├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json, data/soon.json (daily), data/famous.json (monthly)
+├── fetch_risk.py                writes data/risk.json (ESA NEOCC and NASA/JPL Sentry) and data/esa_close.json (daily)
 ├── data/                        the files above
 └── README.md                    this file
 ```

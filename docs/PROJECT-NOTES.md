@@ -94,6 +94,17 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   from 3 letters; suggestions and corrections allow for small spelling mistakes; mission buttons search several
   phrasings; a picture naming a sky object links to it on the globe. Whether to add ESA's Webb and Hubble archives is
   left to the developer.
+- **Decided Nov 9, 2026 (Asteroid Tracker):** ESA's NEO Coordination Centre is added beside NASA's data. A new
+  "Impact risk" tab lists every object on ESA's risk list (including its special risk list) or NASA/JPL's Sentry list,
+  side by side, with the Torino and Palermo scales explained as rules; an asteroid's page and the week's details show
+  ESA's and NASA's impact chances and ESA's close-approach distance; the map gains an "On a risk list" filter and
+  on-screen arrow buttons for panning on phones. Neither centre's server allows calls from web pages, so the data job
+  writes `data/risk.json` and `data/esa_close.json`. NASA stays the main source; every figure says which agency it
+  comes from. The developer waived the mock-up step for this addition ("just do as much as you can").
+- **Decided Nov 9, 2026 (licence position):** ESA's NEOCC portal has no licence of its own and refers to ESA's general
+  terms, which allow educational and informational use with ESA's credit. The figures are shown with the credit
+  "ESA NEO Coordination Centre (©ESA)" and no ESA logo; if a question arises, the NEOCC is asked by email
+  (`neocc@esa.int`).
 - **Not possible (Nov 9, 2026):** seeing individual houses. NASA's sharpest free imagery is about 30 m a pixel
   (Landsat) and the daily layers 250 m; houses need commercial imagery, which is neither NASA's nor free.
 

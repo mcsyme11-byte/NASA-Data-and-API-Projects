@@ -15,6 +15,8 @@ import { loadNeos } from './mapdata.js';
 import { COL, COMET_CODES } from './skymap.js';
 import { neowsId } from './search.js';
 import { placeKeeper, scrollBack } from './back.js';
+import { mountRisk, chanceText } from './risk.js';
+import { esaApproach, riskOf } from './esa.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -198,6 +200,7 @@ function weekTable(list) {
         (sel ? `<tr class="drow"><td colspan="6">${detailHtml(o)}</td></tr>` : '');
     }).join('');
   }
+  fillEsa();
   $('#moreRow').hidden = rows.length <= ROWS;
   $('#moreBtn').textContent = state.showAll ? 'Show fewer' : `Show all ${rows.length}`;
   $$('#weekTable th[data-k]').forEach((th) =>
@@ -214,8 +217,28 @@ function detailHtml(o) {
     { label: 'Closest', value: dateText(o.t), note: new Date(o.t).toISOString().slice(11, 16) + ' UTC' },
   ];
   return `<div class="dwrap"><div class="tiles">${t.map((x) => `<div class="tile"><div class="label">${x.label}</div><div class="value">${x.value}</div><div class="note">${x.note}</div></div>`).join('')}</div>
+    <div class="tiles esa-tiles" data-esa-name="${esc(o.name)}" data-esa-t="${o.t}" data-esa-ld="${o.ld}" hidden></div>
     <p class="note">Sizes are estimates from how bright the object looks: a dark object is larger than a shiny one of the same brightness, so NASA gives a range.</p>
     <p class="dlinks"><a class="btn" href="object.html?id=${encodeURIComponent(o.id)}&amp;t=${o.t}">Open its page ›</a><span class="note">its orbit around the Sun and every pass by Earth</span></p></div>`;
+}
+
+// ESA's figures for the open row, added when ESA's file has loaded: its distance for the same pass, and the
+// object's place on either impact-risk list. Nothing is shown for an object ESA does not list.
+function fillEsa() {
+  const box = document.querySelector('.esa-tiles');
+  if (!box) return;
+  const name = box.dataset.esaName, t = Number(box.dataset.esaT), ld = Number(box.dataset.esaLd);
+  Promise.all([esaApproach(name, t), riskOf(name)]).then(([a, r]) => {
+    if (!box.isConnected) return;
+    const tiles = [];
+    if (a) tiles.push({ label: 'ESA: miss distance', value: fmt(a.ld, a.ld < 10 ? 2 : 1) + ' <small>LD</small>',
+      note: `${fmt(a.km)} km on ${esc(a.date)}, from ESA's NEO Coordination Centre (NASA: ${fmt(ld, ld < 10 ? 2 : 1)} LD)` });
+    if (r && (r.esa || r.nasa)) tiles.push({ label: 'Impact chance', value: chanceText((r.esa || r.nasa).ip),
+      note: `${r.esa ? 'ESA ' + chanceText(r.esa.ip).replace(/ <span.*$/, '') : 'not on ESA\'s list'} · ${r.nasa ? 'NASA ' + chanceText(r.nasa.ip).replace(/ <span.*$/, '') : 'not on NASA\'s list'} · <a href="#risk">the risk list ›</a>` });
+    if (!tiles.length) return;
+    box.innerHTML = tiles.map((x) => `<div class="tile"><div class="label">${x.label}</div><div class="value">${x.value}</div><div class="note">${x.note}</div></div>`).join('');
+    box.hidden = false;
+  });
 }
 
 // week controls
@@ -423,22 +446,24 @@ $('#thisYear').addEventListener('click', () => goYear(thisYearNow()));
 
 // ---------------------------------------------------------------- views (#year, #year-2019, #search)
 const hashYear = () => { const m = /^#year(?:-(\d{4}))?$/.exec(location.hash); return m ? Number(m[1] || thisYearNow()) : null; };
-const hashView = () => (location.hash === '#search' ? 'search' : hashYear() ? 'year' : 'week');
-let search = null;
+const hashView = () => (location.hash === '#search' ? 'search' : location.hash === '#risk' ? 'risk' : hashYear() ? 'year' : 'week');
+let search = null, risk = null;
 function setView(v, year) {
   state.view = v;
   $$('[data-view]').forEach((x) => { x.setAttribute('aria-pressed', x.dataset.view === v); x.setAttribute('aria-selected', x.dataset.view === v); });
   $('#view-week').hidden = v !== 'week';
   $('#view-year').hidden = v !== 'year';
   $('#view-search').hidden = v !== 'search';
+  $('#view-risk').hidden = v !== 'risk';
   hideTip();
+  if (v === 'risk' && !risk) risk = mountRisk($('#view-risk'), 'data/risk.json');
   if (v === 'year') { loadIds(); if (year || !state.year) loadYear(year || state.yearShown); else renderYear(); }
   else if (v === 'search') { if (!search) search = mountSearch($('#view-search'), () => loadNeos().then((d) => d.rows)); setTimeout(() => search.focus(), 0); }
   else if (state.week) renderFiltered();
 }
 $$('[data-view]').forEach((b) => b.addEventListener('click', () => {
   const v = b.dataset.view;
-  history.replaceState(null, '', v === 'year' ? (state.yearShown && state.yearShown !== thisYearNow() ? `#year-${state.yearShown}` : '#year') : v === 'search' ? '#search' : location.pathname);
+  history.replaceState(null, '', v === 'year' ? (state.yearShown && state.yearShown !== thisYearNow() ? `#year-${state.yearShown}` : '#year') : v === 'search' ? '#search' : v === 'risk' ? '#risk' : location.pathname);
   setView(v);
 }));
 addEventListener('hashchange', () => setView(hashView(), hashYear()));

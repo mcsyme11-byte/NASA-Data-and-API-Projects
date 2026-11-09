@@ -92,6 +92,22 @@ Checked Nov 8, 2026 against the API's documentation (version 1.5) and live answe
 - Counts for the whole of 2026, as known on Nov 8, 2026: 1,053 close approaches within 10 LD and 144 within 1 LD
   (about 50 KB as the daily file); 1,558 within 0.05 au.
 
+### JPL Sentry API (impact monitoring), checked Nov 9, 2026
+
+`https://ssd-api.jpl.nasa.gov/sentry.api` (no key; documentation at `https://ssd-api.jpl.nasa.gov/doc/sentry.html`,
+API version 2.0). NASA/JPL's automatic impact-monitoring list: every object with a calculated, non-zero chance of
+hitting Earth within the next 100 years or so.
+- **Summary (no parameters):** one row per object: `des`, `fullname`, `ip` (cumulative impact probability), `ps_cum`,
+  `ps_max` (Palermo), `ts_max` (Torino), `n_imp` (number of possible impacts), `range` (years), `h`, `diameter` (km),
+  `v_inf` (km/s), `last_obs`. Numbers are sent as strings.
+- **`all=1`:** every possible impact of every object (`des`, `date`, `ip`, `ps`, `ts`); used to find each object's most
+  likely impact date.
+- **No CORS header** in the replies recorded by the data job, so pages read `asteroid-tracker/data/risk.json`, written
+  by `asteroid-tracker/fetch_risk.py` on GitHub Actions (twice a day, with the close-approach job).
+- A speed or other figure can arrive as `nan`; the job keeps only finite numbers and refuses to write NaN, because a
+  browser cannot read JSON containing it.
+- Count on Nov 9, 2026: 2,242 objects. Credit: "NASA/JPL (Sentry)".
+
 ### Planet positions (JPL approximate elements)
 
 `https://ssd.jpl.nasa.gov/planets/approx_pos.html`, Table 1 (valid 1800–2050, mean ecliptic and equinox J2000),
@@ -470,7 +486,8 @@ archives to the Picture library. Checked with requests from GitHub's servers and
 
 Decided Nov 9, 2026: ESA's data is added alongside NASA's where it helps. Each ESA source gets its own entry here (address,
 key if any, limits, terms and the exact credit line), checked against ESA's current documentation before anything is
-built on it. ESA sources in use: none yet.
+built on it. ESA sources in use: the ESA/Webb and ESA/Hubble picture archives (Image Explorer, entry above) and the
+NEO Coordination Centre's risk lists and close approaches (Asteroid Tracker, entry below).
 
 ### Using ESA material, checked Nov 9, 2026
 
@@ -486,3 +503,36 @@ built on it. ESA sources in use: none yet.
   so it is never used. These projects use their own emblem.
 - **ESA/Webb and ESA/Hubble** (esawebb.org, esahubble.org) publish their own picture terms (CC BY 4.0 for most images,
   with their own credit lines); check each archive's terms before using it.
+
+### ESA NEO Coordination Centre (NEOCC): risk lists and close approaches, checked Nov 9, 2026
+
+Used by the Asteroid Tracker (Impact risk tab, the asteroid page, the week's details and the map's "On a risk list"
+filter), next to NASA's figures, never in place of them. Checked against ESA's "Automated data access" page
+(`https://neo.ssa.esa.int/computer-access`) and live answers from GitHub's servers.
+- **Address:** `https://neo.ssa.esa.int/PSDB-portlet/download?file=<name>`; no key, no account, free.
+  - `esa_risk_list`: every object with a non-zero impact chance (Nov 9, 2026: 2,209 objects).
+  - `esa_special_risk_list`: objects monitored separately because their impact dates are beyond the usual window
+    (Nov 9, 2026: 101955 Bennu and 29075 (1950 DA)).
+  - `esa_recent_close_app` and `esa_upcoming_close_app`: close approaches to Earth within 0.05 au over the past 30 days
+    and the coming year (Nov 9, 2026: 364 together).
+- **Format:** plain text. A `Last Update: YYYY-MM-DD HH:MM UTC` line, two heading lines, a format line starting `AAAA`,
+  then one row per object with `|` between columns. The risk list gives designation and name, diameter (m, `*` when
+  estimated), the most likely impact (date and time, IP max, PS max, TS), speed (km/s), the years of possible impacts,
+  IP cum and PS cum. The close-approach lists give the date only (no time), the miss distance in km, au and LD,
+  diameter, H, brightest magnitude, speed and ESA's CAI index.
+- **Designations** have no space: `2008JL3` is "2008 JL3"; survey designations such as `6344PL` are "6344 P-L"; a
+  numbered object is given by its number.
+- **Status:** ESA describes this access as experimental and liable to change without notice. The job checks each
+  table's headings and, if they change, keeps the previous file and stops with an error instead of writing wrong
+  figures; the NASA part still runs.
+- **Update times:** the risk lists change after each orbit update (the Nov 9, 2026 list was stamped 18:48 UTC); the job
+  reads them twice a day (06:17 and 14:47 UTC).
+- **CORS:** no `Access-Control-Allow-Origin` header (recorded in `risk.json`, `cors`), so visitors' browsers never
+  contact ESA; pages read `asteroid-tracker/data/risk.json` and `asteroid-tracker/data/esa_close.json`. No change to
+  the Privacy page is needed.
+- **Terms:** the NEOCC portal has no licence of its own and refers to ESA's general terms: educational and
+  informational use is allowed with ESA's credit. No ESA logo is used, and pages say the project isn't endorsed by
+  NASA or ESA.
+- **Credit line, shown wherever the figures appear:** "ESA NEO Coordination Centre (©ESA)", with the list's date. If
+  ESA asks for a different form, it is changed in `index.html`, `object.html`, `map.html`, `risk.js`, `object.js`,
+  `app.js`, `CREDITS.md` and the Credits page. Contact for questions: the NEOCC (`neocc@esa.int`).

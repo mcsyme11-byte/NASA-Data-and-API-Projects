@@ -41,6 +41,7 @@
       <nav class="tabs" aria-label="Asteroid Tracker">
         <button aria-pressed="true" aria-selected="true" data-view="week">This week</button>
         <button aria-pressed="false" aria-selected="false" data-view="year">By year</button>
+        <button aria-pressed="false" aria-selected="false" data-view="risk">Impact risk</button>
         <a href="map.html">Map</a>
         <button aria-pressed="false" aria-selected="false" data-view="search">Search</button>
       </nav>
@@ -189,6 +190,50 @@
       </figure>
     </section>
 
+    <!-- ===================== IMPACT RISK (ESA NEOCC and NASA/JPL Sentry) ===================== -->
+    <section id="view-risk" hidden aria-label="Impact risk: every object with any chance of hitting Earth">
+      <div class="shead" style="margin-top:6px"><h2>Every object with any chance of hitting Earth</h2><span class="aside">ESA and NASA, side by side</span></div>
+      <p class="lede">Two centres watch for possible impacts independently: <b>ESA's NEO Coordination Centre</b> in Italy and <b>NASA/JPL's Sentry</b> in California. Each lists every object whose orbit still allows even a tiny chance of a future impact. Almost every object leaves the lists once more observations pin its orbit down.</p>
+      <div class="tiles" id="riskTiles"></div>
+      <div class="filters" style="margin-top:18px">
+        <div class="seg" role="group" aria-label="Which list">
+          <button class="chip" aria-pressed="true" data-risklist="all">All</button>
+          <button class="chip" aria-pressed="false" data-risklist="both">On both lists</button>
+          <button class="chip" aria-pressed="false" data-risklist="esa">ESA only</button>
+          <button class="chip" aria-pressed="false" data-risklist="nasa">NASA only</button>
+        </div>
+        <label>Size <select id="riskSize">
+          <option value="0">Any size</option><option value="20">20 m or more</option><option value="50">50 m or more</option>
+          <option value="140">140 m or more</option><option value="1000">1 km or more</option></select></label>
+        <label>Name <input type="search" id="riskQ" placeholder="e.g. Bennu, 2008 JL3" autocomplete="off" spellcheck="false"></label>
+        <label class="sortsel">Sort by <select id="riskSort">
+          <option value="ps:-1">Most significant (Palermo)</option><option value="esa:-1">Highest chance, ESA</option><option value="nasa:-1">Highest chance, NASA</option>
+          <option value="d:-1">Largest</option><option value="date:1">Soonest</option><option value="name:1">Name</option></select></label>
+      </div>
+      <p class="note" id="riskCount" aria-live="polite"></p>
+      <div class="card tablecard">
+        <table class="neo" id="riskTable">
+          <thead><tr>
+            <th data-k="name" tabindex="0">Name</th>
+            <th data-k="d" tabindex="0" class="num">Size, est.</th>
+            <th data-k="esa" tabindex="0" class="num">ESA: chance, date</th>
+            <th data-k="nasa" tabindex="0" class="num">NASA: chance, date</th>
+            <th data-k="ps" tabindex="0" class="num">Palermo</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button class="btn" id="riskMore" hidden style="margin-top:12px">Show more</button>
+      <p class="note">Tap a row for both centres' figures. <span id="riskUpdated"></span> Impact-risk data: ESA NEO Coordination Centre (©ESA, neo.ssa.esa.int) and NASA/JPL Sentry (cneos.jpl.nasa.gov), refreshed daily.</p>
+
+      <details class="howto"><summary>How to read this: the rules</summary>
+        <p><b>Rule 1, the chance.</b> "1 in 2,700" is the chance of the single most likely impact date. A chance of 1 in 1,000,000 or smaller means practically nothing. The chance usually falls to zero as more observations arrive, and the object then leaves the list.</p>
+        <p><b>Rule 2, the Torino scale (0 to 10)</b> is for telling the public, and covers only the next 100 years. 0: no hazard. 1: routine, normally removed after more observations. 2 to 4: merits attention by astronomers. 5 to 7: threatening. 8 to 10: a certain collision. Blank: the possible impact is more than 100 years away.</p>
+        <p><b>Rule 3, the Palermo scale</b> is what astronomers use to rank objects: it weighs the chance, the size and how far off the date is, against the everyday background risk from all asteroids. Below −2: no concern. −2 to 0: worth careful watching. Above 0: more threatening than the background. Each step of 1 is ten times the risk. This list is sorted by it by default.</p>
+        <p><b>Rule 4, when ESA and NASA differ.</b> The two centres use different software (ESA's Aegis and NASA's Sentry-II) and may include slightly different observations, so their figures usually agree in size but not exactly, and an object can sit on one list and not the other for a while. A big difference (2023 VD3: about 1 in 430 at ESA, about 1 in 6,800 at NASA) usually means the orbit is still uncertain.</p>
+      </details>
+    </section>
+
     <!-- ===================== SEARCH ===================== -->
     <section id="view-search" hidden aria-label="Search every near-Earth asteroid"></section>
 
@@ -200,7 +245,7 @@
     </dl>
 
     <footer class="footer">
-      <p>Data courtesy of NASA (NeoWs) and NASA/JPL (close-approach data). This is an independent project and isn't endorsed by NASA or ESA.</p>
+      <p>Data courtesy of NASA (NeoWs) and NASA/JPL (close-approach data and Sentry) and ESA (©ESA, NEO Coordination Centre: risk list and close approaches). This is an independent project and isn't endorsed by NASA or ESA.</p>
       <p class="credit"><strong>NASA and ESA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
     </footer>
   </main>
