@@ -97,6 +97,8 @@
     .pic:hover h3 { color: var(--brass-bright); }
     .pic .ph { aspect-ratio: 4 / 3; background: var(--deep); overflow: hidden; }
     .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .nopic { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 120px;
+      color: var(--faint); font-style: italic; font-size: 13px; }
     .pic .pt { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
     .pic h3 { margin: 0; font-size: 15.5px; font-weight: 400; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .pic .meta { font-size: 12.5px; color: var(--muted); font-style: italic; }
@@ -406,7 +408,7 @@
     view: new ol.View({ projection: proj, center: [-20, 55], zoom: 2, minZoom: 1, maxZoom: 10, extent: [-180, -90, 180, 90], constrainOnlyCenter: true }),
   });
   function fillFrame() {          /* fills the frame with no empty bands; the edges of the world crop to fit */
-    const [w, h] = map.getSize(); map.getView().setResolution(Math.min(360 / w, 180 / h)); map.getView().setCenter([0, 15]);
+    const [w, h] = map.getSize(); map.getView().setResolution(Math.min(360 / w, 180 / h)); map.getView().setCenter([0, 0]);
   }
   map.once('change:size', fillFrame); if (map.getSize()) fillFrame();
 
@@ -606,12 +608,20 @@
   const CENTRES = { JSC: 'Johnson Space Center', GSFC: 'Goddard Space Flight Center' };
   $('libCount').textContent = `${SAMPLE_TOTAL} pictures · showing ${PICS.length}`;
   $('gallery').innerHTML = PICS.map(([id, t, d, c], j) => `<button class="pic" data-j="${j}">
-      <span class="ph"><img src="${A}${id}/${id}~thumb.jpg" alt="${esc(t)}" loading="lazy"></span>
+      <span class="ph"><img src="${A}${id}/${id}~thumb.jpg" data-id="${id}" data-try="thumb" alt="${esc(t)}" loading="lazy"></span>
       <span class="pt"><h3>${esc(t)}</h3><span class="meta">${nice(d)} · ${c}</span></span></button>`).join('');
+  /* a size NASA lists can still be missing from its server: try the next size, then show a plain panel */
+  const NEXT = { thumb: 'small', small: 'medium', medium: 'large', large: null };
+  function fallback(img) {
+    const n = NEXT[img.dataset.try];
+    if (n) { img.dataset.try = n; img.src = `${A}${img.dataset.id}/${img.dataset.id}~${n}.jpg`; }
+    else img.replaceWith(Object.assign(document.createElement('span'), { className: 'nopic', textContent: 'Picture unavailable' }));
+  }
+  document.addEventListener('error', e => { if (e.target.matches?.('img[data-try]')) fallback(e.target); }, true);
   $('gallery').addEventListener('click', e => {
     const b = e.target.closest('.pic'); if (!b) return;
     const [id, t, d, c, p, k, s] = PICS[+b.dataset.j];
-    $('vImg').src = `${A}${id}/${id}~medium.jpg`; $('vImg').alt = t;
+    $('vImg').dataset.id = id; $('vImg').dataset.try = 'medium'; $('vImg').src = `${A}${id}/${id}~medium.jpg`; $('vImg').alt = t;
     $('vTitle').textContent = t; $('vDesc').textContent = s;
     $('vFacts').innerHTML = `<dt>Date</dt><dd>${nice(d)}</dd><dt>NASA centre</dt><dd>${CENTRES[c] || c} (${c})</dd>` +
       (p ? `<dt>Photographer</dt><dd>${esc(p)}</dd>` : '') + `<dt>NASA ID</dt><dd class="mono">${esc(id)}</dd>`;
