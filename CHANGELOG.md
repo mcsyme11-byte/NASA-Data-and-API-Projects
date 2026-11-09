@@ -1,5 +1,18 @@
 # Change log
 
+## November 9, 2026 — Image Explorer: ESA's Webb and Hubble pictures in the Picture library
+
+- **Each search also asks ESA/Webb and ESA/Hubble's picture archives** and mixes their pictures with NASA's, sorted
+  by the same score and taking turns between libraries. A tag on each picture says whose it is (NASA, ESA/Webb or
+  ESA/Hubble); **From** picks NASA and ESA, NASA, or ESA; the results line counts each library.
+- **Viewer for ESA pictures:** the credit line in full (with its links), the licence (CC BY 4.0), the caption, the
+  release date, type, constellation and category, read from ESA's page for the picture; a link to that page.
+- **Mission buttons:** James Webb and Hubble also list ESA's archive for that telescope.
+- **Globe:** the selected object's pictures come from NASA's and ESA's libraries in turn, with a count for each.
+- If one library is out of reach the others still show, and the results line says which is out of reach.
+- Credits page, CREDITS.md and the Privacy page list ESA/Webb and ESA/Hubble; the footer reads "Data courtesy of NASA
+  and ESA". The mock-up page was removed.
+
 ## November 9, 2026 — Asteroid Tracker: ESA's impact-risk list and close approaches
 
 - **Impact risk tab:** every object on ESA's risk list (NEO Coordination Centre, with its special risk list) or

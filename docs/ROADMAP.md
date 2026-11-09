@@ -62,10 +62,11 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   (turning, zooming, events, sky markers, find, the selected card, "See it on the Earth map"), the Picture library
   (search, results as you type, spelling suggestions and corrections, mission buttons, Behind the scenes, filters,
   Pictures / Pictures and videos / Videos, playing a video, Show more, the viewer, "See it in the sky").
-- [ ] **ESA pictures in the Picture library (decided Nov 9, 2026):** mock-up `image-explorer/mockup-esa.html` awaits
-  the developer's approval: a NASA or ESA tag on each picture, a "From: NASA and ESA · NASA · ESA" filter, counts
-  for each library, and ESA's credit line and licence in the viewer. After approval: live search of ESA/Webb and
-  ESA/Hubble beside NASA's library, ESA pictures on the globe's selected card, the footer and Credits updated.
+- [ ] **Check the ESA pictures on the live site** with a browser: searches such as "crab nebula", "saturn" and the
+  James Webb and Hubble buttons; an ESA picture's credit line, caption and details in the viewer; the From filter.
+  The build was tested on pages copied from ESA's markup of Nov 9, 2026; the workspace used for the build cannot
+  reach ESA's sites.
+- [ ] Picture library: ESA's videos (esawebb.org/videos, esahubble.org/videos) beside NASA's, if wanted.
 - [ ] Delete the branch `esa-probe` on GitHub (Branches page): it held a one-off probe of ESA's archives on Nov 9,
   2026.
 - [ ] Picture library: tune the ranking further as the developer reviews searches (the weights are in `scoreOf` in

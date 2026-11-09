@@ -139,6 +139,15 @@
 .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nopic { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 120px;
   color: var(--faint); font-style: italic; font-size: 13px; }
+.pic .src { position: absolute; left: 8px; top: 8px; padding: 3px 8px; border-radius: 3px; font-size: 10.5px; letter-spacing: .16em;
+  text-transform: uppercase; background: rgba(10, 14, 21, .82); border: 1px solid var(--brass-dim); color: var(--brass-bright); }
+.pic .src.esa { color: #C9D7E6; border-color: #5F7690; }
+.vcredit { margin: 14px 0 0; padding: 12px 14px; border-left: 2px solid var(--brass-dim); background: var(--bg2); font-size: 14px; color: var(--ink2); }
+.vcredit dt { font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); margin-bottom: 4px; }
+.vcredit dd { margin: 0 0 8px; overflow-wrap: anywhere; }
+.vcredit dd:last-child { margin: 0; }
+.libfilters .seg.from .note { align-self: center; margin: 0 2px 0 0; }
+#libCount span { white-space: nowrap; }
 .pic .pt { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
 .pic h3 { margin: 0; font-size: 15.5px; font-weight: 400; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .pic .meta { font-size: 12.5px; color: var(--muted); font-style: italic; }
@@ -207,3 +216,4 @@ dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
   .vbar { padding-left: 16px; }
 }
 @media (max-width: 400px) { .gallery { grid-template-columns: 1fr; } .mapframe { height: 360px; } }
+#vDesc { white-space: pre-line; }

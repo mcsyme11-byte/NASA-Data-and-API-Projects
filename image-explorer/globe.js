@@ -371,7 +371,7 @@ function select(it) {
       ${it.mag != null ? `<dt>Brightness</dt><dd>Magnitude ${it.mag}${it.mag <= 6 ? ' · visible without a telescope from a dark place' : ''}</dd>` : ''}
       ${it.dim ? `<dt>Size in the sky</dt><dd>${esc(it.dim.replace('x', ' × '))} arcminutes${moons(it.dim)}</dd>` : ''}
       <dt>Sky position</dt><dd class="mono">RA ${raStr(it.ra)} · Dec ${decStr(it.dec)}</dd></dl>
-      <div class="shead" style="margin:6px 0 8px"><h2>NASA pictures</h2><span class="aside" id="gCount">searching…</span></div>
+      <div class="shead" style="margin:6px 0 8px"><h2>Pictures</h2><span class="aside" id="gCount">searching…</span></div>
       <div class="gpics" id="gPics"></div>
       <button class="btn ghost" id="gLib">All pictures in the library</button>`;
     $('gLib').addEventListener('click', () => { $('libQ').value = it.term; show('library'); libSearch(); });
@@ -381,11 +381,11 @@ function select(it) {
 async function pictures(it) {
   const box = $('gPics');
   try {
-    const items = await search({ q: it.term, page_size: 6 });
+    const items = await mixedPics(it.term, 6);                     /* NASA's library and ESA's Webb and Hubble archives */
     if (selected !== it) return;
-    $('gCount').textContent = items.total ? `${items.total.toLocaleString('en-GB')} in NASA's library` : 'none found';
-    box.innerHTML = items.list.map((p, j) => `<button data-j="${j}" aria-label="${esc(p[1])}"><img src="${A}${p[0]}/${p[0]}~thumb.jpg" data-id="${esc(p[0])}" data-try="thumb" alt="" loading="lazy"></button>`).join('')
-      || '<p class="note" style="grid-column:1/-1;margin:0">NASA’s library has no pictures under this name.</p>';
+    $('gCount').textContent = items.counts.length ? items.counts.map(([w, n]) => `${w} ${n.toLocaleString('en-GB')}`).join(' · ') : 'none found';
+    box.innerHTML = items.list.map((p, j) => `<button data-j="${j}" aria-label="${esc(p[1])} (${esc(srcName(p))})"><img src="${esc(thumbOf(p))}" data-id="${esc(p[0])}" data-try="${p.lib ? 'esa' : 'thumb'}" alt="" loading="lazy"></button>`).join('')
+      || '<p class="note" style="grid-column:1/-1;margin:0">NASA’s and ESA’s libraries have no pictures under this name.</p>';
     box.onclick = e => { const b = e.target.closest('[data-j]'); if (b) openViewer(items.list[+b.dataset.j]); };
   } catch { if (selected === it) $('gCount').textContent = 'library out of reach'; }
 }

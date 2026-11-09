@@ -433,6 +433,9 @@ archives to the Picture library. Checked with requests from GitHub's servers and
   its own credit line, to be shown in full, unchanged and beside the picture, with active links online. ESA/Webb and
   ESA/Hubble logos need written consent; the material must not suggest endorsement. Music, papers and code are not
   under CC BY 4.0.
+- **Used since Nov 9, 2026** by the Image Explorer's Picture library and the globe's selected card (live search,
+  thumbnails `thumb300y`, viewer `screen`, "Open large size" `large`). A page past the last answers 404 and is treated
+  as empty.
 - Example credit lines: weic2622c (Cat's Head Nebula) "NASA, ESA, CSA, STScI. Image Processing: J. Depasquale
   (STScI)"; heic1907a "NASA, ESA, and STScI".
 

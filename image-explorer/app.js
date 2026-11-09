@@ -400,7 +400,9 @@ function skyIn(text) {
   return best;
 }
 function openViewer(x) {
+  if (x.lib) return openEsa(x);
   const [id, t, d, c, p, k, s, type] = x, base = assets(type), img = $('vImg'), vid = $('vVid'), video = type === 'video';
+  $('vTitle').dataset.id = id; $('vCredit').hidden = true;
   img.hidden = video; vid.hidden = !video; vid.pause(); vid.removeAttribute('src'); vid.load();
   img.dataset.id = id; img.dataset.base = base; img.dataset.try = 'medium'; img.alt = t;
   if (!video) img.src = `${base}${id}/${id}~medium.jpg`;
@@ -429,6 +431,56 @@ function openViewer(x) {
   if (sky) { $('vSky').dataset.id = sky.id; $('vSky').textContent = `See ${sky.name} in the sky`; }
   $('viewer').showModal();
   $('viewer').querySelector('.vbody').scrollTop = 0;
+}
+/* an ESA picture: its credit line, caption and details are read from ESA's page for it when it is opened */
+function esaHtml(node) {                          /* text and plain web links only */
+  let out = '';
+  const walk = n => { for (const c of n.childNodes) {
+    if (c.nodeType === 3) out += esc(c.textContent);
+    else if (c.nodeName === 'A' && /^https?:\/\//i.test(c.getAttribute('href') || '')) out += `<a href="${esc(c.getAttribute('href'))}" target="_blank" rel="noopener">${esc(c.textContent)}</a>`;
+    else if (c.nodeType === 1) { walk(c); if (/^(P|BR|DIV)$/.test(c.nodeName)) out += ' '; }
+  } };
+  walk(node); return out.replace(/\s+/g, ' ').trim();
+}
+function openEsa(x) {
+  const s = ESA[x.lib], [id, t] = x, img = $('vImg'), vid = $('vVid');
+  img.hidden = false; vid.hidden = true; vid.pause(); vid.removeAttribute('src'); vid.load();
+  img.dataset.try = 'esa'; img.alt = t; img.src = `${s.cdn}/archives/images/screen/${id}.jpg`;
+  $('vTitle').textContent = t; $('vTitle').dataset.id = id; $('vDesc').textContent = ''; $('vKw').innerHTML = ''; $('vNote').hidden = true;
+  const facts = (rows = []) => { $('vFacts').innerHTML = rows.filter(r => r[1]).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('') +
+    `<dt>Library</dt><dd>${s.name}</dd><dt>ESA ID</dt><dd class="mono">${esc(id)}</dd>`; };
+  facts([['Released', x.potw || (x.year ? String(x.year) : '')]]);
+  $('vCredit').hidden = false; $('vCreditText').textContent = 'Reading the credit line from ESA\u2019s page…';
+  $('vLicence').innerHTML = `<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> · caption: ${s.name} · <a href="${esc(x.page)}" target="_blank" rel="noopener">The picture on ${s.site.replace('https://', '')}</a>`;
+  $('vFull').href = `${s.cdn}/archives/images/large/${id}.jpg`; $('vFull').textContent = 'Open large size';
+  $('vKind').textContent = (x.score < 0 ? 'Behind the scenes · ' : '') + 'Picture · ' + s.name;
+  const sky = window.focusSky && skyIn(t);
+  $('vSky').hidden = !sky;
+  if (sky) { $('vSky').dataset.id = sky.id; $('vSky').textContent = `See ${sky.name} in the sky`; }
+  $('viewer').showModal();
+  $('viewer').querySelector('.vbody').scrollTop = 0;
+  fetch(x.page).then(r => r.ok ? r.text() : Promise.reject(new Error(r.status))).then(h => {
+    if ($('vTitle').dataset.id !== id) return;                  /* another picture was opened meanwhile */
+    const d = new DOMParser().parseFromString(h, 'text/html'), cr = d.querySelector('.credit');
+    if (!cr) throw new Error('no credit');
+    $('vCreditText').innerHTML = esaHtml(cr);
+    const rows = {};
+    for (const tr of d.querySelectorAll('tr')) { const k = tr.querySelector('th')?.textContent.replace(/\s+/g, ' ').trim().replace(/:$/, ''), v = tr.querySelector('td'); if (k && v && !(k in rows)) rows[k] = v; }
+    const txt = k => rows[k] ? rows[k].textContent.replace(/\s+/g, ' ').trim() : '';
+    const cat = rows.Category ? [...rows.Category.querySelectorAll('a')].map(a => a.textContent.trim()).filter(Boolean).join(' · ') || txt('Category') : '';
+    facts([['Released', txt('Release date').replace(/,\s*\d{1,2}:\d{2}$/, '') || x.potw], ['Type', txt('Type')], ['Constellation', txt('Constellation')], ['Category', cat]]);
+    /* the caption: the paragraphs before the credit line in the same column */
+    const col = cr.parentElement, paras = [];
+    for (const el of col.querySelectorAll('p')) {
+      if (cr.contains(el) || !(el.compareDocumentPosition(cr) & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+      const tx = el.textContent.replace(/\s+/g, ' ').trim();
+      if (tx && !paras.some(q => q.includes(tx))) paras.push(tx);
+    }
+    $('vDesc').textContent = paras.join('\n\n');
+  }).catch(() => {
+    if ($('vTitle').dataset.id !== id) return;
+    $('vCreditText').innerHTML = `${s.name}. ESA\u2019s page can\u2019t be reached right now; the full credit line is on <a href="${esc(x.page)}" target="_blank" rel="noopener">ESA\u2019s page for this picture</a>.`;
+  });
 }
 $('vSky').addEventListener('click', () => { $('viewer').close(); show('globe'); window.focusSky($('vSky').dataset.id); });
 $('viewer').addEventListener('close', () => $('vVid').pause());
@@ -600,9 +652,10 @@ lq.addEventListener('blur', () => setTimeout(closeLib, 120));
 $('libFix').addEventListener('click', e => { if (e.target.closest('button')) libSearch(false, { exact: true }); });
 
 /* ---------- results ---------- */
-const lib = { page: 1, q: '', totals: [], size: 24, busy: false, seq: 0 };
+const lib = { page: 1, q: '', st: null, busy: false, seq: 0 };
 const libSel = document.querySelectorAll('.libfilters select');
-const typeChips = document.querySelectorAll('.libfilters .seg .chip');
+const typeChips = document.querySelectorAll('.libfilters .seg.type .chip');
+const fromChips = document.querySelectorAll('.libfilters .seg.from .chip');
 const cache = new Map();                           /* the same request is asked once per visit */
 function cached(params) {
   const k = JSON.stringify(params);
@@ -615,19 +668,104 @@ function filters() {
   return { center: centre, year_start: from, year_end: to,
     media_type: ['image', 'image,video', 'video'][[...typeChips].findIndex(c => c.getAttribute('aria-pressed') === 'true')] || 'image' };
 }
-/* one page of a search: a mission's several phrasings are asked together, merged, and sorted by score */
-async function runSearch(q, page, totals) {
-  const terms = PRESETS[fold(q)] || [q], size = terms.length > 1 ? 18 : 24, f = filters();
-  const ask = terms.map((t, i) => totals && (page - 1) * size >= Math.min(totals[i] ?? Infinity, 10000) ? null : cached({ q: t, ...f, page, page_size: size }));
-  const got = await Promise.all(ask.map(p => p || Promise.resolve({ total: totals?.[0] ?? 0, list: [], skip: true })));
-  const ids = new Set(page > 1 ? PICS.map(x => x[0]) : []), list = [];
-  got.forEach(r => r.list.forEach(x => { if (!ids.has(x[0])) { ids.add(x[0]); x.score = scoreOf(x); x.n = list.length; list.push(x); } }));
+/* ---------- ESA/Webb and ESA/Hubble picture archives, searched live beside NASA's library (decided Nov 9, 2026) ----------
+ * Both sites answer browsers from any site (CORS). A search page lists 50 results in its script as
+ * var images = [{ id, title, width, height, src, url, potw }]; a picture's own page has its credit line and details.
+ * Pictures are CC BY 4.0, each with its own credit line, shown in full beside the picture. */
+const ESA = {
+  webb: { name: 'ESA/Webb', site: 'https://esawebb.org', cdn: 'https://cdn.esawebb.org' },
+  hubble: { name: 'ESA/Hubble', site: 'https://esahubble.org', cdn: 'https://cdn.esahubble.org' }
+};
+const ESA_PAGE = 50;
+/* mission buttons: Webb and Hubble list their whole archive ('' = best-ranked first); other missions are NASA's own */
+const ESA_PRESETS = { 'james webb': [['webb', '']], webb: [['webb', '']], hubble: [['hubble', '']] };
+/* the year from an ID such as weic2622c, heic0515a, potw1720a or potm2510a (none for names such as pillarsofcreation) */
+const esaYear = id => { const m = id.match(/^(?:weic|heic|potw|potm|opo|ann|sci)(\d{2})\d/i); return m ? (+m[1] >= 90 ? 1900 : 2000) + +m[1] : null; };
+/* a string from the page's script: '-style and \' escapes, then HTML entities */
+function unjs(s) {
+  const t = document.createElement('textarea');
+  t.innerHTML = s.replace(/\\u([0-9a-f]{4})/gi, (_, h) => String.fromCharCode(parseInt(h, 16))).replace(/\\(.)/g, '$1');
+  return t.value;
+}
+const STR = "'((?:\\\\.|[^'\\\\])*)'";
+const ESA_ROW = new RegExp(`\\{\\s*id:\\s*${STR},\\s*title:\\s*${STR},\\s*width:\\s*\\d+,\\s*height:\\s*\\d+,\\s*src:\\s*${STR},\\s*url:\\s*${STR},\\s*potw:\\s*${STR}`, 'g');
+async function esaSearch(key, words, page) {
+  const s = ESA[key], u = `${s.site}/images/${page > 1 ? `page/${page}/` : ''}${words ? '?search=' + encodeURIComponent(words) : ''}`;
+  let r;
+  try { r = await fetch(u); } catch { r = await fetch(u); }            /* one retry, as for NASA */
+  if (r.status === 404) return { total: 0, list: [] };                 /* a page past the last one */
+  if (!r.ok) throw new Error(String(r.status));
+  const h = await r.text(), start = h.indexOf('var images = ['), end = start < 0 ? -1 : h.indexOf('];', start);
+  const block = start < 0 ? '' : h.slice(start, end < 0 ? undefined : end), list = [];
+  for (const m of block.matchAll(ESA_ROW)) {
+    const id = unjs(m[1]), row = [id, unjs(m[2]) || 'Untitled', '', s.name, '', [], '', 'image'];
+    list.push(Object.assign(row, { lib: key, thumb: unjs(m[3]).replace(/^http:/, 'https:'), page: s.site + unjs(m[4]), potw: unjs(m[5]), year: esaYear(id) }));
+  }
+  const n = h.match(/Showing\s+\d+\s+to\s+\d+\s+of\s+(\d+)/);
+  return { total: n ? +n[1] : list.length, list };
+}
+function cachedEsa(key, words, page) {
+  const k = `esa ${key} ${page} ${words}`;
+  if (!cache.has(k)) cache.set(k, esaSearch(key, words, page).catch(e => { cache.delete(k); throw e; }));
+  return cache.get(k);
+}
+const thumbOf = x => x.lib ? x.thumb : `${assets(x[7])}${x[0]}/${x[0]}~thumb.jpg`;
+const srcName = x => x.lib ? ESA[x.lib].name : 'NASA';
+const fromSel = () => document.querySelector('.libfilters .seg.from [aria-pressed="true"]')?.dataset.from || 'both';
+/* a few pictures of one subject from every library, taking turns (for the globe's selected card) */
+async function mixedPics(term, n = 6) {
+  const jobs = [cached({ q: term, media_type: 'image', page: 1, page_size: 12 }).then(r => ({ who: 'NASA', ...r }))];
+  for (const k of Object.keys(ESA)) jobs.push(cachedEsa(k, term, 1).then(r => ({ who: ESA[k].name, ...r })));
+  const got = (await Promise.allSettled(jobs)).filter(g => g.status === 'fulfilled').map(g => g.value);
+  if (!got.length) throw new Error('out of reach');
+  const lists = got.map(g => g.list.map(x => { x.score = scoreOf(x) + (x.lib ? 2 : 0); return x; }).filter(x => x.score >= 0).sort((a, b) => b.score - a.score));
+  const list = [];
+  for (let i = 0; list.length < n && lists.some(l => l[i]); i++) for (const l of lists) if (l[i] && list.length < n) list.push(l[i]);
+  return { list, counts: got.filter(g => g.total).map(g => [g.who, g.total]) };
+}
+/* one page of a search: NASA's library (a mission's several phrasings asked together) and ESA's two archives, merged.
+   Pictures are sorted by score, taking turns between the libraries within the same score. */
+async function runSearch(q, page, st) {
+  const f = filters(), from = fromSel(), key = fold(q);
+  const terms = PRESETS[key] || [q], size = terms.length > 1 ? 18 : 24;
+  const useEsa = from !== 'nasa' && f.media_type !== 'video';
+  const esaAsk = !useEsa ? [] : ESA_PRESETS[key] || (PRESETS[key] ? [] : Object.keys(ESA).map(k => [k, q]));
+  const jobs = [];
+  if (from !== 'esa') terms.forEach((t, i) => {
+    if (st && (page - 1) * size >= Math.min(st.nasa[i] ?? 0, 10000)) return;
+    jobs.push({ who: 'nasa', i, p: cached({ q: t, ...f, page, page_size: size }) });
+  });
+  for (const [k, words] of esaAsk) {
+    if (st && (page - 1) * ESA_PAGE >= (st.esa[k] ?? 0)) continue;
+    jobs.push({ who: k, p: cachedEsa(k, words, page) });
+  }
+  const done = await Promise.allSettled(jobs.map(j => j.p));
+  if (jobs.length && done.every(d => d.status === 'rejected')) throw new Error('out of reach');
+  const next = { nasa: from !== 'esa' ? terms.map((_, i) => st?.nasa[i] ?? 0) : [], esa: { ...(st?.esa || {}) } }, failed = new Set();
+  const y0 = +f.year_start || 0, y1 = +f.year_end || 9999, byYear = !!(f.year_start || f.year_end);
+  const ids = new Set(page > 1 ? PICS.map(x => (x.lib || 'nasa') + ' ' + x[0]) : []), list = [], seen = {};
+  jobs.forEach((j, n) => {
+    const d = done[n];
+    if (d.status === 'rejected') { failed.add(j.who === 'nasa' ? 'NASA' : ESA[j.who].name); return; }
+    if (j.who === 'nasa') next.nasa[j.i] = d.value.total; else next.esa[j.who] = d.value.total;
+    for (const x of d.value.list) {
+      const id = (x.lib || 'nasa') + ' ' + x[0];
+      if (ids.has(id) || (x.lib && byYear && !(x.year >= y0 && x.year <= y1))) continue;
+      ids.add(id); seen[j.who === 'nasa' ? 'nasa' : x.lib] = (seen[j.who === 'nasa' ? 'nasa' : x.lib] || 0) + 1;
+      x.score = scoreOf(x) + (x.lib ? 2 : 0);                    /* ESA's archives are telescope science pictures */
+      x.n = seen[j.who === 'nasa' ? 'nasa' : x.lib]; list.push(x);
+    }
+  });
   list.sort((a, b) => Math.min(b.score, 4) - Math.min(a.score, 4) || a.n - b.n);
-  return { list, size, totals: got.map((r, i) => r.skip ? totals[i] : r.total), total: Math.max(0, ...got.map(r => r.skip ? 0 : r.total)) };
+  const counts = [];
+  if (from !== 'esa' && next.nasa.length) counts.push(['NASA', Math.max(0, ...next.nasa)]);
+  for (const [k] of esaAsk) counts.push([ESA[k].name, next.esa[k] ?? 0]);
+  const more = next.nasa.some(t => page * size < Math.min(t, 10000)) || esaAsk.some(([k]) => page * ESA_PAGE < (next.esa[k] ?? 0));
+  return { list, st: next, counts, failed: [...failed], more, total: counts.reduce((a, c) => a + c[1], 0) };
 }
 const card = (x, j) => `<button class="pic${x[7] === 'video' ? ' video' : ''}" data-j="${j}">
-      <span class="ph"><img src="${assets(x[7])}${x[0]}/${x[0]}~thumb.jpg" data-id="${esc(x[0])}" data-base="${assets(x[7])}" data-try="thumb" alt="${esc(x[1])}" loading="lazy"></span>
-      <span class="pt"><h3>${esc(x[1])}</h3><span class="meta">${x[2] ? nice(x[2]) : 'No date'} · ${esc(x[3] || 'NASA')}${x[7] === 'video' ? ' · Video' : ''}</span></span></button>`;
+      <span class="ph"><img src="${esc(thumbOf(x))}" data-id="${esc(x[0])}" data-base="${assets(x[7])}" data-try="${x.lib ? 'esa' : 'thumb'}" alt="${esc(x[1])}" loading="lazy"><span class="src${x.lib ? ' esa' : ''}">${srcName(x)}</span></span>
+      <span class="pt"><h3>${esc(x[1])}</h3><span class="meta">${x.lib ? `${esc(x.potw || String(x.year || 'No date'))} · ${srcName(x)}` : `${x[2] ? nice(x[2]) : 'No date'} · ${esc(x[3] || 'NASA')}`}${x[7] === 'video' ? ' · Video' : ''}</span></span></button>`;
 const say = (el, text) => { el.innerHTML = `<div class="state small" style="grid-column:1/-1">${text}</div>`; };
 function render(append, list) {
   if (!append) { PICS.length = 0; $('gallery').innerHTML = ''; $('gallery2').innerHTML = ''; }
@@ -653,7 +791,7 @@ async function libSearch(append = false, opt = {}) {
   const page = append ? lib.page + 1 : 1, q = append ? lib.q : typed;
   if (!append) { $('libCount').textContent = 'Searching NASA’s library…'; if (!PICS.length) say($('gallery'), 'Searching NASA’s library…'); }
   try {
-    let r = await runSearch(q, page, append ? lib.totals : null), used = q, fixed = false;
+    let r = await runSearch(q, page, append ? lib.st : null), used = q, fixed = false;
     if (my !== lib.seq) return;
     if (!append && !opt.exact && r.total < 3) {                  /* few or no results: try the nearest known spelling */
       await loadVocab();
@@ -664,7 +802,7 @@ async function libSearch(append = false, opt = {}) {
         if (r2.total > r.total) { r = r2; used = c; fixed = true; }
       }
     }
-    lib.q = used; lib.page = page; lib.totals = r.totals; lib.size = r.size;
+    lib.q = used; lib.page = page; lib.st = r.st;
     if (!append && fixed) {
       $('libFix').innerHTML = `Showing results for <b>${esc(used)}</b> · <button type="button">search for “${esc(typed)}” instead</button>`;
       $('libFix').hidden = false;
@@ -675,15 +813,18 @@ async function libSearch(append = false, opt = {}) {
     else if (!main) say($('gallery'), 'Only behind-the-scenes pictures match so far. They are shown below; Show more looks further.');
     $('bts').hidden = !back; $('btsToggle').textContent = `Behind the scenes (${back})`;
     if (!append) setBts(!main && back > 0);
-    const total = r.total;
-    $('libCount').textContent = total ? `${total.toLocaleString('en-GB')} found · ${main} shown${back ? ` · ${back} behind the scenes` : ''}` : '';
-    document.querySelector('.more').hidden = !r.totals.some(t => page * r.size < Math.min(t, 10000));
+    const parts = r.counts.filter(c => c[1]).map(([w, n]) => `${w}: ${n.toLocaleString('en-GB')} found`);
+    if (r.list.length || PICS.length) parts.push(`${main} shown`);
+    if (back) parts.push(`${back} behind the scenes`);
+    parts.push(...r.failed.map(w => `${w} out of reach`));
+    $('libCount').innerHTML = r.total || r.failed.length ? parts.map(p => `<span>${esc(p)}</span>`).join(' · ') : '';
+    document.querySelector('.more').hidden = !r.more;
   } catch {
-    if (my === lib.seq && !append) { resetLib('NASA’s library can’t be reached right now. Try again in a moment.'); }
+    if (my === lib.seq && !append) { resetLib('NASA’s and ESA’s libraries can’t be reached right now. Try again in a moment.'); }
   } finally { if (my === lib.seq) lib.busy = false; }
 }
 for (const s of libSel) s.addEventListener('change', () => libSearch(false, { exact: true }));
-typeChips.forEach((c, i) => c.addEventListener('click', () => { typeChips.forEach((x, j) => x.setAttribute('aria-pressed', i === j)); libSearch(false, { exact: true }); }));
+for (const set of [typeChips, fromChips]) set.forEach((c, i) => c.addEventListener('click', () => { set.forEach((x, j) => x.setAttribute('aria-pressed', i === j)); libSearch(false, { exact: true }); }));
 document.querySelector('.more .btn').addEventListener('click', () => libSearch(true));
 $('btsToggle').addEventListener('click', () => setBts($('gallery2').hidden));
 $('gallery2').addEventListener('click', e => { const b = e.target.closest('.pic'); if (b) openViewer(PICS[+b.dataset.j]); });

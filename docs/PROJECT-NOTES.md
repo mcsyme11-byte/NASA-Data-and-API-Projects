@@ -94,6 +94,13 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   from 3 letters; suggestions and corrections allow for small spelling mistakes; mission buttons search several
   phrasings; a picture naming a sky object links to it on the globe. Whether to add ESA's Webb and Hubble archives is
   left to the developer.
+- **Decided Nov 9, 2026 (Image Explorer):** the developer approved the mock-up of ESA's pictures in the library. Each
+  search also asks ESA/Webb and ESA/Hubble's archives live (their pages allow browsers to read them); results are
+  merged and sorted by the same score (ESA's archive pictures start 2 higher, as telescope science pictures), taking
+  turns between libraries. A tag on each picture names its library; "From" picks NASA, ESA or both. The James Webb
+  and Hubble buttons list ESA's whole archive for that telescope; the other mission buttons ask NASA only. ESA's
+  archives have no videos; the NASA centre filter applies to NASA's pictures; the years apply to ESA's pictures by
+  the year in their ID. An ESA picture's credit line, caption and details are read from its page when it opens.
 - **Decided Nov 9, 2026 (Asteroid Tracker):** ESA's NEO Coordination Centre is added beside NASA's data. A new
   "Impact risk" tab lists every object on ESA's risk list (including its special risk list) or NASA/JPL's Sentry list,
   side by side, with the Torino and Palermo scales explained as rules; an asteroid's page and the week's details show

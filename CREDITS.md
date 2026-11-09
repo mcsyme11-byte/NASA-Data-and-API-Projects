@@ -32,6 +32,8 @@ with its exact credit line, in the same change that adds it, and ESA's credit is
 
 | Source | Used for | Terms |
 |---|---|---|
+| ESA/Webb picture archive (esawebb.org) | Image Explorer: Picture library and the globe's pictures, beside NASA's | CC BY 4.0 (esawebb.org/copyright); each picture's own credit line, shown in full with it, for example "NASA, ESA, CSA, STScI. Image Processing: J. Depasquale (STScI)"; captions credited to ESA/Webb |
+| ESA/Hubble picture archive (esahubble.org) | Image Explorer: Picture library and the globe's pictures, beside NASA's | CC BY 4.0 (esahubble.org/copyright); each picture's own credit line, shown in full with it, for example "NASA, ESA, and STScI"; captions credited to ESA/Hubble |
 | ESA NEO Coordination Centre (NEOCC, neo.ssa.esa.int): risk list, special risk list, close approaches | Asteroid Tracker: ESA's impact-risk list beside NASA's, and ESA's close-approach distances | ESA's terms for educational and informational use; credit "ESA NEO Coordination Centre (©ESA)" |
 
 **ESA's terms:** some ESA images, videos and other works are released, where expressly stated, under the Creative
