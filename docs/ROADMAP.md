@@ -21,6 +21,8 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   run each day.
 - [ ] **Developer testing of the home page's "closest pass, next 7 days" line, the size comparisons and the three new
   famous passes** (Toutatis, 2012 TC4, 2023 BU), on a computer and a phone.
+- [ ] **Developer testing of map panning** with a mouse (right, middle and Shift drag), a trackpad (the ✥ button)
+  and a phone (two fingers), and of the "‹ Back" buttons going back exactly one page.
 - [ ] **Developer testing of the orbit diagram's close-approach rings,** the countdown, Play stopping at the approach,
   the new speeds, and turning a famous pass off by pressing its button again.
 - [ ] **Developer testing of the map, search and home preview:** dragging, pinching and zooming on a phone and a

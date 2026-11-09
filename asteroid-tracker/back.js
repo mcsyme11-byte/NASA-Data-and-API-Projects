@@ -1,33 +1,17 @@
 // NASA Data Projects · Asteroid Tracker · back button · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
-// A "‹ Back" link at the top of a page, named for the page it returns to ("Back to the map", "Back to the tracker").
-// When the previous page in this tab is a page of this site, the link uses the browser's own Back, so that page
-// returns where it was left: the tracker and the map also keep their place in this tab (see placeKeeper below).
-// Otherwise the link keeps the fallback written in the HTML (the tracker's front page), or stays hidden when the
-// HTML marks it hidden.
+// The "‹ Back" button at the top of a page. Since Nov 9, 2026 the site's shared footer script (shared/footer.js) names
+// it for the page it returns to and makes it use the browser's own Back, on every page; adding a second click
+// handler here would go back two pages. This only shows a button the HTML marks hidden (the map's, which is
+// useful only when the map was opened from another page of the site).
 //
-// Use:  <a class="backlink" id="back" href="./">‹ Asteroid Tracker</a>   then   backLink(document.getElementById('back'));
+// Use:  <a class="backlink" id="back" href="./" hidden>‹ Back</a>   then   backLink(document.getElementById('back'));
 
 export function backLink(el) {
-  if (!el) return;
+  if (!el || !el.hidden) return;
   let ref = null;
   try { ref = new URL(document.referrer); } catch { /* no referrer */ }
-  const here = location.origin + location.pathname + location.search;
-  if (!ref || ref.origin !== location.origin || ref.origin + ref.pathname + ref.search === here) return;
-  const p = ref.pathname;
-  const label = /\/map\.html$/.test(p) ? 'Back to the map'
-    : /\/object\.html$/.test(p) ? 'Back to the asteroid'
-    : /\/asteroid-tracker\/(index\.html)?$/.test(p) ? 'Back to the tracker'
-    : /\/(index\.html)?$/.test(p) && !/\/(mars-data|image-explorer)\//.test(p) ? 'Back to the home page'
-    : 'Back';
-  el.textContent = '‹ ' + label;
-  el.href = ref.href;
-  el.hidden = false;
-  // The browser's own Back brings the page back as it was. A page opened in a new tab has no history to return to,
-  // so then the link simply opens the page.
-  el.addEventListener('click', (e) => {
-    if (history.length > 1 && !e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) { e.preventDefault(); history.back(); }
-  });
+  if (ref && ref.origin === location.origin && ref.pathname !== location.pathname) el.hidden = false;
 }
 
 // Keeps a page's place (whatever get() returns, plus the scroll position) in this browser tab when the page is left,

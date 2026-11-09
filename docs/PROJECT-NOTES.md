@@ -139,6 +139,13 @@ close-approach files, every near-Earth object's orbit, the spacecraft positions 
 from JPL, and commits them if they changed. If other work has been pushed meanwhile, it rebases onto it and retries
 the push (up to five times).
 
+**Decided Nov 9, 2026 (whole site):** "‹ Back" buttons (`<a class="backlink" id="back">`) are named and wired by
+`shared/footer.js` alone. Page code must not add its own click handler to them, or one press goes back two pages;
+the Asteroid Tracker's `back.js` only un-hides the map's button.
+
+**Decided Nov 9, 2026 (Asteroid Tracker):** the map pans (right, middle or Shift drag, two fingers, or the ✥ button),
+and the wheel and a pinch zoom towards the pointer; a plain drag still turns the view.
+
 **Decided Nov 9, 2026 (Asteroid Tracker):** the orbit diagram marks a close approach at both bodies' positions at that
 moment, and Play stops there; its normal speed is 5 days a second (60 was too fast to follow).
 

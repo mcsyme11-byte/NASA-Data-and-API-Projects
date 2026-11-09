@@ -228,6 +228,9 @@ table.neo tr.out td { color: var(--muted); }
 .mapframe:fullscreen { height: 100vh; border-radius: 0; }
 #map { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; outline: none; }
 #map.dragging { cursor: grabbing; }
+#map.panning, #map.panmode { cursor: move; }
+.mbtn[aria-pressed="true"] { border-color: var(--brass); color: var(--brass-bright); background: rgba(192, 160, 98, .16); }
+.mbtn[hidden] { display: none; }
 #map:focus-visible { box-shadow: inset 0 0 0 2px var(--ink); }
 .ovl-find { right: 12px; top: 12px; width: min(280px, 46%); pointer-events: auto; }
 .findbox input { height: 38px; font-size: 15px; background: rgba(12, 17, 25, .88); }

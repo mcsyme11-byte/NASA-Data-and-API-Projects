@@ -180,6 +180,8 @@ export class SolarMap {
     this.tilt = opts.tilt ?? 55; this.spin = opts.spin ?? -20;
     this.viewR = opts.viewR ?? 1.7;                    // au from the centre to the nearer edge of the view
     this.center = 'Sun';                               // 'Sun', 'Earth', or { asteroid: k }, or { craft: i }
+    this.panX = 0; this.panY = 0;                      // pan: how far the view is moved off the centre, in au across and up the screen
+    this.panMode = false;                              // the pan button: a plain drag pans instead of turning the view
     this.filter = 'all';                               // 'all' | 'haz' | 'big' | 'km'
     this.foundMax = 9999;                              // show only objects found by the end of this year
     this.only = null;                                  // a Set of indices: show only these (close passes in a year)
@@ -252,7 +254,8 @@ export class SolarMap {
     if (this.ast) this.ast.update(this.jd, this.quick);
     const c = this.centerPos();
     const cf = Math.cos(this.spin * RAD), sf = Math.sin(this.spin * RAD), ct = Math.cos(this.tilt * RAD), st = Math.sin(this.tilt * RAD);
-    const cx = W / 2, cy = H / 2, s = (Math.min(W, H) / 2 - 10 * dpr) / this.viewR;
+    const s = (Math.min(W, H) / 2 - 10 * dpr) / this.viewR;
+    const cx = W / 2 - this.panX * s, cy = H / 2 + this.panY * s;   // where the centre object falls, after panning
     this._p = { cf, sf, ct, st, cx, cy, s, c };
     const proj = (x, y, z) => {
       x -= c[0]; y -= c[1]; z -= c[2];
@@ -489,28 +492,66 @@ export class SolarMap {
     return bk >= 0 ? { kind: 'asteroid', k: bk, name: A.rows[bk][1].trim() } : null;
   }
 
-  // ---------------------------------------------------------------- input: drag to turn, pinch or wheel to zoom
+  // Pixels per au on the canvas, and a point on screen (CSS px from the canvas's top left) as a position across
+  // and up the screen plane (au, measured from the centre object).
+  _scale() { return (Math.min(this.cv.width, this.cv.height) / 2 - 10 * this.dpr) / this.viewR; }
+  _screenToPlane(px, py) {
+    const s = this._scale(), W = this.cv.width, H = this.cv.height;
+    return [this.panX + (px * this.dpr - W / 2) / s, this.panY + (H / 2 - py * this.dpr) / s];
+  }
+  // Zoom to viewR keeping the point under (px, py) where it is, so the wheel and a pinch zoom towards the pointer.
+  zoomAt(viewR, px, py) {
+    const [u, v] = this._screenToPlane(px, py);
+    this.setView({ viewR });
+    const s = this._scale(), W = this.cv.width, H = this.cv.height;
+    this.panX = u - (px * this.dpr - W / 2) / s; this.panY = v - (H / 2 - py * this.dpr) / s;
+    this.request();
+  }
+  // Pan by a drag of (dx, dy) CSS pixels: the map follows the pointer.
+  panBy(dx, dy, from) {
+    const s = this._scale();
+    this.panX = from[0] - dx * this.dpr / s; this.panY = from[1] + dy * this.dpr / s;
+    this.request();
+  }
+
+  // ---------------------------------------------------------------- input
+  // Drag to turn the view; drag with the middle or right button, with Shift held, or with the pan button on, to pan;
+  // on a touch screen, two fingers pinch to zoom and drag to pan. The wheel and a pinch zoom towards the pointer.
   _bind() {
     const cv = this.cv, ptrs = new Map();
     let start = null, pinch = null, moved = false;
+    const local = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    cv.addEventListener('contextmenu', (e) => e.preventDefault());     // the right button pans
     cv.addEventListener('pointerdown', (e) => {
       cv.setPointerCapture(e.pointerId);
       ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
       moved = false;
-      if (ptrs.size === 1) start = { x: e.clientX, y: e.clientY, spin: this.spin, tilt: this.tilt };
-      if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), r: this.viewR }; start = null; }
+      if (e.button === 1) e.preventDefault();                          // no auto-scroll on the middle button
+      const pan = e.button === 1 || e.button === 2 || e.shiftKey || this.panMode;
+      if (ptrs.size === 1) start = { x: e.clientX, y: e.clientY, spin: this.spin, tilt: this.tilt, pan, from: [this.panX, this.panY] };
+      if (ptrs.size === 2) {
+        const [a, b] = [...ptrs.values()];
+        pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), r: this.viewR, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, from: [this.panX, this.panY] };
+        start = null;
+      }
     });
     cv.addEventListener('pointermove', (e) => {
       if (!ptrs.has(e.pointerId)) { this.onHover && this.onHover(e); return; }
       ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (pinch && ptrs.size === 2) {
-        const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
-        this.setView({ viewR: pinch.r * pinch.d / Math.max(10, d) }); moved = true; this.onView && this.onView();
+        // two fingers: the midpoint pans, the spread zooms about the midpoint
+        const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y), mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+        this.panBy(mx - pinch.mx, my - pinch.my, pinch.from);
+        const r = cv.getBoundingClientRect();
+        this.zoomAt(pinch.r * pinch.d / Math.max(10, d), mx - r.left, my - r.top);
+        pinch.r = this.viewR; pinch.d = d; pinch.mx = mx; pinch.my = my; pinch.from = [this.panX, this.panY];
+        moved = true; this.onView && this.onView();
       } else if (start) {
         const dx = e.clientX - start.x, dy = e.clientY - start.y;
         if (!moved && Math.hypot(dx, dy) < 4) return;
-        moved = true; cv.classList.add('dragging');
-        this.setView({ spin: start.spin + dx * 0.35, tilt: start.tilt + dy * 0.3 });
+        moved = true; cv.classList.add(start.pan ? 'panning' : 'dragging');
+        if (start.pan) this.panBy(dx, dy, start.from);
+        else this.setView({ spin: start.spin + dx * 0.35, tilt: start.tilt + dy * 0.3 });
         this.onView && this.onView();
       }
     });
@@ -518,19 +559,24 @@ export class SolarMap {
       const wasTap = !moved && ptrs.size === 1 && start;
       ptrs.delete(e.pointerId);
       if (ptrs.size < 2) pinch = null;
-      if (ptrs.size === 0) { cv.classList.remove('dragging'); if (wasTap && e.type === 'pointerup') this.onTap && this.onTap(e); start = null; }
+      if (ptrs.size === 0) { cv.classList.remove('dragging', 'panning'); if (wasTap && e.type === 'pointerup' && e.button === 0) this.onTap && this.onTap(e); start = null; }
     };
     cv.addEventListener('pointerup', end);
     cv.addEventListener('pointercancel', end);
     cv.addEventListener('pointerleave', (e) => { if (!ptrs.size) this.onLeave && this.onLeave(e); });
     cv.addEventListener('wheel', (e) => {
       e.preventDefault();
-      this.setView({ viewR: this.viewR * Math.exp(e.deltaY * (e.deltaMode ? 0.05 : 0.0015)) });
+      const [px, py] = local(e);
+      this.zoomAt(this.viewR * Math.exp(e.deltaY * (e.deltaMode ? 0.05 : 0.0015)), px, py);
       this.onView && this.onView();
     }, { passive: false });
-    cv.addEventListener('dblclick', () => { this.setView({ viewR: this.viewR / 2 }); this.onView && this.onView(); });
+    cv.addEventListener('dblclick', (e) => { const [px, py] = local(e); this.zoomAt(this.viewR / 2, px, py); this.onView && this.onView(); });
     cv.addEventListener('keydown', (e) => {
-      const k = e.key, step = e.shiftKey ? 15 : 5;
+      const k = e.key, step = e.shiftKey ? 15 : 5, p = 0.08 * this.viewR;
+      if (e.altKey && k.startsWith('Arrow')) {                         // Alt + arrows pan
+        this.panX += k === 'ArrowLeft' ? -p : k === 'ArrowRight' ? p : 0; this.panY += k === 'ArrowDown' ? -p : k === 'ArrowUp' ? p : 0;
+        this.request(); e.preventDefault(); this.onView && this.onView(); return;
+      }
       if (k === 'ArrowLeft') this.setView({ spin: this.spin - step });
       else if (k === 'ArrowRight') this.setView({ spin: this.spin + step });
       else if (k === 'ArrowUp') this.setView({ tilt: this.tilt - step });

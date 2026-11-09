@@ -58,7 +58,7 @@ const place = placeKeeper('map', () => {
   if (!map) return {};
   const c = map.center, s = selected;
   return {
-    viewR: map.viewR, spin: map.spin, tilt: map.tilt, tour: tour ? tour.id : null,
+    viewR: map.viewR, spin: map.spin, tilt: map.tilt, tour: tour ? tour.id : null, panX: map.panX, panY: map.panY, panMode: map.panMode,
     center: typeof c === 'object' && c ? (c.asteroid !== undefined ? { asteroid: pdesOf(c.asteroid) } : { craft: c.craft }) : c,
     sel: !s ? null : s.kind === 'asteroid' || s.kind === 'tour' ? { kind: 'asteroid', pdes: pdesOf(s.k) } : s.kind === 'craft' ? { kind: 'craft', i: s.i } : s.kind === 'planet' ? { kind: 'planet', name: s.name } : null,
     ms: live ? null : nowMs(), speed: $('#speed').value, filter: map.filter,
@@ -85,6 +85,7 @@ function restorePlace(p) {
   else if (c && c.asteroid !== undefined) { const k = kOf(c.asteroid); if (k >= 0) map.center = { asteroid: k }; }
   else if (c && Number.isInteger(c.craft) && map.spacecraft[c.craft]) map.center = { craft: c.craft };
   if (Number.isFinite(p.viewR) && Number.isFinite(p.tilt) && Number.isFinite(p.spin)) map.setView({ viewR: p.viewR, tilt: p.tilt, spin: p.spin });
+  if (Number.isFinite(p.panX) && Number.isFinite(p.panY)) { map.panX = p.panX; map.panY = p.panY; map.panMode = !!p.panMode; map.request(); }
   $('#hint').classList.add('gone');
   scrollBack(p.scrollY);
 }
@@ -147,26 +148,40 @@ function syncButtons() {
   const c = map.center;
   $$('[data-c]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.c === 'sel' ? typeof c === 'object' : c === b.dataset.c));
   $$('[data-f]').forEach((b) => b.setAttribute('aria-pressed', map.filter === b.dataset.f));
+  syncPan();
 }
 // smooth transitions between views (skipped when the user prefers reduced motion)
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function animateTo(target, ms = 600) {
   if (reduce) { map.setView(target); syncButtons(); return; }
-  const from = { tilt: map.tilt, spin: map.spin, viewR: map.viewR }, t0 = performance.now();
+  const from = { tilt: map.tilt, spin: map.spin, viewR: map.viewR, panX: map.panX, panY: map.panY }, t0 = performance.now();
   const step = (t) => {
     const f = Math.min(1, (t - t0) / ms), e = f < 0.5 ? 2 * f * f : 1 - (-2 * f + 2) ** 2 / 2;
     const v = {};
     if (target.tilt !== undefined) v.tilt = from.tilt + (target.tilt - from.tilt) * e;
     if (target.spin !== undefined) v.spin = from.spin + (target.spin - from.spin) * e;
     if (target.viewR !== undefined) v.viewR = Math.exp(Math.log(from.viewR) + (Math.log(target.viewR) - Math.log(from.viewR)) * e);
+    if (target.panX !== undefined) { v.panX = from.panX + (target.panX - from.panX) * e; v.panY = from.panY + (target.panY - from.panY) * e; }
     map.setView(v);
     if (f < 1) requestAnimationFrame(step); else syncButtons();
   };
   requestAnimationFrame(step);
 }
 $$('[data-v]').forEach((b) => b.addEventListener('click', () => animateTo(VIEWS[b.dataset.v])));
-$$('[data-r]').forEach((b) => b.addEventListener('click', () => animateTo({ viewR: Number(b.dataset.r) }, 900)));
-function centre(c) { map.center = c; map.request(); syncButtons(); }
+$$('[data-r]').forEach((b) => b.addEventListener('click', () => animateTo({ viewR: Number(b.dataset.r), panX: 0, panY: 0 }, 900)));
+// Choosing a centre (or the current one again) also undoes any panning.
+function centre(c) { map.center = c; map.panX = 0; map.panY = 0; map.request(); syncButtons(); }
+// ---------------------------------------------------------------- panning
+// The pan button makes a plain drag (or one finger) pan instead of turning; "Re-centre" appears once the view has
+// been panned, and glides back to the centre object.
+function syncPan() {
+  const off = Math.hypot(map.panX, map.panY) > map.viewR * 0.02;
+  $('#recentre').hidden = !off;
+  $('#panBtn').setAttribute('aria-pressed', map.panMode);
+  $('#map').classList.toggle('panmode', map.panMode);
+}
+$('#panBtn').addEventListener('click', () => { map.panMode = !map.panMode; syncPan(); });
+$('#recentre').addEventListener('click', () => { animateTo({ panX: 0, panY: 0 }, 500); setTimeout(syncPan, 520); });
 $$('[data-c]').forEach((b) => b.addEventListener('click', () => {
   if (b.dataset.c === 'sel') { if (selected) centre(selected.kind === 'asteroid' ? { asteroid: selected.k } : selected.kind === 'craft' ? { craft: selected.i } : selected.name); }
   else centre(b.dataset.c);
@@ -434,7 +449,7 @@ async function startTour(id) {
   }
   selected = { kind: 'tour', k, name: P.title };
   map.selected = k; $('#cSel').disabled = false;
-  map.center = 'Earth';
+  map.center = 'Earth'; map.panX = 0; map.panY = 0;
   setDate(tMs - P.pre * DAY);
   $('#speed').value = String(P.speed);
   map.filter = 'all'; map.only = null; $('#closeIn').value = ''; map.foundMax = 9999; $('#foundBy').value = $('#foundBy').max; $('#foundBy').dispatchEvent(new Event('input'));
@@ -446,7 +461,7 @@ async function startTour(id) {
 function endTour() {
   tour = null; map.tour = null; map.selected = -1; selected = null;
   $$('[data-pass]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
-  stop(); map.center = 'Sun'; $('#speed').value = '10'; setDate(Date.now(), true);
+  stop(); map.center = 'Sun'; map.panX = 0; map.panY = 0; $('#speed').value = '10'; setDate(Date.now(), true);
   $('#selBody').innerHTML = '<p class="note">Tap a dot, a planet or a spacecraft on the map, or use "Find an asteroid".</p>';
   $('#cSel').disabled = true;
   animateTo({ viewR: 1.7, tilt: 55 }, 900); syncButtons();

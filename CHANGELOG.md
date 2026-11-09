@@ -1,5 +1,16 @@
 # Change log
 
+## November 9, 2026 — Asteroid Tracker: panning on the map; Back goes one page
+
+- **Map panning:** drag with the right or middle mouse button, or hold Shift while dragging; on a touch screen, drag
+  with two fingers; or press the new ✥ button beside the zoom buttons, after which a plain drag pans. "Re-centre"
+  appears once the map is panned. Choosing Sun, Earth or Selected, an "Out to" view or a famous pass also re-centres.
+  Alt and the arrow keys pan from the keyboard. The pan is kept when returning to the map.
+- The mouse wheel, a double click and a pinch now zoom towards the pointer rather than the middle of the map.
+- **Fix:** the "‹ Back" buttons on an asteroid's page and on the map went back two pages, because the site-wide Back
+  code in `shared/footer.js` and the tracker's own code both handled the click. The tracker now leaves naming and
+  clicking to the footer, and only shows the map's button when the map was opened from another page.
+
 ## November 9, 2026 — Asteroid Tracker: clearer close approach in the orbit diagram; slower playing
 
 - **Orbit diagram (each asteroid's page):** the selected close approach is marked by two rings joined by a line,
