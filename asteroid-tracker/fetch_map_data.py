@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# NASA Data Projects · Asteroid Tracker · data for the map and search · © 2026 Malcolm Syme · mcsyme11@gmail.com
+# NASA and ESA Data Projects · Asteroid Tracker · data for the map and search · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Writes, in asteroid-tracker/data/:
 #   neos.json        every near-Earth asteroid's orbit and size, from the NASA/JPL Small-Body Database (SBDB) Query

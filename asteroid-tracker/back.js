@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · back button · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · back button · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // The "‹ Back" button at the top of a page. Since Nov 9, 2026 the site's shared footer script (shared/footer.js) names
 // it for the page it returns to and makes it use the browser's own Back, on every page; adding a second click

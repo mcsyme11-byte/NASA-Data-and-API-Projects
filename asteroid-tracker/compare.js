@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · size comparisons · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · size comparisons · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // An asteroid's size put next to something familiar: "About 3 times the length of an NHL hockey rink (61 m)".
 //

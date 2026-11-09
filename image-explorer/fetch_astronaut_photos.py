@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# NASA Data Projects · Image Explorer · astronaut photos of Earth for the globe · © 2026 Malcolm Syme · mcsyme11@gmail.com
+# NASA and ESA Data Projects · Image Explorer · astronaut photos of Earth for the globe · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Source: the Gateway to Astronaut Photography of Earth (eol.jsc.nasa.gov), Earth Science and Remote Sensing Unit,
 # NASA Johnson Space Center, through its Photos Database API:
@@ -26,7 +26,7 @@ KEEP, MAX_CLOUD = 400, 50
 def query(key, since):
     params = {'query': f'frames|pdate|ge|{since}', 'return': '|'.join(FIELDS), 'key': key}
     url = API + '?' + urllib.parse.urlencode(params, safe='|')
-    req = urllib.request.Request(url, headers={'User-Agent': 'NASA-Data-Projects/1.0 (github.com/mcsyme11-byte/NASA-Data-and-API-Projects)'})
+    req = urllib.request.Request(url, headers={'User-Agent': 'NASA-Data-Projects/1.0 (github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects)'})
     with urllib.request.urlopen(req, timeout=120) as r:
         rows = json.loads(r.read().decode('utf-8'))
     if not isinstance(rows, list):

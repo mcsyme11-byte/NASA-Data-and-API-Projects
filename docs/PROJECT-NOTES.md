@@ -1,9 +1,14 @@
 # Project notes
 
-How NASA Data Projects is built, the decisions made so far, and how to run and publish it.
+How NASA and ESA Data Projects is built, the decisions made so far, and how to run and publish it.
 
 ## Decisions
 
+- **Decided Nov 9, 2026:** the project is renamed **NASA and ESA Data Projects**, and the repository
+  **mcsyme11-byte/NASA-ESA-Data-and-API-Projects** (formerly NASA-Data-and-API-Projects). The site moved with it to
+  https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/ (GitHub does not redirect the old site address; it
+  redirects the old repository address for links and Git). Saved browser data keeps its old `nasa-data-projects.`
+  names, so visitors' keys and places are not lost.
 - **Decided Nov 9, 2026:** the site has information pages (About, Privacy, Terms of use, Credits, Contact) at
   `about/`, `privacy/`, `terms/`, `credits/` and `contact/`, linked from a row of site links in every footer
   (`shared/footer.js`, one file for every page). The footer also links to the licence and the source code on GitHub.
@@ -20,7 +25,7 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
 - **Decided Nov 8, 2026:** the look follows the Flight Deck Suite and Hot Mic ("old money": navy, brass, cream,
   serif type), see [DESIGN.md](DESIGN.md).
 - **Suggested order (Nov 8, 2026):** Asteroid Tracker, then Image Explorer, then Mars Data.
-- **Each project is built in its own chat** inside the Claude project "NASA Data Projects"; a general chat is for
+- **Each project is built in its own chat** inside the Claude project "NASA and ESA Data Projects"; a general chat is for
   questions and exploring.
 - **Decided Nov 8, 2026 (Asteroid Tracker):** charts are hand-drawn SVG (no library), the "This year" view (JPL
   close-approach data) is part of version 1, and the page was built from an approved mock-up.
@@ -114,11 +119,11 @@ JavaScript modules on `file://`.)
 
 ## Publishing (GitHub Pages)
 
-Live since Nov 8, 2026: https://mcsyme11-byte.github.io/NASA-Data-and-API-Projects/
+Live since Nov 8, 2026: https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/
 
 One-time setting, done on github.com: the repository's **Settings › Pages › Build and deployment**, Source
 "Deploy from a branch", Branch **main**, folder **/ (root)**, Save. The site then appears at
-`https://mcsyme11-byte.github.io/NASA-Data-and-API-Projects/` a minute or two after each push.
+`https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/` a minute or two after each push.
 
 ## Checks on GitHub
 

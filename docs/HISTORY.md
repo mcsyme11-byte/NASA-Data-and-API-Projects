@@ -1,11 +1,11 @@
 # History
 
-How NASA Data Projects came about, in order.
+How NASA and ESA Data Projects came about, in order.
 
 ## November 8, 2026 — the idea and the repository
 
 - The developer planned three learning projects built on NASA's open data and APIs, in one Claude project named
-  "NASA Data Projects": an **asteroid tracker** (near-Earth objects sorted by size and distance, with an interactive
+  "NASA and ESA Data Projects": an **asteroid tracker** (near-Earth objects sorted by size and distance, with an interactive
   dashboard), a **Mars data** study (cleaning, organising, statistics and charts of mission measurements) and a
   **NASA image explorer** (searching NASA imagery by date, location and mission, starting from GIBS).
 - Notes from the first discussion: NeoWs's feed covers at most 7 days per request; some older Mars APIs (such as

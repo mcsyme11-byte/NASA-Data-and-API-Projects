@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · orbit positions · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · orbit positions · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Positions of the planets and of an asteroid around the Sun, from Keplerian orbital elements, in the J2000
 // ecliptic frame (x towards the March equinox, z towards the ecliptic north pole), in astronomical units (au).

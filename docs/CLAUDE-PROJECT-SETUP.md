@@ -4,7 +4,7 @@ How the work is organised in a Claude project, and the text for its instructions
 
 ## Setting up the project
 
-1. In Claude, the project is named **NASA Data Projects**.
+1. In Claude, the project is named **NASA and ESA Data Projects**.
 2. Paste the instructions below into "Set project instructions".
 3. Keep one chat for general questions and exploring.
 4. Start each project in its own chat inside the project, with this GitHub repository attached:
@@ -13,9 +13,9 @@ How the work is organised in a Claude project, and the text for its instructions
 ## Project instructions (paste this)
 
 ```
-This project is Malcolm Syme's NASA Data Projects: three learning-and-exploring
+This project is Malcolm Syme's NASA and ESA Data Projects: three learning-and-exploring
 projects built on NASA's open data and APIs, in one public GitHub repository
-(mcsyme11-byte/NASA-Data-and-API-Projects), one folder each:
+(mcsyme11-byte/NASA-ESA-Data-and-API-Projects), one folder each:
 - asteroid-tracker/  Asteroid Tracker (NeoWs: near-Earth objects by size and
   distance, interactive dashboard)
 - mars-data/  Mars Data (mission measurements cleaned, organised by time and

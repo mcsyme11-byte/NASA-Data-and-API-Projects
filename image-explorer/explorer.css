@@ -1,4 +1,4 @@
-/* NASA Data Projects · Image Explorer page styles, on top of shared/theme.css · © 2026 Malcolm Syme · mcsyme11@gmail.com */
+/* NASA and ESA Data Projects · Image Explorer page styles, on top of shared/theme.css · © 2026 Malcolm Syme · mcsyme11@gmail.com */
 
 .datebar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
 .datebar input[type=date] { width: auto; min-width: 170px; text-align: center; }

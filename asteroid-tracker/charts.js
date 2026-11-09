@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · hand-drawn SVG charts · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · hand-drawn SVG charts · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Each chart is drawn at its frame's real width (so text stays readable on phones) and redrawn on resize.
 // Colours follow docs/DESIGN.md: brass for data, red only for NASA's "potentially hazardous" flag, which also gets a

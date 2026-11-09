@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · the solar system map · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · the solar system map · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Draws every near-Earth asteroid (about 43,000), the planets and selected spacecraft around the Sun on a <canvas>,
 // at any date, from any angle. Built for smooth movement:

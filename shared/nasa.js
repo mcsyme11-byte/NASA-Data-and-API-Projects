@@ -1,4 +1,4 @@
-// NASA Data Projects · shared NASA API helper · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · shared NASA API helper · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // One place for talking to api.nasa.gov, used by every project's page.
 //

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# NASA Data Projects · Image Explorer · builds the globe's sky files · © 2026 Malcolm Syme · mcsyme11@gmail.com
+# NASA and ESA Data Projects · Image Explorer · builds the globe's sky files · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Source: the d3-celestial project's data files (Olaf Frohn, BSD 3-Clause licence; see data/LICENSE-d3-celestial.txt).
 # Get them with `npm install d3-celestial` and pass the package's data folder:

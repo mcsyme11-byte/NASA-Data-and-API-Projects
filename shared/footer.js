@@ -1,4 +1,4 @@
-// NASA Data Projects · site links in every footer · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · site links in every footer · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Adds one row of links (About, Privacy, Terms, Credits, Contact, the licence and the source code) to the top of the page's
 // <footer class="footer">, so the links are written in one place for every page. Each page loads it with
@@ -6,7 +6,7 @@
 // It also sets up the "‹ Back" button on pages that have one (see wireBack below).
 // Links are worked out from this file's own address, so they are right at any folder depth.
 
-const REPO = 'https://github.com/mcsyme11-byte/NASA-Data-and-API-Projects';
+const REPO = 'https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects';
 const root = new URL("../", import.meta.url.split("?")[0]);
 
 const LINKS = [

@@ -1,6 +1,6 @@
 # Design guide — "old money", under a night sky
 
-NASA Data Projects share the look of the developer's other projects (the Flight Deck Suite and Hot Mic): navy,
+NASA and ESA Data Projects share the look of the developer's other projects (the Flight Deck Suite and Hot Mic): navy,
 brass and cream, serif type and thin brass rules; calm and precise, like a well-kept paper logbook. The one addition
 is a quiet night sky: a faint field of brass and cream stars behind the home page.
 

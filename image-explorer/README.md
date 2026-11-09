@@ -1,6 +1,6 @@
 # Image Explorer
 
-**Project 3 of NASA Data Projects.** Status: **live** (version 1, Nov 9, 2026).
+**Project 3 of NASA and ESA Data Projects.** Status: **live** (version 1, Nov 9, 2026).
 
 NASA shares huge collections of scientific and satellite imagery. This project is a website that lets people
 search, filter and explore those images by details like date, location and mission.
@@ -60,4 +60,4 @@ python3 image-explorer/tools/build_features.py path/to/natural-earth-geojson   #
 
 ---
 
-**Image Explorer** · part of NASA Data Projects · Created by **Malcolm Syme** · <mcsyme11@gmail.com>
+**Image Explorer** · part of NASA and ESA Data Projects · Created by **Malcolm Syme** · <mcsyme11@gmail.com>

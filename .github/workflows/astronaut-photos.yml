@@ -1,4 +1,4 @@
-# NASA Data Projects · Image Explorer astronaut photos · © 2026 Malcolm Syme · mcsyme11@gmail.com
+# NASA and ESA Data Projects · Image Explorer astronaut photos · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Once a day, fetches the newest cataloged astronaut photos of Earth (with their positions) from the Gateway to
 # Astronaut Photography of Earth (eol.jsc.nasa.gov) and commits image-explorer/data/astronaut.json when it has changed;

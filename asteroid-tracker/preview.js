@@ -1,4 +1,4 @@
-// NASA Data Projects · the home page's live preview of the solar system map · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · the home page's live preview of the solar system map · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // The potentially hazardous asteroids (about 2,500, data/preview.json) and the planets, turning slowly and moving
 // through time. Not interactive: a click opens the full map. Pauses when off screen or in a background tab, and

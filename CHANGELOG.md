@@ -1,5 +1,13 @@
 # Change log
 
+## November 9, 2026 — renamed NASA and ESA Data Projects
+
+- **New name** on every page, document and code comment: NASA and ESA Data Projects.
+- **New repository address:** github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects; the site is now at
+  https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/. Every full link (the footer's licence and source
+  links, About, Terms, Credits, the README, the docs, the data jobs' contact line) points to the new address.
+- Saved browser data (the API key, places in pages) keeps its old storage names, so nothing saved is lost.
+
 ## November 9, 2026 — Asteroid Tracker: panning on the map; Back goes one page
 
 - **Map panning:** drag with the right or middle mouse button, or hold Shift while dragging; on a touch screen, drag
@@ -269,7 +277,7 @@
 
 ## November 8, 2026 — the site is live
 
-- **GitHub Pages switched on:** the home page is at https://mcsyme11-byte.github.io/NASA-Data-and-API-Projects/
+- **GitHub Pages switched on:** the home page is at https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/
   (checked: the page and its three projects load).
 - The developer has a personal NASA API key (kept only in the browser and a local `.env`, never in the repository).
 - The Claude project's instructions are in place.

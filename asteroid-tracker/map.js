@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · solar system map page · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · solar system map page · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // map.html[?focus=<SBDB spkid>]  The renderer is skymap.js; the data (all near-Earth asteroids, spacecraft tracks,
 // this week's visitors) comes from mapdata.js, which reads the daily files in data/.

@@ -1,4 +1,4 @@
-# NASA Data Projects
+# NASA and ESA Data Projects
 
 **Three ways to learn and explore with real data from NASA and its APIs.**
 Designed by **Malcolm Syme** and built with Claude.
@@ -16,7 +16,7 @@ Suggested order: Asteroid Tracker, then Image Explorer, then Mars Data (each bui
 ## How it fits together
 
 ```
-NASA-Data-and-API-Projects/
+NASA-ESA-Data-and-API-Projects/
 ├── index.html          home page linking the three projects
 ├── about/ privacy/ terms/ credits/ contact/   the site's information pages
 ├── shared/             the look (theme.css, emblem), the NASA API helper (nasa.js) and the footer links (footer.js)
@@ -60,6 +60,6 @@ NASA-Data-and-API-Projects/
 Data courtesy of NASA. Imagery from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data
 and Information System (ESDIS). An independent project, not endorsed by NASA.
 
-**NASA Data Projects** · Created by **Malcolm Syme** · <mcsyme11@gmail.com>
+**NASA and ESA Data Projects** · Created by **Malcolm Syme** · <mcsyme11@gmail.com>
 Copyright © 2026 Malcolm Syme. Released under the [MIT License](LICENSE.md); third-party data and libraries keep
 their own terms, listed in [CREDITS.md](CREDITS.md).

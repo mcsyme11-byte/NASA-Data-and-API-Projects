@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · one asteroid · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · one asteroid · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // object.html?id=<NeoWs id>[&t=<close-approach time, ms UTC>]
 // One request to NASA NeoWs (/neo/rest/v1/neo/{id}) gives the asteroid's size, its orbital elements and every
@@ -65,7 +65,7 @@ document.addEventListener('click', (e) => { if (e.target.closest('[data-act=retr
 function render() {
   const n = state.neo, od = n.orbital_data, k = state.k = asteroidElements(od);
   const m = n.estimated_diameter.meters, size = { dmin: m.estimated_diameter_min, dmax: m.estimated_diameter_max };
-  document.title = `${n.name} · Asteroid Tracker · NASA Data Projects`;
+  document.title = `${n.name} · Asteroid Tracker · NASA and ESA Data Projects`;
   $('#name').textContent = n.name;
   const cls = od.orbit_class || {};
   $('#lede').textContent = ORBIT_CLASS[cls.orbit_class_type] || cls.orbit_class_description || 'A near-Earth object.';

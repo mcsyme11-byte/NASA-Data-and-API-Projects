@@ -1,7 +1,7 @@
 # Asteroid Tracker
 
-**Project 1 of NASA Data Projects.** Status: **version 1 live** (Nov 8, 2026):
-https://mcsyme11-byte.github.io/NASA-Data-and-API-Projects/asteroid-tracker/
+**Project 1 of NASA and ESA Data Projects.** Status: **version 1 live** (Nov 8, 2026):
+https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/asteroid-tracker/
 
 Every near-Earth object passing Earth, sorted by size and distance, with graphs to explore in an interactive dashboard.
 
@@ -87,4 +87,4 @@ Run locally: `python3 -m http.server 8000` in the repository's top folder, then 
 
 ---
 
-**Asteroid Tracker** · part of NASA Data Projects · Created by **Malcolm Syme** · <mcsyme11@gmail.com>
+**Asteroid Tracker** · part of NASA and ESA Data Projects · Created by **Malcolm Syme** · <mcsyme11@gmail.com>

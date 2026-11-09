@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · search · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · search · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Instant search over every near-Earth asteroid's name and code (data/neos.json, loaded once). Matching ignores
 // case, spaces and brackets, so "2024yr4", "2024 YR4" and "(2024 YR4)" all find the same object. Ranking:

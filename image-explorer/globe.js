@@ -1,4 +1,4 @@
-/* NASA Data Projects · Image Explorer · the Globe tab · © 2026 Malcolm Syme · mcsyme11@gmail.com
+/* NASA and ESA Data Projects · Image Explorer · the Globe tab · © 2026 Malcolm Syme · mcsyme11@gmail.com
  *
  * The Earth (NASA Blue Marble from GIBS), turned to the current sidereal time, inside the real sky: 5,044 stars to
  * magnitude 6, the 88 constellations' lines and about 1,350 galaxies, nebulae and star clusters (data/, built by

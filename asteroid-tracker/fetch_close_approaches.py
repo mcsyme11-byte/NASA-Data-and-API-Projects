@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# NASA Data Projects · Asteroid Tracker · daily close-approach data · © 2026 Malcolm Syme · mcsyme11@gmail.com
+# NASA and ESA Data Projects · Asteroid Tracker · daily close-approach data · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Fetches every close approach to Earth within 10 lunar distances (LD), one calendar year (UTC) at a time, from the
 # NASA/JPL SBDB Close-Approach Data API, and writes asteroid-tracker/data/YYYY.json for each year plus

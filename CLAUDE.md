@@ -1,6 +1,6 @@
 # Instructions for Claude working in this repo
 
-This repository is Malcolm Syme's **NASA Data Projects**: three learning-and-exploring projects built on NASA's open
+This repository is Malcolm Syme's **NASA and ESA Data Projects**: three learning-and-exploring projects built on NASA's open
 data and APIs, one folder each:
 
 | Project | Folder | What it is |

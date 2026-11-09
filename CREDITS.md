@@ -1,6 +1,6 @@
 # Credits
 
-NASA Data Projects is created by **Malcolm Syme** (<mcsyme11@gmail.com>). The project's own code and documents are
+NASA and ESA Data Projects is created by **Malcolm Syme** (<mcsyme11@gmail.com>). The project's own code and documents are
 released under the [MIT License](LICENSE.md). Everything below comes from others and keeps its own terms.
 
 The same list appears on the site's Credits page. When a new data source or library is added, it is added here and
@@ -40,4 +40,4 @@ logotype ("worm") and seal are not used.
 
 ---
 
-**NASA Data Projects** · Created by **Malcolm Syme** · <mcsyme11@gmail.com>
+**NASA and ESA Data Projects** · Created by **Malcolm Syme** · <mcsyme11@gmail.com>

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# NASA Data Projects · the wording and secrets check · © 2026 Malcolm Syme · mcsyme11@gmail.com
+# NASA and ESA Data Projects · the wording and secrets check · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Checks the repository against CLAUDE.md's rules: neutral wording ("the developer", never a first name on its own),
 # no chat narrating its own work, no chat tone, no personal paths or user names, and no NASA API key in any file (the repository is

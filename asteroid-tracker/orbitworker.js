@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · the map's background thread · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · the map's background thread · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Works out the positions of every asteroid for the map (kepler.js) so the page's own thread only draws. The page
 // sends the orbits once, then a date and three position arrays to fill; the arrays go back and forth without copying.

@@ -1,4 +1,4 @@
-# NASA Data Projects · checks · © 2026 Malcolm Syme · mcsyme11@gmail.com
+# NASA and ESA Data Projects · checks · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # After every push to main (and on pull requests), checks the repository against CLAUDE.md's rules with
 # dev/check_wording.py: neutral wording, no personal paths or user names, and no NASA API key (the repository is

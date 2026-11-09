@@ -1,4 +1,4 @@
-// NASA Data Projects · Image Explorer · builds the place list for place search · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Image Explorer · builds the place list for place search · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Source: GeoNames (geonames.org, CC BY 4.0) through the all-the-cities package (MIT), which holds every GeoNames
 // place of 1,000 people or more. Run from a folder where `npm install all-the-cities@3.1.0` has been done:

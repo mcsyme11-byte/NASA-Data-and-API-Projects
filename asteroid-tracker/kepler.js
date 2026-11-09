@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · positions of many asteroids at once · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · positions of many asteroids at once · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Used both on the page (skymap.js) and in the background thread (orbitworker.js), so both give identical positions.
 // S holds the orbits as typed arrays (see Asteroids in skymap.js) and receives the positions in S.x, S.y, S.z (au).

@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · the home page's "closest pass in the next 7 days" · © 2026 Malcolm Syme ·
+// NASA and ESA Data Projects · Asteroid Tracker · the home page's "closest pass in the next 7 days" · © 2026 Malcolm Syme ·
 // mcsyme11@gmail.com
 //
 // Reads data/soon.json (written daily: the close passes from a day ago to 15 days ahead, within 10 Moon distances)

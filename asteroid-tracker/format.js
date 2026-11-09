@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · units and formatting · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · units and formatting · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Rules for the numbers on this page:
 //   Moon distances:  LD = km ÷ 384,400                 (1 LD is the Moon's average distance)

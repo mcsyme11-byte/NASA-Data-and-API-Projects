@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · the orbit diagram · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · the orbit diagram · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Draws the Sun, the planets' orbits and an asteroid's orbit to scale in SVG, with every body placed at the chosen
 // date (positions from orbit.js). The view can be turned: "tilt" is the angle from looking straight down on Earth's

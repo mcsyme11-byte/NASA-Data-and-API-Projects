@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# NASA Data Projects · Image Explorer · builds the natural-feature list for place search
+# NASA and ESA Data Projects · Image Explorer · builds the natural-feature list for place search
 # © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Source: Natural Earth 1:10m (naturalearthdata.com, public domain), the GeoJSON files in the

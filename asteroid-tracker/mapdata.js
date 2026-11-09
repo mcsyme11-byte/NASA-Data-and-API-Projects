@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · data for the map and search · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · data for the map and search · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // data/neos.json        every near-Earth asteroid's orbit (NASA/JPL Small-Body Database), refreshed daily
 // data/spacecraft.json  spacecraft positions every few days (NASA/JPL Horizons), refreshed daily

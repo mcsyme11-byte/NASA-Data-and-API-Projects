@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Two views:
 //   This week  live from NASA NeoWs (/neo/rest/v1/feed, at most 7 days per request; 1 request per week shown),

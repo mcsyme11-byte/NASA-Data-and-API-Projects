@@ -1,4 +1,4 @@
-// NASA Data Projects · Asteroid Tracker · the Search tab · © 2026 Malcolm Syme · mcsyme11@gmail.com
+// NASA and ESA Data Projects · Asteroid Tracker · the Search tab · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Results appear after every letter typed. The first search loads data/neos.json (about 43,000 asteroids) once;
 // after that each keystroke is answered from memory in a few milliseconds.

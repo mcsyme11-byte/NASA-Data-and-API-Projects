@@ -1,4 +1,4 @@
-/* NASA Data Projects · Asteroid Tracker page styles, on top of shared/theme.css · © 2026 Malcolm Syme · mcsyme11@gmail.com */
+/* NASA and ESA Data Projects · Asteroid Tracker page styles, on top of shared/theme.css · © 2026 Malcolm Syme · mcsyme11@gmail.com */
 [hidden] { display: none !important; }
 
 .toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 22px;
