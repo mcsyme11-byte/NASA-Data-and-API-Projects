@@ -32,17 +32,21 @@ filter by. The Image Library has the mission photos. The globe ties places on Ea
 image-explorer/
 ├── index.html          the page: Earth map, Globe, Picture library
 ├── explorer.css        the page's styles (on top of shared/theme.css)
-├── app.js              the Earth map, place search, tabs and the picture library
+├── app.js              the Earth map (world, Arctic, Antarctic), place search, tabs and the picture library
 ├── globe.js            the Globe tab (three.js)
+├── fetch_astronaut_photos.py   daily astronaut photos (GitHub Actions; needs the EOL_API_KEY secret)
 ├── data/
 │   ├── places.json     towns of 10,000 people or more and capitals (GeoNames, CC BY 4.0)
+│   ├── features.json   mountains, ranges, lakes, rivers, deserts, islands, seas (Natural Earth, public domain)
+│   ├── astronaut.json  the newest astronaut photos of Earth with their positions (empty until the key is set)
 │   ├── stars.json      5,044 stars to magnitude 6        ┐
 │   ├── sky.json        about 1,350 deep-sky objects      ├ d3-celestial (BSD licence,
 │   ├── constellations.json  the 88 constellations        ┘ LICENSE-d3-celestial.txt)
 │   └── LICENSE-d3-celestial.txt
 ├── tools/
 │   ├── build_sky.py        builds stars.json, sky.json, constellations.json
-│   └── build_places.mjs    builds places.json
+│   ├── build_places.mjs    builds places.json
+│   └── build_features.py   builds features.json
 └── README.md           this file
 ```
 
@@ -51,6 +55,7 @@ Rebuilding the data:
 npm install d3-celestial all-the-cities@3.1.0                  # in any scratch folder
 python3 image-explorer/tools/build_sky.py node_modules/d3-celestial/data
 node image-explorer/tools/build_places.mjs image-explorer/data/places.json   # run from the scratch folder
+python3 image-explorer/tools/build_features.py path/to/natural-earth-geojson   # the six files named in the script
 ```
 
 ---

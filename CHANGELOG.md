@@ -1,5 +1,22 @@
 # Change log
 
+## November 9, 2026 — Image Explorer: polar views, natural features, videos, astronaut photos
+
+- **Arctic and Antarctic views** on the Earth map, looking straight down on the poles (GIBS's polar maps, with
+  proj4js). Layers a view lacks are greyed out ("World view only"): sea temperature and smoke and dust in both, fires
+  around Antarctica; sea ice there comes from the daily MODIS sea-ice layer. Choosing a place far from the pole goes
+  back to the world view.
+- **Natural features in place search:** 3,978 mountains (with heights), ranges, lakes, rivers, deserts, islands,
+  seas, gulfs and bays from Natural Earth (public domain); choosing a lake, range, river or sea shows all of it.
+- **Playable videos** in the picture library: Pictures / Pictures and videos / Videos; a play mark on video cards; the
+  viewer plays the smallest version NASA offers and links the full-size file.
+- **Astronaut photos on the globe** (blue squares): a daily job (`astronaut-photos.yml`, `fetch_astronaut_photos.py`)
+  fetches the newest cataloged photos of Earth with their positions from NASA's Gateway to Astronaut Photography of
+  Earth; each opens with the photo, its date, what it shows, a link to NASA's page and NASA's credit line. Switched
+  off until the free API key is stored as the secret `EOL_API_KEY`.
+- **Sky positions checked:** Westerlund 2 moved 0.02°; the Rho Ophiuchi marker moved 1.2°, from the star onto the
+  cloud complex named after it.
+
 ## November 9, 2026 — Image Explorer version 1
 
 - **Live** at `image-explorer/`, from the approved mock-up; the mock-up files are removed. The home page lists the

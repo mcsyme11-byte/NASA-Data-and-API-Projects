@@ -43,13 +43,14 @@ FAMOUS_M = {'M1', 'M8', 'M13', 'M16', 'M20', 'M27', 'M31', 'M33', 'M42', 'M44', 
 FAMOUS = {'Carina Nebula', 'Southern Ring Nebula', 'Helix Nebula', "Cat's Eye Nebula", 'Horsehead Nebula',
           'Tarantula Nebula', 'Large Magellanic Cloud', 'Small Magellanic Cloud', 'Centaurus A', 'Sculptor Galaxy',
           'Needle Galaxy', 'Omega Centauri', 'North America Nebula', 'Rosette Nebula', 'Veil Nebula', "Stephan's Quintet"}
-# famous Hubble and Webb targets missing from the catalogue: J2000 positions (SIMBAD), degrees
+# famous Hubble and Webb targets missing from the catalogue: J2000 positions, degrees. Checked Nov 9, 2026 against
+# SIMBAD's values as published (Wikipedia's infoboxes cite SIMBAD; NASA's Webb image pages for the Cartwheel)
 EXTRA = [
     ("Stephan's Quintet", 'HCG 92', 'galaxy', 'Group of galaxies', 338.990, 33.960),
-    ('Cartwheel Galaxy', 'ESO 350-40', 'galaxy', 'Ring galaxy', 9.421, -33.716),
-    ('Westerlund 2', 'Westerlund 2', 'cluster', 'Young star cluster', 156.000, -57.750),
-    ('Cassiopeia A', '3C 461', 'nebula', 'Supernova remnant', 350.850, 58.815),
-    ('Rho Ophiuchi', 'Rho Oph cloud', 'nebula', 'Star-forming cloud', 246.400, -23.450),
+    ('Cartwheel Galaxy', 'ESO 350-40', 'galaxy', 'Ring galaxy', 9.421, -33.716),          # 00h 37m 41.1s, -33° 42' 59"
+    ('Westerlund 2', 'Westerlund 2', 'cluster', 'Young star cluster', 155.992, -57.764),   # 10h 23m 58.1s, -57° 45' 49"
+    ('Cassiopeia A', '3C 461', 'nebula', 'Supernova remnant', 350.850, 58.815),         # 23h 23m 24s, +58° 48.9'
+    ('Rho Ophiuchi', 'Rho Oph cloud', 'nebula', 'Star-forming cloud', 247.025, -24.542),  # the cloud complex: 16h 28m 06s, -24° 32.5'
 ]
 
 def tidy(s): return s.replace('´', '’').replace("'", '’')

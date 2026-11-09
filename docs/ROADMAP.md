@@ -32,26 +32,33 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
   "famous.json written").
 
-## 2. Image Explorer (version 1 live Nov 9, 2026)
+## 2. Image Explorer (version 1 live Nov 9, 2026; additions Nov 9)
 
+- [ ] **Astronaut photos: request the free API key** by email from jsc-earthweb@mail.nasa.gov (Gateway to Astronaut
+  Photography of Earth), then store it on github.com as the repository secret `EOL_API_KEY` (Settings › Secrets and
+  variables › Actions › New repository secret) and run Actions › Astronaut photos › Run workflow once. Until then the
+  globe hides the astronaut photos. The first real run is the first test of `fetch_astronaut_photos.py` against the
+  API (it was tested on records shaped like the API documentation's examples).
 - [ ] **Developer testing** at the developer's own pace, on a computer and a phone: the Earth map (dates, Play,
-  layers, place search, tapping the map), the Globe (turning, zooming, events, sky markers, find, the selected card,
-  "See it on the Earth map"), the Picture library (search, filters, Show more, the viewer).
+  layers, place search with towns and natural features, tapping the map, the Arctic and Antarctic views), the Globe
+  (turning, zooming, events, sky markers, find, the selected card, "See it on the Earth map"), the Picture library
+  (search, filters, Pictures / Pictures and videos / Videos, playing a video, Show more, the viewer).
+- [ ] Check the Arctic and Antarctic views with live imagery (built and tested with NASA out of reach; the tile
+  addresses were checked separately).
+- [ ] Delete the branch `image-explorer-probe` on GitHub (Branches page): it held one-off probes of NASA, SIMBAD and
+  the astronaut photo site on Nov 9, 2026.
 - [ ] Further rounds of changes to the globe, as the developer reviews it.
-- [ ] Globe: astronaut photos of Earth as pins (work out how to query eol.jsc.nasa.gov; a daily file from GitHub
-  Actions, since web pages cannot call it).
-- [ ] Globe: confirm the four hand-listed sky positions against SIMBAD (see DATA-SOURCES.md).
 - [ ] Globe: sharper Earth close up (finer Blue Marble tiles for the part in view); day and night shading if wanted;
   more objects (fainter galaxies) if wanted.
-- [ ] Earth map: each layer's dates read from GIBS rather than a fixed one-day lag for the MUR layers, without
-  downloading the 5.8 MB layer list on every visit.
+- [ ] Earth map: each layer's dates read from GIBS rather than fixed one-day lags (MUR layers; clouds in the polar
+  views), without downloading the 5.8 MB layer list on every visit.
 - [ ] Earth map: colour keys drawn in the project's look from GIBS's colour maps, in place of GIBS's light legend images.
-- [ ] Earth map: Arctic and Antarctic views (`epsg3413`, `epsg3031`).
-- [ ] Place search: mountains, lakes, rivers and other natural features (GeoNames classes T and H).
-- [ ] Picture library: videos playable; all sizes of a picture listed in the viewer.
+- [ ] Place search: smaller natural features (Natural Earth 1:10m leaves out, for example, Lake Louise and the Bow
+  River).
+- [ ] Picture library: subtitles for videos (NASA's files cannot be attached from another site; would need a copy).
 - [ ] Shared parts used by both projects (tabs, "How to read this", the big search box, the tooltip) moved from
   `asteroid-tracker/tracker.css` into `shared/theme.css`; the page still loads `tracker.css` for them.
-- [ ] Load OpenLayers and three.js from the repository rather than a CDN, so the page does not depend on jsDelivr.
+- [ ] Load OpenLayers, proj4js and three.js from the repository rather than a CDN, so the page does not depend on jsDelivr.
 - [ ] Keyboard use of the globe's markers (today they are reached through Find). With reduced motion set, the globe
   does not turn by itself and moves without animation; to be rechecked on a phone.
 

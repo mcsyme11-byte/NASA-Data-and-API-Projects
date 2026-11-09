@@ -3,7 +3,7 @@
  * The Earth (NASA Blue Marble from GIBS), turned to the current sidereal time, inside the real sky: 5,044 stars to
  * magnitude 6, the 88 constellations' lines and about 1,350 galaxies, nebulae and star clusters (data/, built by
  * tools/build_sky.py from d3-celestial). Pins on the Earth are the natural events NASA EONET reported in the last
- * 30 days. Uses app.js's show(), nice(), esc(), search(), openViewer(), libSearch(), focusEarth() and A.
+ * 30 days, and astronaut photos of Earth (data/astronaut.json, refreshed daily by fetch_astronaut_photos.py). Uses app.js's show(), nice(), esc(), search(), openViewer(), libSearch(), focusEarth() and A.
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -21,9 +21,9 @@ const vec = (lat, lon, r) => new THREE.Vector3(r * Math.cos(lat * D2R) * Math.co
 /* Greenwich mean sidereal time: how far the Earth has turned against the stars (IAU 1982 formula, enough here). */
 const gmst = (t = Date.now()) => ((((280.46061837 + 360.98564736629 * (t / 864e5 + 2440587.5 - 2451545)) % 360) + 360) % 360) * D2R;
 
-const vis = { events: true, galaxy: true, nebula: true, cluster: true, lines: true, labels: true, spin: !reduce };
+const vis = { events: true, photos: true, galaxy: true, nebula: true, cluster: true, lines: true, labels: true, spin: !reduce };
 let renderer, scene, camera, controls, earth, earthMat, started = false, running = false;
-let events = [], sky = [], cons = [], lines = null, hits = [], selected = null, fly = null, hover = null;
+let events = [], photos = [], sky = [], cons = [], lines = null, hits = [], selected = null, fly = null, hover = null;
 
 /* ---------- sky objects: data/sky.json rows are
    [id, name, kind, type, ra, dec, magnitude, size in arcminutes, famous, search term, other designation] ---------- */
@@ -60,6 +60,7 @@ function init() {
   loadStars();
   loadSky();
   loadEvents();
+  loadPhotos();
   wirePointer();
   new ResizeObserver(resize).observe(frame);
 }
@@ -154,9 +155,21 @@ async function loadEvents() {
   status();
 }
 
+/* ---------- astronaut photos of Earth (cataloged ones, with the position of the photo's centre) ---------- */
+const EOL = 'https://eol.jsc.nasa.gov/';
+async function loadPhotos() {
+  try {
+    const j = await (await fetch('data/astronaut.json')).json();
+    photos = (j.photos || []).map(([id, date, time, lat, lon, place, feat, cloud, small, large]) => ({
+      id, kind: 'photo', name: place || 'Astronaut photo', date, time, lat, lon, feat, cloud, small, large, local: vec(lat, lon, 1.004) }));
+  } catch { photos = []; }
+  document.querySelector('[data-show="photos"]').hidden = !photos.length;
+  status();
+}
+
 function status() {
   const ev = events === null ? 'events unavailable right now' : `${events.length} events on Earth in the last 30 days`;
-  tag(`${ev} · ${sky.length.toLocaleString('en-GB')} sky objects · as of ${new Date().toUTCString().slice(17, 22)} UTC`);
+  tag(`${ev}${photos.length ? ` · ${photos.length} astronaut photos` : ''} · ${sky.length.toLocaleString('en-GB')} sky objects · as of ${new Date().toUTCString().slice(17, 22)} UTC`);
   $('gSrc').textContent = 'Earth: NASA Blue Marble (GIBS). Events: NASA EONET, live. Stars to magnitude 6, galaxies, nebulae, clusters and constellations: d3-celestial.';
 }
 const tag = t => { $('gTag').textContent = t; };
@@ -247,6 +260,18 @@ function draw() {
     if (sel) { ctx.strokeStyle = BRIGHT; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, r + 5, 0, 7); ctx.stroke(); }
     if (sel || hover === e || (vis.labels && dist < 1.5)) label(x, y, e.name, sel || hover === e ? BRIGHT : INK2, sel ? r + 8 : 9);
   }
+
+  /* astronaut photos: small blue squares where each photo's centre is */
+  if (vis.photos) for (const ph of photos) {
+    const p = ph.local.clone().applyMatrix4(m);
+    if (p.dot(cam.clone().sub(p)) <= 0) continue;
+    const at = place(p, ph, 9); if (!at) continue;
+    const [x, y] = at, r = dist < 1.6 ? 4.5 : dist < 3 ? 3.5 : 2.6, sel = selected === ph;
+    ctx.fillStyle = '#8AA9C9'; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+    ctx.strokeStyle = 'rgba(5,8,13,.8)'; ctx.lineWidth = 1; ctx.strokeRect(x - r, y - r, 2 * r, 2 * r);
+    if (sel) { ctx.strokeStyle = BRIGHT; ctx.lineWidth = 1.5; ctx.strokeRect(x - r - 5, y - r - 5, 2 * r + 10, 2 * r + 10); }
+    if (sel || hover === ph) label(x, y, ph.name, BRIGHT, sel ? r + 9 : 9);
+  }
 }
 
 /* ---------- pointer: hover names, tap to select ---------- */
@@ -269,7 +294,7 @@ function wirePointer() {
     if (e.pointerType !== 'mouse' || e.buttons) { tip.hidden = true; return; }
     hover = nearest(e); el.style.cursor = hover ? 'pointer' : '';
     if (!hover) { tip.hidden = true; return; }
-    tip.innerHTML = `<b>${esc(hover.name)}</b><br>${esc(hover.kind === 'event' ? hover.catTitle + ' · ' + nice(hover.date) : hover.type)}`;
+    tip.innerHTML = `<b>${esc(hover.name)}</b><br>${esc(hover.kind === 'event' ? hover.catTitle + ' · ' + nice(hover.date) : hover.kind === 'photo' ? 'Astronaut photo · ' + nice(hover.date) : hover.type)}`;
     tip.style.left = e.clientX + 14 + 'px'; tip.style.top = e.clientY + 14 + 'px'; tip.hidden = false;
   });
   el.addEventListener('pointerleave', () => { hover = null; tip.hidden = true; });
@@ -299,7 +324,7 @@ function stepFly() {
   if (k === 1) fly = null;
 }
 function goTo(it) {
-  if (it.kind === 'event') {
+  if (it.kind === 'event' || it.kind === 'photo') {
     flyTo(it.local.clone().applyMatrix4(earth.matrixWorld).normalize().multiplyScalar(Math.min(camera.position.length(), 2.2)));
   } else {
     flyTo(skyView(it.pos, Math.max(camera.position.length(), 6)));
@@ -319,7 +344,20 @@ function moons(dim) {                                   /* the full Moon is abou
 function select(it) {
   selected = it;
   const card = $('gCard');
-  if (it.kind === 'event') {
+  if (it.kind === 'photo') {
+    const [mission, roll, frame] = it.id.split('-');
+    card.innerHTML = `<h2>Selected</h2><div class="eyebrow">Astronaut photo</div><h3>${esc(it.name)}</h3>
+      <a class="gphoto" href="${EOL}DatabaseImages/${esc(it.large)}" target="_blank" rel="noopener"><img onerror="this.parentNode.hidden = true" src="${EOL}DatabaseImages/${esc(it.small)}" alt="Astronaut photo of ${esc(it.name)}, ${esc(it.id)}"></a>
+      <dl class="facts"><dt>Taken</dt><dd>${nice(it.date)}, ${esc(it.time)} UTC</dd>
+      ${it.feat ? `<dt>Shows</dt><dd>${esc(it.feat)}</dd>` : ''}
+      <dt>Cloud</dt><dd>${it.cloud}% of the picture</dd>
+      <dt>Photo</dt><dd class="mono">${esc(it.id)}</dd>
+      <dt>Centre</dt><dd class="mono">${Math.abs(it.lat).toFixed(1)}° ${it.lat >= 0 ? 'N' : 'S'}, ${Math.abs(it.lon).toFixed(1)}° ${it.lon >= 0 ? 'E' : 'W'}</dd></dl>
+      <a class="btn ghost" href="${EOL}SearchPhotos/photo.pl?mission=${encodeURIComponent(mission)}&roll=${encodeURIComponent(roll)}&frame=${encodeURIComponent(frame)}" target="_blank" rel="noopener">The photo on NASA's site</a>
+      <button class="btn ghost" id="gEarth">See it on the Earth map</button>
+      <p class="note" style="margin:12px 0 0">${/^ISS/.test(it.id) ? 'Taken from the International Space Station. ' : ''}Image courtesy of the Earth Science and Remote Sensing Unit, NASA Johnson Space Center.</p>`;
+    $('gEarth').addEventListener('click', () => focusEarth(it.lat, it.lon, it.date, null));
+  } else if (it.kind === 'event') {
     card.innerHTML = `<h2>Selected</h2><div class="eyebrow">${esc(it.catTitle)} · on Earth now</div><h3>${esc(it.name)}</h3>
       <dl class="facts"><dt>Latest report</dt><dd>${nice(it.date)}</dd>
       ${it.mag ? `<dt>Size</dt><dd>${Number(it.mag).toLocaleString('en-GB')} ${esc(it.unit || '')}</dd>` : ''}
@@ -358,12 +396,12 @@ const gq = $('gQ'), gl = $('gList'); let found = [], gsel = -1;
 gq.addEventListener('input', () => {
   const f = fold(gq.value.trim()); found = []; gsel = -1;
   if (!f) { gl.hidden = true; return; }
-  for (const it of [...sky, ...(events || [])]) {
+  for (const it of [...sky, ...(events || []), ...photos]) {
     const keys = [it.name, it.id, it.desig || '', it.catTitle || ''].map(fold);
     if (keys.some(k => k.startsWith(f) || k.includes(' ' + f))) found.push(it);
     if (found.length >= 8) break;
   }
-  gl.innerHTML = found.length ? found.map((it, j) => `<li role="option" id="gl${j}" aria-selected="false" data-j="${j}"><span>${esc(it.name)}</span><span class="k">${esc(it.kind === 'event' ? it.catTitle : it.type)}</span></li>`).join('')
+  gl.innerHTML = found.length ? found.map((it, j) => `<li role="option" id="gl${j}" aria-selected="false" data-j="${j}"><span>${esc(it.name)}</span><span class="k">${esc(it.kind === 'event' ? it.catTitle : it.kind === 'photo' ? 'Astronaut photo · ' + nice(it.date) : it.type)}</span></li>`).join('')
     : '<li aria-disabled="true"><span class="note">Nothing by that name on the globe</span></li>';
   gl.hidden = false; gq.setAttribute('aria-expanded', 'true');
 });

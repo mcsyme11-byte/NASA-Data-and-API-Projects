@@ -65,6 +65,10 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
   it with all the galaxies. Version 1 went live the same night with about 1,350 sky objects (every Messier object,
   every named object and every galaxy to magnitude 12) and the constellations, the real place list (GeoNames) and the
   live picture library. Further rounds of changes are expected.
+- **Decided Nov 9, 2026 (Image Explorer):** the developer asked for five additions at once, built the same night:
+  the four hand-listed sky positions checked, playable videos, natural features in place search (Natural Earth),
+  Arctic and Antarctic views (proj4js with OpenLayers), and astronaut photos on the globe (a daily GitHub Actions
+  job, active once the free API key is stored as the secret `EOL_API_KEY`).
 - **Not possible (Nov 9, 2026):** seeing individual houses. NASA's sharpest free imagery is about 30 m a pixel
   (Landsat) and the daily layers 250 m; houses need commercial imagery, which is neither NASA's nor free.
 
@@ -75,7 +79,7 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
 | Web pages | Plain HTML, CSS and JavaScript modules, no build step | Free hosting on GitHub Pages; easy to read and learn from |
 | Charts | Hand-drawn SVG, styled to DESIGN.md (Asteroid Tracker); chosen per project | No library to load; matches the look exactly |
 | Globe (Image Explorer) | three.js 0.187 (MIT licence, from a CDN), WebGL | A textured Earth, 5,000 stars and markers drawn smoothly; the markers and names are drawn on a 2D layer above |
-| Maps (Image Explorer) | OpenLayers 10 (BSD licence, from a CDN), `epsg4326` and the two polar projections | Handles GIBS's tile grids, vector fire tiles and polar views; Leaflet does not without add-ons |
+| Maps (Image Explorer) | OpenLayers 10 (BSD licence) and proj4js 2.22 (MIT) from a CDN; `epsg4326`, `epsg3413` (Arctic), `epsg3031` (Antarctic) | Handles GIBS's tile grids, vector fire tiles and polar views; Leaflet does not without add-ons |
 | Mars analysis | Python 3 (pandas, matplotlib) in `mars-data/analysis/` | Cleaning and statistics are easiest in Python; it writes small summary files the web page reads |
 
 ## API keys
@@ -110,6 +114,10 @@ One-time setting, done on github.com: the repository's **Settings › Pages › 
 - no NASA API key.
 
 Run it by hand: `python3 dev/check_wording.py`.
+
+`.github/workflows/astronaut-photos.yml` runs once a day (07:41 UTC) and on demand: it fetches the newest astronaut
+photos of Earth into `image-explorer/data/astronaut.json` if the secret `EOL_API_KEY` is set, and commits the file if
+it changed.
 
 `.github/workflows/asteroid-data.yml` runs once a day (06:17 UTC) and on demand (Actions › Asteroid data › Run
 workflow, with "all" to refresh every year): it refreshes the Asteroid Tracker's close-approach files, every

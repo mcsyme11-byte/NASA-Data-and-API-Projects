@@ -66,3 +66,13 @@ How NASA Data Projects came about, in order.
   the last 30 days, about 35.
 - The globe mock-up was approved the same night and published with about 1,350 sky objects.
 
+## November 9, 2026 — Image Explorer: five additions overnight
+
+- The developer asked for five additions and went to bed. NASA, SIMBAD and the astronaut photo site cannot be reached
+  from the build session, so a temporary GitHub Actions job on a separate branch checked them and committed what it
+  found; Natural Earth was downloaded directly.
+- The check of the hand-listed sky positions found one real mistake: the Rho Ophiuchi marker sat on the star, not on
+  the cloud complex named after it.
+- The astronaut photo site turned out to have a documented API that needs a free key, requested by email. The daily
+  job was built to start working as soon as the key is stored as a GitHub secret.
+

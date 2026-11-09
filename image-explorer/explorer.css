@@ -19,6 +19,9 @@
   background: transparent; border: 1px solid var(--line); border-radius: var(--r-btn); color: var(--ink2); font: 15px var(--font); cursor: pointer; }
 .lyr button:hover { border-color: var(--brass-dim); }
 .lyr button[aria-pressed="true"] { border-color: var(--brass); color: var(--ink); background: rgba(192, 160, 98, .07); }
+.lyr button[disabled] { color: var(--faint); cursor: default; border-style: dashed; }
+.lyr button[disabled]:hover { border-color: var(--line); }
+.lyr button[disabled] .mark { border-color: var(--faint); }
 .lyr .mark { flex: none; width: 14px; height: 14px; border: 1px solid var(--brass-dim); border-radius: 50%; }
 .lyr.multi .mark { border-radius: 2px; }
 .lyr button[aria-pressed="true"] .mark { background: var(--brass); border-color: var(--brass); box-shadow: inset 0 0 0 2px var(--card); }
@@ -83,6 +86,10 @@
 .key.ga { border-radius: 50%; border: 1.5px solid var(--brass-bright); width: 11px; height: 11px; }
 .key.ne { background: var(--brass); transform: rotate(45deg) scale(.8); }
 .key.cl { border-radius: 50%; background: var(--ink2); width: 6px; height: 6px; }
+.key.ph { background: #8AA9C9; width: 9px; height: 9px; }
+.gphoto { display: block; margin: 0 0 12px; border: 1px solid var(--line); border-radius: var(--r-btn); overflow: hidden; background: var(--deep); }
+.gphoto img { display: block; width: 100%; height: auto; }
+.gphoto:hover { border-color: var(--brass); }
 .gwrap { display: grid; grid-template-columns: 1fr 330px; gap: 22px; align-items: start; }
 .globeframe { position: relative; height: 640px; background: #05080D; touch-action: none; }
 #globe, #gOver { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -125,6 +132,10 @@
 .pic:hover { border-color: var(--brass-dim); }
 .pic:hover h3 { color: var(--brass-bright); }
 .pic .ph { aspect-ratio: 4 / 3; background: var(--deep); overflow: hidden; }
+.pic .ph { position: relative; }
+.pic.video .ph::after { content: "▶"; position: absolute; left: 10px; bottom: 10px; width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; padding-left: 3px; font-size: 13px;
+  background: rgba(15, 21, 32, .85); border: 1px solid var(--brass); color: var(--brass-bright); }
 .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nopic { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 120px;
   color: var(--faint); font-style: italic; font-size: 13px; }
@@ -138,6 +149,7 @@ dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
 .vwrap { display: grid; grid-template-columns: 1.5fr 1fr; }
 .vimg { background: var(--deep); display: flex; align-items: center; justify-content: center; min-height: 320px; }
 .vimg img { max-width: 100%; max-height: calc(100vh - 80px); display: block; }
+.vimg video { width: 100%; max-height: calc(100vh - 80px); display: block; background: #000; }
 .vtext { padding: 22px; overflow-y: auto; max-height: calc(100vh - 34px); }
 .vtext h2 { margin-top: 0; }
 .vtext h3 { font-size: 21px; font-weight: 400; margin: 0 0 12px; line-height: 1.3; }

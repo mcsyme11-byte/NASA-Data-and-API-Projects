@@ -318,8 +318,11 @@ Checked Nov 9, 2026 (live requests from the published site):
   keep the name on the first part and the number on the others; dark nebulae lose their magnitude, which describes
   nothing visible.
 - Four famous targets are not in the catalogue and are listed by hand (J2000, degrees): the Cartwheel Galaxy (9.421,
-  −33.716), Westerlund 2 (156.0, −57.75), Cassiopeia A (350.85, +58.815) and Rho Ophiuchi (246.4, −23.45). To be
-  confirmed against SIMBAD (simbad.cds.unistra.fr).
+  −33.716), Westerlund 2 (155.992, −57.764), Cassiopeia A (350.85, +58.815) and the Rho Ophiuchi cloud complex
+  (247.025, −24.542). **Checked Nov 9, 2026** against SIMBAD's values as published (Wikipedia's infoboxes, which cite
+  SIMBAD, and NASA's Webb image page for the Cartwheel): the Cartwheel and Cassiopeia A were right; Westerlund 2 moved
+  by 0.02°; Rho Ophiuchi had been placed on the star Rho Ophiuchi, 1.2° from the cloud complex named after it, and was
+  corrected. SIMBAD itself did not answer requests from GitHub Actions within 3 minutes that night.
 
 ### Place names (GeoNames), checked Nov 9, 2026
 
@@ -333,9 +336,65 @@ Checked Nov 9, 2026 (live requests from the published site):
 
 ### Astronaut photos of Earth (Gateway to Astronaut Photography of Earth), checked Nov 9, 2026
 
-- `https://eol.jsc.nasa.gov`: photos taken from the space station and earlier missions, each with the position of
-  the area shown. **Web pages cannot call it** (no CORS headers), so pins from it would come from a file refreshed
-  by GitHub Actions, as the Asteroid Tracker's data is. How to query it is still to be worked out.
+- `https://eol.jsc.nasa.gov`, Earth Science and Remote Sensing Unit, NASA Johnson Space Center: astronaut photos of
+  Earth from 1961 to today. **Web pages cannot call it** (no CORS headers); `robots.txt` allows everything.
+- **Photos Database API** (documented at `https://eol.jsc.nasa.gov/SearchPhotos/PhotosDatabaseAPI/`):
+  `https://eol.jsc.nasa.gov/SearchPhotos/PhotosDatabaseAPI/PhotosDatabaseAPI.pl?query=…&return=…&key=…`, answering
+  JSON (a list of records with `table.field` names). `query` is groups of `table|field|operator|value` (operators
+  `gt ge lt le eq ne like`, joined with AND); `return` is groups of `table|field`. **A key is required**; keys are free
+  and requested by email from jsc-earthweb@mail.nasa.gov.
+- Tables: `frames` (cataloged photos: `mission`, `roll`, `frame`, `pdate` YYYYMMDD and `ptime` HHMMSS in UTC, `lat`
+  and `lon` of the photo's centre to 0.1°, `nlat`/`nlon` of the point below the station, `cldp` cloud percentage,
+  `tilt`, `geon` place name, `feat` features), `nadir` (photos not yet cataloged: only the point below the station),
+  `images` (`directory`, `filename`, `width`, `height`, `filesize`; one record per image size).
+- Images: `https://eol.jsc.nasa.gov/DatabaseImages/{directory}/{filename}`, for example
+  `https://eol.jsc.nasa.gov/DatabaseImages/ESC/small/ISS073/ISS073-E-100000.JPG`; `ESC/small/…` and `ESC/large/…`.
+  Photo pages: `https://eol.jsc.nasa.gov/SearchPhotos/photo.pl?mission=ISS073&roll=E&frame=100000`.
+- **Credit** (the site's conditions of use): "Image courtesy of the Earth Science and Remote Sensing Unit, NASA
+  Johnson Space Center", with the photo number (mission-roll-frame) and the site's address.
+- In this repository: `image-explorer/fetch_astronaut_photos.py`, run daily by `.github/workflows/astronaut-photos.yml`
+  with the key from the repository secret `EOL_API_KEY`, writes `image-explorer/data/astronaut.json` (the newest 400
+  cataloged photos of the last 90 days, or the last year if fewer than 60, with 50% cloud or less). Without the
+  secret the job changes nothing and the globe hides the astronaut photos.
+
+### Image and Video Library: videos, checked Nov 9, 2026
+
+- A video's files are under `https://images-assets.nasa.gov/video/{nasa_id}/` (images are under `image/`):
+  `~orig.mp4`, and usually `~large.mp4` or `~medium.mp4`, `~small.mp4`, `~preview.mp4`, `~mobile.mp4`, plus stills
+  (`~thumb.jpg`, `~small.jpg`, `~medium.jpg`, numbered frames `~thumb_1.jpg` …) and subtitles (`{nasa_id}.vtt`).
+  `asset/{nasa_id}` lists them (with `http://` links that also work as `https://`).
+- Sizes for three Apollo 11 films: `~mobile.mp4` 118–177 MB, `~small.mp4` 534–799 MB, `~orig.mp4` 1.5–5.3 GB. The
+  page plays the smallest version listed and links the largest.
+- The video files send no CORS headers: they play in a page, but subtitles (`.vtt`) cannot be attached from another
+  site, so the page shows none.
+- "apollo 11": 71 videos.
+
+### GIBS polar views, checked Nov 9, 2026
+
+- `epsg3413` (Arctic, 303 layers) and `epsg3031` (Antarctic, 263 layers). Tile grid: 512 px tiles from
+  (−4,194,304 m, 4,194,304 m), 8,192 m a pixel at level 0, halving each level; deepest level `250m` 5, `500m` 4,
+  `1km` 3. Map projections: polar stereographic, EPSG:3413 `+lat_ts=70 +lon_0=-45`, EPSG:3031 `+lat_ts=-71 +lon_0=0`.
+- Of the eight layers: true colour (`250m`), night lights (`1km`), snow (`500m`) and clouds (`1km`, newest day a day
+  behind) exist in both; fires (`MODIS_Combined_Thermal_Anomalies_All`, vector tiles) only in the Arctic view; sea
+  ice comes from `MODIS_Terra_Sea_Ice` (`1km`, daily, from 2000) because the MUR sea-ice layer is world view only;
+  sea temperature and smoke and dust are world view only. Test tiles for each answered 200 with CORS allowed.
+- Blue Marble (`BlueMarble_NextGeneration`, `BlueMarble_ShadedRelief_Bathymetry`) is listed in both polar layer lists,
+  unlike the world list.
+
+### Place-name services not used
+
+### Natural features (Natural Earth), checked Nov 9, 2026
+
+- Natural Earth 1:10m (naturalearthdata.com, **public domain**), GeoJSON files from the `nvkelso/natural-earth-vector`
+  repository on GitHub: `ne_10m_lakes`, `ne_10m_rivers_lake_centerlines`, `ne_10m_geography_regions_points`,
+  `ne_10m_geography_regions_elevation_points`, `ne_10m_geography_regions_polys`, `ne_10m_geography_marine_polys`.
+- `image-explorer/data/features.json` (`tools/build_features.py`): 3,978 named features (1,063 rivers, 627 mountains
+  with their heights, 453 lakes, 405 islands, 219 reservoirs, 214 mountain ranges, 158 island groups, 71 seas,
+  61 gulfs, 60 bays, 58 deserts and others), each with a label point, an importance (Natural Earth's `scalerank`) and,
+  for areas and rivers, a bounding box so the map can show all of it. About 250 KB.
+- Natural Earth gives some lakes a short English name ("Superior", "Nyanza" for Lake Victoria); the build uses the
+  full local name when it starts with "Lake" or contains the short name.
+- Small features (Lake Louise in Alberta, the Bow River) are below Natural Earth's 1:10m scale and are not included.
 
 ### Place-name services not used
 
