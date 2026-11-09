@@ -1,5 +1,10 @@
 # Change log
 
+## November 9, 2026 — README brought up to date
+
+- The README links the live site, gives the projects' status in the order of work, names NASA and ESA sources in
+  the documentation table, and lists the GitHub workflows (checks and daily data updates).
+
 ## November 9, 2026 — ESA check across the site
 
 - Every ESA source now on the site was checked against the project rules: ESA's NEO Coordination Centre (risk list,

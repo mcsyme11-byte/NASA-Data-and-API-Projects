@@ -3,6 +3,8 @@
 **Three ways to learn and explore with real data from NASA and ESA (the European Space Agency) and their APIs.**
 Designed by **Malcolm Syme** and built with Claude.
 
+**The site:** https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/
+
 ## The projects
 
 | Project | What it is | Data | Status |
@@ -11,7 +13,8 @@ Designed by **Malcolm Syme** and built with Claude.
 | [**Mars Data**](mars-data/) | Weather measured on Mars, cleaned and organised by time and place, with statistics and charts that show its patterns | NASA Planetary Data System (Curiosity's REMS) | Planned |
 | [**Image Explorer**](image-explorer/) | The Earth from orbit on any day since 2000, a globe inside the real sky with natural events and astronaut photos, and the picture libraries of NASA and ESA, searchable by subject, mission and date | NASA GIBS, EONET and Image and Video Library; ESA/Webb and ESA/Hubble picture archives | **Live** |
 
-Suggested order: Asteroid Tracker, then Image Explorer, then Mars Data (each builds skills the next one uses).
+Order of work: Asteroid Tracker (live), then Image Explorer (live), then Mars Data (next); each builds skills the next
+one uses.
 
 ## How it fits together
 
@@ -23,7 +26,8 @@ NASA-ESA-Data-and-API-Projects/
 ├── asteroid-tracker/   Project 1
 ├── mars-data/          Project 2 (Python analysis + a charts page)
 ├── image-explorer/     Project 3
-└── docs/               design guide, data sources, notes, roadmap, history
+├── docs/               design guide, data sources, notes, roadmap, history
+└── .github/workflows/  checks after every push, and the daily data updates
 ```
 
 - **Pages run in the browser,** with no build step: plain HTML, CSS and JavaScript, hosted free on GitHub Pages.
@@ -47,7 +51,7 @@ NASA-ESA-Data-and-API-Projects/
 | Document | What's in it |
 |---|---|
 | [docs/DESIGN.md](docs/DESIGN.md) | Colours, type, components and chart colours |
-| [docs/DATA-SOURCES.md](docs/DATA-SOURCES.md) | Every NASA source used: endpoints, keys, limits, acknowledgements |
+| [docs/DATA-SOURCES.md](docs/DATA-SOURCES.md) | Every NASA and ESA source used: endpoints, keys, limits, terms and credit lines |
 | [docs/PROJECT-NOTES.md](docs/PROJECT-NOTES.md) | How it's built, decisions, how to run and publish |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | What's next and every pending to-do |
 | [docs/HISTORY.md](docs/HISTORY.md) | How the project came about, in order |
