@@ -1,5 +1,16 @@
 # Change log
 
+## November 9, 2026 — Asteroid Tracker: clearer close approach in the orbit diagram; slower playing
+
+- **Orbit diagram (each asteroid's page):** the selected close approach is marked by two rings joined by a line,
+  where Earth (blue) and the asteroid (brass) are at the moment they are closest, labelled "Closest to Earth" with the
+  date and NASA's distance. Before the approach the side panel counts down ("Closest approach in 40 days"). Play stops
+  exactly at the approach and the rings turn solid; pressing Play again carries on. The "Near Earth" view marks the
+  same point on the asteroid's path past Earth.
+- **Speeds:** Slow 1 day a second, Normal 5 days a second (was 60), Fast 20, Fastest 90; each named in the menu.
+- **Map:** pressing a highlighted famous-pass button again ends the tour and returns to today.
+- In the "Near Earth" view, the "towards the Sun" label no longer overlaps the time marks.
+
 ## November 9, 2026 — shared files always load fresh
 
 - **Fixed:** browsers that had saved an older `shared/theme.css` kept showing the old layout (narrow text, an unstyled

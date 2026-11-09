@@ -31,7 +31,7 @@ const ORBIT_CLASS = {
 
 const params = new URLSearchParams(location.search);
 const id = (params.get('id') || '').trim();
-const state = { neo: null, k: null, view: null, jd: null, anchor: null, approaches: [], sel: null, playing: false, showAll: false };
+const state = { neo: null, k: null, view: null, jd: null, anchor: null, approaches: [], sel: null, playing: false, showAll: false, held: null };
 
 function notice(msg, actions = '') {
   $('#notice').innerHTML = msg ? `<div class="notice warn" role="alert"><span>${msg}</span><span class="seg">${actions}</span></div>` : '';
@@ -125,7 +125,9 @@ function setDate(jd) {
   jd = jdFromMs(ms);
   state.jd = jd;
   const v = state.view;
-  v.marker = state.sel && state.sel.t >= MIN_MS && state.sel.t <= MAX_MS ? { jd: jdFromMs(state.sel.t) } : null;
+  const sel = state.sel && state.sel.t >= MIN_MS && state.sel.t <= MAX_MS ? state.sel : null;
+  v.marker = sel ? { jd: jdFromMs(sel.t), ld: sel.ld,
+    label: `${new Date(sel.t).toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })} · ${fmt(sel.ld, sel.ld < 10 ? 2 : 1)} Moon distances` } : null;
   v.setDate(jd);
   $('#slider').value = ((ms - state.anchor) / DAY + 365).toFixed(2);
   $('#oDate').textContent = new Date(ms).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
@@ -159,6 +161,13 @@ function readouts() {
   if (sel && Math.abs(msFromJd(jd) - sel.t) < 2 * DAY) {
     $('#approachNote').innerHTML = `Close approach on ${dateText(sel.t, true)} UTC. <b>NASA/JPL: ${fmt(sel.ld, 2)} LD</b> (${fmt(sel.km)} km) at ${fmt(sel.v, 1)} km/s. ` +
       `This diagram: ${fmt(dE / LD_AU, dE / LD_AU < 10 ? 2 : 1)} LD${sel.ld < 1 ? ' (so close that Earth\'s own pull, left out of the diagram, bends the path)' : ''}.`;
+  } else if (sel && sel.t >= MIN_MS && sel.t <= MAX_MS) {
+    // a countdown to the selected approach, which the rings on the diagram mark
+    const days = Math.round((sel.t - msFromJd(jd)) / DAY), n = Math.abs(days);
+    const span = n >= 730 ? `${fmt(n / 365.25, 1)} years` : `${fmt(n)} day${n === 1 ? '' : 's'}`;
+    $('#approachNote').innerHTML = `<b>Closest approach ${days > 0 ? 'in ' + span : span + ' ago'}</b>: ${dateText(sel.t)} ${new Date(sel.t).getUTCFullYear()}, ` +
+      `${fmt(sel.ld, sel.ld < 10 ? 2 : 1)} LD (NASA/JPL). The two rings show where Earth and the asteroid ${days > 0 ? 'will be' : 'were'} at that moment` +
+      `${days > 0 ? '; Play stops there' : ''}.`;
   } else {
     const next = state.approaches.find((a) => a.t > msFromJd(jd) + DAY);
     $('#approachNote').innerHTML = next ? `Next close approach after this date: ${dateText(next.t)} ${new Date(next.t).getUTCFullYear()}, ${fmt(next.ld, 1)} LD (NASA/JPL).` : '';
@@ -203,10 +212,20 @@ function frame(t) {
   const dt = last ? Math.min(0.1, (t - last) / 1000) : 0; last = t;
   const next = state.jd + dt * Number($('#speed').value);
   if (msFromJd(next) >= MAX_MS) { setDate(jdFromMs(MAX_MS)); stop(); return; }
+  // reaching the selected close approach: stop exactly at that moment, so both meeting points line up on screen.
+  // "held" remembers the stop, so pressing Play again carries on from there; it is forgotten once the date moves
+  // away (by playing on, or the slider), so playing towards the approach again stops again.
+  const sel = state.sel && state.sel.t >= MIN_MS && state.sel.t <= MAX_MS ? jdFromMs(state.sel.t) : null;
+  if (state.held !== null && Math.abs(state.jd - state.held) > 0.01) state.held = null;
+  if (sel !== null && state.held !== sel && state.jd < sel && next >= sel) { setDate(sel); state.held = sel; stop(); return; }
   setDate(next);
   raf = requestAnimationFrame(frame);
 }
-function play() { state.playing = true; last = 0; $('#play').setAttribute('aria-pressed', 'true'); $('#play').textContent = '❚❚ Pause'; raf = requestAnimationFrame(frame); }
+function play() {
+  // starting at the approach itself (as a link to it opens): carry on from it rather than stop at once
+  const sel = state.sel ? jdFromMs(state.sel.t) : null;
+  if (sel !== null && Math.abs(state.jd - sel) < 0.001) state.held = sel;
+  state.playing = true; last = 0; $('#play').setAttribute('aria-pressed', 'true'); $('#play').textContent = '❚❚ Pause'; raf = requestAnimationFrame(frame); }
 function stop() { state.playing = false; if (raf) cancelAnimationFrame(raf); raf = null; $('#play').setAttribute('aria-pressed', 'false'); $('#play').textContent = '▶ Play'; }
 $('#play').addEventListener('click', () => (state.playing ? stop() : play()));
 document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });

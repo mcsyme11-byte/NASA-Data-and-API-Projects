@@ -497,6 +497,7 @@ function banner(text, ms = 2200) {
   const b = $('#tourBanner'); b.textContent = text; b.hidden = false;
   clearTimeout(bannerTimer); bannerTimer = setTimeout(() => (b.hidden = true), ms);
 }
-$$('[data-pass]').forEach((b) => b.addEventListener('click', () => startTour(b.dataset.pass)));
+// a pass's button starts it; pressing the highlighted button again ends it, like "End tour"
+$$('[data-pass]').forEach((b) => b.addEventListener('click', () => (tour && tour.id === b.dataset.pass ? endTour() : startTour(b.dataset.pass))));
 
 start();

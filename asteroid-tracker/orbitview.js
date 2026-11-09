@@ -27,7 +27,7 @@ export class OrbitView {
   constructor(svg, { k, name, hazardous, tip }) {
     this.svg = svg; this.k = k; this.name = name; this.hazardous = hazardous; this.tip = tip;
     this.tilt = 0; this.spin = 0; this.zoom = 1; this.nearEarth = false; this.nearRadius = 0.05;
-    this.jd = null; this.marker = null;          // marker: { jd, label } for the selected close approach
+    this.jd = null; this.marker = null;          // marker: { jd, ld, label } for the selected close approach
     // which planets: always the inner four; Jupiter when the asteroid's orbit reaches past the asteroid belt
     this.planets = ['Mercury', 'Venus', 'Earth', 'Mars'].concat(k.Q > 3.6 ? ['Jupiter'] : []);
     this.fitR = Math.max(k.Q, k.Q > 3.6 ? 5.46 : 1.70) * 1.06;
@@ -165,11 +165,8 @@ export class OrbitView {
       el('circle', { cx: x, cy: y, r: 10, fill: 'transparent' }, m);
       this._tipOn(m, `<b>${ap.label[0].toUpperCase() + ap.label.slice(1)}</b><br>${ap.r.toFixed(3)} au, ${(ap.r * 149.6).toFixed(0)} million km`);
     }
-    // the selected close approach: where the asteroid is on that date
-    if (this.marker) {
-      const [x, y] = this._proj(asteroidPosition(this.k, this.marker.jd));
-      el('circle', { cx: x, cy: y, r: 9, fill: 'none', stroke: C.bright, 'stroke-width': 1.2, 'stroke-dasharray': '2 2' }, g);
-    }
+    // the selected close approach: where Earth and the asteroid both will be (or were) at that moment
+    const meet = this.marker ? this._meeting(g, planetPosition('Earth', this.marker.jd), asteroidPosition(this.k, this.marker.jd), jd) : null;
     // bodies, drawn back to front
     const bodies = this.planets.map((n) => ({ n, p: n === 'Earth' ? earth : planetPosition(n, jd) }));
     bodies.push({ n: '_ast', p: ast });
@@ -206,7 +203,38 @@ export class OrbitView {
     this._label(g, ...at('Earth').slice(0, 2), 'Earth', C.blue, 9, true);
     const len = Math.hypot(ax - ex, ay - ey);
     if (len > 70) this._label(g, (ex + ax) / 2, (ey + ay) / 2, `${dist(earth, ast).toFixed(3)} au`, C.ink2, 4, false, 11);
+    if (meet) this._meetLabel(g, meet);
     for (const n of ['Mars', 'Venus', 'Jupiter', 'Mercury']) if (this.planets.includes(n)) this._label(g, ...at(n).slice(0, 2), n, C.ink2, 7);
+  }
+
+  // The close-approach meeting point: a ring where Earth will be, a ring where the asteroid will be, and a line
+  // between them, all in the bright "close approach" colour. At the moment itself (within half a day) the rings are
+  // solid; before and after they are dashed. Returns where to put the label.
+  _meeting(g, e, a, jd) {
+    const [ex, ey] = this._proj(e), [ax, ay] = this._proj(a);
+    const now = Math.abs(jd - this.marker.jd) < 0.5, dash = now ? '' : '3 3';
+    el('line', { x1: ex, y1: ey, x2: ax, y2: ay, stroke: C.bright, 'stroke-width': 1.4, opacity: 0.9 }, g);
+    el('circle', { cx: ex, cy: ey, r: 11, fill: 'none', stroke: C.blue, 'stroke-width': 1.6, 'stroke-dasharray': dash }, g);
+    el('circle', { cx: ax, cy: ay, r: 11, fill: 'none', stroke: C.bright, 'stroke-width': 1.6, 'stroke-dasharray': dash }, g);
+    this._occupy(ex, ey, 12); this._occupy(ax, ay, 12);
+    return { x: (ex + ax) / 2, y: (ey + ay) / 2, ax, ay, now };
+  }
+  _meetLabel(g, m) {
+    // two lines, placed together as one block at the first free spot around the asteroid's ring
+    const head = m.now ? 'Closest to Earth now' : 'Closest to Earth', sub = this.marker.label || '';
+    const w = Math.max(head.length * 12 * 0.52, sub.length * 11 * 0.52), h = sub ? 28 : 13, o = 16;
+    const spots = [[o, -h / 2], [o, -h - 4], [o, 4], [-o - w, -h / 2], [-o - w, -h - 4], [-o - w, 4], [-w / 2, -o - h], [-w / 2, o],
+      [o * 2, -h / 2], [-o * 2 - w, -h / 2], [-w / 2, -o * 2 - h], [-w / 2, o * 2]];
+    let at = null;
+    for (const [dx, dy] of spots) {
+      const bx = [m.ax + dx - 2, m.ay + dy - 2, m.ax + dx + w + 2, m.ay + dy + h + 2];
+      if (bx[0] < 2 || bx[2] > this.W - 2 || bx[1] < 2 || bx[3] > this.H - 2) continue;
+      if (this.boxes.some((q) => bx[0] < q[2] && bx[2] > q[0] && bx[1] < q[3] && bx[3] > q[1])) continue;
+      at = [m.ax + dx, m.ay + dy]; this.boxes.push(bx); break;
+    }
+    if (!at) at = [this.W - w - 14, this.H - 34 - h];          // no room beside the ring: the clear bottom-right corner
+    const t = el('text', { x: at[0], y: at[1] + 11, fill: C.bright, 'font-size': 12 }, g); t.textContent = head;
+    if (sub) { const u = el('text', { x: at[0], y: at[1] + 25, fill: C.ink2, 'font-size': 11 }, g); u.textContent = sub; }
   }
 
   // Zoomed in around Earth: the Moon's orbit for scale and the asteroid's path relative to Earth
@@ -227,6 +255,7 @@ export class OrbitView {
     const [ex, ey] = this._proj(earth), [ux, uy] = this._proj(sunPt);
     el('line', { x1: ex, y1: ey, x2: ux, y2: uy, stroke: C.brass, 'stroke-width': 1, 'stroke-dasharray': '1 4', opacity: 0.7 }, g);
     const st = el('text', { x: ux, y: uy - 6, 'text-anchor': 'middle', fill: C.brass, 'font-size': 11 }, g); st.textContent = 'towards the Sun ☉';
+    const sw = 17 * 11 * 0.52; this.boxes.push([ux - sw / 2 - 2, uy - 19, ux + sw / 2 + 2, uy - 2]);   // kept clear of other labels
     // the asteroid's path relative to Earth. Time span and tick spacing follow its speed past Earth, so a fast
     // close pass gets hourly ticks and a slow distant one ticks every few days.
     const rel = (j) => { const e = planetPosition('Earth', j), a = asteroidPosition(this.k, j); return [a[0] - e[0], a[1] - e[1], a[2] - e[2]]; };
@@ -252,6 +281,16 @@ export class OrbitView {
       el('circle', { cx: x, cy: y, r: 2.2, fill: col }, g);
       if (n % 2 === 0) this._label(g, x, y, fmtT(d), C.muted, 5, false, 10);
     }
+    // the selected close approach on this path: where the asteroid will be relative to Earth at that moment
+    let meetNear = null;
+    if (this.marker && Math.abs(this.marker.jd - jd) <= span) {
+      const r = rel(this.marker.jd), p = [r[0] + earth[0], r[1] + earth[1], r[2] + earth[2]];
+      const [mx, my] = this._proj(p), now = Math.abs(jd - this.marker.jd) < 0.5;
+      el('line', { x1: ex, y1: ey, x2: mx, y2: my, stroke: C.bright, 'stroke-width': 1.2, opacity: 0.8 }, g);
+      el('circle', { cx: mx, cy: my, r: 11, fill: 'none', stroke: C.bright, 'stroke-width': 1.6, 'stroke-dasharray': now ? '' : '3 3' }, g);
+      this._occupy(mx, my, 12);
+      meetNear = { x: mx, y: my, ax: mx, ay: my, now };
+    }
     // Earth and the asteroid now
     const [ax, ay] = this._proj(ast);
     el('line', { x1: ex, y1: ey, x2: ax, y2: ay, stroke: C.ink2, 'stroke-width': 1, 'stroke-dasharray': '3 4' }, g);
@@ -264,6 +303,7 @@ export class OrbitView {
     this._occupy(ex, ey, 8); this._occupy(ax, ay, 8);
     this._label(g, ax, ay, this.name.replace(/[()]/g, ''), C.bright, 10, true);
     this._label(g, ex, ey, 'Earth', C.blue, 10, true);
+    if (meetNear) this._meetLabel(g, meetNear);
     this._tipOn(m, `<b>${this.name}</b><br>${(d / LD_AU).toFixed(1)} Moon distances from Earth`);
   }
 

@@ -173,6 +173,7 @@ svg.orbit.dragging { cursor: grabbing; }
 .lg.node { width: 10px; height: 10px; border: 0; background:
   linear-gradient(45deg, transparent 43%, var(--ink) 43% 57%, transparent 57%), linear-gradient(-45deg, transparent 43%, var(--ink) 43% 57%, transparent 57%); }
 .lg.peri { width: 9px; height: 9px; border: 1.5px solid var(--brass); border-radius: 50%; }
+.lg.meet { width: 12px; height: 12px; border: 1.6px solid var(--brass-bright); border-radius: 50%; }
 table.neo tr.out td { color: var(--muted); }
 @media (max-width: 760px) {
   .orbitbar .seg, .timebar .seg { width: 100%; }

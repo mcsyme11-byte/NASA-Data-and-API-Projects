@@ -139,6 +139,9 @@ close-approach files, every near-Earth object's orbit, the spacecraft positions 
 from JPL, and commits them if they changed. If other work has been pushed meanwhile, it rebases onto it and retries
 the push (up to five times).
 
+**Decided Nov 9, 2026 (Asteroid Tracker):** the orbit diagram marks a close approach at both bodies' positions at that
+moment, and Play stops there; its normal speed is 5 days a second (60 was too fast to follow).
+
 **Decided Nov 9, 2026 (Asteroid Tracker):** a backup daily run, after GitHub did not start the 06:17 run that day.
 The size comparisons (`compare.js`) replace the earlier "school buses / football fields" phrase everywhere, with one
 rule set; the famous passes take their times and distances from NASA/JPL close-approach data in `famous.json` rather

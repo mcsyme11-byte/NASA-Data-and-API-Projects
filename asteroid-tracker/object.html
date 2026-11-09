@@ -83,7 +83,7 @@
                 <button class="chip" data-step="1" aria-label="Forward 1 day">1 d ›</button>
                 <button class="chip" data-step="30" aria-label="Forward 30 days">30 d »</button>
               </div>
-              <label class="speed">Speed <select id="speed"><option value="15">Slow</option><option value="60" selected>Normal</option><option value="240">Fast</option></select></label>
+              <label class="speed">Speed <select id="speed"><option value="1">Slow · 1 day a second</option><option value="5" selected>Normal · 5 days a second</option><option value="20">Fast · 20 days a second</option><option value="90">Fastest · 90 days a second</option></select></label>
             </div>
             <div class="slider">
               <input type="range" id="slider" min="0" max="730" step="0.25" value="365" aria-label="Date">
@@ -106,6 +106,7 @@
               <span><i class="lg earth"></i>Earth and its orbit</span>
               <span><i class="lg ast"></i>Asteroid's orbit, above Earth's orbital plane</span>
               <span><i class="lg ast below"></i>below it</span>
+              <span><i class="lg meet"></i>where Earth and the asteroid are at the closest approach</span>
               <span><i class="lg node"></i>crosses Earth's orbital plane</span>
               <span><i class="lg peri"></i>closest to / farthest from the Sun</span>
               <span><i class="lg planet"></i>other planets</span>
@@ -115,6 +116,7 @@
 
         <details class="howto"><summary>How to read this</summary>
           <p><b>Top view:</b> the solar system seen from above. The Sun is in the middle; the blue ring is Earth's orbit (1 au, 150 million km). The brass line is the asteroid's orbit. Everything moves anticlockwise. Press <b>Play</b> or move the slider to watch Earth and the asteroid travel; the dashed line between them gives their distance.</p>
+          <p><b>The close approach:</b> two bright rings, joined by a line, mark where Earth (blue ring) and the asteroid (brass ring) will be at the moment they are closest. As they travel, each heads for its own ring; Play stops when they arrive, and the rings turn solid. Choose another approach from the list below to move the rings.</p>
           <p><b>Tilted</b> and <b>Side</b> show that most asteroid orbits are slanted: the solid part of its orbit is above the plane of Earth's orbit, the dashed part below. It can only come really close to Earth near the two ✕ marks, where it crosses that plane. <b>Near Earth</b> zooms in around Earth.</p>
           <p id="accNote"></p>
         </details>
