@@ -405,7 +405,7 @@
     layers: [...BASES.map(L => layers[L.id]), ...OVERS.map(L => layers[L.id])],
     overlays: [popup],
     controls: ol.control.defaults.defaults({ attribution: false, rotate: false }).extend([new ol.control.ScaleLine()]),
-    view: new ol.View({ projection: proj, center: [-20, 55], zoom: 2, minZoom: 1, maxZoom: 10, extent: [-180, -90, 180, 90], constrainOnlyCenter: true }),
+    view: new ol.View({ projection: proj, center: [-20, 55], zoom: 2, maxZoom: 10, extent: [-180, -90, 180, 90], smoothExtentConstraint: false }),   /* never shows past the poles or the date line */
   });
   function fillFrame() {          /* fills the frame with no empty bands; the edges of the world crop to fit */
     const [w, h] = map.getSize(); map.getView().setResolution(Math.min(360 / w, 180 / h)); map.getView().setCenter([0, 0]);
