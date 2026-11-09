@@ -1,5 +1,11 @@
 # Change log
 
+## November 9, 2026 — Image Explorer: ESA picture archives checked; mock-up
+
+- ESA/Webb and ESA/Hubble picture archives checked (search, paging, fields, credit lines, licence, browser access);
+  findings in `docs/DATA-SOURCES.md`.
+- Mock-up of the Picture library with ESA's pictures beside NASA's: `image-explorer/mockup-esa.html`.
+
 ## November 9, 2026 — ESA alongside NASA
 
 - **Decided:** ESA (the European Space Agency) data is added alongside NASA's where it helps; NASA stays the main

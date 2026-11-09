@@ -389,8 +389,36 @@ Checked Nov 9, 2026 (live requests from the published site):
   `center` `STScI` or `STScI (Webb)` (Space Telescope Science Institute), `nasa_id` of mission frames (`AS11-…`
   Apollo, `iss0…e…` Space Station) point to pictures of space or of Earth from space; `nasa_id` starting `NHQ`, `KSC`
   or `jsc`, and photographers credited "NASA/…", point to event photography.
-- ESA's picture feeds `https://esawebb.org/images/feed/` and `https://esahubble.org/images/feed/` allow browsers to
-  read them (CORS); not used (see the roadmap). NASA's APOD API answered 503 on Nov 9, 2026.
+- NASA's APOD API answered 503 on Nov 9, 2026.
+
+### ESA/Webb and ESA/Hubble picture archives, checked Nov 9, 2026
+
+Decided Nov 9, 2026: ESA's data is added alongside NASA's. The Image Explorer adds ESA's two telescope picture
+archives to the Picture library. Checked with requests from GitHub's servers and ESA's published terms.
+
+- **Sites:** `https://esawebb.org/images/` (703 pictures) and `https://esahubble.org/images/` (5,511 pictures), the
+  same archive software. No key and no JSON API.
+- **Browsers may read them:** every archive page, picture page, feed and picture file answers with
+  `access-control-allow-origin: *`.
+- **Search:** `/images/?search={words}`, 50 results a page; further pages `/images/page/{n}/?search={words}`; newest
+  first with `&sort=-release_date`. The page states the count ("Showing 1 to 50 of 166"); a search with no match has
+  no count and no list. Examples: Webb "nebula" 166, "crab" 7, "hubble" 212; Hubble "andromeda" 116, "saturn" 131,
+  "crab nebula" 47.
+- **Results** are in the page's script as `var images = [ { id, title, width, height, src, url, potw }, … ]`:
+  `src` is the 300 px-high thumbnail, `url` the picture's page, `potw` the date for a Picture of the Week or Month
+  (empty otherwise). No date, credit or caption in the list.
+- **A picture's page** (`/images/{id}/`) holds the title (`<h1>`), the caption, the credit line (`<div
+  class="credit">`), and tables "About the Image" (Id, Type such as Observation, Release date, Size) and "About the
+  Object" (name, type, constellation, category, distance), plus coordinates (RA, Dec, field of view). The markup
+  differs slightly between the two sites (table classes, headings `h3` or `h4`).
+- **Files:** `https://cdn.esawebb.org/archives/images/{size}/{id}.jpg` and `https://cdn.esahubble.org/…`, sizes
+  `thumb300y`, `screen` (1280 px wide), `large`, `publicationjpg`, and others; originals are TIFF, up to 135 MB.
+- **Licence:** Creative Commons Attribution 4.0 (CC BY 4.0) for pictures, videos and web texts. Each picture has
+  its own credit line, to be shown in full, unchanged and beside the picture, with active links online. ESA/Webb and
+  ESA/Hubble logos need written consent; the material must not suggest endorsement. Music, papers and code are not
+  under CC BY 4.0.
+- Example credit lines: weic2622c (Cat's Head Nebula) "NASA, ESA, CSA, STScI. Image Processing: J. Depasquale
+  (STScI)"; heic1907a "NASA, ESA, and STScI".
 
 ### GIBS polar views, checked Nov 9, 2026
 

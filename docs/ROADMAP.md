@@ -54,10 +54,12 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   (turning, zooming, events, sky markers, find, the selected card, "See it on the Earth map"), the Picture library
   (search, results as you type, spelling suggestions and corrections, mission buttons, Behind the scenes, filters,
   Pictures / Pictures and videos / Videos, playing a video, Show more, the viewer, "See it in the sky").
-- [ ] **Decision for the developer:** NASA's library holds only about 5 James Webb science pictures (the rest of its
-  Webb records are launches, testing, people and illustrations). ESA's Webb and Hubble archives (esawebb.org,
-  esahubble.org; their picture feeds allow browsers to read them) would add the full science releases. They are
-  ESA's, not NASA's, with their own credit lines.
+- [ ] **ESA pictures in the Picture library (decided Nov 9, 2026):** mock-up `image-explorer/mockup-esa.html` awaits
+  the developer's approval: a NASA or ESA tag on each picture, a "From: NASA and ESA · NASA · ESA" filter, counts
+  for each library, and ESA's credit line and licence in the viewer. After approval: live search of ESA/Webb and
+  ESA/Hubble beside NASA's library, ESA pictures on the globe's selected card, the footer and Credits updated.
+- [ ] Delete the branch `esa-probe` on GitHub (Branches page): it held a one-off probe of ESA's archives on Nov 9,
+  2026.
 - [ ] Picture library: tune the ranking further as the developer reviews searches (the weights are in `scoreOf` in
   `image-explorer/app.js`).
 - [ ] Polar views: a sea ice layer that works through the polar night. GIBS's microwave sea-ice records ended
