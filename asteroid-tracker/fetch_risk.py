@@ -100,7 +100,20 @@ def esa_risk():
         out[d] = {'name': name, 'diameter_m': num(r[1]), 'estimated': r[2] == '*', 'date': r[3][:10] or None,
                   'ip_max': num(r[4]), 'ps_max': num(r[5]), 'ts': int(r[6]) if r[6].isdigit() else None,
                   'v_kms': num(r[7]), 'years': r[8] or None, 'ip_cum': num(r[9]), 'ps_cum': num(r[10])}
-    print('ESA risk list: %d objects (updated %s)' % (len(out), stamp))
+    # the special risk list: objects ESA follows separately, such as Bennu and 1950 DA, whose possible impacts lie
+    # more than a century ahead and are worked out with extra care; same columns, without the year range and totals
+    text, _ = fetch(NEOCC, {'file': 'esa_special_risk_list'})
+    _, srows = esa_table(text, ['Num/des', 'Diameter', 'IP max', 'PS max', 'Vel km/s'])
+    for r in srows:
+        if len(r) < 8:
+            continue
+        num_des, name = (r[0].split(None, 1) + [''])[:2]
+        d = des_from_esa(num_des)
+        if d not in out:
+            out[d] = {'name': name, 'diameter_m': num(r[1]), 'estimated': r[2] == '*', 'date': r[3][:10] or None,
+                      'ip_max': num(r[4]), 'ps_max': num(r[5]), 'ts': int(r[6]) if r[6].isdigit() else None,
+                      'v_kms': num(r[7]), 'years': None, 'ip_cum': None, 'ps_cum': None, 'special': True}
+    print('ESA risk list: %d objects, %d of them on the special risk list (updated %s)' % (len(out), len(srows), stamp))
     return stamp, out, cors
 
 
@@ -182,7 +195,8 @@ def neows_ids():
 
 RISK_FIELDS = ['designation', 'name', 'neows_id', 'diameter_m',
                'esa_date', 'esa_ip_max', 'esa_ps_max', 'esa_ts', 'esa_years', 'esa_ip_cum', 'esa_ps_cum',
-               'nasa_date', 'nasa_ip_max', 'nasa_ps_max', 'nasa_ts', 'nasa_years', 'nasa_ip_cum', 'nasa_ps_cum', 'v_kms']
+               'nasa_date', 'nasa_ip_max', 'nasa_ps_max', 'nasa_ts', 'nasa_years', 'nasa_ip_cum', 'nasa_ps_cum', 'v_kms',
+               'esa_special']
 
 
 def main():
@@ -224,7 +238,7 @@ def main():
         rows.append([d, name, ids.get(d), e.get('diameter_m') or n.get('diameter_m'),
                      e.get('date'), e.get('ip_max'), e.get('ps_max'), e.get('ts'), e.get('years'), e.get('ip_cum'), e.get('ps_cum'),
                      n.get('date'), n.get('ip_max'), n.get('ps_max'), n.get('ts'), n.get('years'), n.get('ip'), n.get('ps_cum'),
-                     e.get('v_kms') or n.get('v_kms')])
+                     e.get('v_kms') or n.get('v_kms'), bool(e.get('special'))])
     write_if_changed('risk.json', {
         'source': 'ESA NEO Coordination Centre risk list (neo.ssa.esa.int) and NASA/JPL Sentry (ssd-api.jpl.nasa.gov)',
         'updated': stamp, 'esa_updated': esa_stamp, 'counts': {'esa': len(esa), 'nasa': len(nasa), 'both': len(set(esa) & set(nasa))},
