@@ -123,7 +123,7 @@
     .kw { display: flex; flex-wrap: wrap; gap: 6px; }
     .kw .tag { color: var(--ink2); }
     .vclose { position: absolute; top: 10px; right: 10px; z-index: 2; }
-    .vclose.btn { min-height: 34px; width: auto; padding: 0 12px; font-size: 12px; }
+    .vclose.btn { min-height: 34px; width: auto; padding: 0 12px; font-size: 12px; background: rgba(15, 21, 32, .92); }
 
     @media (max-width: 1024px) {
       .explore { grid-template-columns: 1fr; }
@@ -621,7 +621,7 @@
   $('gallery').innerHTML = PICS.map(([id, t, d, c], j) => `<button class="pic" data-j="${j}">
       <span class="ph"><img src="${A}${id}/${id}~thumb.jpg" data-id="${id}" data-try="thumb" alt="${esc(t)}" loading="lazy"></span>
       <span class="pt"><h3>${esc(t)}</h3><span class="meta">${nice(d)} · ${c}</span></span></button>`).join('');
-  /* a size NASA lists can still be missing from its server: try the next size, then show a plain panel */
+  /* a picture file can fail to load (seen Nov 9, 2026): try the next size, then show a plain panel */
   const NEXT = { thumb: 'small', small: 'medium', medium: 'large', large: null };
   function fallback(img) {
     const n = NEXT[img.dataset.try];

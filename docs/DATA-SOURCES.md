@@ -258,8 +258,9 @@ Checked Nov 9, 2026 (live requests from the published site):
   position: no result has coordinates. Searching by place therefore searches the words in titles, captions and
   keywords.
 - **File names:** `https://images-assets.nasa.gov/image/{nasa_id}/{nasa_id}~{thumb|small|medium|large|orig}.jpg`.
-  A size listed by `asset/{nasa_id}` can still be missing from the server (`GSFC_20171208_Archive_e000775`: `small`
-  loads, `thumb` and `medium` fail), so the page tries the next size before showing "Picture unavailable".
+  A listed size can fail to load for a while (`GSFC_20171208_Archive_e000775`: `thumb` and `medium` failed and `small`
+  loaded on Nov 9, 2026; all three loaded an hour later), so the page tries the next size before showing "Picture
+  unavailable".
   `asset/{nasa_id}` and older records give `http://` links; the page always uses `https://`.
 
 ### Place names (for the place search)
