@@ -4,6 +4,9 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
 
 ## Decisions
 
+- **Decided Nov 9, 2026:** the project's own code and documents are released under the **MIT License** (replacing
+  "all rights reserved"); third-party data and libraries keep their own terms, listed in `CREDITS.md`. A new data
+  source or library is added to `CREDITS.md` (and the site's Credits page) in the same change.
 - **Decided Nov 8, 2026:** three projects in one repository, each in its own folder (a "stream"):
   `asteroid-tracker/`, `mars-data/`, `image-explorer/`. Shared code and the look live in `shared/`.
 - **Decided Nov 8, 2026:** the repository is **public**, so the pages can be hosted free on GitHub Pages and shown

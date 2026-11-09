@@ -51,6 +51,8 @@ NASA-Data-and-API-Projects/
 | [docs/ROADMAP.md](docs/ROADMAP.md) | What's next and every pending to-do |
 | [docs/HISTORY.md](docs/HISTORY.md) | How the project came about, in order |
 | [CHANGELOG.md](CHANGELOG.md) | Every change, newest first |
+| [LICENSE.md](LICENSE.md) | The MIT License (the project's own code and documents) |
+| [CREDITS.md](CREDITS.md) | Every outside data source and library, with its terms |
 
 ---
 
@@ -58,4 +60,5 @@ Data courtesy of NASA. Imagery from NASA's Global Imagery Browse Services (GIBS)
 and Information System (ESDIS). An independent project, not endorsed by NASA.
 
 **NASA Data Projects** · Created by **Malcolm Syme** · <mcsyme11@gmail.com>
-Copyright © 2026 Malcolm Syme. All rights reserved. See [LICENSE.md](LICENSE.md).
+Copyright © 2026 Malcolm Syme. Released under the [MIT License](LICENSE.md); third-party data and libraries keep
+their own terms, listed in [CREDITS.md](CREDITS.md).

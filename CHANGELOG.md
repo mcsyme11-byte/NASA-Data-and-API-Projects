@@ -1,5 +1,12 @@
 # Change log
 
+## November 9, 2026 — MIT License and credits
+
+- **Licence:** the project's own code and documents are now under the MIT License (`LICENSE.md`), replacing "all
+  rights reserved".
+- **Credits:** `CREDITS.md` lists every outside data source and library with its terms (NASA and JPL sources, GIBS
+  with its acknowledgement, d3-celestial, GeoNames, Natural Earth, OpenLayers, proj4js, three.js).
+
 ## November 9, 2026 — Image Explorer: date changes reload the pictures
 
 - **Fixed:** changing the date (date box, slider, day buttons, Play) did not reload the satellite pictures already on
