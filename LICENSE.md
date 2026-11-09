@@ -23,6 +23,7 @@ SOFTWARE.
 ---
 
 This licence covers the code and documents written for this project. Data, imagery, libraries and other material
-from third parties (NASA and JPL data and imagery, the d3-celestial star catalogue, GeoNames place names, Natural
-Earth, OpenLayers, proj4js, three.js) keep their own terms, listed in [CREDITS.md](CREDITS.md). NASA's name,
-insignia and logotype are not covered by this licence, and the project is not endorsed by NASA.
+from third parties (NASA, JPL and ESA data and imagery, the d3-celestial star catalogue, GeoNames place names, Natural
+Earth, OpenLayers, proj4js, three.js) keep their own terms, listed in [CREDITS.md](CREDITS.md). NASA's and ESA's
+names, NASA's insignia and logotype and ESA's logo are not covered by this licence, and the project is not endorsed by
+NASA or ESA.

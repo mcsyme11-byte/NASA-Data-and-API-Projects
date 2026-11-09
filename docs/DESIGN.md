@@ -93,6 +93,9 @@ The classes in `shared/theme.css`:
   with exact values. Colour is never the only way to tell series apart (labels or shapes too).
 - **Estimates** (asteroid diameters) are drawn as a range (a bar from min to max), not one point.
 
+- **Agencies:** every source note names the agency the numbers come from (NASA, NASA/JPL, ESA). There are no agency
+  logos or agency colours; NASA and ESA data share the same series colours.
+
 ## 7. Screen sizes
 
 Everything must look right at 375, 390, 430 (phones; 320 must not break), 768, 1024 (tablets), 1280 and 1440+

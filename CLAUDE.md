@@ -1,7 +1,7 @@
 # Instructions for Claude working in this repo
 
-This repository is Malcolm Syme's **NASA and ESA Data Projects**: three learning-and-exploring projects built on NASA's open
-data and APIs, one folder each:
+This repository is Malcolm Syme's **NASA and ESA Data Projects**: three learning-and-exploring projects built on the open data
+and APIs of NASA and ESA (the European Space Agency), one folder each:
 
 | Project | Folder | What it is |
 |---|---|---|
@@ -38,8 +38,20 @@ inside its own folder.
 - **Version tags on shared files (since Nov 9, 2026):** pages link `shared/theme.css` and `shared/footer.js` with a
   version tag (`?v=YYYYMMDDNN`). After changing either file, raise the tag in every page (one search-and-replace), so
   browsers fetch the new copy instead of an old saved one.
-- **Respect NASA's terms:** show "Data courtesy of NASA" and that the project isn't endorsed by NASA; show the GIBS
-  acknowledgement wherever GIBS imagery appears; never use NASA's insignia or logotype.
+- **ESA data (decided Nov 9, 2026):** ESA's data is added alongside NASA's where it helps; NASA stays the main source,
+  and pages say which agency each number or picture comes from. For every ESA source:
+  - check it against ESA's current documentation before building on it (address, format, limits, terms, credit), and
+    record it in `docs/DATA-SOURCES.md` (ESA section) with its exact credit line;
+  - show ESA's credit wherever its data or pictures appear, in ESA's own form (for example "ESA/DLR/FU Berlin, CC BY-SA
+    3.0 IGO", with a link to the licence where one applies), and add the source to `CREDITS.md` and the Credits page
+    in the same change;
+  - use only material ESA allows: works released under CC BY-SA 3.0 IGO, or ESA's terms for educational and
+    informational use; never ESA's logo (it needs ESA's written permission);
+  - keep it free to run: no paid ESA services; a free account or key follows the same no-secrets rule as NASA's;
+  - if visitors' browsers contact an ESA service directly, add it to the Privacy page first.
+- **Respect NASA's and ESA's terms:** show "Data courtesy of NASA" (and ESA where its data is used) and that the
+  project isn't endorsed by NASA or ESA; show the GIBS
+  acknowledgement wherever GIBS imagery appears; never use NASA's insignia or logotype, or ESA's logo.
 - **Check facts about the data:** confirm endpoints, fields and limits against NASA's current documentation before
   building on them, and record anything new in `docs/DATA-SOURCES.md`.
 - Quality bar: correct, professional, tested. Check every page at the widths in DESIGN.md, and its empty, loading and

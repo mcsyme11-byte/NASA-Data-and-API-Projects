@@ -435,4 +435,26 @@ Checked Nov 9, 2026 (live requests from the published site):
 
 - NASA data and imagery are generally free to use and not under copyright in the United States, but NASA's insignia
   (the "meatball" logo) and logotype **may not be used** without permission. These projects use their own emblem.
-- Pages say "Data courtesy of NASA" and that the project isn't endorsed by NASA.
+- Pages say "Data courtesy of NASA" (and ESA where its data is used) and that the project isn't endorsed by NASA or
+  ESA.
+
+## ESA (the European Space Agency)
+
+Decided Nov 9, 2026: ESA's data is added alongside NASA's where it helps. Each ESA source gets its own entry here (address,
+key if any, limits, terms and the exact credit line), checked against ESA's current documentation before anything is
+built on it. ESA sources in use: none yet.
+
+### Using ESA material, checked Nov 9, 2026
+
+- **CC BY-SA 3.0 IGO:** where ESA expressly says so, its images, videos and other works are released under the Creative
+  Commons Attribution-ShareAlike 3.0 IGO licence (esa.int › Services › CC BY-SA 3.0 IGO licence). They may be reproduced,
+  shared and adapted without asking, provided the source is credited in ESA's form (for example "Credit: ESA/Rosetta/NavCam
+  – CC BY-SA IGO 3.0", "ESA/DLR/FU Berlin, CC BY-SA 3.0 IGO"), the licence text is linked, changes are marked, and
+  adaptations are shared under the same licence. Nothing may suggest that ESA endorses them.
+- **Other ESA material:** ESA's website terms allow educational, editorial and informational use with ESA's credit
+  (for example "©ESA", "ESA/NASA - SOHO/LASCO"); material credited to someone else needs that holder's terms
+  (esa.int › ESA Multimedia › Terms and conditions).
+- **ESA's logo** is ESA's property, protected under the Paris Convention; any use needs ESA's prior written permission,
+  so it is never used. These projects use their own emblem.
+- **ESA/Webb and ESA/Hubble** (esawebb.org, esahubble.org) publish their own picture terms (CC BY 4.0 for most images,
+  with their own credit lines); check each archive's terms before using it.

@@ -5,7 +5,13 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 0. Repository (set up Nov 8, 2026)
 
-- [ ] **Create the Claude project's chats:** one per project (the project's instructions are in place).
+- [ ] **ESA follow-up (from Nov 9, 2026):** after each project chat adds ESA sources, check that every one is in
+      `CREDITS.md` and on the Credits page with its exact credit line, in the ESA section of `docs/DATA-SOURCES.md`,
+      and, if visitors' browsers contact it directly, on the Privacy page (with ESA's privacy policy linked).
+- [ ] **Update the Claude project** with the new name, description and instructions in `docs/CLAUDE-PROJECT-SETUP.md`,
+      and send the new site address (github.io/NASA-ESA-Data-and-API-Projects/) wherever the old one was shared: the
+      old address (github.io/NASA-Data-and-API-Projects/) stopped working with the rename.
+
 - [ ] Delete the branch `map-data-test` on GitHub (Branches page): it held a one-off test run of the map's data job
   on Nov 9, 2026, and branches cannot be deleted from the build session.
 - [ ] Optional: a **Project Record** PDF rebuilt automatically after every push, as in the Flight Deck Suite and Hot Mic.

@@ -1,6 +1,6 @@
 # NASA and ESA Data Projects
 
-**Three ways to learn and explore with real data from NASA and its APIs.**
+**Three ways to learn and explore with real data from NASA and ESA (the European Space Agency) and their APIs.**
 Designed by **Malcolm Syme** and built with Claude.
 
 ## The projects
@@ -57,8 +57,8 @@ NASA-ESA-Data-and-API-Projects/
 
 ---
 
-Data courtesy of NASA. Imagery from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data
-and Information System (ESDIS). An independent project, not endorsed by NASA.
+Data courtesy of NASA and ESA. Imagery from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data
+and Information System (ESDIS). An independent project, not endorsed by NASA or ESA.
 
 **NASA and ESA Data Projects** · Created by **Malcolm Syme** · <mcsyme11@gmail.com>
 Copyright © 2026 Malcolm Syme. Released under the [MIT License](LICENSE.md); third-party data and libraries keep

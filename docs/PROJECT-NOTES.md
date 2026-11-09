@@ -4,6 +4,12 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## Decisions
 
+- **Decided Nov 9, 2026:** ESA (the European Space Agency) data is added **alongside** NASA's across the projects;
+  NASA stays the main source, and ESA is added where it helps. Each project's chat changes its own project; the
+  project-wide files (name, CLAUDE.md, credits, terms, footers) are changed in the general chat. The rules for ESA
+  sources are in CLAUDE.md: check against ESA's documentation first, record in DATA-SOURCES, show ESA's credit wherever
+  its data appears, list it in CREDITS.md and on the Credits page, never use ESA's logo, keep it free, and add any ESA
+  service the browser contacts to the Privacy page first. Every page says the project isn't endorsed by NASA or ESA.
 - **Decided Nov 9, 2026:** the project is renamed **NASA and ESA Data Projects**, and the repository
   **mcsyme11-byte/NASA-ESA-Data-and-API-Projects** (formerly NASA-Data-and-API-Projects). The site moved with it to
   https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/ (GitHub does not redirect the old site address; it

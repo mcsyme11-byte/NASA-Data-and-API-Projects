@@ -25,6 +25,21 @@ there in the same change.
 services from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data and Information System
 (ESDIS).
 
+## ESA (the European Space Agency)
+
+Decided Nov 9, 2026: ESA data and imagery are added alongside NASA's where they help. Each ESA source is listed here,
+with its exact credit line, in the same change that adds it, and ESA's credit is shown wherever its data appears.
+
+| Source | Used for | Terms |
+|---|---|---|
+| (none on the site yet) | | |
+
+**ESA's terms:** some ESA images, videos and other works are released, where expressly stated, under the Creative
+Commons Attribution-ShareAlike 3.0 IGO licence (CC BY-SA 3.0 IGO): the source is credited in ESA's own form (for
+example "ESA/DLR/FU Berlin, CC BY-SA 3.0 IGO"), the licence is linked, changes are marked, and changed versions are
+shared under the same licence. Other material on ESA's website may be used for educational and informational purposes
+with ESA's credit (ESA's terms and conditions, esa.int). ESA's logo is not used: it needs ESA's written permission.
+
 ## Code libraries (loaded from the jsDelivr CDN)
 
 | Library | Version | Used for | Licence |
@@ -33,9 +48,10 @@ services from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth
 | proj4js (`proj4`) | 2.22.0 | Image Explorer: the polar map projections | MIT |
 | three.js (`three`) | 0.187.0 | Image Explorer: the globe | MIT |
 
-## NASA
+## NASA and ESA
 
-Data courtesy of NASA. This is an independent project and is not endorsed by NASA. NASA's insignia ("meatball"),
+Data courtesy of NASA and ESA. This is an independent project and is not endorsed by NASA or ESA. ESA's logo is not
+used. NASA's insignia ("meatball"),
 logotype ("worm") and seal are not used.
 
 ---

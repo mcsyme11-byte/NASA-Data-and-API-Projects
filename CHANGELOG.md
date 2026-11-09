@@ -1,5 +1,18 @@
 # Change log
 
+## November 9, 2026 — ESA alongside NASA
+
+- **Decided:** ESA (the European Space Agency) data is added alongside NASA's where it helps; NASA stays the main
+  source. Each project's chat adds ESA to its own project.
+- **Rules for ESA sources** in CLAUDE.md: checked against ESA's current documentation first, recorded in
+  DATA-SOURCES, ESA's credit wherever its data appears, listed in CREDITS.md and on the Credits page, no ESA logo, free
+  to run, and any ESA service the browser contacts added to the Privacy page first.
+- **Every page** says the project isn't endorsed by NASA or ESA; the site's own pages credit "NASA and ESA (the
+  European Space Agency)"; the home page and About describe data from NASA and ESA.
+- **Credits** (page and CREDITS.md), **Terms**, **LICENSE.md**, **DATA-SOURCES** and **DESIGN** cover ESA: its
+  CC BY-SA 3.0 IGO licence and credit form, its terms for other material, and that its logo is not used.
+- The Claude project's new name, description and instructions are in `docs/CLAUDE-PROJECT-SETUP.md`.
+
 ## November 9, 2026 — renamed NASA and ESA Data Projects
 
 - **New name** on every page, document and code comment: NASA and ESA Data Projects.

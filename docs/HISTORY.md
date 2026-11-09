@@ -76,3 +76,10 @@ How NASA and ESA Data Projects came about, in order.
 - The astronaut photo site turned out to have a documented API that needs a free key, requested by email. The daily
   job was built to start working as soon as the key is stored as a GitHub secret.
 
+## November 9, 2026 — NASA and ESA
+
+- The project became **NASA and ESA Data Projects**: ESA (the European Space Agency) data is added alongside NASA's
+  where it helps, with NASA as the main source. The repository was renamed NASA-ESA-Data-and-API-Projects, and the site
+  moved to https://mcsyme11-byte.github.io/NASA-ESA-Data-and-API-Projects/.
+- Project-wide rules for ESA sources were added (check ESA's documentation first, credit ESA wherever its data appears,
+  never ESA's logo, free to run), and every page now says the project isn't endorsed by NASA or ESA.
