@@ -5,9 +5,9 @@ and APIs of NASA and ESA (the European Space Agency), one folder each:
 
 | Project | Folder | What it is |
 |---|---|---|
-| **Asteroid Tracker** | `asteroid-tracker/` | Near-Earth objects sorted by size and distance, an interactive dashboard |
+| **Asteroid Tracker** | `asteroid-tracker/` | Near-Earth objects sorted by size and distance, an interactive dashboard (NASA/JPL and ESA NEOCC) |
 | **Mars Data** | `mars-data/` | Mars mission measurements cleaned, organised, analysed and charted |
-| **Image Explorer** | `image-explorer/` | NASA imagery searchable by date, location and mission (GIBS + Image Library) |
+| **Image Explorer** | `image-explorer/` | Imagery searchable by date, location and mission (NASA GIBS + Image Library, ESA/Webb + ESA/Hubble) |
 
 Shared code and the look are in `shared/`; documents in `docs/`. It is separate from the Flight Deck Suite and Hot Mic
 (their own repositories), but shares their look.

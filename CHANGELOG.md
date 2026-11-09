@@ -1,5 +1,18 @@
 # Change log
 
+## November 9, 2026 — ESA check across the site
+
+- Every ESA source now on the site was checked against the project rules: ESA's NEO Coordination Centre (risk list,
+  special risk list, close approaches; Asteroid Tracker) and the ESA/Webb and ESA/Hubble picture archives (Image
+  Explorer) are in CREDITS.md, on the Credits page and in DATA-SOURCES, and their credit lines appear in the footers of
+  the pages that show them. NASA/JPL's Sentry impact monitoring, added at the same time, is listed too.
+- **Privacy:** the ESA/Hubble privacy policy is linked; the list of sites the pages link to includes ESA's NEO
+  Coordination Centre (the Asteroid Tracker links to it but the browser never contacts it; its data is fetched by the
+  daily data job on GitHub).
+- **Terms:** ESA/Webb and ESA/Hubble pictures are released under CC BY 4.0, each with its own credit line.
+- **About, the home page, the README and CLAUDE.md** describe the ESA data in the Asteroid Tracker and Image Explorer;
+  the README shows the Image Explorer as live.
+
 ## November 9, 2026 — Image Explorer: ESA's Webb and Hubble pictures in the Picture library
 
 - **Each search also asks ESA/Webb and ESA/Hubble's picture archives** and mixes their pictures with NASA's, sorted
