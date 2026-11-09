@@ -1,5 +1,12 @@
 # Change log
 
+## November 9, 2026 — Asteroid Tracker: data check
+
+- Checked the "Asteroid data" job: the 06:17 UTC scheduled run did not start, so the job was started by hand at
+  12:01 UTC. It succeeded: close approaches for 2026 updated (2027 unchanged), the list of near-Earth objects and the
+  spacecraft positions rewritten, and the site republished. Parker Solar Probe now has 13,493 positions (every
+  6 hours), and its path curves smoothly around the Sun on the map.
+
 ## November 9, 2026 — Image Explorer: polar views, natural features, videos, astronaut photos
 
 - **Arctic and Antarctic views** on the Earth map, looking straight down on the poles (GIBS's polar maps, with

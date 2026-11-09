@@ -17,8 +17,9 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] **Developer testing of the additions:** an asteroid's page (open one from a row's details), the orbit
   diagram (Top / Tilted / Side, drag to turn, Play, the slider, Near Earth, tapping an approach), and past years
   in the "By year" view.
-- [ ] Confirm the first daily run of the "Asteroid data" workflow the following morning (a new commit, or "No
-  change" in its log).
+- [ ] Watch for the scheduled "Asteroid data" run at 06:17 UTC: on Nov 9, 2026 GitHub did not start it (no scheduled
+  run that day); the job was started by hand at 12:01 UTC and succeeded. If scheduled runs keep failing to start,
+  consider a second daily time in the workflow.
 - [ ] **Developer testing of the map, search and home preview:** dragging, pinching and zooming on a phone and a
   computer; Play at each speed; full screen and leaving it; Find; "Found by the end of" with Watch; "Close to Earth
   in"; the Search tab with "Found in"; the naming guide; the live preview on the home page.
@@ -27,8 +28,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   live clock; the full-screen and exit buttons; the "‹ Back" buttons (tracker → an asteroid → Back returns to the
   same week, filters, open row and scroll position; the same from the map, the Search tab and the "By year" view);
   every name in the "By year" tables opening its own page.
-- [ ] After the next daily data run, look at Parker Solar Probe near the Sun on the map: its path should now curve
-  smoothly around the Sun (the run samples it every 6 hours).
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
   "famous.json written").
 
