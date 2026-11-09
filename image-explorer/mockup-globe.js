@@ -210,6 +210,7 @@ function run() {
 }
 
 const BRASS = '#C0A062', BRIGHT = '#E2C88E', INK2 = '#B4AFA2';
+window.__g = { get camera() { return camera; }, get sky() { return sky; }, get hits() { return hits; }, get earth() { return earth; } };
 function draw() {
   const w = frame.clientWidth, h = frame.clientHeight, d = over.width / w;
   ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, w, h);
