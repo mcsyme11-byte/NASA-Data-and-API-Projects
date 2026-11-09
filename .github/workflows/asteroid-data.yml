@@ -6,12 +6,16 @@
 #   fetch_map_data.py          every near-Earth asteroid's orbit (NASA/JPL SBDB) and spacecraft positions (Horizons)
 # The JPL APIs block direct calls from web pages (no CORS), which is why the data is fetched here.
 # Run by hand: Actions › Asteroid data › Run workflow ("all" refreshes every year).
+# Two daily times: GitHub sometimes delays or skips a scheduled run when busy (Nov 9, 2026: the 06:17 run never
+# started), so a second run later in the day catches up. When the first run has already done the work, the second
+# finds no change and commits nothing.
 
 name: Asteroid data
 
 on:
   schedule:
-    - cron: '17 6 * * *'   # 06:17 UTC daily
+    - cron: '17 6 * * *'    # 06:17 UTC daily
+    - cron: '47 14 * * *'   # 14:47 UTC daily, the backup
   workflow_dispatch:
     inputs:
       all:
@@ -46,4 +50,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Asteroid data: daily close-approach update"
-          git push
+          # Other work may have been pushed while the data was fetched: put this commit on top of it and retry.
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase --quiet && git push && exit 0
+            echo "Push attempt $attempt did not succeed; retrying."
+            sleep $((attempt * 10))
+          done
+          exit 1

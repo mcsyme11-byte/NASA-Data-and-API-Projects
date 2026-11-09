@@ -27,6 +27,8 @@ import urllib.request
 DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 SBDB = 'https://ssd-api.jpl.nasa.gov/sbdb_query.api'
 HORIZONS = 'https://ssd.jpl.nasa.gov/api/horizons.api'
+CAD = 'https://ssd-api.jpl.nasa.gov/cad.api'
+AU_KM = 149597870.7
 UA = {'User-Agent': 'NASA-Data-Projects/1.0 (asteroid tracker)'}
 FIELDS = ['spkid', 'full_name', 'pdes', 'a', 'e', 'i', 'om', 'w', 'ma', 'epoch', 'H', 'diameter', 'pha', 'class', 'first_obs']
 
@@ -155,12 +157,17 @@ def spacecraft(today):
 
 
 # the famous passes: id, Horizons command, time of closest approach (UTC, from the NASA/JPL close-approach data)
+# id, Horizons command, CAD designation, approximate time of closest approach (UTC), also the pass by the Moon.
+# The exact time and distance come from NASA/JPL's close-approach data (CAD) for that date.
 FAMOUS = [
-    ('apophis-2029', '99942;', '2029-04-13 21:46'),
-    ('duende-2013', '367943;', '2013-02-15 19:26'),
-    ('2020qg-2020', 'DES=2020 QG;', '2020-08-16 04:09'),
-    ('2019ok-2019', 'DES=2019 OK;', '2019-07-25 01:22'),
-    ('2024yr4-2032', 'DES=2024 YR4;', '2032-12-22 08:22'),
+    ('apophis-2029', '99942;', '99942', '2029-04-13 21:46', False),
+    ('duende-2013', '367943;', '367943', '2013-02-15 19:26', False),
+    ('2020qg-2020', 'DES=2020 QG;', '2020 QG', '2020-08-16 04:09', False),
+    ('2019ok-2019', 'DES=2019 OK;', '2019 OK', '2019-07-25 01:22', False),
+    ('2024yr4-2032', 'DES=2024 YR4;', '2024 YR4', '2032-12-22 08:22', True),
+    ('toutatis-2004', '4179;', '4179', '2004-09-29 13:35', False),
+    ('2012tc4-2017', 'DES=2012 TC4;', '2012 TC4', '2017-10-12 05:42', False),
+    ('2023bu-2023', 'DES=2023 BU;', '2023 BU', '2023-01-27 00:29', False),
 ]
 
 
@@ -183,10 +190,31 @@ def vectors(cmd, start, stop, step):
     return rows
 
 
+def cad(des, t, body='Earth'):
+    """NASA/JPL's close-approach record within 3 days of t: {'cd': 'YYYY-MM-DD HH:MM', 'km', 'v_rel' (km/s)}."""
+    res = get(CAD, {'des': des, 'body': body, 'dist-max': '0.2',
+                    'date-min': (t - dt.timedelta(days=3)).strftime('%Y-%m-%d'),
+                    'date-max': (t + dt.timedelta(days=3)).strftime('%Y-%m-%d')})
+    f = res.get('fields', [])
+    rows = [dict(zip(f, r)) for r in res.get('data', [])]
+    if not rows:
+        return None
+    r = min(rows, key=lambda x: float(x['dist']))
+    when = dt.datetime.strptime(r['cd'], '%Y-%b-%d %H:%M')
+    return {'cd': when.strftime('%Y-%m-%d %H:%M'), 'km': round(float(r['dist']) * AU_KM),
+            'v_rel': round(float(r['v_rel']), 2)}
+
+
 def famous():
     out = []
-    for pid, cmd, when in FAMOUS:
+    for pid, cmd, des, when, moon in FAMOUS:
         t = dt.datetime.strptime(when, '%Y-%m-%d %H:%M')
+        rec = cad(des, t)
+        if rec:
+            t = dt.datetime.strptime(rec['cd'], '%Y-%m-%d %H:%M')
+            when = rec['cd']
+            if moon:
+                rec['moon'] = cad(des, t, 'Moon')
         bodies = {}
         for name, c in (('asteroid', cmd), ('earth', '399'), ('moon', '301')):
             rows = {}
@@ -195,8 +223,8 @@ def famous():
                     rows[r[0]] = r
                 time.sleep(0.5)
             bodies[name] = [rows[k] for k in sorted(rows)]
-        out.append({'id': pid, 'closest': when, **bodies})
-        print('  %s: %d asteroid positions' % (pid, len(bodies['asteroid'])))
+        out.append({'id': pid, 'closest': when, 'cad': rec, **bodies})
+        print('  %s: %d asteroid positions; closest %s, %s km' % (pid, len(bodies['asteroid']), when, rec and rec['km']))
     return out
 
 
@@ -247,11 +275,13 @@ def main():
         old = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
     except (OSError, ValueError):
         old = {}
-    stale = '--all' in sys.argv or old.get('updated', '')[:10] < (now - dt.timedelta(days=30)).strftime('%Y-%m-%d')
+    have = [p.get('id') for p in old.get('passes', []) if p.get('cad')]
+    stale = ('--all' in sys.argv or old.get('updated', '')[:10] < (now - dt.timedelta(days=30)).strftime('%Y-%m-%d')
+             or have != [f[0] for f in FAMOUS])   # a pass added or removed, or the close-approach figures missing
     if stale:
         try:
             passes = famous()
-            write_if_changed('famous.json', {'source': 'NASA/JPL Horizons API: heliocentric ecliptic J2000; rows [jd, x, y, z (au), '
+            write_if_changed('famous.json', {'source': 'NASA/JPL Horizons API: heliocentric ecliptic J2000; cad: NASA/JPL close-approach data (km from the centre); rows [jd, x, y, z (au), '
                                              'vx, vy, vz (au/day)]', 'updated': stamp, 'passes': passes}, ['passes'])
         except Exception as e:
             print('famous passes: could not reach the Horizons API (%s)' % e)
