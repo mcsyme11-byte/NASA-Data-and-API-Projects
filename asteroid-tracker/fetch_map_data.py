@@ -152,6 +152,52 @@ def spacecraft(today):
     return out
 
 
+# the famous passes: id, Horizons command, time of closest approach (UTC, from the NASA/JPL close-approach data)
+FAMOUS = [
+    ('apophis-2029', '99942;', '2029-04-13 21:46'),
+    ('duende-2013', '367943;', '2013-02-15 19:26'),
+    ('2020qg-2020', 'DES=2020 QG;', '2020-08-16 04:09'),
+    ('2019ok-2019', 'DES=2019 OK;', '2019-07-25 01:22'),
+    ('2024yr4-2032', 'DES=2024 YR4;', '2032-12-22 08:22'),
+]
+
+
+def vectors(cmd, start, stop, step):
+    """Heliocentric ecliptic J2000 positions (au) and velocities (au/day): rows [jd, x, y, z, vx, vy, vz]."""
+    res = get(HORIZONS, {
+        'format': 'json', 'COMMAND': "'%s'" % urllib.parse.quote(cmd), 'EPHEM_TYPE': 'VECTORS', 'CENTER': "'500@10'",
+        'START_TIME': "'%s'" % urllib.parse.quote(start.strftime('%Y-%m-%d %H:%M')),
+        'STOP_TIME': "'%s'" % urllib.parse.quote(stop.strftime('%Y-%m-%d %H:%M')),
+        'STEP_SIZE': "'%s'" % urllib.parse.quote(step), 'OUT_UNITS': 'AU-D', 'REF_PLANE': 'ECLIPTIC', 'REF_SYSTEM': 'ICRF',
+        'VEC_TABLE': '2', 'CSV_FORMAT': 'YES', 'OBJ_DATA': 'NO'})
+    text = res.get('result', '')
+    if '$$SOE' not in text:
+        raise RuntimeError((res.get('error') or text[:200]).strip())
+    rows = []
+    for line in text.split('$$SOE', 1)[1].split('$$EOE', 1)[0].strip().splitlines():
+        p = [c.strip() for c in line.split(',')]
+        if len(p) >= 8:
+            rows.append([round(float(p[0]), 6)] + [round(float(v), 10) for v in p[2:8]])
+    return rows
+
+
+def famous():
+    out = []
+    for pid, cmd, when in FAMOUS:
+        t = dt.datetime.strptime(when, '%Y-%m-%d %H:%M')
+        bodies = {}
+        for name, c in (('asteroid', cmd), ('earth', '399'), ('moon', '301')):
+            rows = {}
+            for span, step in ((dt.timedelta(hours=12), '10 m'), (dt.timedelta(days=3), '1 h'), (dt.timedelta(days=40), '1 d')):
+                for r in vectors(c, t - span, t + span, step):
+                    rows[r[0]] = r
+                time.sleep(0.5)
+            bodies[name] = [rows[k] for k in sorted(rows)]
+        out.append({'id': pid, 'closest': when, **bodies})
+        print('  %s: %d asteroid positions' % (pid, len(bodies['asteroid'])))
+    return out
+
+
 def write_if_changed(name, obj, keys):
     path = os.path.join(DATA, name)
     try:
@@ -193,6 +239,20 @@ def main():
     except Exception as e:
         failed += 1
         print('spacecraft: could not reach the Horizons API (%s)' % e)
+    # famous passes: past ones do not change and future predictions change rarely, so monthly is enough
+    path = os.path.join(DATA, 'famous.json')
+    try:
+        old = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    except (OSError, ValueError):
+        old = {}
+    stale = '--all' in sys.argv or old.get('updated', '')[:10] < (now - dt.timedelta(days=30)).strftime('%Y-%m-%d')
+    if stale:
+        try:
+            passes = famous()
+            write_if_changed('famous.json', {'source': 'NASA/JPL Horizons API: heliocentric ecliptic J2000; rows [jd, x, y, z (au), '
+                                             'vx, vy, vz (au/day)]', 'updated': stamp, 'passes': passes}, ['passes'])
+        except Exception as e:
+            print('famous passes: could not reach the Horizons API (%s)' % e)
     return 1 if failed == 2 else 0
 
 
