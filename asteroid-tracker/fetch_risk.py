@@ -18,6 +18,7 @@
 # Run by hand:  python3 asteroid-tracker/fetch_risk.py   (standard library only)
 import datetime as dt
 import json
+import math
 import os
 import re
 import sys
@@ -82,10 +83,12 @@ def esa_table(text, need):
 
 
 def num(s):
+    """A finite number, or None (blank, "n/a", "nan", "inf")."""
     try:
-        return float(s)
+        v = float(s)
     except (TypeError, ValueError):
         return None
+    return v if math.isfinite(v) else None
 
 
 def esa_risk():
@@ -170,7 +173,7 @@ def write_if_changed(name, obj, keys):
     except (OSError, ValueError):
         pass
     with open(path, 'w', encoding='utf-8') as fh:
-        json.dump(obj, fh, separators=(',', ':'))
+        json.dump(obj, fh, separators=(',', ':'), allow_nan=False)   # NaN is not valid JSON: fail rather than write it
         fh.write('\n')
     print('%s: written' % name)
 
