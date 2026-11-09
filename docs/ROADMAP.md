@@ -6,6 +6,8 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 ## 0. Repository (set up Nov 8, 2026)
 
 - [ ] **Create the Claude project's chats:** one per project (the project's instructions are in place).
+- [ ] Delete the branch `map-data-test` on GitHub (Branches page): it held a one-off test run of the map's data job
+  on Nov 9, 2026, and branches cannot be deleted from the build session.
 - [ ] Optional: a **Project Record** PDF rebuilt automatically after every push, as in the Flight Deck Suite and Hot Mic.
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
