@@ -162,7 +162,9 @@ D (km) = 1329 ÷ √p × 10^(−H ÷ 5)
   OSIRIS-REx/APEX −64, Hera −91, James Webb Space Telescope −170, Europa Clipper −159, Juno −61. On Nov 1, 2026
   Voyager 1 was 172 au from the Sun, Voyager 2 145 au, New Horizons 66 au.
 - When a range starts before a spacecraft's data, Horizons answers with the first date it covers; the script then
-  retries from that date. Each spacecraft is sampled every 1 to 30 days from launch to a year ahead (about 240 KB).
+  retries from that date. Each spacecraft is sampled every 4 to 30 days from launch to a year ahead, and Parker Solar
+  Probe every 6 hours (`STEP_SIZE='6 h'`; stored as a step of 0.25 days), since near the Sun it moves about 16 million
+  km a day while passing about 7 million km from it (about 600 KB in all).
 - The International Space Station and Hubble are not on the map: 400–540 km above Earth, they sit inside Earth's dot
   at any scale it shows.
 

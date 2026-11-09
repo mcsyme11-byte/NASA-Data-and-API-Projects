@@ -214,6 +214,7 @@ function select(b) {
   if (b.kind === 'planet' && b.name === 'Earth') b = { kind: 'planet', name: 'Earth' };
   selected = b;
   map.selected = b.kind === 'asteroid' || b.kind === 'tour' ? b.k : -1;
+  map.selectedCraft = b.kind === 'craft' ? b.i : -1;          // its whole path, not only the last year
   $('#cSel').disabled = false;
   map.request();
   showSelected(true);

@@ -109,13 +109,50 @@ export class Asteroids {
   }
 }
 
-// Spacecraft: samples [jd0, stepDays, x0,y0,z0, x1,y1,z1, …] per craft; positions by linear interpolation
+// Spacecraft: samples [jd0, stepDays, x0,y0,z0, x1,y1,z1, …] per craft (au, ecliptic, Sun at the centre).
+// Between two samples the path is a centripetal Catmull-Rom curve through the samples on either side: it follows tight
+// turns, such as Parker Solar Probe's around the Sun, without the corners of straight lines or the overshoot of other
+// curves. The spacecraft's dot and its drawn path use the same curve, so the dot always sits on its path.
+function craftPoint(s, n, i, t) {
+  const P = (k) => { k = Math.max(0, Math.min(n - 1, k)); const o = 2 + k * 3; return [s[o], s[o + 1], s[o + 2]]; };
+  const p1 = P(i), p2 = P(i + 1);
+  const p0 = i > 0 ? P(i - 1) : p1.map((v, j) => 2 * v - p2[j]);                 // ends: mirror the next point
+  const p3 = i + 2 < n ? P(i + 2) : p2.map((v, j) => 2 * v - p1[j]);
+  const knot = (a, b) => Math.max(1e-12, Math.sqrt(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2])));
+  const t0 = 0, t1 = t0 + knot(p0, p1), t2 = t1 + knot(p1, p2), t3 = t2 + knot(p2, p3), u = t1 + (t2 - t1) * t;
+  const mix = (a, b, ta, tb) => a.map((v, j) => ((tb - u) * v + (u - ta) * b[j]) / (tb - ta));
+  const A1 = mix(p0, p1, t0, t1), A2 = mix(p1, p2, t1, t2), A3 = mix(p2, p3, t2, t3);
+  return mix(mix(A1, A2, t0, t2), mix(A2, A3, t1, t3), t1, t2);
+}
 export function spacecraftAt(sc, jd) {
   const s = sc.samples, n = (s.length - 2) / 3, f = (jd - s[0]) / s[1];
   if (!(f >= 0) || f > n - 1) return null;
-  const i = Math.min(n - 2, Math.floor(f)), t = f - i, o = 2 + i * 3;
-  return [s[o] + (s[o + 3] - s[o]) * t, s[o + 1] + (s[o + 4] - s[o + 1]) * t, s[o + 2] + (s[o + 5] - s[o + 2]) * t];
+  const i = Math.min(n - 2, Math.floor(f));
+  return craftPoint(s, n, i, f - i);
 }
+// The whole path, worked out once per spacecraft: [x, y, z, jd] points, with extra points between two samples where
+// the path bends (one more for about every 4 degrees of turn, up to 12), so curves stay smooth when zoomed in.
+export function craftTrack(sc) {
+  if (sc._track) return sc._track;
+  const s = sc.samples, n = (s.length - 2) / 3, out = [];
+  const P = (k) => { const o = 2 + k * 3; return [s[o], s[o + 1], s[o + 2]]; };
+  const turn = (a, b, c) => {
+    const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], v = [c[0] - b[0], c[1] - b[1], c[2] - b[2]];
+    const lu = Math.hypot(...u), lv = Math.hypot(...v);
+    return lu && lv ? Math.acos(Math.max(-1, Math.min(1, (u[0] * v[0] + u[1] * v[1] + u[2] * v[2]) / (lu * lv)))) : 0;
+  };
+  for (let i = 0; i < n - 1; i++) {
+    const bend = Math.max(i > 0 ? turn(P(i - 1), P(i), P(i + 1)) : 0, i + 2 < n ? turn(P(i), P(i + 1), P(i + 2)) : 0);
+    const k = Math.min(12, 1 + Math.floor(bend / (4 * RAD)));
+    for (let j = 0; j < k; j++) { const p = j ? craftPoint(s, n, i, j / k) : P(i); p.push(s[0] + (i + j / k) * s[1]); out.push(p); }
+  }
+  if (n) { const p = P(n - 1); p.push(s[0] + (n - 1) * s[1]); out.push(p); }
+  sc._track = out;
+  return out;
+}
+// Spacecraft that repeat the same loop many times (Parker Solar Probe around the Sun, Juno around Jupiter) show only
+// their last year of flight, so the loops do not pile up; selecting one shows its whole path.
+export const RECENT_ONLY = new Set(['-96', '-61']);
 
 // Position at jd from samples [jd, x, y, z, vx, vy, vz] (au, au/day), by cubic Hermite interpolation between the two
 // samples around jd, which uses the velocities too; null outside the samples.
@@ -149,6 +186,7 @@ export class SolarMap {
     this.colorBy = 'class';                            // 'class' | 'plain'
     this.highlight = new Set();                        // asteroid indices drawn larger (this week's visitors)
     this.selected = -1;
+    this.selectedCraft = -1;                          // the selected spacecraft's index: its whole path is drawn
     this.labels = opts.labels !== false;
     this.quick = false;                                // true while playing: one Newton step per frame
     this.tour = null;                                  // a famous pass: { k, asteroid, earth, moon } Horizons samples
@@ -323,16 +361,18 @@ export class SolarMap {
       } else line(this.ast.path(this.selected, this.viewR < 0.1 ? 4000 : 360), 'rgba(226,200,142,.9)', 1.5);
     }
     // spacecraft tracks
-    for (const sc of this.spacecraft) {
-      if (!sc.show) continue;
-      const pts = [], smp = sc.samples, n = (smp.length - 2) / 3;
-      for (let i = 0; i < n; i += Math.max(1, Math.floor(n / 400))) {
-        const jd = smp[0] + i * smp[1]; if (jd > this.jd) break;
-        pts.push([smp[2 + i * 3], smp[3 + i * 3], smp[4 + i * 3]]);
-      }
+    // every point is used (line() skips what is off screen); recent-only spacecraft from a year before the date shown
+    this.spacecraft.forEach((sc, ci) => {
+      if (!sc.show) return;
+      const tr = craftTrack(sc), from = RECENT_ONLY.has(sc.id) && ci !== this.selectedCraft ? this.jd - 365.25 : -Infinity;
+      let a = 0, b = tr.length;
+      while (a < b) { const m = (a + b) >> 1; if (tr[m][3] < from) a = m + 1; else b = m; }   // first point in range
+      const pts = [];
+      for (let i = a; i < tr.length && tr[i][3] <= this.jd; i++) pts.push(tr[i]);
       const now = spacecraftAt(sc, this.jd); if (now) pts.push(now);
-      if (pts.length > 1) line(pts, 'rgba(237,230,211,.28)', 1, [2, 4]);
-    }
+      const sel = ci === this.selectedCraft;
+      if (pts.length > 1) line(pts, sel ? 'rgba(237,230,211,.55)' : 'rgba(237,230,211,.28)', sel ? 1.3 : 1, [2, 4]);
+    });
     // Sun
     // the Sun: a glow, and its true size (696,000 km) once that is bigger than the marker
     const sun = proj(0, 0, 0), sTrue = (696000 / AU_KM) * s, sr = Math.max(7 * dpr, sTrue / 0.7);

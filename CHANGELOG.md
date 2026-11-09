@@ -1,5 +1,15 @@
 # Change log
 
+## November 9, 2026 — Asteroid Tracker: smooth spacecraft paths
+
+- Spacecraft paths on the map are drawn through every sample as smooth curves (centripetal Catmull-Rom) instead of
+  a thinned set of straight lines, which looked jagged near the Sun; each spacecraft's dot moves along the same
+  curve.
+- Parker Solar Probe and Juno, which repeat the same loop many times, show their last year of flight; selecting one
+  shows its whole path, drawn brighter.
+- Parker Solar Probe is sampled every 6 hours instead of daily (`data/spacecraft.json`), so its turn around the Sun
+  is captured: near the Sun it covers about 16 million km a day while passing about 7 million km from it.
+
 ## November 9, 2026 — Image Explorer: the Globe tab (mock-up)
 
 - **Globe tab** in the mock-up: NASA's Blue Marble Earth, turned to the current sidereal time, inside the real sky

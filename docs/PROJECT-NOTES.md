@@ -34,6 +34,8 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
 - **Map performance (Nov 9, 2026):** the Kepler solving moved to a background thread (`orbitworker.js`, sharing
   `kepler.js` with the page, which falls back to solving itself if a worker cannot start); lines are cut to the
   visible area before drawing. Measured: playing at a median of 60 frames a second at every width, zoomed in or out.
+- **Decided Nov 9, 2026 (Asteroid Tracker):** spacecraft paths are smooth curves through every sample; Parker Solar
+  Probe and Juno show only their last year unless selected, because their repeated loops piled up into a tangle.
 - **Decided Nov 9, 2026 (Asteroid Tracker):** famous close passes are placed from Horizons positions
   (`data/famous.json`), not two-body orbits, because Earth's pull bends the path during a close pass. Five passes:
   Apophis 2029, Duende 2013, 2020 QG, 2019 OK and 2024 YR4 (2032).

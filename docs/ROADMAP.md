@@ -27,6 +27,8 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   live clock; the full-screen and exit buttons; the "‹ Back" buttons (tracker → an asteroid → Back returns to the
   same week, filters, open row and scroll position; the same from the map, the Search tab and the "By year" view);
   every name in the "By year" tables opening its own page.
+- [ ] After the next daily data run, look at Parker Solar Probe near the Sun on the map: its path should now curve
+  smoothly around the Sun (the run samples it every 6 hours).
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
   "famous.json written").
 

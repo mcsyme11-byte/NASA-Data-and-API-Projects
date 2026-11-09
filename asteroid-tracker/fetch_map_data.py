@@ -38,7 +38,9 @@ SPACECRAFT = [
      'Launched in 1977; the only spacecraft to visit Uranus and Neptune; in interstellar space since 2018.'),
     ('-98', 'New Horizons', '2006-01-20', 20, 'flew past Pluto in 2015',
      'Flew past Pluto in 2015 and the small world Arrokoth in 2019; now in the Kuiper belt.'),
-    ('-96', 'Parker Solar Probe', '2018-08-13', 1, 'closest ever to the Sun',
+    # Parker: every 6 hours (0.25 d). Near the Sun it covers about 16 million km a day while passing about 7 million km
+    # from it, so daily samples would cut straight across its turn.
+    ('-96', 'Parker Solar Probe', '2018-08-13', 0.25, 'closest ever to the Sun',
      'Flies closer to the Sun than any spacecraft before it, through the Sun\'s outer atmosphere.'),
     ('-49', 'Lucy', '2021-10-17', 4, 'touring Jupiter\'s Trojan asteroids',
      'On a twelve-year tour of the Trojan asteroids that share Jupiter\'s orbit.'),
@@ -116,7 +118,7 @@ def spacecraft(today):
         for attempt in range(3):
             res = get(HORIZONS, {
                 'format': 'json', 'COMMAND': "'%s'" % hid, 'EPHEM_TYPE': 'VECTORS', 'CENTER': "'500@10'",
-                'START_TIME': "'%s'" % rng[0], 'STOP_TIME': "'%s'" % rng[1], 'STEP_SIZE': "'%d%%20d'" % step,
+                'START_TIME': "'%s'" % rng[0], 'STOP_TIME': "'%s'" % rng[1], 'STEP_SIZE': "'%d%%20h'" % round(step * 24) if step < 1 else "'%d%%20d'" % step,
                 'OUT_UNITS': 'AU-D', 'REF_PLANE': 'ECLIPTIC', 'REF_SYSTEM': 'ICRF', 'VEC_TABLE': '1', 'CSV_FORMAT': 'YES',
                 'OBJ_DATA': 'NO'})
             text = res.get('result', '') + res.get('error', '')
