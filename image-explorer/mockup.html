@@ -73,6 +73,10 @@
       padding: 12px 14px; color: var(--ink); transform: translate(-50%, calc(-100% - 14px)); font-size: 14px; }
     .pop::after { content: ""; position: absolute; left: 50%; bottom: -7px; width: 12px; height: 12px; margin-left: -6px; background: var(--bg2);
       border-right: 1px solid var(--brass-dim); border-bottom: 1px solid var(--brass-dim); transform: rotate(45deg); }
+    .pop { --x: -50%; --ax: 50%; transform: translate(var(--x), calc(-100% - 14px)); }
+    .pop::after { left: var(--ax); }
+    .pop.below { transform: translate(var(--x), 14px); }
+    .pop.below::after { bottom: auto; top: -7px; transform: rotate(225deg); }
     .pop .eyebrow { font-size: 10px; letter-spacing: .26em; }
     .pop .where { font-size: 17px; margin: 2px 0; }
     .pop .ll { font: 12px var(--mono); color: var(--muted); }
@@ -399,7 +403,7 @@
     : new ol.layer.Tile({ source: rasterSource(L), visible: false, opacity: L.opacity || 1 });
 
   const popEl = document.createElement('div'); popEl.className = 'pop';
-  const popup = new ol.Overlay({ element: popEl, positioning: 'bottom-center', stopEvent: true, autoPan: { animation: { duration: 200 } } });
+  const popup = new ol.Overlay({ element: popEl, stopEvent: true });
   const map = new ol.Map({
     target: 'map',
     layers: [...BASES.map(L => layers[L.id]), ...OVERS.map(L => layers[L.id])],
@@ -531,8 +535,9 @@
   }
   function go(h) {
     list.hidden = true; q.setAttribute('aria-expanded', 'false'); q.value = h.kind === 'Coordinates' ? h.name : h.name;
-    map.getView().animate({ center: [h.lon, h.lat], zoom: Math.max(map.getView().getZoom(), 5), duration: 700 });
-    showPop([h.lon, h.lat], h.kind === 'Coordinates' ? nearest(h.lat, h.lon) : h.name);
+    popup.setPosition(undefined);
+    map.getView().animate({ center: [h.lon, h.lat], zoom: Math.max(map.getView().getZoom(), 5), duration: 700 },
+      () => showPop([h.lon, h.lat], h.kind === 'Coordinates' ? nearest(h.lat, h.lon) : h.name));
   }
   q.addEventListener('input', suggest);
   q.addEventListener('keydown', e => {
@@ -557,6 +562,11 @@
     const term = /^Open water/.test(label) ? '' : place;
     popEl.innerHTML = `<button class="x" aria-label="Close">×</button><div class="eyebrow">This spot</div><div class="where">${esc(label)}</div>
       <div class="ll">${fmtLL(lat, lon)}</div>${term ? `<button class="btn" data-q="${esc(term)}">NASA pictures of ${esc(term)}</button>` : ''}`;
+    const px = map.getPixelFromCoordinate(c);
+    popEl.classList.toggle('below', !px || px[1] < 190);       /* opens below the spot near the top of the map */
+    const w = map.getSize()[0], room = 150;                    /* and slides inward near the sides */
+    const x = !px ? 50 : px[0] < room ? 100 * Math.max(.08, px[0] / (2 * room)) : px[0] > w - room ? 100 - 100 * Math.max(.08, (w - px[0]) / (2 * room)) : 50;
+    popEl.style.setProperty('--x', `-${x}%`); popEl.style.setProperty('--ax', `${x}%`);
     popup.setPosition(c);
   }
   popEl.addEventListener('click', e => {
