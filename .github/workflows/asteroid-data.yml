@@ -16,6 +16,12 @@ on:
   schedule:
     - cron: '17 6 * * *'    # 06:17 UTC daily
     - cron: '47 14 * * *'   # 14:47 UTC daily, the backup
+  # also whenever a data script or this workflow changes on main, so new data appears with the code that uses it
+  push:
+    branches: [main]
+    paths:
+      - 'asteroid-tracker/fetch_*.py'
+      - '.github/workflows/asteroid-data.yml'
   workflow_dispatch:
     inputs:
       all:
@@ -40,6 +46,11 @@ jobs:
         run: python3 asteroid-tracker/fetch_close_approaches.py ${{ inputs.all && '--all' || '' }}
       - name: Fetch asteroid orbits and spacecraft positions
         run: python3 asteroid-tracker/fetch_map_data.py
+      # ESA NEOCC and NASA/JPL Sentry. If one of them cannot be read, the run is marked with a warning but the other
+      # data is still saved (the script keeps that source's previous figures).
+      - name: Fetch impact-risk lists and ESA close approaches
+        continue-on-error: true
+        run: python3 asteroid-tracker/fetch_risk.py
       - name: Commit if changed
         run: |
           git add -A asteroid-tracker/data/
@@ -49,7 +60,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Asteroid data: daily close-approach update"
+          git commit -m "Asteroid data: daily close-approach and impact-risk update"
           # Other work may have been pushed while the data was fetched: put this commit on top of it and retry.
           for attempt in 1 2 3 4 5; do
             git pull --rebase --quiet && git push && exit 0
