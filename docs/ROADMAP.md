@@ -42,8 +42,9 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   layers, place search with towns and natural features, tapping the map, the Arctic and Antarctic views), the Globe
   (turning, zooming, events, sky markers, find, the selected card, "See it on the Earth map"), the Picture library
   (search, filters, Pictures / Pictures and videos / Videos, playing a video, Show more, the viewer).
-- [ ] Check the Arctic and Antarctic views with live imagery (built and tested with NASA out of reach; the tile
-  addresses were checked separately).
+- [ ] Polar views: a sea ice layer that works through the polar night. GIBS's microwave sea-ice records ended
+  (SSMIS Aug 2021, AMSR2 Sep 2025); the current one is MODIS (a camera, daylight only). Ice surface temperature
+  (`MODIS_Terra_Ice_Surface_Temp_Night`, thermal) is an option to consider.
 - [ ] Delete the branch `image-explorer-probe` on GitHub (Branches page): it held one-off probes of NASA, SIMBAD and
   the astronaut photo site on Nov 9, 2026.
 - [ ] Further rounds of changes to the globe, as the developer reviews it.

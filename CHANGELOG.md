@@ -1,5 +1,15 @@
 # Change log
 
+## November 9, 2026 — Image Explorer: date changes reload the pictures
+
+- **Fixed:** changing the date (date box, slider, day buttons, Play) did not reload the satellite pictures already on
+  the map, so an earlier day could show the newest day's picture. Every layer now reloads for the new date. Found
+  while checking the polar views with live imagery.
+- Polar views checked with live NASA imagery: the Arctic (Nov 8: polar night over the pole; Aug 15: the whole Arctic
+  in daylight with summer fires) and the Antarctic (Nov 8: the continent in spring sunlight, snow layer).
+- The polar sea ice layer's colour key is a single swatch ("Sea ice seen that day, daylight only") in place of
+  GIBS's large classification legend; the page explains the polar night.
+
 ## November 9, 2026 — Asteroid Tracker: data check
 
 - Checked the "Asteroid data" job: the 06:17 UTC scheduled run did not start, so the job was started by hand at

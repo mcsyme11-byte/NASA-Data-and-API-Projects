@@ -380,6 +380,13 @@ Checked Nov 9, 2026 (live requests from the published site):
   sea temperature and smoke and dust are world view only. Test tiles for each answered 200 with CORS allowed.
 - Blue Marble (`BlueMarble_NextGeneration`, `BlueMarble_ShadedRelief_Bathymetry`) is listed in both polar layer lists,
   unlike the world list.
+- Checked with live imagery Nov 9, 2026: on Nov 8 the true-colour picture has a black area over the North Pole (polar
+  night; MODIS is a camera); on Aug 15 the Arctic is covered. `MODIS_Terra_Sea_Ice` is a classification layer whose
+  only coloured class is sea ice (rgb 255, 100, 100; colour map `MODIS_L2_Sea_Ice.xml`). GIBS's microwave sea-ice
+  layers, which work in the dark, end in Aug 2021 (`SSMIS_Sea_Ice_Concentration`) and Sep 2025
+  (`AMSRU2_Sea_Ice_Concentration_12km`).
+- OpenLayers note: `source.refresh()` did not fetch new tiles after the date changed; `setTileUrlFunction(fn, key)`
+  with a new key does.
 
 ### Place-name services not used
 

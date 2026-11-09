@@ -18,7 +18,7 @@ const OVERS = [
   { id: 'clouds', name: 'Clouds', layer: 'MODIS_Terra_Cloud_Top_Temp_Day', ext: 'png', set: '2km', since: 2000, legend: 'MODIS_Cloud_Top_Temp', opacity: .75, polar: { set: '1km', lag: 1 } },
   { id: 'smoke', name: 'Smoke and dust', layer: 'MODIS_Terra_Aerosol', ext: 'png', set: '2km', since: 2000, legend: 'MODIS_VIIRS_AOD', opacity: .8, polar: null },
   { id: 'ice', name: 'Sea ice', layer: 'GHRSST_L4_MUR_Sea_Ice_Concentration', ext: 'png', set: '1km', since: 2002, legend: 'GHRSST_Sea_Ice_Concentration', lag: 1,
-    polar: { layer: 'MODIS_Terra_Sea_Ice', legend: 'MODIS_L2_Sea_Ice', lag: 0, sat: 'Terra' } },
+    polar: { layer: 'MODIS_Terra_Sea_Ice', legend: null, key: ['#FF6464', 'Sea ice seen that day (daylight only)'], lag: 0, sat: 'Terra' } },
 ];
 
 /* ---------- dates ---------- */
@@ -110,7 +110,8 @@ function fillFrame() {          /* fills the frame with no empty bands; the edge
 map.once('change:size', fillFrame); if (map.getSize()) fillFrame();
 
 function refreshSources() {
-  for (const L of [...BASES, ...OVERS]) layers[L.id].getSource()?.refresh();
+  /* a new key makes OpenLayers fetch every tile again with the new date (refresh() alone kept the old tiles) */
+  for (const L of [...BASES, ...OVERS]) { const s = layers[L.id].getSource(); if (s) s.setTileUrlFunction(s.getTileUrlFunction(), view + ' ' + date); }
 }
 
 /* ---------- layer pickers ---------- */
@@ -160,8 +161,8 @@ function update() {
   $('mapTag').innerHTML = `<strong>${nice(date)}</strong> · ${view === 'world' ? '' : V().name + ' · '}${B.name}${O.length ? ' + ' + O.map(L => L.name.toLowerCase()).join(', ') : ''}`;
   const rows = [];
   if (B.legend) rows.push(`<div class="row"><span>${B.name}</span><img src="https://gibs.earthdata.nasa.gov/legends/${B.legend}_H.svg" alt="Colour key for ${B.name}"></div>`);
-  for (const L of O) rows.push(L.vector
-    ? `<div class="row"><span>${L.name}</span><span class="firekey"><i></i>A fire or other hot spot seen that day</span></div>`
+  for (const L of O) rows.push(L.vector || L.key
+    ? `<div class="row"><span>${L.name}</span><span class="firekey"><i${L.key ? ` style="background:${L.key[0]};box-shadow:none;border-radius:2px"` : ''}></i>${L.key ? L.key[1] : 'A fire or other hot spot seen that day'}</span></div>`
     : `<div class="row"><span>${L.name}</span><img src="https://gibs.earthdata.nasa.gov/legends/${L.legend}_H.svg" alt="Colour key for ${L.name}"></div>`);
   $('legend').innerHTML = rows.join('');
   const behind = [B, ...O].filter(L => dayFor(L) !== date);
@@ -176,7 +177,7 @@ function update() {
 /* switch between the World, Arctic and Antarctic views */
 function setView(v) {
   if (v === view) return;
-  view = v; stop(); popup.setPosition(undefined);
+  view = v; stop(); popup.setPosition(undefined); $('cursor').hidden = true;
   if (!spec(BASES.find(L => L.id === base))) base = 'truecolor';
   for (const id of [...on]) if (!spec(OVERS.find(L => L.id === id))) on.delete(id);
   buildSources(); map.setView(makeView()); fillFrame();
