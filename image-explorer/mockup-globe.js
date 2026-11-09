@@ -13,7 +13,9 @@ const $ = id => document.getElementById(id);
 const D2R = Math.PI / 180;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const frame = $('globeFrame'), host = $('globe'), over = $('gOver'), ctx = over.getContext('2d');
-const SKY_R = 190, STAR_R = 200, HOME = { lat: 35, lon: -100, dist: 4.4 };
+/* the starting view looks past the Earth towards Sagittarius and the centre of the galaxy, the richest part of the
+   sky for nebulae and clusters (the Lagoon, Trifid, Omega and Eagle nebulae) */
+const SKY_R = 190, STAR_R = 200, HOME = { ra: 271, dec: -22, dist: 6 };
 
 /* Earth-fixed and sky positions use the same rule: x towards longitude (or right ascension) 0, y north. */
 const vec = (lat, lon, r) => new THREE.Vector3(r * Math.cos(lat * D2R) * Math.cos(lon * D2R), r * Math.sin(lat * D2R), -r * Math.cos(lat * D2R) * Math.sin(lon * D2R));
@@ -287,8 +289,15 @@ function wirePointer() {
 }
 
 /* ---------- camera moves ---------- */
+/* stand on the far side of the Earth from a sky direction, a little to one side, so the sky shows beside the Earth */
+function skyView(u, dist) {
+  u = u.clone().normalize();
+  const side = new THREE.Vector3(0, 1, 0).cross(u);
+  if (side.lengthSq() < 1e-6) side.set(1, 0, 0);
+  return u.negate().add(side.normalize().multiplyScalar(0.45)).normalize().multiplyScalar(dist);
+}
 function home(animate = true) {
-  const p = vec(HOME.lat, HOME.lon, HOME.dist).applyAxisAngle(new THREE.Vector3(0, 1, 0), earth.rotation.y);
+  const p = skyView(vec(HOME.dec, HOME.ra, 1), HOME.dist);
   animate ? flyTo(p) : camera.position.copy(p);
 }
 function flyTo(to) { fly = { from: camera.position.clone(), to, t0: performance.now(), ms: reduce ? 1 : 900 }; }
@@ -304,10 +313,7 @@ function goTo(it) {
   if (it.kind === 'event') {
     flyTo(it.local.clone().applyMatrix4(earth.matrixWorld).normalize().multiplyScalar(Math.min(camera.position.length(), 2.2)));
   } else {
-    /* stand on the far side of the Earth from the object, a little to one side, so it shows beside the Earth */
-    const u = it.pos.clone().normalize(), side = new THREE.Vector3(0, 1, 0).cross(u).normalize();
-    if (side.lengthSq() < 1e-6) side.set(1, 0, 0);
-    flyTo(u.negate().add(side.multiplyScalar(0.3)).normalize().multiplyScalar(Math.max(camera.position.length(), 9)));
+    flyTo(skyView(it.pos, Math.max(camera.position.length(), 6)));
   }
 }
 $('gIn').addEventListener('click', () => flyTo(camera.position.clone().multiplyScalar(0.75).clampLength(1.15, 40)));
