@@ -8,6 +8,9 @@
 #   preview.json     the potentially hazardous ones only, for the home page's live preview
 #   spacecraft.json  positions of selected spacecraft around the Sun from NASA/JPL Horizons, every few days from
 #                    launch (or 1977) to a year ahead
+#   famous.json      for the map's famous close passes: precise positions and velocities of the asteroid, Earth and
+#                    the Moon (Horizons, which includes Earth's pull), every 10 minutes within 12 hours of closest
+#                    approach, hourly within 3 days, daily within 40 days. Refreshed when missing or a month old.
 # The JPL APIs do not send CORS headers, so web pages cannot call them; GitHub Actions runs this script once a day
 # (.github/workflows/asteroid-data.yml). No key is needed.
 #
