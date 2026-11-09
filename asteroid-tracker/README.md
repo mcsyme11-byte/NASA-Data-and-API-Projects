@@ -17,6 +17,11 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
 - **Each asteroid's page:** its size and orbit, every close approach to Earth from 1900 to 2200, and the **orbit
   diagram**: the Sun, the planets and the asteroid to scale at any date from 1900 to 2050, turnable, with Play,
   a slider and a "Near Earth" view.
+- **Solar System Map** (`map.html`): all 43,186 near-Earth objects, the planets and eleven spacecraft, turnable and
+  zoomable at 60 frames a second, with a discovery timeline ("Found by the end of"), "Close to Earth in", Find and
+  filters. A live preview runs on the home page.
+- **Search:** results with every letter, a "Found in" filter, and a guide to how asteroids are named, with each code
+  decoded (2024 YR4: found December 16–31, 2024, the 117th new small body given a code in that half-month).
 - **Key settings:** a personal NASA key, kept in the browser only; NASA's shared demo key otherwise.
 
 ## The numbers: which rule to use when
@@ -29,6 +34,7 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
 | brightness H, no measured size | diameter range | D (km) = 1329 ÷ √p × 10^(−H ÷ 5), with p = 0.25 (smallest) and p = 0.05 (largest) | H = 22 → **106–237 m** |
 | a measured diameter (JPL, rare) | size | use it as given | 433 Eros: **about 16.8 km** |
 | orbital elements and a date | position around the Sun | M = M0 + n·(days since epoch) → solve M = E − e·sin E → x′ = a(cos E − e), y′ = a√(1−e²)·sin E → rotate by ω, i, Ω | 1998 VE31 on Nov 9, 2026: **0.1785 au** from Earth (NASA: 0.1785) |
+| a provisional code, e.g. 2024 YR4 | when it was found | year; 1st letter = half-month (A = Jan 1–15 … Y = Dec 16–31, no I); order = number × 25 + position of the 2nd letter (no I) | 2024 YR4: Dec 16–31, 2024, **117th** |
 | distance from the Sun r, orbit size a | speed around the Sun | v = √(GM☉ · (2/r − 1/a)), GM☉ = 1.327 × 10¹¹ km³/s² | r = 1.15 au, a = 1.05 au → **26.4 km/s** |
 
 ## Data
@@ -38,7 +44,9 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
 | NASA NeoWs `feed` (`api.nasa.gov/neo/rest/v1/`) | This week | NASA key or `DEMO_KEY` | Live from the page, 1 request per week shown |
 | NASA NeoWs `neo/{id}` | Each asteroid's page | NASA key or `DEMO_KEY` | Live, 1 request per page |
 | NASA/JPL Close-Approach Data (`ssd-api.jpl.nasa.gov/cad.api`) | By year | none | Daily files, `data/YYYY.json` and `data/years.json` (the API blocks calls from web pages) |
-| JPL approximate planetary elements | The orbit diagram's planets | none | Copied into `orbit.js` (valid 1800–2050) |
+| JPL approximate planetary elements | The orbit diagram's and the map's planets | none | Copied into `orbit.js` (valid 1800–2050) |
+| NASA/JPL Small-Body Database Query API | Map and search | none | Daily file `data/neos.json` (and `data/preview.json`) |
+| NASA/JPL Horizons | The map's spacecraft | none | Daily file `data/spacecraft.json` |
 
 Limits: the `feed` covers at most 7 days per request; `DEMO_KEY` allows 30 requests an hour and 50 a day per
 connection, a personal key 1,000 an hour. Details: [docs/DATA-SOURCES.md](../docs/DATA-SOURCES.md).
@@ -47,17 +55,25 @@ connection, a personal key 1,000 an hour. Details: [docs/DATA-SOURCES.md](../doc
 
 ```
 asteroid-tracker/
-├── index.html                   the tracker: this week and by year
+├── index.html                   the tracker: This week, By year and Search tabs
 ├── object.html                  one asteroid: facts, the orbit diagram, every close approach
-├── tracker.css                  styles for both pages (on top of shared/theme.css)
-├── app.js                       the tracker's data, filters, sorting, tables and views
+├── map.html                     the solar system map
+├── tracker.css                  styles for all three pages (on top of shared/theme.css)
+├── app.js                       the tracker's data, filters, sorting, tables and tabs
 ├── object.js                    the asteroid page: loading, the diagram's controls, the approaches chart and list
+├── map.js                       the map page: controls, selection, Find, year filters, full screen
+├── skymap.js                    the map's renderer: 43,000 orbits in typed arrays, drawn into a pixel buffer
+├── preview.js                   the home page's live preview of the map
+├── mapdata.js                   loads the map's and search's data files
+├── search.js                    search over every name, ids, name decoding, result cards
+├── searchview.js                the Search tab
 ├── charts.js                    the tracker's SVG charts and the shared tooltips
 ├── orbit.js                     orbit maths: Kepler's equation, planet and asteroid positions (JPL elements)
 ├── orbitview.js                 the orbit diagram: projection, views, drawing, labels, dragging
 ├── format.js                    units, the size rule and number formatting
-├── fetch_close_approaches.py    writes data/YYYY.json and data/years.json (run daily by GitHub Actions)
-├── data/                        close approaches within 10 LD, one file per year since 2000, and the index
+├── fetch_close_approaches.py    writes data/YYYY.json and data/years.json (daily, GitHub Actions)
+├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json (daily)
+├── data/                        the files above
 └── README.md                    this file
 ```
 

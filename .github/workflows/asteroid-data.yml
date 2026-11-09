@@ -1,9 +1,10 @@
 # NASA Data Projects · Asteroid Tracker daily data · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
-# Once a day, refreshes the Asteroid Tracker's close-approach files from the NASA/JPL close-approach API
-# (asteroid-tracker/fetch_close_approaches.py): this year, next year, and any missing year since 2000, plus the
-# index data/years.json. Commits the files when they have changed; GitHub Pages then republishes the site.
-# The JPL API blocks direct calls from web pages (no CORS), which is why the data is fetched here.
+# Once a day, refreshes the Asteroid Tracker's data files and commits them when they have changed; GitHub Pages then
+# republishes the site:
+#   fetch_close_approaches.py  close approaches (NASA/JPL CAD API): this year, next year, any missing year since 2000
+#   fetch_map_data.py          every near-Earth asteroid's orbit (NASA/JPL SBDB) and spacecraft positions (Horizons)
+# The JPL APIs block direct calls from web pages (no CORS), which is why the data is fetched here.
 # Run by hand: Actions › Asteroid data › Run workflow ("all" refreshes every year).
 
 name: Asteroid data
@@ -28,11 +29,13 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Fetch close approaches
         run: python3 asteroid-tracker/fetch_close_approaches.py ${{ inputs.all && '--all' || '' }}
+      - name: Fetch asteroid orbits and spacecraft positions
+        run: python3 asteroid-tracker/fetch_map_data.py
       - name: Commit if changed
         run: |
           git add -A asteroid-tracker/data/

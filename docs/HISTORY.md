@@ -31,3 +31,14 @@ How NASA Data Projects came about, in order.
   page for each asteroid, past years in the year view, and an orbit diagram, the one singled out for particular care.
 - The orbit maths was checked before the diagram was drawn: Earth's distance from the Sun at perihelion and
   aphelion, and an asteroid's distance from Earth on the day of a close approach, matched NASA's figures.
+
+## November 8–9, 2026 — the solar system map
+
+- The developer asked for a map of all the asteroids around the Sun that could be turned smoothly and seen from
+  different vantage points, with spacecraft such as the Voyagers, plus a search with results after every letter.
+  A mock-up with made-up asteroids was approved; the developer then asked for a guide to asteroid names, year
+  filters and a fix to the full-screen button, built directly.
+- Smoothness was measured throughout. Two changes made playing reach 60 frames a second: each object's orbit is
+  solved starting from the previous frame, and the dots are drawn at 1.5× resolution rather than 2×.
+- The real data showed that NASA's list of near-Earth objects includes about 200 comets (Halley among them), which
+  became their own colour on the map.

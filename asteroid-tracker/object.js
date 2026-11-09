@@ -10,6 +10,7 @@ import { fmt, sizeText, dateText, sizePicture, LD_KM } from './format.js';
 import { hoverTip, tipApi, hideTip } from './charts.js';
 import { asteroidElements, asteroidPosition, planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM } from './orbit.js';
 import { OrbitView } from './orbitview.js';
+import { decodeName } from './search.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -70,7 +71,11 @@ function render() {
   $('#pills').innerHTML =
     (n.is_potentially_hazardous_asteroid ? '<span class="tag haz">Potentially hazardous</span>' : '<span class="tag">Not flagged hazardous</span>') +
     (n.is_sentry_object ? ' <span class="tag warn">On NASA\'s Sentry watch list</span>' : '') +
+    ` <a class="tag link" href="map.html?focus=${encodeURIComponent(n.designation || '')}">Show on the solar system map ›</a>` +
     ` <a class="tag link" href="${esc(n.nasa_jpl_url)}" target="_blank" rel="noopener">JPL's page ›</a>`;
+  const dec = decodeName(n.name);
+  $('#decode').hidden = !dec;
+  if (dec) $('#decode').textContent = dec;
 
   const years = k.period / 365.25, moidAu = Number(od.minimum_orbit_intersection);
   tiles('#facts', [

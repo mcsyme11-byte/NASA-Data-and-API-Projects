@@ -134,6 +134,51 @@ D (km) = 1329 ÷ √p × 10^(−H ÷ 5)
 | InSight weather (TWINS, pressure sensor) | Elysium Planitia, 2018–2022 | The mission has ended; archived in the PDS |
 | Viking Lander meteorology | 1976–1982 | For a then-and-now comparison |
 
+### SBDB Query API (every near-Earth object), checked Nov 8–9, 2026
+
+`https://ssd-api.jpl.nasa.gov/sbdb_query.api` (no key; no CORS headers, so it is fetched by
+`asteroid-tracker/fetch_map_data.py` on GitHub Actions and saved as `asteroid-tracker/data/neos.json`).
+- Query used: `sb-group=neo`, `full-prec=true`, `fields=spkid,full_name,pdes,a,e,i,om,w,ma,epoch,H,diameter,pha,class,first_obs`.
+- Answer: `fields` and `data` (one array per object, numbers as strings) and `count`. 43,186 objects on Nov 8, 2026,
+  2,552 of them potentially hazardous; 209 are comets (classes JFc, JFC, HTC, ETc, …), the rest asteroids (APO 24,454,
+  AMO 14,979, ATE 3,505, IEO 39). Nearly all share one epoch of osculation (2461200.5); a few thousand have their own.
+- `first_obs` is the first observation found, which can be older than the discovery (precovery in archive images):
+  Eros 1893, discovered 1898. The "year found" in `neos.json` is therefore the year in the provisional code
+  (2004 MN4 → 2004, A898 PA → 1898), and `first_obs` only where there is no such code (survey codes such as
+  6344 P-L); comets have no year found.
+- **Ids:** SBDB's `spkid` is 20,000,000 + number for numbered asteroids (Apophis 20099942) and an 8-digit id for the
+  others (1998 VE31 = 50092224). NeoWs (`neo/{id}`) uses 2,000,000 + number for numbered asteroids (2099942) and
+  accepts the 8-digit id for the others (checked: 50092224 returns 1998 VE31). NeoWs does not cover comets; the pages
+  link comets to JPL's lookup page instead.
+- Size: about 5.5 MB as JSON, about 1.8 MB as GitHub Pages sends it (compressed).
+
+### Horizons API (spacecraft), checked Nov 8–9, 2026
+
+`https://ssd.jpl.nasa.gov/api/horizons.api` (no key; no CORS headers; fetched by `fetch_map_data.py`).
+- Query: `COMMAND='<id>'`, `EPHEM_TYPE=VECTORS`, `CENTER='500@10'` (the Sun), `OUT_UNITS=AU-D`,
+  `REF_PLANE=ECLIPTIC`, `REF_SYSTEM=ICRF`, `VEC_TABLE=1` (position only), `CSV_FORMAT=YES`, `STEP_SIZE='<n> d'`.
+  The table is between `$$SOE` and `$$EOE`; each line gives the Julian date, the calendar date, then x, y, z in au.
+- Ids used: Voyager 1 −31, Voyager 2 −32, New Horizons −98, Parker Solar Probe −96, Lucy −49, Psyche −255,
+  OSIRIS-REx/APEX −64, Hera −91, James Webb Space Telescope −170, Europa Clipper −159, Juno −61. On Nov 1, 2026
+  Voyager 1 was 172 au from the Sun, Voyager 2 145 au, New Horizons 66 au.
+- When a range starts before a spacecraft's data, Horizons answers with the first date it covers; the script then
+  retries from that date. Each spacecraft is sampled every 1 to 30 days from launch to a year ahead (about 240 KB).
+- The International Space Station and Hubble are not on the map: 400–540 km above Earth, they sit inside Earth's dot
+  at any scale it shows.
+
+### Asteroid names (Minor Planet Center rules)
+
+Used by `decodeCode()` in `asteroid-tracker/search.js`:
+- **Provisional code** `YYYY XYn`: the year found; X the half-month (A = Jan 1–15, B = Jan 16–31, … Y = Dec 16–31;
+  I and Z not used); Y and n the order in that half-month: 25 letters A–Z without I, n the number of times the
+  alphabet was used up, so order = n × 25 + position of Y. Example: 2024 YR4 = Dec 16–31, 2024, 4 × 25 + 17 = 117th.
+- Old-style codes before 1925 begin with A and the last three digits of the year (A898 PA = 1898).
+- Survey codes `nnnn P-L` (Palomar–Leiden survey, 1960) and `nnnn T-1/T-2/T-3` (Trojan surveys, 1971, 1973, 1977).
+- A permanent **number** follows once the orbit is secure, then possibly a **name** approved by the IAU; the full
+  name keeps all three: 99942 Apophis (2004 MN4).
+- Checked against known discovery dates: Eros Aug 13, 1898 (A898 PA); Apollo Apr 24, 1932 (1932 HA); Phaethon
+  Oct 11, 1983 (1983 TB); Bennu Sep 11, 1999 (1999 RQ36); Apophis Jun 19, 2004 (2004 MN4); 2024 YR4 Dec 27, 2024.
+
 ## Image Explorer
 
 ### GIBS (Global Imagery Browse Services)

@@ -21,6 +21,16 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
 - **Decided Nov 8, 2026 (Asteroid Tracker):** after version 1, three additions: a page for each asteroid (every
   approach, from `neo/{id}`), past years in the year view (2000 to next year) and an orbit diagram, with the orbit
   diagram to be done with particular care. The developer allowed building these without separate mock-ups.
+- **Decided Nov 8, 2026 (Asteroid Tracker):** a solar system map on its own page (`map.html`) with every near-Earth
+  object, the planets and spacecraft; a live preview of it on the home page; a Search tab. Mock-ups approved Nov 8.
+- **Decided Nov 9, 2026 (Asteroid Tracker):** a guide to how asteroids are named, with each code decoded on the pages;
+  "Found by the end of" (a discovery timeline) and "Close to Earth in" (a year) on the map; "Found in" in search;
+  comets kept on the map as their own type. Built without a separate mock-up, at the developer's request.
+- **Map performance (Nov 9, 2026):** positions are worked out only when the date changes, in typed arrays, starting
+  each object from its previous frame's solution; dots are written straight into a pixel buffer at most 1.5× the
+  screen's resolution; nothing is redrawn unless something changed. Measured with all 43,186 objects: dragging at
+  60 frames a second on every screen tested; playing at 60 on standard and phone screens and 50–55 on 2× desktop and
+  tablet screens, on a test machine without a graphics processor.
 - **Decided Nov 8, 2026 (Asteroid Tracker):** the orbit diagram computes positions itself (two-body Kepler orbits from
   NASA's elements; planets from JPL's approximate elements), so it works offline from the one NeoWs answer. Its
   limits are shown on the page; NASA's official close-approach figures are shown beside it.
@@ -68,8 +78,8 @@ One-time setting, done on github.com: the repository's **Settings › Pages › 
 Run it by hand: `python3 dev/check_wording.py`.
 
 `.github/workflows/asteroid-data.yml` runs once a day (06:17 UTC) and on demand (Actions › Asteroid data › Run
-workflow, with "all" to refresh every year): it refreshes the Asteroid Tracker's close-approach files from JPL and
-commits them if they changed.
+workflow, with "all" to refresh every year): it refreshes the Asteroid Tracker's close-approach files, every
+near-Earth object's orbit and the spacecraft positions from JPL, and commits them if they changed.
 
 ## Writing style
 

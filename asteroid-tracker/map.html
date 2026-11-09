@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!-- NASA Data Projects · Asteroid Tracker · solar system map · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar System Map · Asteroid Tracker · NASA Data Projects</title>
+  <meta name="description" content="Every known near-Earth asteroid, the planets and spacecraft around the Sun, at any date, from any angle.">
+  <meta name="theme-color" content="#141B26">
+  <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../shared/theme.css">
+  <link rel="stylesheet" href="tracker.css">
+  <script type="module" src="map.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg>
+        NASA Data Projects
+      </a>
+      <nav class="nav" aria-label="Projects">
+        <a href="../">Home</a>
+        <a href="./" aria-current="page">Asteroids</a>
+        <a href="../mars-data/">Mars</a>
+        <a href="../image-explorer/">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="phead">
+      <div class="eyebrow"><a href="./">Asteroid Tracker</a></div>
+      <h1>Solar System Map</h1>
+      <p class="lede">Every known near-Earth object, <span id="count">…</span> of them, with the planets and spacecraft, at any date and from any angle.</p>
+    </div>
+
+    <nav class="tabs" aria-label="Asteroid Tracker">
+      <a href="./">This week</a>
+      <a href="./#year">By year</a>
+      <a href="map.html" aria-current="page">Map</a>
+      <a href="./#search">Search</a>
+    </nav>
+
+    <div id="notice"></div>
+
+    <section class="card mapcard" id="mapcard" aria-label="Solar system map">
+      <div class="maplayout">
+        <div class="mapmain">
+          <div class="mapframe" id="mapframe">
+            <canvas id="map" tabindex="0" aria-label="Map of the solar system. Drag to turn, pinch or scroll to zoom, arrow keys to turn, plus and minus to zoom. Tap an object for details."></canvas>
+            <div class="ovl ovl-date" aria-live="polite"><span class="eyebrow">Date (UTC)</span><strong id="mDate">—</strong><span class="note" id="mSub"></span></div>
+            <div class="ovl ovl-find">
+              <label class="findbox"><span class="sr">Find an asteroid on the map</span>
+                <input type="search" id="find" placeholder="Find an asteroid…" autocomplete="off" spellcheck="false" aria-controls="findList">
+              </label>
+              <ul class="findlist" id="findList" role="listbox" hidden></ul>
+            </div>
+            <div class="ovl ovl-zoom">
+              <button class="mbtn" id="zIn" aria-label="Zoom in">+</button>
+              <button class="mbtn" id="zOut" aria-label="Zoom out">−</button>
+              <button class="mbtn" id="full" aria-label="Full screen">⤢</button>
+            </div>
+            <div class="ovl ovl-scale"><span id="scaleLbl"></span><i id="scaleBar"></i></div>
+            <div class="ovl ovl-hint" id="hint">Drag to turn · scroll or pinch to zoom · tap a dot</div>
+            <div class="loading" id="loading"><span>Loading about 43,000 orbits…</span></div>
+          </div>
+
+          <div class="mapbar">
+            <div class="seg" role="group" aria-label="View">
+              <span class="barlbl">View</span>
+              <button class="chip" data-v="top">Top</button>
+              <button class="chip" data-v="tilt" aria-pressed="true">Tilted</button>
+              <button class="chip" data-v="side">Side</button>
+            </div>
+            <div class="seg" role="group" aria-label="Distance">
+              <span class="barlbl">Out to</span>
+              <button class="chip" data-r="1.7" aria-pressed="true">Mars</button>
+              <button class="chip" data-r="3.2" aria-pressed="false">Asteroid belt</button>
+              <button class="chip" data-r="6">Jupiter</button>
+              <button class="chip" data-r="34">Neptune</button>
+              <button class="chip" data-r="185">Voyagers</button>
+            </div>
+            <div class="seg" role="group" aria-label="Centre on">
+              <span class="barlbl">Centre</span>
+              <button class="chip" data-c="Sun" aria-pressed="true">Sun</button>
+              <button class="chip" data-c="Earth">Earth</button>
+              <button class="chip" data-c="sel" id="cSel" disabled>Selected</button>
+            </div>
+          </div>
+
+          <div class="mapbar">
+            <div class="seg" role="group" aria-label="Time">
+              <button class="chip" data-step="-30" aria-label="Back 30 days">« 30 d</button>
+              <button class="chip play" id="play" aria-pressed="false">▶ Play</button>
+              <button class="chip" data-step="30" aria-label="Forward 30 days">30 d »</button>
+              <button class="chip" id="today">Today</button>
+            </div>
+            <label class="speed">Speed <select id="speed"><option value="2">2 days a second</option><option value="10" selected>10 days a second</option><option value="40">40 days a second</option><option value="365">a year a second</option></select></label>
+            <label class="speed">Date <input type="date" id="date" min="1900-01-01" max="2050-12-31"></label>
+          </div>
+
+          <div class="mapbar">
+            <div class="seg" role="group" aria-label="Show">
+              <span class="barlbl">Show</span>
+              <button class="chip" data-f="all" aria-pressed="true">All</button>
+              <button class="chip" data-f="haz">Potentially hazardous</button>
+              <button class="chip" data-f="big">Over 140 m</button>
+              <button class="chip" data-f="km">Over 1 km</button>
+            </div>
+            <div class="seg" role="group" aria-label="Spacecraft">
+              <button class="chip" id="craftBtn" aria-pressed="true">Spacecraft</button>
+              <button class="chip" id="weekBtn" aria-pressed="true">This week's visitors</button>
+            </div>
+          </div>
+
+          <div class="mapbar years">
+            <div class="yearctl">
+              <label for="foundBy" class="barlbl">Found by the end of</label>
+              <div class="yearrow">
+                <button class="chip" id="watch" aria-pressed="false">▶ Watch the discoveries</button>
+                <input type="range" id="foundBy" min="1960" max="2026" step="1" value="2026" aria-describedby="foundNote">
+                <strong id="foundYear">2026</strong>
+              </div>
+              <p class="note" id="foundNote"></p>
+            </div>
+            <div class="yearctl">
+              <label for="closeIn" class="barlbl">Close to Earth in</label>
+              <div class="yearrow"><select id="closeIn"><option value="">Any year</option></select></div>
+              <p class="note" id="closeNote">Pick a year to see only the asteroids that passed within 10 Moon distances of Earth that year.</p>
+            </div>
+          </div>
+        </div>
+
+        <aside class="mapside" aria-label="Details">
+          <div class="card selcard" id="selcard">
+            <div class="label">Selected</div>
+            <div id="selBody"><p class="note">Tap a dot, a planet or a spacecraft on the map, or use "Find an asteroid".</p></div>
+          </div>
+          <div class="legendbox">
+            <div class="label">Orbit types</div>
+            <ul class="classlist" id="classlist"></ul>
+            <p class="note">Colours show where each orbit lies compared with Earth's. Brighter patches are where many asteroids are bunched together. Rings mark asteroids passing within 10 Moon distances of Earth this week.</p>
+          </div>
+          <div class="legendbox">
+            <div class="label">Spacecraft</div>
+            <ul class="craftlist" id="craftlist"></ul>
+            <p class="note">The International Space Station and Hubble orbit 400–540 km above Earth: at any scale on this map they sit inside Earth's dot.</p>
+          </div>
+        </aside>
+      </div>
+
+      <details class="howto"><summary>How to read this</summary>
+        <p>The <b>Sun</b> is in the middle; the rings are the planets' orbits and the blue ring is <b>Earth's</b>. Each coloured dot is one <b>near-Earth asteroid</b>, where it is on the date shown. The map is to scale: 1 au is Earth's distance from the Sun, 150 million km.</p>
+        <p><b>Drag</b> to turn it, <b>scroll or pinch</b> to zoom, and press <b>Play</b> to watch everything move round the Sun: the inner planets and the asteroids closest to the Sun move fastest. <b>Tap</b> any dot for its name and size, then open its page for its full orbit and every pass by Earth.</p>
+        <p>Rings mark <b>this week's visitors</b>, the asteroids passing within 10 Moon distances of Earth this week. The dashed lines are the paths the <b>spacecraft</b> have flown; choose "Voyagers" to zoom out to the edge of the solar system.</p>
+        <p><b>Found by the end of</b> shows only the asteroids known by the end of that year; the ones found that very year shine white. Press <b>Watch the discoveries</b> to see how few were known before the 1990s, when telescope surveys began searching the sky every night. <b>Close to Earth in</b> picks out the asteroids that passed near Earth in one year.</p>
+      </details>
+    </section>
+
+    <footer class="footer">
+      <p>Data courtesy of NASA: asteroid orbits from the NASA/JPL Small-Body Database, spacecraft positions from NASA/JPL Horizons, planets from JPL's approximate planetary elements. This is an independent project and isn't endorsed by NASA.</p>
+      <p class="credit"><strong>NASA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
+    </footer>
+  </main>
+  <div class="tip" id="tip" hidden></div>
+</body>
+</html>

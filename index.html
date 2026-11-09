@@ -26,6 +26,28 @@
     .project svg.icon { width: 34px; height: 34px; color: var(--brass); }
 
     .stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5; }
+
+    .livemap { margin-top: 8px; }
+    .liveframe { position: relative; display: block; height: 440px; background: #0C1119; border: 1px solid var(--line);
+      border-top-color: var(--brass-dim); border-radius: var(--r-card); overflow: hidden; color: var(--ink); }
+    .liveframe canvas { display: block; width: 100%; height: 100%; }
+    .liveframe:hover { border-color: var(--brass-dim); }
+    .liveframe:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .liveinfo { position: absolute; left: 14px; top: 14px; display: flex; flex-direction: column; gap: 2px; max-width: 60%; pointer-events: none;
+      background: rgba(12, 17, 25, .78); padding: 8px 12px; border-radius: var(--r-btn); }
+    .liveBtn .short { display: none; }
+    .liveinfo strong { font-weight: 400; font-size: 22px; }
+    .liveBtn { position: absolute; right: 18px; bottom: 18px; }
+    .liveframe:hover .liveBtn { filter: brightness(1.08); }
+    .livenote { margin: 10px 0 0; }
+    @media (max-width: 760px) {
+      .liveframe { height: 340px; }
+      .liveinfo { max-width: 85%; }
+      .liveinfo strong { font-size: 18px; }
+      .liveBtn { left: 16px; right: 16px; bottom: 14px; width: auto; white-space: nowrap; }
+      .liveBtn .long { display: none; }
+      .liveBtn .short { display: inline; }
+    }
   </style>
 </head>
 <body>
@@ -57,6 +79,20 @@
       </div>
     </section>
 
+    <section class="livemap" aria-labelledby="liveTitle">
+      <div class="shead"><h2 id="liveTitle">The solar system, right now</h2><span class="aside">live from NASA data</span></div>
+      <a class="liveframe" href="asteroid-tracker/map.html" aria-label="Open the solar system map">
+        <canvas id="preview" aria-hidden="true"></canvas>
+        <span class="liveinfo">
+          <span class="eyebrow">Today</span>
+          <strong id="liveCount">The potentially hazardous asteroids</strong>
+          <span class="note">and the inner planets, moving round the Sun</span>
+        </span>
+        <span class="btn liveBtn"><span class="long">Explore the solar system ›</span><span class="short">Explore the map ›</span></span>
+      </a>
+      <p class="note livenote">The full map shows all 43,000 known near-Earth asteroids and comets, the planets, and spacecraft from Parker Solar Probe to the Voyagers, at any date and from any angle.</p>
+    </section>
+
     <div class="shead"><h2>The projects</h2><span class="aside">three streams, one repository</span></div>
     <div class="grid">
       <article class="card project">
@@ -66,8 +102,8 @@
         </svg>
         <div class="num">Project 1</div>
         <h3>Asteroid Tracker</h3>
-        <p>Every near-Earth object passing us this week, sorted by size and distance, with graphs you can explore. Distances in Moon distances, so the numbers mean something.</p>
-        <div class="src">NASA NeoWs · JPL close-approach data</div>
+        <p>Every near-Earth object passing us this week, sorted by size and distance, with graphs to explore; every close pass since 2000; a page and an orbit diagram for each asteroid; a search and a map of the whole solar system.</p>
+        <div class="src">NASA NeoWs · NASA/JPL close-approach data, Small-Body Database and Horizons</div>
         <div class="foot"><span class="pill good">Live</span><a class="btn ghost" href="asteroid-tracker/">Open</a></div>
       </article>
 
@@ -100,6 +136,13 @@
     </footer>
   </main>
 
+  <script type="module">
+    // the live preview of the solar system map (asteroid-tracker/preview.js); the page works without it
+    import { mountPreview } from './asteroid-tracker/preview.js';
+    mountPreview(document.getElementById('preview'), 'asteroid-tracker/data/preview.json', {
+      onCount: (n) => { document.getElementById('liveCount').textContent = n.toLocaleString('en-CA') + ' potentially hazardous asteroids'; },
+    }).catch(() => { document.querySelector('.livemap').hidden = true; });
+  </script>
   <script>
     // a quiet field of brass and cream stars behind the page (decoration only)
     (function () {

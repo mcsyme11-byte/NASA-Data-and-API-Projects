@@ -35,12 +35,14 @@
       <p class="lede">Every near-Earth object passing us, sorted by size and distance, with graphs you can explore.</p>
     </div>
 
-    <!-- view switch + key status -->
+    <!-- tabs + key status -->
     <div class="toolbar">
-      <div class="seg" role="group" aria-label="View">
-        <button class="chip" aria-pressed="true" data-view="week">This week</button>
-        <button class="chip" aria-pressed="false" data-view="year">By year</button>
-      </div>
+      <nav class="tabs" aria-label="Asteroid Tracker">
+        <button aria-pressed="true" aria-selected="true" data-view="week">This week</button>
+        <button aria-pressed="false" aria-selected="false" data-view="year">By year</button>
+        <a href="map.html">Map</a>
+        <button aria-pressed="false" aria-selected="false" data-view="search">Search</button>
+      </nav>
       <div class="keystat">
         <span class="pill warn" id="keyPill">Demo key</span>
         <button class="linkbtn" id="openKey" aria-expanded="false" aria-controls="keyCard">Key settings</button>
@@ -185,6 +187,9 @@
         </details>
       </figure>
     </section>
+
+    <!-- ===================== SEARCH ===================== -->
+    <section id="view-search" hidden aria-label="Search every near-Earth asteroid"></section>
 
     <div class="shead"><h2>Words on this page</h2></div>
     <dl class="card gloss">

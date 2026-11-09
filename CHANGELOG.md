@@ -1,5 +1,28 @@
 # Change log
 
+## November 9, 2026 — Asteroid Tracker: solar system map, search, home preview, names explained
+
+- **Solar System Map** (`asteroid-tracker/map.html`): all 43,186 known near-Earth objects (asteroids and 209 comets)
+  coloured by orbit type, the eight planets and eleven spacecraft (from Parker Solar Probe to the Voyagers, with the
+  paths they have flown), at any date from 1900 to 2050. Drag to turn, scroll or pinch to zoom, keyboard controls;
+  Top, Tilted and Side views; zoom presets from Mars to the Voyagers; centre on the Sun, Earth or a selection; Play
+  at four speeds; Find; filters (potentially hazardous, over 140 m, over 1 km); this week's visitors ringed; full
+  screen, with a separate exit button and a fallback for phones that cannot make part of a page full screen.
+- **Found by the end of:** a discovery timeline from 1960 to today, with "Watch the discoveries"; the objects found
+  in the year shown shine white. **Close to Earth in:** only the asteroids that passed within 10 LD in a chosen year.
+- **Search tab:** instant results with every letter over every near-Earth object, a "Found in" filter (a year or a
+  decade, biggest first), cards with an orbit sketch, size, orbit type and a link to the map; typed codes are
+  decoded as they are typed.
+- **How asteroid names work:** a guide in the Search tab, and each name decoded on search cards, the map and each
+  asteroid's page (for example "2004 MN4: found June 16–30, 2004, the 113th new small body given a code in that
+  half-month").
+- **Home page:** a live preview of the map (the 2,552 potentially hazardous asteroids and the inner planets),
+  pausing when off screen and still for people who prefer reduced motion; it opens the map.
+- **Tabs** across the Asteroid Tracker (This week · By year · Map · Search), also on each asteroid's page, which
+  gains "Show on the solar system map".
+- New daily data: `fetch_map_data.py` writes `data/neos.json`, `data/preview.json` and `data/spacecraft.json`.
+- Layout checked on every page at 320–1440 px; fixes at small widths.
+
 ## November 8, 2026 — Asteroid Tracker: tidier notes and layout
 
 - "How to read this" notes are now closed by default and open with a tap.

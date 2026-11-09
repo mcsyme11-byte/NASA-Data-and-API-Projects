@@ -10,6 +10,8 @@
 import { nasaGet, getKey, setKey, usingDemoKey, isoDate } from '../shared/nasa.js';
 import { fmt, sizeText, dateText, sizePicture, diameterM, LD_KM, DAY_MS } from './format.js';
 import { scatter, perDay, biggest, yearChart, perYear, hideTip } from './charts.js';
+import { mountSearch } from './searchview.js';
+import { loadNeos } from './mapdata.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -400,23 +402,27 @@ $('#prevYear').addEventListener('click', () => goYear(state.yearShown - 1));
 $('#nextYear').addEventListener('click', () => goYear(state.yearShown + 1));
 $('#thisYear').addEventListener('click', () => goYear(thisYearNow()));
 
-// ---------------------------------------------------------------- views (#year, or #year-2019 for a past year)
+// ---------------------------------------------------------------- views (#year, #year-2019, #search)
 const hashYear = () => { const m = /^#year(?:-(\d{4}))?$/.exec(location.hash); return m ? Number(m[1] || thisYearNow()) : null; };
+const hashView = () => (location.hash === '#search' ? 'search' : hashYear() ? 'year' : 'week');
+let search = null;
 function setView(v, year) {
   state.view = v;
-  $$('[data-view]').forEach((x) => x.setAttribute('aria-pressed', x.dataset.view === v));
+  $$('[data-view]').forEach((x) => { x.setAttribute('aria-pressed', x.dataset.view === v); x.setAttribute('aria-selected', x.dataset.view === v); });
   $('#view-week').hidden = v !== 'week';
   $('#view-year').hidden = v !== 'year';
+  $('#view-search').hidden = v !== 'search';
   hideTip();
   if (v === 'year') { if (year || !state.year) loadYear(year || state.yearShown); else renderYear(); }
+  else if (v === 'search') { if (!search) search = mountSearch($('#view-search'), () => loadNeos().then((d) => d.rows)); setTimeout(() => search.focus(), 0); }
   else if (state.week) renderFiltered();
 }
 $$('[data-view]').forEach((b) => b.addEventListener('click', () => {
   const v = b.dataset.view;
-  history.replaceState(null, '', v === 'year' ? (state.yearShown && state.yearShown !== thisYearNow() ? `#year-${state.yearShown}` : '#year') : location.pathname);
+  history.replaceState(null, '', v === 'year' ? (state.yearShown && state.yearShown !== thisYearNow() ? `#year-${state.yearShown}` : '#year') : v === 'search' ? '#search' : location.pathname);
   setView(v);
 }));
-addEventListener('hashchange', () => { const y = hashYear(); setView(y ? 'year' : 'week', y); });
+addEventListener('hashchange', () => setView(hashView(), hashYear()));
 
 let resizeTimer;
 addEventListener('resize', () => {
@@ -428,4 +434,4 @@ addEventListener('resize', () => {
 showKeyState();
 if (location.hash === '#key') toggleKeyCard(true);
 loadWeek();
-setView(hashYear() ? 'year' : 'week', hashYear());
+setView(hashView(), hashYear());

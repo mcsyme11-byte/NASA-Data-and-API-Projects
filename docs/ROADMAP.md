@@ -17,8 +17,12 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   in the "By year" view.
 - [ ] Confirm the first daily run of the "Asteroid data" workflow the following morning (a new commit, or "No
   change" in its log).
-- [ ] Ideas (not decided): the asteroid's page reachable from every row of the "By year" tables (needs NASA's id
-  for unnumbered objects, which JPL's close-approach data does not give); a short animation of a famous close pass.
+- [ ] **Developer testing of the map, search and home preview:** dragging, pinching and zooming on a phone and a
+  computer; Play at each speed; full screen and leaving it; Find; "Found by the end of" with Watch; "Close to Earth
+  in"; the Search tab with "Found in"; the naming guide; the live preview on the home page.
+- [ ] Ideas (not decided): the asteroid's page reachable from every row of the "By year" tables (unnumbered objects
+  need their id from `neos.json`, a 1.8 MB download that the year view does not otherwise need); a short animation
+  of a famous close pass; the map in a Web Worker if playing ever needs more speed on large screens.
 
 ## 2. Image Explorer (second)
 

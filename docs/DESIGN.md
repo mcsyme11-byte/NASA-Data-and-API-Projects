@@ -72,6 +72,8 @@ The classes in `shared/theme.css`:
 | Fields | `input`, `select` | 44px, deep navy, brass border on focus |
 | Status pill | `.pill.good/.bad/.warn/.info` | Caps, coloured outline |
 | Tag | `.tag` | Italic, outlined (for example "Potentially hazardous") |
+| Tabs | `.tabs` (Asteroid Tracker) | Caps, brass underline on the open tab; scroll sideways on narrow screens |
+| How to read this | `details.howto` | Closed by default; brass caps summary with a › that turns |
 | Notice | `.notice`, `.notice.warn` | A bordered box for messages |
 | Chart / map / image frame | `.frame` | Deep navy with a hairline |
 | Footer | `.footer`, `.credit` | Data acknowledgements, then the credit |

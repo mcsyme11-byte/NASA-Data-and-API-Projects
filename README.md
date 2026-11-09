@@ -7,7 +7,7 @@ Designed by **Malcolm Syme** and built with Claude.
 
 | Project | What it is | Data | Status |
 |---|---|---|---|
-| [**Asteroid Tracker**](asteroid-tracker/) | An interactive dashboard of the near-Earth objects passing Earth: sorted by size, distance in Moon distances, graphs to explore | NASA NeoWs, JPL close-approach data | **Live** |
+| [**Asteroid Tracker**](asteroid-tracker/) | The near-Earth objects passing Earth this week and every year since 2000, a page and orbit diagram for each, a search, and a turnable map of all 43,000 with the planets and spacecraft | NASA NeoWs; NASA/JPL close-approach data, Small-Body Database and Horizons | **Live** |
 | [**Mars Data**](mars-data/) | Weather measured on Mars, cleaned and organised by time and place, with statistics and charts that show its patterns | NASA Planetary Data System (Curiosity's REMS) | Planned |
 | [**Image Explorer**](image-explorer/) | A website to search and filter NASA's images by date, location and mission, and slide through time over the whole Earth | NASA GIBS, NASA Image and Video Library | Planned |
 
