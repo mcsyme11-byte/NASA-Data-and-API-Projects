@@ -13,7 +13,7 @@ const $ = id => document.getElementById(id);
 const D2R = Math.PI / 180;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const frame = $('globeFrame'), host = $('globe'), over = $('gOver'), ctx = over.getContext('2d');
-const SKY_R = 190, STAR_R = 200, HOME = { lat: 35, lon: -100, dist: 3.4 };
+const SKY_R = 190, STAR_R = 200, HOME = { lat: 35, lon: -100, dist: 4.4 };
 
 /* Earth-fixed and sky positions use the same rule: x towards longitude (or right ascension) 0, y north. */
 const vec = (lat, lon, r) => new THREE.Vector3(r * Math.cos(lat * D2R) * Math.cos(lon * D2R), r * Math.sin(lat * D2R), -r * Math.cos(lat * D2R) * Math.sin(lon * D2R));
@@ -79,8 +79,8 @@ function init() {
   earth = new THREE.Group(); earth.rotation.y = gmst(); scene.add(earth);
   earthMat = new THREE.MeshBasicMaterial({ color: 0x1a2333 });
   earth.add(new THREE.Mesh(new THREE.SphereGeometry(1, 128, 64), earthMat));
-  scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.025, 64, 32),
-    new THREE.MeshBasicMaterial({ color: 0x8aa9c9, transparent: true, opacity: 0.12, side: THREE.BackSide })));
+  scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.012, 64, 32),
+    new THREE.MeshBasicMaterial({ color: 0x8aa9c9, transparent: true, opacity: 0.18, side: THREE.BackSide })));
   home(false);
 
   loadEarth();
@@ -158,12 +158,13 @@ async function loadSky() {
   status();
 }
 
-/* ---------- natural events NASA is following now (EONET) ---------- */
+/* ---------- natural events NASA is following, with a report in the last 30 days (EONET) ----------
+ * Many events stay "open" for months after the last report (7,236 open on Nov 9, 2026, 35 reported in 30 days). */
 const CAT = { wildfires: '#C9784A', volcanoes: '#D1A956', severeStorms: '#8AA9C9', seaLakeIce: '#B79AC8', snow: '#B79AC8' };
 async function loadEvents() {
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const j = await (await fetch('https://eonet.gsfc.nasa.gov/api/v3/events?status=open')).json();
+      const j = await (await fetch('https://eonet.gsfc.nasa.gov/api/v3/events?status=open&days=30')).json();
       events = j.events.map(e => {
         const g = e.geometry[e.geometry.length - 1];
         let [lon, lat] = g.coordinates;
@@ -179,7 +180,7 @@ async function loadEvents() {
 }
 
 function status() {
-  const ev = events === null ? 'events unavailable right now' : `${events.length} events on Earth`;
+  const ev = events === null ? 'events unavailable right now' : `${events.length} events on Earth in the last 30 days`;
   tag(`${ev} · ${sky.length} sky objects · as of ${new Date().toUTCString().slice(17, 22)} UTC`);
   $('gSrc').textContent = 'Earth: NASA Blue Marble (GIBS). Events: NASA EONET, live. Stars to magnitude 6 and Messier objects: d3-celestial.';
 }
