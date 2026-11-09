@@ -380,8 +380,10 @@
       tileUrlFunction: c => `${GIBS}${L.layer}/default/${dayFor(L)}/${L.set}/${c[0]}/${c[2]}/${c[1]}.${L.ext}`,
     });
   }
-  const fireStyle = new ol.style.Style({ image: new ol.style.Circle({ radius: 3,
-    fill: new ol.style.Fill({ color: '#E8763A' }), stroke: new ol.style.Stroke({ color: 'rgba(232,118,58,.35)', width: 3 }) }) });
+  /* fire dots grow as the map zooms in: 1.2 px for the whole world, up to 4 px close up */
+  const fireStyles = [1.2, 2, 3, 4].map(r => new ol.style.Style({ image: new ol.style.Circle({ radius: r,
+    fill: new ol.style.Fill({ color: '#E8763A' }), stroke: r > 2 ? new ol.style.Stroke({ color: 'rgba(232,118,58,.35)', width: 3 }) : undefined }) }));
+  const fireStyle = (f, res) => fireStyles[res > .2 ? 0 : res > .05 ? 1 : res > .015 ? 2 : 3];
   function vectorSource(L) {
     return new ol.source.VectorTile({
       projection: proj, tileGrid: grid(L.set), format: new ol.format.MVT(),
@@ -403,10 +405,10 @@
     controls: ol.control.defaults.defaults({ attribution: false, rotate: false }).extend([new ol.control.ScaleLine()]),
     view: new ol.View({ projection: proj, center: [-20, 55], zoom: 2, minZoom: 1, maxZoom: 10, extent: [-180, -90, 180, 90], constrainOnlyCenter: true }),
   });
-  function fillFrame() {          /* the whole width of the world, cropped top and bottom, never letterboxed */
+  function fillFrame() {          /* fills the frame with no empty bands; the edges of the world crop to fit */
     const [w, h] = map.getSize(); map.getView().setResolution(Math.min(360 / w, 180 / h)); map.getView().setCenter([0, 15]);
   }
-  fillFrame();
+  map.once('change:size', fillFrame); if (map.getSize()) fillFrame();
 
   function refreshSources() {
     for (const L of [...BASES, ...OVERS]) layers[L.id].getSource().refresh();
