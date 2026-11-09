@@ -127,6 +127,7 @@
 
     @media (max-width: 1024px) {
       .explore { grid-template-columns: 1fr; }
+      .explore > .mapcol { order: -1; }                 /* the map before its controls on tablets and phones */
       .side { display: grid; grid-template-columns: 1fr 1fr; }
       .side .card.place { grid-column: 1 / -1; }
       .vwrap { grid-template-columns: 1fr; }
@@ -251,7 +252,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="mapcol">
           <div class="frame mapframe">
             <div id="map" aria-label="Map of the Earth, satellite imagery"></div>
             <div class="maptag" id="mapTag"></div>
