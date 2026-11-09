@@ -1,5 +1,16 @@
 # Change log
 
+## November 9, 2026 — site pages: About, Privacy, Terms, Credits, Contact
+
+- **Five new pages:** About (what the site is, the projects, how it works, who made it), Privacy (nothing collected;
+  what stays in the browser; the services the browser contacts), Terms of use (free and educational, as is, not for
+  safety decisions, NASA, the API key, no warranty), Credits (every data source and library with its terms, the GIBS
+  acknowledgement, the MIT License) and Contact (the address, Write an email, Copy address, and three ready-made
+  subjects: bug report, the data, ideas).
+- **Site links in every footer** (`shared/footer.js`): About · Privacy · Terms · Credits · Contact · Licence (MIT) ·
+  Source code, on every page of the site.
+- Checked at 1280 and 390 pixels wide; no page errors.
+
 ## November 9, 2026 — Image Explorer: picture library search and viewer
 
 - **Viewer:** Close sits in its own bar above the picture and stays in view while the text scrolls; the white

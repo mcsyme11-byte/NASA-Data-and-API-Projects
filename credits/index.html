@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!-- NASA Data Projects · Credits · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Credits · NASA Data Projects</title>
+  <meta name="description" content="Every data source and code library NASA Data Projects uses, with its terms.">
+  <meta name="theme-color" content="#141B26">
+  <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../shared/theme.css">
+  <script type="module" src="../shared/footer.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg>
+        NASA Data Projects
+      </a>
+      <nav class="nav" aria-label="Projects">
+        <a href="../">Home</a>
+        <a href="../asteroid-tracker/">Asteroids</a>
+        <a href="../mars-data/">Mars</a>
+        <a href="../image-explorer/">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="phead">
+      <div class="eyebrow">About this site</div>
+      <h1>Credits</h1>
+      <p class="updated">Last updated November 9, 2026</p>
+    </div>
+    <article class="prose prose-wide">
+      <div class="summary">
+        <p>NASA Data Projects is created by <strong>Malcolm Syme</strong>. It is built on the work of NASA, NASA/JPL and the
+          people and projects below. Each keeps its own terms.</p>
+      </div>
+
+      <h2>Data and imagery</h2>
+      <div class="tablewrap"><table class="credits">
+        <thead><tr><th>Source</th><th>Used for</th><th>Terms</th></tr></thead>
+        <tbody>
+          <tr><td><strong>NASA NeoWs</strong> (api.nasa.gov)</td><td>Asteroid Tracker: close approaches, sizes, the hazard flag</td><td>NASA data</td></tr>
+          <tr><td><strong>NASA/JPL Solar System Dynamics</strong>: Close-Approach Data, Small-Body Database, Horizons, approximate planetary elements</td><td>Asteroid Tracker: approaches, orbits, spacecraft and planet positions</td><td>NASA/JPL data</td></tr>
+          <tr><td><strong>NASA GIBS</strong> (Global Imagery Browse Services), including Blue Marble</td><td>Image Explorer: the Earth map, polar views, the globe's surface</td><td>NASA imagery; acknowledgement below</td></tr>
+          <tr><td><strong>NASA Image and Video Library</strong></td><td>Image Explorer: pictures and videos</td><td>NASA material; some items carry their own credit, shown with each item</td></tr>
+          <tr><td><strong>NASA EONET</strong> (Earth Observatory Natural Event Tracker)</td><td>Image Explorer: natural events on the globe</td><td>NASA data</td></tr>
+          <tr><td><strong>Gateway to Astronaut Photography of Earth</strong>, Earth Science and Remote Sensing Unit, NASA Johnson Space Center (<a href="https://eol.jsc.nasa.gov/" target="_blank" rel="noopener">eol.jsc.nasa.gov</a>)</td><td>Image Explorer: astronaut photos</td><td>NASA material</td></tr>
+          <tr><td><strong>d3-celestial</strong>, © 2015 Olaf Frohn</td><td>Image Explorer: stars, galaxies, nebulae, clusters, constellations</td><td>BSD 3-Clause (<a href="../image-explorer/data/LICENSE-d3-celestial.txt">licence</a>)</td></tr>
+          <tr><td><strong>GeoNames</strong> (<a href="https://www.geonames.org/" target="_blank" rel="noopener">geonames.org</a>), through the all-the-cities package (MIT)</td><td>Image Explorer: place search</td><td><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></td></tr>
+          <tr><td><strong>Natural Earth</strong> (<a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">naturalearthdata.com</a>)</td><td>Image Explorer: mountains, lakes and rivers</td><td>Public domain</td></tr>
+        </tbody>
+      </table></div>
+
+      <p class="ack">We acknowledge the use of imagery provided by services from NASA's Global Imagery Browse Services
+        (GIBS), part of NASA's Earth Science Data and Information System (ESDIS).</p>
+
+      <h2>Code libraries</h2>
+      <p>Loaded from the jsDelivr CDN.</p>
+      <div class="tablewrap"><table class="credits">
+        <thead><tr><th>Source</th><th>Used for</th><th>Terms</th></tr></thead>
+        <tbody>
+          <tr><td><strong>OpenLayers</strong> 10.11.0</td><td>Image Explorer: the Earth map</td><td>BSD 2-Clause</td></tr>
+          <tr><td><strong>proj4js</strong> 2.22.0</td><td>Image Explorer: polar map projections</td><td>MIT</td></tr>
+          <tr><td><strong>three.js</strong> 0.187.0</td><td>Image Explorer: the globe</td><td>MIT</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2>This project's licence</h2>
+      <p>The site's own code and documents are released under the <a href="https://github.com/mcsyme11-byte/NASA-Data-and-API-Projects/blob/main/LICENSE.md" target="_blank" rel="noopener">MIT License</a>:
+        anyone may use, copy and change them, as long as the copyright notice (© 2026 Malcolm Syme) stays with them. The
+        same list of credits is kept in the repository as <a href="https://github.com/mcsyme11-byte/NASA-Data-and-API-Projects/blob/main/CREDITS.md" target="_blank" rel="noopener">CREDITS.md</a>.</p>
+
+      <h2>NASA</h2>
+      <p>Data courtesy of NASA. This is an independent project and isn't endorsed by NASA. NASA's insignia, logotype and
+        seal are not used.</p>
+    </article>
+
+    <footer class="footer">
+      <p>Data courtesy of NASA. This is an independent project and isn't endorsed by NASA.</p>
+      <p class="credit"><strong>NASA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
+    </footer>
+  </main>
+</body>
+</html>

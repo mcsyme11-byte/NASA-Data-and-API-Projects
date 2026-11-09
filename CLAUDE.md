@@ -31,6 +31,10 @@ inside its own folder.
 - **Look:** the Flight Deck Suite's "old money" look (navy, brass, cream, serif type), as set out in `docs/DESIGN.md`
   and `shared/theme.css`. New pages and big visual changes start as mock-ups the developer approves.
 - **Free to run:** static pages on GitHub Pages and free NASA APIs; no paid services.
+- **Site pages (since Nov 9, 2026):** every page loads `shared/footer.js` (the links to About, Privacy, Terms, Credits,
+  Contact, the licence and the source code). A new data source or library is added to `CREDITS.md` and the Credits
+  page (`credits/index.html`) in the same change; anything new the site stores or sends is added to the Privacy page
+  first.
 - **Respect NASA's terms:** show "Data courtesy of NASA" and that the project isn't endorsed by NASA; show the GIBS
   acknowledgement wherever GIBS imagery appears; never use NASA's insignia or logotype.
 - **Check facts about the data:** confirm endpoints, fields and limits against NASA's current documentation before

@@ -76,7 +76,9 @@ The classes in `shared/theme.css`:
 | How to read this | `details.howto` | Closed by default; brass caps summary with a › that turns |
 | Notice | `.notice`, `.notice.warn` | A bordered box for messages |
 | Chart / map / image frame | `.frame` | Deep navy with a hairline |
-| Footer | `.footer`, `.credit` | Data acknowledgements, then the credit |
+| Footer | `.footer`, `.credit` | Site links (added by `shared/footer.js`), data acknowledgements, then the credit |
+| Site links | `.sitelinks` | About · Privacy · Terms · Credits · Contact · Licence (MIT) ↗ · Source code ↗; every page loads `shared/footer.js` |
+| Reading page | `.prose`, `.summary`, `.updated`, `table.credits` | About, Privacy, Terms and Credits: 72-character lines, a brass-ruled summary, the date of the last update |
 
 ## 6. Charts
 

@@ -18,7 +18,8 @@ Suggested order: Asteroid Tracker, then Image Explorer, then Mars Data (each bui
 ```
 NASA-Data-and-API-Projects/
 ├── index.html          home page linking the three projects
-├── shared/             the look (theme.css, emblem) and the NASA API helper (nasa.js)
+├── about/ privacy/ terms/ credits/ contact/   the site's information pages
+├── shared/             the look (theme.css, emblem), the NASA API helper (nasa.js) and the footer links (footer.js)
 ├── asteroid-tracker/   Project 1
 ├── mars-data/          Project 2 (Python analysis + a charts page)
 ├── image-explorer/     Project 3

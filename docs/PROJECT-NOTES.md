@@ -4,6 +4,12 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
 
 ## Decisions
 
+- **Decided Nov 9, 2026:** the site has information pages (About, Privacy, Terms of use, Credits, Contact) at
+  `about/`, `privacy/`, `terms/`, `credits/` and `contact/`, linked from a row of site links in every footer
+  (`shared/footer.js`, one file for every page). The footer also links to the licence and the source code on GitHub.
+  The Privacy page states what the site actually does (nothing collected; the API key in local storage; the place in
+  a page in session storage; GitHub Pages, NASA services and jsDelivr contacted directly) and is updated before the
+  site stores or sends anything new.
 - **Decided Nov 9, 2026:** the project's own code and documents are released under the **MIT License** (replacing
   "all rights reserved"); third-party data and libraries keep their own terms, listed in `CREDITS.md`. A new data
   source or library is added to `CREDITS.md` (and the site's Credits page) in the same change.
