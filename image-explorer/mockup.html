@@ -82,7 +82,7 @@
     .legend { margin-top: 12px; display: grid; gap: 10px; }
     .legend .row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; }
     .legend .row span { font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); }
-    .legend img { width: 100%; max-width: 420px; height: auto; display: block; }
+    .legend img { width: 100%; max-width: 420px; height: auto; display: block; background: var(--ink); border-radius: var(--r-btn); padding: 4px 8px; }
     .firekey { display: inline-flex; align-items: center; gap: 8px; color: var(--ink2); font-size: 13px; }
     .firekey i { width: 10px; height: 10px; border-radius: 50%; background: #E8763A; box-shadow: 0 0 0 2px rgba(232, 118, 58, .35); }
 
@@ -231,6 +231,7 @@
           <div class="card">
             <h2>On top</h2>
             <div class="lyr multi" id="overList" aria-label="On top"></div>
+            <p class="note" style="margin:10px 0 0">Fires go with anything; the coloured layers show one at a time.</p>
           </div>
 
           <div class="card">
@@ -347,14 +348,14 @@
       since: 2018, sat: 'NOAA-20', inst: 'VIIRS day/night band', note: 'Cities, fires and moonlit cloud',
       legend: 'VIIRS_SNPP_DayNightBand_ENCC' },
     { id: 'sst', name: 'Sea temperature', layer: 'GHRSST_L4_MUR_Sea_Surface_Temperature', ext: 'png', set: '1km',
-      since: 2002, sat: 'Several', inst: 'combined daily (MUR)', note: 'Ocean surface, °C', legend: 'GHRSST_Sea_Surface_Temperature' },
+      since: 2002, sat: 'Several', inst: 'combined daily (MUR)', note: 'Ocean surface, °C', legend: 'GHRSST_Sea_Surface_Temperature', lag: 1 },
   ];
   const OVERS = [
     { id: 'fires', name: 'Fires', layer: 'MODIS_Combined_Thermal_Anomalies_All', set: '1km', vector: true, since: 2002 },
     { id: 'snow', name: 'Snow', layer: 'MODIS_Terra_NDSI_Snow_Cover', ext: 'png', set: '500m', since: 2000, legend: 'MODIS_NDSI_Snow_Cover' },
     { id: 'clouds', name: 'Clouds', layer: 'MODIS_Terra_Cloud_Top_Temp_Day', ext: 'png', set: '2km', since: 2000, legend: 'MODIS_Cloud_Top_Temp', opacity: .75 },
     { id: 'smoke', name: 'Smoke and dust', layer: 'MODIS_Terra_Aerosol', ext: 'png', set: '2km', since: 2000, legend: 'MODIS_VIIRS_AOD', opacity: .8 },
-    { id: 'ice', name: 'Sea ice', layer: 'GHRSST_L4_MUR_Sea_Ice_Concentration', ext: 'png', set: '1km', since: 2002, legend: 'GHRSST_Sea_Ice_Concentration' },
+    { id: 'ice', name: 'Sea ice', layer: 'GHRSST_L4_MUR_Sea_Ice_Concentration', ext: 'png', set: '1km', since: 2002, legend: 'GHRSST_Sea_Ice_Concentration', lag: 1 },
   ];
 
   /* ---------- dates ---------- */
@@ -363,6 +364,9 @@
   const LATEST = iso(Date.now() - DAY);                     // the last full UTC day
   const nice = s => new Date(s + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   let date = LATEST;
+  /* each layer's own newest day: the combined (MUR) layers arrive a day after the others.
+     The built page reads every layer's dates from GIBS instead of a fixed lag. */
+  const dayFor = L => { const last = iso(Date.parse(LATEST) - (L.lag || 0) * DAY); return date > last ? last : date; };
 
   /* ---------- map ---------- */
   const proj = ol.proj.get('EPSG:4326');
@@ -373,7 +377,7 @@
   function rasterSource(L) {
     return new ol.source.XYZ({
       projection: proj, tileGrid: grid(L.set), crossOrigin: 'anonymous', transition: 150,
-      tileUrlFunction: c => `${GIBS}${L.layer}/default/${date}/${L.set}/${c[0]}/${c[2]}/${c[1]}.${L.ext}`,
+      tileUrlFunction: c => `${GIBS}${L.layer}/default/${dayFor(L)}/${L.set}/${c[0]}/${c[2]}/${c[1]}.${L.ext}`,
     });
   }
   const fireStyle = new ol.style.Style({ image: new ol.style.Circle({ radius: 3,
@@ -381,7 +385,7 @@
   function vectorSource(L) {
     return new ol.source.VectorTile({
       projection: proj, tileGrid: grid(L.set), format: new ol.format.MVT(),
-      tileUrlFunction: c => `${GIBS}${L.layer}/default/${date}/${L.set}/${c[0]}/${c[2]}/${c[1]}.mvt`,
+      tileUrlFunction: c => `${GIBS}${L.layer}/default/${dayFor(L)}/${L.set}/${c[0]}/${c[2]}/${c[1]}.mvt`,
     });
   }
   const layers = {};
@@ -399,7 +403,10 @@
     controls: ol.control.defaults.defaults({ attribution: false, rotate: false }).extend([new ol.control.ScaleLine()]),
     view: new ol.View({ projection: proj, center: [-20, 55], zoom: 2, minZoom: 1, maxZoom: 10, extent: [-180, -90, 180, 90], constrainOnlyCenter: true }),
   });
-  map.getView().fit([-180, -60, 180, 80], { size: map.getSize(), padding: [10, 10, 10, 10] });
+  function fillFrame() {          /* the whole width of the world, cropped top and bottom, never letterboxed */
+    const [w, h] = map.getSize(); map.getView().setResolution(Math.min(360 / w, 180 / h)); map.getView().setCenter([0, 15]);
+  }
+  fillFrame();
 
   function refreshSources() {
     for (const L of [...BASES, ...OVERS]) layers[L.id].getSource().refresh();
@@ -419,8 +426,13 @@
   });
   overList.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
-    const id = b.dataset.id; on.has(id) ? on.delete(id) : on.add(id);
-    b.setAttribute('aria-pressed', on.has(id)); layers[id].setVisible(on.has(id));
+    const id = b.dataset.id, colour = !OVERS.find(L => L.id === id).vector;
+    if (on.has(id)) on.delete(id);
+    else {
+      if (colour) for (const L of OVERS) if (!L.vector && on.has(L.id)) on.delete(L.id);   /* colour layers hide each other */
+      on.add(id);
+    }
+    for (const x of overList.children) { const s = on.has(x.dataset.id); x.setAttribute('aria-pressed', s); layers[x.dataset.id].setVisible(s); }
     update();
   });
 
@@ -440,7 +452,9 @@
       ? `<div class="row"><span>${L.name}</span><span class="firekey"><i></i>A fire or other hot spot seen that day</span></div>`
       : `<div class="row"><span>${L.name}</span><img src="https://gibs.earthdata.nasa.gov/legends/${L.legend}_H.svg" alt="Colour key for ${L.name}"></div>`);
     $('legend').innerHTML = rows.join('');
-    $('mapSrc').textContent = `Imagery: NASA GIBS · ${[B, ...O].map(L => L.layer).join(', ')}`;
+    const behind = [B, ...O].filter(L => dayFor(L) !== date);
+    $('mapSrc').textContent = (behind.length ? `${behind.map(L => L.name).join(' and ')}: newest day ${nice(dayFor(behind[0]))}, shown instead. ` : '') +
+      `Imagery: NASA GIBS · ${[B, ...O].map(L => L.layer).join(', ')}`;
     $('dPick').value = date; $('dLatest').setAttribute('aria-pressed', date === LATEST);
     $('dNext').disabled = date >= LATEST;
     const from = Date.parse(LATEST) - 60 * DAY;
