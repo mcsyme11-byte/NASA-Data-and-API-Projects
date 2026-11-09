@@ -11,7 +11,7 @@ search, filter and explore those images by details like date, location and missi
 |---|---|---|
 | **Earth map** | NASA GIBS (Global Imagery Browse Services) | Pick a date and a picture (true colour, night lights, sea temperature) with fires, snow, clouds, smoke and dust or sea ice on top; pan and zoom the whole planet; step or play through the days. |
 | **Globe** | NASA Blue Marble (GIBS), NASA EONET, d3-celestial | Turn and zoom the Earth inside the real sky; pins for NASA's natural events of the last 30 days; about 1,350 galaxies, nebulae and star clusters, each opening NASA's pictures of it. |
-| **Picture library** | NASA Image and Video Library (`images-api.nasa.gov`) | Search by keyword, place, mission (Apollo, Hubble, Webb…), centre and year; open a picture with its description and date. |
+| **Picture library** | NASA Image and Video Library (`images-api.nasa.gov`) | Search by keyword, place, mission (Apollo, Hubble, Webb…), centre and year, with results and spelling suggestions as you type; space pictures first, launches and events under "Behind the scenes"; open a picture with its description and date, or find its galaxy or nebula on the globe. |
 
 Reason for using several sources: GIBS is satellite imagery **of Earth**, arranged by date and layer, with no "mission" to
 filter by. The Image Library has the mission photos. The globe ties places on Earth and objects in the sky to them.

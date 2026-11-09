@@ -194,11 +194,16 @@
 
     <!-- ===================== PICTURE LIBRARY ===================== -->
     <section id="view-library" hidden>
-      <label class="bigsearch">
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
-        <input type="search" id="libQ" value="" placeholder="Search NASA's pictures: a place, mission or subject" aria-label="Search NASA's pictures" autocomplete="off">
-        <button class="qclear" id="libClear" type="button">Clear</button>
-      </label>
+      <div class="placebox libbox">
+        <label class="bigsearch">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
+          <input type="search" id="libQ" value="" placeholder="Search NASA's pictures: a mission, a planet, a galaxy, a place" autocomplete="off" spellcheck="false"
+            role="combobox" aria-expanded="false" aria-controls="libList" aria-autocomplete="list" aria-label="Search NASA's pictures">
+          <button class="qclear" id="libClear" type="button">Clear</button>
+        </label>
+        <ul class="suggest" id="libList" role="listbox" hidden></ul>
+      </div>
+      <p class="note" id="libFix" hidden></p>
       <div class="searchopts">
         <div class="popular" aria-label="Missions">
           <span class="note" style="margin-right:4px">Missions</span>
@@ -224,10 +229,22 @@
       </div>
 
       <div class="shead"><h2>Results</h2><span class="aside" id="libCount"></span></div>
-      <div class="gallery" id="gallery"><div class="state small" style="grid-column:1/-1">Type a place, a mission or a subject, or pick a mission.</div></div>
+      <div class="gallery" id="gallery"><div class="state small" style="grid-column:1/-1">Type a mission, a planet, a galaxy or a place, or pick a mission. Results appear as you type.</div></div>
       <div class="more" hidden><button class="btn ghost" type="button">Show more</button></div>
+      <div class="bts" id="bts" hidden>
+        <button class="btn ghost" id="btsToggle" type="button" aria-expanded="false" aria-controls="gallery2">Behind the scenes</button>
+        <p class="note">Launches, people, testing, events, and artists' illustrations: pictures about a mission rather than taken by it.</p>
+        <div class="gallery" id="gallery2" hidden></div>
+      </div>
       <details class="howto">
         <summary>How to read this</summary>
+        <p><b>Space pictures first.</b> NASA's library holds both pictures taken by its missions (galaxies, planets,
+          the Earth from orbit) and pictures about them (launches, engineers, events). The page reads each picture's
+          record (its NASA ID, the centre that published it and the words in its caption) and shows the pictures taken
+          in or of space first; the rest are under <b>Behind the scenes</b>. The sorting is automatic and sometimes
+          wrong.</p>
+        <p><b>Spelling.</b> Suggestions appear as you type and allow for small mistakes ("hubbel" finds Hubble). When a
+          search finds almost nothing, the closest known name is searched instead, and the page says so.</p>
         <p><b>Dates</b> are the dates in NASA's records. For older pictures this can be the day the picture was added to the
           library, not the day it was taken; the caption usually gives the real date.</p>
         <p><b>NASA centre</b> is the NASA site that published the picture, for example Johnson Space Center (JSC) for
@@ -237,20 +254,25 @@
       </details>
     </section>
 
-    <dialog class="viewer" id="viewer" aria-label="Picture">
-      <button class="btn ghost vclose" id="vClose" type="button">Close</button>
-      <div class="vwrap">
+    <dialog class="viewer" id="viewer" aria-labelledby="vTitle">
+      <div class="vbar">
+        <span class="eyebrow" id="vKind">Picture</span>
+        <button class="btn ghost vclose" id="vClose" type="button">Close</button>
+      </div>
+      <div class="vbody"><div class="vwrap">
         <div class="vimg"><img id="vImg" alt=""><video id="vVid" controls preload="metadata" playsinline hidden></video></div>
         <div class="vtext">
-          <h2>Picture</h2>
           <h3 id="vTitle"></h3>
           <dl class="facts" id="vFacts"></dl>
           <p id="vDesc"></p>
           <div class="kw" id="vKw"></div>
           <p class="note" id="vNote" hidden></p>
-          <p style="margin-top:16px"><a class="btn ghost" id="vFull" href="#" target="_blank" rel="noopener">Open large size</a></p>
+          <div class="vbtns">
+            <a class="btn ghost" id="vFull" href="#" target="_blank" rel="noopener">Open large size</a>
+            <button class="btn ghost" id="vSky" type="button" hidden>See it in the sky</button>
+          </div>
         </div>
-      </div>
+      </div></div>
     </dialog>
 
     <footer class="footer">

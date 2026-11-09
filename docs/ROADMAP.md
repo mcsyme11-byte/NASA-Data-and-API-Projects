@@ -41,7 +41,14 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] **Developer testing** at the developer's own pace, on a computer and a phone: the Earth map (dates, Play,
   layers, place search with towns and natural features, tapping the map, the Arctic and Antarctic views), the Globe
   (turning, zooming, events, sky markers, find, the selected card, "See it on the Earth map"), the Picture library
-  (search, filters, Pictures / Pictures and videos / Videos, playing a video, Show more, the viewer).
+  (search, results as you type, spelling suggestions and corrections, mission buttons, Behind the scenes, filters,
+  Pictures / Pictures and videos / Videos, playing a video, Show more, the viewer, "See it in the sky").
+- [ ] **Decision for the developer:** NASA's library holds only about 5 James Webb science pictures (the rest of its
+  Webb records are launches, testing, people and illustrations). ESA's Webb and Hubble archives (esawebb.org,
+  esahubble.org; their picture feeds allow browsers to read them) would add the full science releases. They are
+  ESA's, not NASA's, with their own credit lines.
+- [ ] Picture library: tune the ranking further as the developer reviews searches (the weights are in `scoreOf` in
+  `image-explorer/app.js`).
 - [ ] Polar views: a sea ice layer that works through the polar night. GIBS's microwave sea-ice records ended
   (SSMIS Aug 2021, AMSR2 Sep 2025); the current one is MODIS (a camera, daylight only). Ice surface temperature
   (`MODIS_Terra_Ice_Surface_Temp_Night`, thermal) is an option to consider.

@@ -371,8 +371,8 @@ document.addEventListener('error', e => { if (e.target.matches?.('img[data-try]'
 $('gallery').addEventListener('click', e => { const b = e.target.closest('.pic'); if (b) openViewer(PICS[+b.dataset.j]); });
 $('vClose').addEventListener('click', () => $('viewer').close());
 $('viewer').addEventListener('click', e => { if (e.target === $('viewer')) $('viewer').close(); });
-$('libClear').addEventListener('click', () => { $('libQ').value = ''; $('libQ').focus(); });
-for (const c of document.querySelectorAll('.popular .chip')) c.addEventListener('click', () => { $('libQ').value = c.textContent; libSearch(); });
+$('libClear').addEventListener('click', () => { $('libQ').value = ''; closeLib(); libSearch(); $('libQ').focus(); });
+for (const c of document.querySelectorAll('.popular .chip')) c.addEventListener('click', () => { $('libQ').value = c.textContent; closeLib(); libSearch(false, { exact: true }); });
 
 const API = 'https://images-api.nasa.gov/search';
 async function search(params) {
@@ -391,8 +391,16 @@ async function search(params) {
 }
 /* the video sizes to play, smallest first; the largest becomes the "full size" link */
 const PLAY = ['~mobile.mp4', '~small.mp4', '~preview.mp4', '~medium.mp4', '~large.mp4', '~orig.mp4'];
-function openViewer([id, t, d, c, p, k, s, type]) {
-  const base = assets(type), img = $('vImg'), vid = $('vVid'), video = type === 'video';
+/* a sky object named in a picture's title or keywords, to find on the globe: the best-known, then the longest name */
+function skyIn(text) {
+  const f = ' ' + fold(text).replace(/[^a-z0-9]+/g, ' ') + ' ', m = f.match(/ messier (\d{1,3}) /);
+  let best = m ? SKY.find(s => s.id === 'M' + m[1]) : null;
+  for (const s of SKY) if (s.f.length >= 5 && f.includes(' ' + s.f.replace(/[^a-z0-9]+/g, ' ') + ' ') &&
+    (!best || s.famous > best.famous || (s.famous === best.famous && s.f.length > best.f.length))) best = s;
+  return best;
+}
+function openViewer(x) {
+  const [id, t, d, c, p, k, s, type] = x, base = assets(type), img = $('vImg'), vid = $('vVid'), video = type === 'video';
   img.hidden = video; vid.hidden = !video; vid.pause(); vid.removeAttribute('src'); vid.load();
   img.dataset.id = id; img.dataset.base = base; img.dataset.try = 'medium'; img.alt = t;
   if (!video) img.src = `${base}${id}/${id}~medium.jpg`;
@@ -415,50 +423,270 @@ function openViewer([id, t, d, c, p, k, s, type]) {
       $('vNote').textContent = 'Plays the smallest version NASA offers; the full-size file can be several gigabytes.';
     }).catch(() => { $('vNote').textContent = 'NASA\u2019s library can\u2019t be reached right now, so the video can\u2019t be played.'; });
   }
+  $('vKind').textContent = (x.score < 0 ? 'Behind the scenes · ' : '') + (video ? 'Video' : 'Picture');
+  const sky = window.focusSky && skyIn(t + ' ' + k.join(' '));
+  $('vSky').hidden = !sky;
+  if (sky) { $('vSky').dataset.id = sky.id; $('vSky').textContent = `See ${sky.name} in the sky`; }
   $('viewer').showModal();
+  $('viewer').querySelector('.vbody').scrollTop = 0;
 }
+$('vSky').addEventListener('click', () => { $('viewer').close(); show('globe'); window.focusSky($('vSky').dataset.id); });
 $('viewer').addEventListener('close', () => $('vVid').pause());
 Object.assign(CENTRES, { JPL: 'Jet Propulsion Laboratory', KSC: 'Kennedy Space Center', MSFC: 'Marshall Space Flight Center',
   HQ: 'NASA Headquarters', ARC: 'Ames Research Center', LARC: 'Langley Research Center', GRC: 'Glenn Research Center',
   AFRC: 'Armstrong Flight Research Center', SSC: 'Stennis Space Center' });
 
-const lib = { page: 1, total: 0, busy: false };
+/* ---------- ranking: pictures taken in space or of space first; launches, people, events and illustrations behind the scenes ----------
+ * Decided Nov 9, 2026. NASA's library holds far more pictures of people, rockets and events than of space, and its own order
+ * puts them first. Each result gets a score from what NASA records with it; 0 or more goes in the main results, below 0
+ * goes under "Behind the scenes". The weights were tuned by hand on searches for Hubble, Saturn, Voyager, Cassini and Iceland. */
+const ART = /\b(artist'?s?|illustrations?|concepts?|animation|logos?|posters?|renderings?|infographic)\b/;
+const SCI = /\b(nebulae?|galax(?:y|ies)|clusters?|supernovae?|planets?|exoplanets?|mercury|venus|mars|martian|jupiter|jovian|saturn|uranus|neptune|pluto|charon|moons?|lunar|craters?|comets?|asteroids?|sun|solar|corona|flares?|auroras?|aurorae|eclipse|earthrise|deep field|stars?|stellar|black hole|quasars?|rings?|surface|terrain|dunes?|mosaic|panorama|infrared|x-ray|ultraviolet|true colou?r|false colou?r|hurricane|cyclone|typhoon|volcano|wildfires?|glaciers?|ice sheet|earth observations?|from orbit|night lights|city lights)\b/g;
+const PPL = /\b(launch(?:es|ed|ing)?|liftoff|lifts? off|rollout|rolls? out|press|media|reporters|invit\w*|briefings?|conferences?|ceremony|visits?|visitors|tours?|training|trains|portraits?|awards?|employees|students|interns|events?|panel|meeting|speaks|speech|administrator|deputy|director|reception|celebrat\w*|team|engineers?|technicians?|workers|prepar\w*|hangar|clean ?room|launch pad|stacking|stacked|transport\w*|arrives?|arrival|mock-?up|test stand|hearing|congress\w*|signing|workshop|exhibit\w*|outreach)\b/g;
+function scoreOf(x) {
+  const [id, title, , centre, photographer, keywords] = x, text = (title + ' ' + keywords.join(' ')).toLowerCase();
+  let s = 0;
+  if (/^PIA\d/i.test(id)) s += 2;                                   /* NASA's Planetary Photojournal */
+  if (/^STScI/i.test(centre)) s += 3;                               /* the Hubble and Webb science institute */
+  if (/^(AS\d+-|iss\d+e)/i.test(id)) s += 3;                        /* frames from Apollo and the Space Station */
+  if (/^(NHQ|KSC|jsc)/i.test(id)) s -= 3;                           /* headquarters, Kennedy and Johnson event photography */
+  if (/^NASA\//i.test(photographer)) s -= 1;                        /* a staff photographer's credit */
+  s += Math.min(4, (text.match(SCI) || []).length);
+  s -= 1.2 * (text.match(PPL) || []).length;
+  if (ART.test(text)) s -= 4;
+  return s;
+}
+/* a mission button searches several phrasings and merges them; one word alone finds mostly launches and people */
+const PRESETS = {
+  'apollo 11': ['apollo 11 lunar surface', 'apollo 11 earth', 'apollo 11'],
+  'hubble': ['hubble'],
+  'james webb': ['webb nebula', 'webb galaxy image', 'webb nircam image', 'james webb'],
+  'artemis': ['artemis ii earth moon', 'artemis i orion earth', 'orion earth moon', 'artemis'],
+  'space station': ['space station earth observation', 'iss crew earth observations', 'international space station'],
+  'voyager': ['voyager'],
+  'mars rovers': ['perseverance mastcam', 'curiosity mars surface', 'mars rover'],
+  'juno': ['junocam', 'juno jupiter'], 'new horizons': ['new horizons pluto'], 'hirise': ['hirise mars'],
+  'chandra': ['chandra x-ray'], 'solar dynamics observatory': ['solar dynamics observatory sun'], 'galileo': ['galileo jupiter'],
+  'apollo 8': ['apollo 8 earthrise', 'apollo 8']
+};
+PRESETS.webb = PRESETS['james webb']; PRESETS.iss = PRESETS['space station']; PRESETS['international space station'] = PRESETS['space station'];
+
+/* ---------- spelling: the names the suggestions and corrections are drawn from ---------- */
+const MISSIONS = ['Mercury', 'Gemini', 'Apollo 1', 'Apollo 7', 'Apollo 8', 'Apollo 9', 'Apollo 10', 'Apollo 11', 'Apollo 12', 'Apollo 13',
+  'Apollo 14', 'Apollo 15', 'Apollo 16', 'Apollo 17', 'Apollo-Soyuz', 'Skylab', 'Space Shuttle', 'Columbia', 'Challenger', 'Discovery',
+  'Atlantis', 'Endeavour', 'Enterprise', 'Space Station', 'International Space Station', 'Artemis', 'Artemis I', 'Artemis II', 'Artemis III',
+  'Orion', 'Space Launch System', 'Saturn V', 'Gateway', 'Commercial Crew', 'Crew Dragon', 'Starliner', 'Cygnus', 'Hubble',
+  'Hubble Space Telescope', 'James Webb', 'James Webb Space Telescope', 'Chandra', 'Spitzer', 'Compton', 'Kepler', 'TESS', 'Fermi', 'Swift',
+  'WISE', 'NEOWISE', 'NuSTAR', 'IXPE', 'Roman Space Telescope', 'SOFIA', 'GALEX', 'COBE', 'WMAP', 'Voyager', 'Voyager 1', 'Voyager 2',
+  'Pioneer', 'Pioneer 10', 'Pioneer 11', 'Mariner', 'Mariner 4', 'Mariner 9', 'Mariner 10', 'Viking', 'Viking 1', 'Viking 2', 'Galileo',
+  'Cassini', 'Huygens', 'Juno', 'New Horizons', 'Messenger', 'Magellan', 'Ulysses', 'Dawn', 'Stardust', 'Deep Impact', 'Genesis',
+  'OSIRIS-REx', 'Lucy', 'Psyche', 'DART', 'Europa Clipper', 'Dragonfly', 'Parker Solar Probe', 'Solar Dynamics Observatory', 'SOHO',
+  'STEREO', 'TRACE', 'Hinode', 'IRIS', 'Solar Orbiter', 'Mars Pathfinder', 'Sojourner', 'Spirit', 'Opportunity', 'Curiosity',
+  'Perseverance', 'Ingenuity', 'Phoenix', 'InSight', 'MAVEN', 'Mars Odyssey', 'Mars Global Surveyor', 'Mars Reconnaissance Orbiter',
+  'HiRISE', 'Mars Express', 'Lunar Reconnaissance Orbiter', 'LCROSS', 'GRAIL', 'LADEE', 'Lunar Orbiter', 'Surveyor', 'Ranger',
+  'Clementine', 'Lunar Prospector', 'Landsat', 'Terra', 'Aqua', 'Aura', 'Suomi NPP', 'NOAA-20', 'GOES', 'GPM', 'ICESat-2', 'GRACE',
+  'SMAP', 'SWOT', 'PACE', 'TEMPO', 'CALIPSO', 'CloudSat', 'Jason-3', 'Sentinel-6', 'Earth Observatory', 'MODIS', 'VIIRS', 'X-15',
+  'Gravity Probe B', 'Mars rovers', 'Mars Sample Return', 'Ares', 'Juno Jupiter', 'JunoCam', 'Mastcam'];
+const WORDS = ['nebula', 'galaxy', 'galaxies', 'star cluster', 'supernova', 'black hole', 'exoplanet', 'planet', 'Sun', 'Moon', 'Earth',
+  'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Charon', 'Titan', 'Europa', 'Enceladus', 'Io',
+  'Ganymede', 'Callisto', 'Phobos', 'Deimos', 'Ceres', 'Vesta', 'Bennu', 'comet', 'asteroid', 'meteor', 'aurora', 'eclipse',
+  'solar flare', 'sunspot', 'earthrise', 'astronaut', 'spacewalk', 'rocket', 'launch', 'telescope', 'satellite', 'rover', 'lander',
+  'crater', 'volcano', 'hurricane', 'typhoon', 'cyclone', 'wildfire', 'glacier', 'iceberg', 'sea ice', 'desert', 'river', 'delta',
+  'island', 'city lights', 'night lights', 'deep field', 'infrared', 'x-ray', 'ultraviolet', 'Milky Way', 'Andromeda', 'Orion Nebula'];
+let SKY = [], skyLoading = null, VOCAB = null, vocabLoading = null, KNOWN = null;
+function loadSky() {
+  skyLoading ??= fetch('data/sky.json').then(r => r.json()).then(rows => {
+    SKY = rows.map(([id, name, , type, , , , , famous]) => ({ id, name, type, famous: !!famous, f: fold(name) }));
+  }).catch(() => { skyLoading = null; });
+  return skyLoading;
+}
+function loadVocab() {
+  vocabLoading ??= Promise.all([loadPlaces().catch(() => {}), loadSky()]).then(() => {
+    const v = [], seen = new Set(), add = (name, kind, rank, fz = true) => { const f = fold(name); if (!seen.has(f)) { seen.add(f); v.push({ name, kind, rank, f, fz }); } };
+    MISSIONS.forEach(m => add(m, 'Mission', 0));
+    WORDS.forEach(w => add(w, 'Subject', 1));
+    SKY.forEach(s => add(s.name, s.type, s.famous ? 1 : 3));
+    COUNTRIES.forEach(c => add(c.name, 'Country', 2));
+    FEATURES.forEach(p => add(p.name, p.kind, p.rank <= 3 ? 2 : 4));
+    (PLACES || []).forEach((p, i) => add(p.name, regionName(p.cc), 3, i < 3000));   /* largest first; spelling help for the 3,000 largest */
+    VOCAB = v;
+    KNOWN = new Set(v.flatMap(x => x.f.split(/[\s-]+/)));
+  });
+  return vocabLoading;
+}
+/* optimal string alignment distance (Damerau-Levenshtein, where a swapped pair of letters counts as one mistake);
+   gives up early once every route is past max */
+function osa(a, b, max) {
+  const m = a.length, n = b.length; if (Math.abs(m - n) > max) return max + 1;
+  let pp = null, p = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    const c = [i]; let low = i;
+    for (let j = 1; j <= n; j++) {
+      let d = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d = Math.min(d, pp[j - 2] + 1);
+      c[j] = d; if (d < low) low = d;
+    }
+    if (low > max) return max + 1;
+    pp = p; p = c;
+  }
+  return p[n];
+}
+const allowed = f => f.length <= 5 ? 1 : 2;                         /* mistakes allowed: 1 up to 5 letters, 2 for longer */
+const wordStart = (f, s) => { const i = f.indexOf(s); return i === 0 || (i > 0 && f[i - 1] === ' ') ? i : -1; };
+/* the start of a name, misspelt: compare with the name's first letters, one shorter, as long and one longer */
+function prefixDist(s, f, max) {
+  let best = max + 1;
+  for (const L of [s.length - 1, s.length, s.length + 1]) if (L > 0 && L <= f.length) best = Math.min(best, osa(s, f.slice(0, L), max));
+  return best;
+}
+function libSuggestions(s) {
+  const f = fold(s), exact = [], near = [], max = allowed(f);
+  for (const v of VOCAB) {
+    const i = wordStart(v.f, f);
+    if (i >= 0) { if (exact.length < 400) exact.push({ ...v, i, len: s.length }); }
+    else if (v.fz && f.length >= 4 && v.f.length >= f.length - 1) { const d = prefixDist(f, v.f, max); if (d <= max) near.push({ ...v, d }); }
+  }
+  exact.sort((a, b) => (a.i > 0) - (b.i > 0) || a.rank - b.rank);
+  near.sort((a, b) => a.d - b.d || a.rank - b.rank);
+  return [...exact.slice(0, 8), ...near].slice(0, 8);
+}
+/* the corrected search for a misspelt one: the whole phrase if it is close to a known name, otherwise word by word */
+function correction(s) {
+  if (!VOCAB) return null;
+  const f = fold(s); let best = null, bd = allowed(f) + 1;
+  for (const v of VOCAB) { if (!v.fz) continue; const d = osa(f, v.f, allowed(f)); if (d < bd || (d === bd && best && v.rank < best.rank)) { bd = d; best = v; } }
+  if (best && bd > 0 && bd <= allowed(f)) return best.name;
+  const words = f.split(/\s+/); let changed = false;
+  const fixed = words.map(w => {
+    if (w.length < 4 || KNOWN.has(w)) return w;
+    let b = null, d0 = allowed(w) + 1;
+    for (const k of KNOWN) { if (Math.abs(k.length - w.length) > 2) continue; const d = osa(w, k, allowed(w)); if (d < d0) { d0 = d; b = k; } }
+    if (b) { changed = true; return b; } return w;
+  });
+  return changed ? fixed.join(' ') : null;
+}
+
+/* ---------- the search box: suggestions as you type, results from 3 letters ---------- */
+const lq = $('libQ'), ll = $('libList'); let lhits = [], lsel = -1, typeTimer = null;
+function closeLib() { ll.hidden = true; lq.setAttribute('aria-expanded', 'false'); lq.removeAttribute('aria-activedescendant'); }
+function libSuggest() {
+  const s = lq.value.trim(); lhits = []; lsel = -1;
+  if (fold(s).length < 2) return closeLib();
+  if (!VOCAB) { loadVocab().then(() => { if (document.activeElement === lq) libSuggest(); }); return; }
+  lhits = libSuggestions(s);
+  if (!lhits.length) return closeLib();
+  ll.innerHTML = lhits.map((h, j) => `<li role="option" id="ll${j}" aria-selected="false" data-j="${j}"><span>${
+    h.i != null ? esc(h.name.slice(0, h.i)) + '<mark>' + esc(h.name.slice(h.i, h.i + h.len)) + '</mark>' + esc(h.name.slice(h.i + h.len)) : esc(h.name)
+  }</span><span class="k">${esc(h.kind)}</span></li>`).join('');
+  ll.hidden = false; lq.setAttribute('aria-expanded', 'true');
+}
+function pickLib(h) { closeLib(); clearTimeout(typeTimer); lq.value = h.name; libSearch(false, { exact: true }); }
+lq.addEventListener('focus', () => { loadVocab(); loadSky(); });
+lq.addEventListener('input', () => {
+  libSuggest(); clearTimeout(typeTimer);
+  const s = lq.value.trim();
+  if (s.length >= 3) typeTimer = setTimeout(() => libSearch(), 350); else if (!s) libSearch();
+});
+lq.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); clearTimeout(typeTimer); if (!ll.hidden && lsel >= 0) pickLib(lhits[lsel]); else { closeLib(); libSearch(); } return; }
+  if (ll.hidden || !lhits.length) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault(); lsel = (lsel + (e.key === 'ArrowDown' ? 1 : -1) + lhits.length) % lhits.length;
+    [...ll.children].forEach((li, j) => li.setAttribute('aria-selected', j === lsel)); lq.setAttribute('aria-activedescendant', 'll' + lsel);
+  } else if (e.key === 'Escape') { e.preventDefault(); closeLib(); }     /* closes the list; the words stay */
+});
+ll.addEventListener('mousedown', e => { const li = e.target.closest('li[data-j]'); if (li) { e.preventDefault(); pickLib(lhits[+li.dataset.j]); } });
+lq.addEventListener('blur', () => setTimeout(closeLib, 120));
+$('libFix').addEventListener('click', e => { if (e.target.closest('button')) libSearch(false, { exact: true }); });
+
+/* ---------- results ---------- */
+const lib = { page: 1, q: '', totals: [], size: 24, busy: false, seq: 0 };
 const libSel = document.querySelectorAll('.libfilters select');
 const typeChips = document.querySelectorAll('.libfilters .seg .chip');
-function render(append, list) {
-  const start = append ? PICS.length : 0;
-  if (!append) PICS.length = 0;
-  PICS.push(...list);
-  const html = list.map((x, i) => `<button class="pic${x[7] === 'video' ? ' video' : ''}" data-j="${start + i}">
-      <span class="ph"><img src="${assets(x[7])}${x[0]}/${x[0]}~thumb.jpg" data-id="${esc(x[0])}" data-base="${assets(x[7])}" data-try="thumb" alt="${esc(x[1])}" loading="lazy"></span>
-      <span class="pt"><h3>${esc(x[1])}</h3><span class="meta">${x[2] ? nice(x[2]) : 'No date'} · ${esc(x[3] || 'NASA')}${x[7] === 'video' ? ' · Video' : ''}</span></span></button>`).join('');
-  append ? $('gallery').insertAdjacentHTML('beforeend', html) : ($('gallery').innerHTML = html);
+const cache = new Map();                           /* the same request is asked once per visit */
+function cached(params) {
+  const k = JSON.stringify(params);
+  if (!cache.has(k)) cache.set(k, search(params).catch(e => { cache.delete(k); throw e; }));
+  return cache.get(k);
 }
-async function libSearch(append = false) {
-  if (lib.busy) return;
-  const q = $('libQ').value.trim();
-  if (!q) { $('gallery').innerHTML = '<div class="state small" style="grid-column:1/-1">Type a place, a mission or a subject.</div>'; $('libCount').textContent = ''; return; }
-  lib.busy = true; lib.page = append ? lib.page + 1 : 1;
-  if (!append) { $('gallery').innerHTML = '<div class="state small" style="grid-column:1/-1">Searching NASA’s library…</div>'; $('libCount').textContent = ''; }
-  const centre = libSel[0].value === 'Any' ? '' : libSel[0].value.split(' ')[0];
+function filters() {
+  const centre = (libSel[0].value || '').split(' ')[0];
   const from = /^\d{4}$/.test(libSel[1].value) ? libSel[1].value : '', to = /^\d{4}$/.test(libSel[2].value) ? libSel[2].value : '';
-  try {
-    const r = await search({ q, center: centre, year_start: from, year_end: to, page: lib.page, page_size: 24,
-      media_type: ['image', 'image,video', 'video'][[...typeChips].findIndex(c => c.getAttribute('aria-pressed') === 'true')] || 'image' });
-    lib.total = r.total;
-    if (!append && !r.list.length) $('gallery').innerHTML = `<div class="state small" style="grid-column:1/-1">Nothing found for “${esc(q)}”. Try fewer words, another spelling, or pictures and videos.</div>`;
-    else render(append, r.list);
-    const shown = PICS.length, cap = Math.min(lib.total, 10000);
-    $('libCount').textContent = lib.total ? `${lib.total.toLocaleString('en-GB')} found · showing ${shown}` : '';
-    document.querySelector('.more').hidden = shown >= cap;
-  } catch {
-    if (!append) $('gallery').innerHTML = '<div class="state small" style="grid-column:1/-1">NASA’s library can’t be reached right now. Try again in a moment.</div>';
-  }
-  lib.busy = false;
+  return { center: centre, year_start: from, year_end: to,
+    media_type: ['image', 'image,video', 'video'][[...typeChips].findIndex(c => c.getAttribute('aria-pressed') === 'true')] || 'image' };
 }
-$('libQ').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); libSearch(); } });
-for (const s of libSel) s.addEventListener('change', () => libSearch());
-typeChips.forEach((c, i) => c.addEventListener('click', () => { typeChips.forEach((x, j) => x.setAttribute('aria-pressed', i === j)); libSearch(); }));
+/* one page of a search: a mission's several phrasings are asked together, merged, and sorted by score */
+async function runSearch(q, page, totals) {
+  const terms = PRESETS[fold(q)] || [q], size = terms.length > 1 ? 18 : 24, f = filters();
+  const ask = terms.map((t, i) => totals && (page - 1) * size >= Math.min(totals[i] ?? Infinity, 10000) ? null : cached({ q: t, ...f, page, page_size: size }));
+  const got = await Promise.all(ask.map(p => p || Promise.resolve({ total: totals?.[0] ?? 0, list: [], skip: true })));
+  const ids = new Set(page > 1 ? PICS.map(x => x[0]) : []), list = [];
+  got.forEach(r => r.list.forEach(x => { if (!ids.has(x[0])) { ids.add(x[0]); x.score = scoreOf(x); x.n = list.length; list.push(x); } }));
+  list.sort((a, b) => Math.min(b.score, 4) - Math.min(a.score, 4) || a.n - b.n);
+  return { list, size, totals: got.map((r, i) => r.skip ? totals[i] : r.total), total: Math.max(0, ...got.map(r => r.skip ? 0 : r.total)) };
+}
+const card = (x, j) => `<button class="pic${x[7] === 'video' ? ' video' : ''}" data-j="${j}">
+      <span class="ph"><img src="${assets(x[7])}${x[0]}/${x[0]}~thumb.jpg" data-id="${esc(x[0])}" data-base="${assets(x[7])}" data-try="thumb" alt="${esc(x[1])}" loading="lazy"></span>
+      <span class="pt"><h3>${esc(x[1])}</h3><span class="meta">${x[2] ? nice(x[2]) : 'No date'} · ${esc(x[3] || 'NASA')}${x[7] === 'video' ? ' · Video' : ''}</span></span></button>`;
+const say = (el, text) => { el.innerHTML = `<div class="state small" style="grid-column:1/-1">${text}</div>`; };
+function render(append, list) {
+  if (!append) { PICS.length = 0; $('gallery').innerHTML = ''; $('gallery2').innerHTML = ''; }
+  $('gallery').querySelector('.state')?.remove();
+  const start = PICS.length, main = [], back = [];
+  PICS.push(...list);
+  list.forEach((x, i) => (x.score >= 0 ? main : back).push(card(x, start + i)));
+  $('gallery').insertAdjacentHTML('beforeend', main.join('')); $('gallery2').insertAdjacentHTML('beforeend', back.join(''));
+}
+function setBts(open) {
+  $('btsToggle').setAttribute('aria-expanded', open); $('gallery2').hidden = !open;
+}
+function resetLib(text) {
+  PICS.length = 0; say($('gallery'), text); $('gallery2').innerHTML = ''; $('bts').hidden = true; setBts(false);
+  $('libCount').textContent = ''; $('libFix').hidden = true; document.querySelector('.more').hidden = true;
+}
+async function libSearch(append = false, opt = {}) {
+  const typed = lq.value.trim();
+  if (append && lib.busy) return;
+  const my = ++lib.seq;
+  if (!typed) { resetLib('Type a mission, a planet, a galaxy or a place, or pick a mission. Results appear as you type.'); return; }
+  lib.busy = true;
+  const page = append ? lib.page + 1 : 1, q = append ? lib.q : typed;
+  if (!append) { $('libCount').textContent = 'Searching NASA’s library…'; if (!PICS.length) say($('gallery'), 'Searching NASA’s library…'); }
+  try {
+    let r = await runSearch(q, page, append ? lib.totals : null), used = q, fixed = false;
+    if (my !== lib.seq) return;
+    if (!append && !opt.exact && r.total < 3) {                  /* few or no results: try the nearest known spelling */
+      await loadVocab();
+      const c = correction(typed);
+      if (c && fold(c) !== fold(typed)) {
+        const r2 = await runSearch(c, 1, null);
+        if (my !== lib.seq) return;
+        if (r2.total > r.total) { r = r2; used = c; fixed = true; }
+      }
+    }
+    lib.q = used; lib.page = page; lib.totals = r.totals; lib.size = r.size;
+    if (!append && fixed) {
+      $('libFix').innerHTML = `Showing results for <b>${esc(used)}</b> · <button type="button">search for “${esc(typed)}” instead</button>`;
+      $('libFix').hidden = false;
+    } else if (!append) $('libFix').hidden = true;
+    render(append, r.list);
+    const main = $('gallery').querySelectorAll('.pic').length, back = $('gallery2').querySelectorAll('.pic').length;
+    if (!append && !r.list.length) say($('gallery'), `Nothing found for “${esc(typed)}”. Try fewer words, another spelling, or pictures and videos.`);
+    else if (!main) say($('gallery'), 'Only behind-the-scenes pictures match so far. They are shown below; Show more looks further.');
+    $('bts').hidden = !back; $('btsToggle').textContent = `Behind the scenes (${back})`;
+    if (!append) setBts(!main && back > 0);
+    const total = r.total;
+    $('libCount').textContent = total ? `${total.toLocaleString('en-GB')} found · ${main} shown${back ? ` · ${back} behind the scenes` : ''}` : '';
+    document.querySelector('.more').hidden = !r.totals.some(t => page * r.size < Math.min(t, 10000));
+  } catch {
+    if (my === lib.seq && !append) { resetLib('NASA’s library can’t be reached right now. Try again in a moment.'); }
+  } finally { if (my === lib.seq) lib.busy = false; }
+}
+for (const s of libSel) s.addEventListener('change', () => libSearch(false, { exact: true }));
+typeChips.forEach((c, i) => c.addEventListener('click', () => { typeChips.forEach((x, j) => x.setAttribute('aria-pressed', i === j)); libSearch(false, { exact: true }); }));
 document.querySelector('.more .btn').addEventListener('click', () => libSearch(true));
+$('btsToggle').addEventListener('click', () => setBts($('gallery2').hidden));
+$('gallery2').addEventListener('click', e => { const b = e.target.closest('.pic'); if (b) openViewer(PICS[+b.dataset.j]); });
+loadSky();                                         /* the sky names, for "See it in the sky" */
 
 update();

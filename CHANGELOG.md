@@ -1,5 +1,23 @@
 # Change log
 
+## November 9, 2026 — Image Explorer: picture library search and viewer
+
+- **Viewer:** Close sits in its own bar above the picture and stays in view while the text scrolls; the white
+  scrollbar is gone (dark scrollbars throughout); videos and pictures are labelled.
+- **Space pictures first:** each result is scored from what NASA records with it (Photojournal and Space Telescope
+  Science Institute pictures, Apollo and Space Station frames and words such as nebula or crater count up; launches,
+  people, events and artists' illustrations count down). Launches, people, events and illustrations move under
+  "Behind the scenes", closed by default.
+- **Mission buttons** search several phrasings at once and merge them (for example James Webb: nebulae, galaxies,
+  NIRCam images and "james webb").
+- **Results as you type** from 3 letters (after a pause of 0.35 s); a search already made is not asked again.
+- **Spelling:** suggestions as you type allow for small mistakes, from about 150 missions, 1,350 sky objects,
+  countries, natural features and towns. A search with fewer than 3 results is repeated with the nearest known
+  spelling ("hubbel" shows Hubble, with a link to search the words as typed).
+- **"See it in the sky":** a picture whose title or keywords name a galaxy, nebula or star cluster on the globe opens
+  that object on the globe.
+- Escape closes the suggestions without clearing the words.
+
 ## November 9, 2026 — MIT License and credits
 
 - **Licence:** the project's own code and documents are now under the MIT License (`LICENSE.md`), replacing "all

@@ -72,6 +72,11 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
   the four hand-listed sky positions checked, playable videos, natural features in place search (Natural Earth),
   Arctic and Antarctic views (proj4js with OpenLayers), and astronaut photos on the globe (a daily GitHub Actions
   job, active once the free API key is stored as the secret `EOL_API_KEY`).
+- **Decided Nov 9, 2026 (Image Explorer):** the picture library puts pictures taken in space or of space first and
+  moves launches, people, events and artists' illustrations under "Behind the scenes"; results appear as you type
+  from 3 letters; suggestions and corrections allow for small spelling mistakes; mission buttons search several
+  phrasings; a picture naming a sky object links to it on the globe. Whether to add ESA's Webb and Hubble archives is
+  left to the developer.
 - **Not possible (Nov 9, 2026):** seeing individual houses. NASA's sharpest free imagery is about 30 m a pixel
   (Landsat) and the daily layers 250 m; houses need commercial imagery, which is neither NASA's nor free.
 

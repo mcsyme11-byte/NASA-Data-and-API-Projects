@@ -143,24 +143,43 @@
 .pic h3 { margin: 0; font-size: 15.5px; font-weight: 400; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .pic .meta { font-size: 12.5px; color: var(--muted); font-style: italic; }
 
-dialog.viewer { width: min(1100px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; background: var(--card); color: var(--ink);
-  border: 1px solid var(--brass-dim); border-radius: var(--r-card); }
-dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
-.vwrap { display: grid; grid-template-columns: 1.5fr 1fr; }
-.vimg { background: var(--deep); display: flex; align-items: center; justify-content: center; min-height: 320px; }
-.vimg img { max-width: 100%; max-height: calc(100vh - 80px); display: block; }
-.vimg video { width: 100%; max-height: calc(100vh - 80px); display: block; background: #000; }
-.vtext { padding: 22px; overflow-y: auto; max-height: calc(100vh - 34px); }
-.vtext h2 { margin-top: 0; }
-.vtext h3 { font-size: 21px; font-weight: 400; margin: 0 0 12px; line-height: 1.3; }
-.vtext p { color: var(--ink2); font-size: 15px; }
 .facts { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; margin: 0 0 14px; font-size: 14px; }
 .facts dt { font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); padding-top: 3px; }
 .facts dd { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
 .kw { display: flex; flex-wrap: wrap; gap: 6px; }
 .kw .tag { color: var(--ink2); }
-.vclose { position: absolute; top: 10px; right: 10px; z-index: 2; }
-.vclose.btn { min-height: 34px; width: auto; padding: 0 12px; font-size: 12px; background: rgba(15, 21, 32, .92); }
+
+/* picture viewer: a bar with Close that never scrolls, and a body below it that does */
+dialog.viewer { width: min(1100px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; background: var(--card); color: var(--ink);
+  border: 1px solid var(--brass-dim); border-radius: var(--r-card); overflow: hidden; color-scheme: dark; }
+dialog.viewer[open] { display: flex; flex-direction: column; }
+dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
+.vbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px 10px 22px;
+  border-bottom: 1px solid var(--line); background: var(--card); }
+.vbar .eyebrow { margin: 0; }
+.vclose.btn { min-height: 34px; width: auto; padding: 0 14px; font-size: 12px; }
+.vbody { flex: 1; min-height: 0; overflow-y: auto; }
+.vwrap { display: grid; grid-template-columns: 1.5fr 1fr; align-items: start; }
+.vimg { background: var(--deep); display: flex; align-items: center; justify-content: center; min-height: 320px; position: sticky; top: 0; }
+.vimg img { max-width: 100%; max-height: calc(100vh - 100px); display: block; }
+.vimg video { width: 100%; max-height: calc(100vh - 100px); display: block; background: #000; }
+.vtext { padding: 22px; }
+.vtext h3 { font-size: 21px; font-weight: 400; margin: 0 0 12px; line-height: 1.3; }
+.vtext p { color: var(--ink2); font-size: 15px; }
+.vbtns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.vbtns .btn { width: auto; }
+/* dark scrollbars wherever the page scrolls inside a box */
+.vbody, .suggest, .gcard { scrollbar-width: thin; scrollbar-color: var(--brass-dim) var(--bg2); }
+.vbody::-webkit-scrollbar, .suggest::-webkit-scrollbar { width: 10px; }
+.vbody::-webkit-scrollbar-track, .suggest::-webkit-scrollbar-track { background: var(--bg2); }
+.vbody::-webkit-scrollbar-thumb, .suggest::-webkit-scrollbar-thumb { background: var(--brass-dim); border-radius: 5px; border: 2px solid var(--bg2); }
+/* library: suggestions, the correction note, behind the scenes */
+.libbox { position: relative; }
+#libFix { margin: 10px 0 0; }
+#libFix button { background: none; border: 0; padding: 0; color: var(--brass-bright); font: inherit; font-style: italic; text-decoration: underline; cursor: pointer; }
+.bts { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); }
+.bts .btn { width: auto; }
+.bts .note { margin: 10px 0 14px; }
 
 @media (max-width: 1024px) {
   .explore { grid-template-columns: 1fr; }
@@ -168,8 +187,8 @@ dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
   .side { display: grid; grid-template-columns: 1fr 1fr; }
   .side .card.place { grid-column: 1 / -1; }
   .vwrap { grid-template-columns: 1fr; }
-  .vtext { max-height: none; }
-  .vimg img { max-height: 60vh; }
+  .vimg { position: static; }
+  .vimg img, .vimg video { max-height: 60vh; }
 }
 @media (max-width: 760px) {
   .side { grid-template-columns: 1fr; }
@@ -183,7 +202,8 @@ dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
   .gallery { grid-template-columns: 1fr 1fr; gap: 10px; }
   .pic .pt { padding: 10px; }
   .pic h3 { font-size: 14px; }
-  dialog.viewer { width: 100vw; max-width: 100vw; max-height: 100vh; height: 100vh; margin: 0; border-radius: 0; }
+  dialog.viewer { width: 100vw; max-width: 100vw; max-height: 100dvh; height: 100dvh; margin: 0; border-radius: 0; }
   .vtext { padding: 16px; }
+  .vbar { padding-left: 16px; }
 }
 @media (max-width: 400px) { .gallery { grid-template-columns: 1fr; } .mapframe { height: 360px; } }

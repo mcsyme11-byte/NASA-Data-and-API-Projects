@@ -369,6 +369,18 @@ Checked Nov 9, 2026 (live requests from the published site):
   site, so the page shows none.
 - "apollo 11": 71 videos.
 
+### Image and Video Library: what the results are, checked Nov 9, 2026
+
+- NASA's own order puts launches, people and events first for most mission names: of the first results for "james
+  webb", nearly all are testing, launch, people or illustrations. NASA's library holds only about 5 Webb science
+  pictures (for example `carina_nebula`, `southern_ring_nebula`, `webb_first_deep_field`, `PIA26702`).
+- Clues recorded with each result, used for the page's ranking: `nasa_id` starting `PIA` (Planetary Photojournal),
+  `center` `STScI` or `STScI (Webb)` (Space Telescope Science Institute), `nasa_id` of mission frames (`AS11-…`
+  Apollo, `iss0…e…` Space Station) point to pictures of space or of Earth from space; `nasa_id` starting `NHQ`, `KSC`
+  or `jsc`, and photographers credited "NASA/…", point to event photography.
+- ESA's picture feeds `https://esawebb.org/images/feed/` and `https://esahubble.org/images/feed/` allow browsers to
+  read them (CORS); not used (see the roadmap). NASA's APOD API answered 503 on Nov 9, 2026.
+
 ### GIBS polar views, checked Nov 9, 2026
 
 - `epsg3413` (Arctic, 303 layers) and `epsg3031` (Antarctic, 263 layers). Tile grid: 512 px tiles from

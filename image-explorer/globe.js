@@ -417,6 +417,14 @@ gq.addEventListener('keydown', e => {
 gl.addEventListener('mousedown', e => { const li = e.target.closest('li[data-j]'); if (li) { e.preventDefault(); pick(found[+li.dataset.j]); } });
 gq.addEventListener('blur', () => setTimeout(() => { gl.hidden = true; }, 120));
 
+/* ---------- from the picture viewer: fly to a sky object by its catalogue id, once the sky has loaded ---------- */
+window.focusSky = (id, tries = 0) => {
+  const it = sky.find(s => s.id === id);
+  if (!it || !camera) { if (tries < 60) setTimeout(() => window.focusSky(id, tries + 1), 150); return; }
+  if (vis.spin) setSpin(false);
+  gq.value = it.name; goTo(it); select(it);
+};
+
 /* ---------- show / hide chips ---------- */
 function setSpin(v) { vis.spin = v; if (controls) controls.autoRotate = v; document.querySelector('[data-show="spin"]').setAttribute('aria-pressed', v); }
 for (const c of document.querySelectorAll('[data-show]')) {
