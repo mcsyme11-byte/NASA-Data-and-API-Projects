@@ -1,10 +1,9 @@
-/* NASA Data Projects · Image Explorer · mock-up: the Globe tab and the live picture library
- * © 2026 Malcolm Syme · mcsyme11@gmail.com
+/* NASA Data Projects · Image Explorer · the Globe tab · © 2026 Malcolm Syme · mcsyme11@gmail.com
  *
- * The Earth (NASA Blue Marble from GIBS) turned to the current sidereal time inside the sky: 5,044 stars to
- * magnitude 6 and the 110 Messier objects (d3-celestial), plus famous Hubble and Webb targets, at their real
- * positions. Pins on the Earth are the natural events NASA EONET is following now. Uses the classic script's
- * show(), nice(), esc(), PICS, CENTRES and focusEarth().
+ * The Earth (NASA Blue Marble from GIBS), turned to the current sidereal time, inside the real sky: 5,044 stars to
+ * magnitude 6, the 88 constellations' lines and about 1,350 galaxies, nebulae and star clusters (data/, built by
+ * tools/build_sky.py from d3-celestial). Pins on the Earth are the natural events NASA EONET reported in the last
+ * 30 days. Uses app.js's show(), nice(), esc(), search(), openViewer(), libSearch(), focusEarth() and A.
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -22,41 +21,12 @@ const vec = (lat, lon, r) => new THREE.Vector3(r * Math.cos(lat * D2R) * Math.co
 /* Greenwich mean sidereal time: how far the Earth has turned against the stars (IAU 1982 formula, enough here). */
 const gmst = (t = Date.now()) => ((((280.46061837 + 360.98564736629 * (t / 864e5 + 2440587.5 - 2451545)) % 360) + 360) % 360) * D2R;
 
-const vis = { events: true, galaxy: true, nebula: true, cluster: true, labels: true, spin: !reduce };
+const vis = { events: true, galaxy: true, nebula: true, cluster: true, lines: true, labels: true, spin: !reduce };
 let renderer, scene, camera, controls, earth, earthMat, started = false, running = false;
-let events = [], sky = [], hits = [], selected = null, fly = null, hover = null;
+let events = [], sky = [], cons = [], lines = null, hits = [], selected = null, fly = null, hover = null;
 
-/* ---------- sky objects ---------- */
-const TYPES = { s: ['galaxy', 'Spiral galaxy'], e: ['galaxy', 'Elliptical galaxy'], i: ['galaxy', 'Irregular galaxy'],
-  gc: ['cluster', 'Globular star cluster'], oc: ['cluster', 'Open star cluster'], pos: ['cluster', 'Group of stars'],
-  pn: ['nebula', 'Planetary nebula'], rn: ['nebula', 'Reflection nebula'], sfr: ['nebula', 'Star-forming nebula'],
-  snr: ['nebula', 'Supernova remnant'], dn: ['nebula', 'Dark nebula'], bn: ['nebula', 'Bright nebula'] };
-const FAMOUS = new Set(['M1', 'M8', 'M13', 'M16', 'M20', 'M27', 'M31', 'M33', 'M42', 'M44', 'M45', 'M51', 'M57', 'M81', 'M87', 'M101', 'M104']);
-const SEARCH = { M77: 'Messier 77', M87: 'Messier 87', M24: 'Messier 24', M73: 'Messier 73', M16: 'Eagle Nebula', M45: 'Pleiades', M44: 'Beehive Cluster' };
-/* famous Hubble and Webb targets outside the Messier list; positions (J2000, degrees) to be confirmed against SIMBAD when built */
-const EXTRA = [
-  ['Carina Nebula', 'NGC 3372', 'nebula', 'Star-forming nebula', 161.265, -59.867],
-  ['Southern Ring Nebula', 'NGC 3132', 'nebula', 'Planetary nebula', 151.757, -40.436],
-  ['Helix Nebula', 'NGC 7293', 'nebula', 'Planetary nebula', 337.411, -20.837],
-  ['Cat’s Eye Nebula', 'NGC 6543', 'nebula', 'Planetary nebula', 269.639, 66.633],
-  ['Horsehead Nebula', 'Barnard 33', 'nebula', 'Dark nebula', 85.245, -2.458],
-  ['Tarantula Nebula', 'NGC 2070', 'nebula', 'Star-forming nebula', 84.676, -69.101],
-  ['Cassiopeia A', '3C 461', 'nebula', 'Supernova remnant', 350.85, 58.815],
-  ['Rho Ophiuchi', 'Rho Oph cloud', 'nebula', 'Star-forming cloud', 246.4, -23.45],
-  ['Westerlund 2', 'Westerlund 2', 'cluster', 'Young star cluster', 156.0, -57.75],
-  ['Stephan’s Quintet', 'HCG 92', 'galaxy', 'Group of galaxies', 339.0, 33.96],
-  ['Cartwheel Galaxy', 'ESO 350-40', 'galaxy', 'Ring galaxy', 9.421, -33.716],
-  ['Centaurus A', 'NGC 5128', 'galaxy', 'Elliptical galaxy', 201.365, -43.019],
-  ['Large Magellanic Cloud', 'LMC', 'galaxy', 'Dwarf galaxy', 80.894, -69.756],
-  ['Small Magellanic Cloud', 'SMC', 'galaxy', 'Dwarf galaxy', 13.187, -72.829],
-];
-const tidy = s => s.replace(/[´’]/g, '’');
-function nameOf(id, alt, kind) {
-  if (!alt) return 'Messier ' + id.slice(1);
-  alt = tidy(alt);
-  if (kind === 'galaxy' && !/galaxy|cloud| a$/i.test(alt)) return alt + ' Galaxy';
-  return alt;
-}
+/* ---------- sky objects: data/sky.json rows are
+   [id, name, kind, type, ra, dec, magnitude, size in arcminutes, famous, search term, other designation] ---------- */
 
 /* ---------- start (on the first visit to the tab) ---------- */
 document.addEventListener('viewchange', e => {
@@ -122,10 +92,9 @@ async function loadEarth() {
 /* ---------- stars ---------- */
 async function loadStars() {
   try {
-    const j = await (await fetch('https://cdn.jsdelivr.net/gh/ofrohn/d3-celestial@master/data/stars.6.json')).json();
-    const n = j.features.length, pos = new Float32Array(n * 3), size = new Float32Array(n), col = new Float32Array(n * 3);
-    j.features.forEach((f, i) => {
-      const [ra, dec] = f.geometry.coordinates, m = f.properties.mag, bv = parseFloat(f.properties.bv) || 0.6;
+    const rows = await (await fetch('data/stars.json')).json();
+    const n = rows.length, pos = new Float32Array(n * 3), size = new Float32Array(n), col = new Float32Array(n * 3);
+    rows.forEach(([ra, dec, m, bv], i) => {
       vec(dec, ra, STAR_R).toArray(pos, i * 3);
       size[i] = Math.max(1.3, 5.6 - 0.8 * m);
       const c = bv < 0.2 ? [0.80, 0.87, 1] : bv > 1.1 ? [1, 0.82, 0.66] : bv > 0.6 ? [1, 0.93, 0.82] : [0.95, 0.95, 0.97];
@@ -142,22 +111,25 @@ async function loadStars() {
     });
     scene.add(new THREE.Points(geo, mat));
   } catch { /* the sky still works without background stars */ }
+  try {                                                  /* constellation lines, faint brass */
+    cons = await (await fetch('data/constellations.json')).json();
+    const pts = [];
+    for (const c of cons) for (const seg of c.lines) for (let i = 1; i < seg.length; i++)
+      pts.push(vec(seg[i - 1][1], seg[i - 1][0], STAR_R - 2), vec(seg[i][1], seg[i][0], STAR_R - 2));
+    for (const c of cons) c.pos = vec(c.at[1], c.at[0], STAR_R - 2);
+    lines = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({ color: 0x7e6a45, transparent: true, opacity: 0.55, depthWrite: false }));
+    lines.visible = vis.lines; scene.add(lines);
+  } catch { cons = []; }
 }
 
 /* ---------- galaxies, nebulae, clusters ---------- */
 async function loadSky() {
   try {
-    const j = await (await fetch('https://cdn.jsdelivr.net/gh/ofrohn/d3-celestial@master/data/messier.json')).json();
-    for (const f of j.features) {
-      const p = f.properties, [kind, type] = TYPES[p.type] || ['nebula', 'Nebula'];
-      const [ra, dec] = f.geometry.coordinates;
-      sky.push({ id: f.id, name: nameOf(f.id, p.alt, kind), desig: [f.id, p.desig].filter(Boolean).join(' · '), kind, type,
-        mag: p.mag, dim: p.dim, ra: (ra + 360) % 360, dec, famous: FAMOUS.has(f.id),
-        term: SEARCH[f.id] || (p.alt ? nameOf(f.id, p.alt, kind) : 'Messier ' + f.id.slice(1)), pos: vec(dec, ra, SKY_R) });
-    }
-  } catch { tag('The Messier list could not be loaded right now.'); }
-  for (const [name, desig, kind, type, ra, dec] of EXTRA)
-    sky.push({ id: desig, name, desig, kind, type, ra, dec, famous: true, term: name, pos: vec(dec, ra, SKY_R) });
+    const rows = await (await fetch('data/sky.json')).json();
+    sky = rows.map(([id, name, kind, type, ra, dec, mag, dim, famous, term, alt]) =>
+      ({ id, name, kind, type, ra, dec, mag, dim, famous: !!famous, term, desig: [id, alt].filter(Boolean).join(' · '), pos: vec(dec, ra, SKY_R) }));
+  } catch { tag('The sky objects could not be loaded right now.'); }
   status();
 }
 
@@ -184,8 +156,8 @@ async function loadEvents() {
 
 function status() {
   const ev = events === null ? 'events unavailable right now' : `${events.length} events on Earth in the last 30 days`;
-  tag(`${ev} · ${sky.length} sky objects · as of ${new Date().toUTCString().slice(17, 22)} UTC`);
-  $('gSrc').textContent = 'Earth: NASA Blue Marble (GIBS). Events: NASA EONET, live. Stars to magnitude 6 and Messier objects: d3-celestial.';
+  tag(`${ev} · ${sky.length.toLocaleString('en-GB')} sky objects · as of ${new Date().toUTCString().slice(17, 22)} UTC`);
+  $('gSrc').textContent = 'Earth: NASA Blue Marble (GIBS). Events: NASA EONET, live. Stars to magnitude 6, galaxies, nebulae, clusters and constellations: d3-celestial.';
 }
 const tag = t => { $('gTag').textContent = t; };
 
@@ -224,28 +196,43 @@ function draw() {
     if (s.z > 1 || s.x < -1.05 || s.x > 1.05 || s.y < -1.05 || s.y > 1.05) return null;
     const x = (s.x + 1) / 2 * w, y = (1 - s.y) / 2 * h; hits.push({ x, y, r, item }); return [x, y];
   };
-  const label = (x, y, text, colour) => {
-    const tw = ctx.measureText(text).width, box = [x + 9, y - 8, tw + 4, 16];
+  const label = (x, y, text, colour, gap = 9) => {      /* gap: room for the selection ring */
+    const tw = ctx.measureText(text).width, box = [x + gap, y - 8, tw + 4, 16];
     if (labels.some(b => box[0] < b[0] + b[2] && b[0] < box[0] + box[2] && box[1] < b[1] + b[3] && b[1] < box[1] + box[3])) return;
     labels.push(box);
     ctx.fillStyle = 'rgba(5,8,13,.65)'; ctx.fillRect(box[0] - 2, box[1], box[2] + 2, box[3]);
-    ctx.fillStyle = colour; ctx.fillText(text, x + 10, y);
+    ctx.fillStyle = colour; ctx.fillText(text, x + gap + 1, y);
   };
 
-  /* sky: hidden behind the Earth; names for the famous ones when zoomed out */
+  /* constellation names, faint, when the lines are shown */
+  if (vis.lines && vis.labels && lines) {
+    ctx.fillStyle = 'rgba(126,106,69,.9)'; ctx.font = 'italic 11px Georgia, "Palatino Linotype", serif';
+    for (const c of cons) {
+      const dir = c.pos.clone().sub(cam).normalize(), b = cam.dot(dir), disc = b * b - (cam.lengthSq() - 1);
+      if (disc > 0 && -b - Math.sqrt(disc) > 0) continue;
+      const s = c.pos.clone().project(camera); if (s.z > 1 || Math.abs(s.x) > 1 || Math.abs(s.y) > 1) continue;
+      const t = c.name.toUpperCase();
+      ctx.fillText(t, (s.x + 1) / 2 * w - ctx.measureText(t).width / 2, (1 - s.y) / 2 * h);
+    }
+    ctx.font = '12px Georgia, "Palatino Linotype", serif';
+  }
+
+  /* sky: hidden behind the Earth; names for the famous ones when zoomed out; faint objects drawn smaller */
   for (const o of sky) {
     if (!vis[o.kind]) continue;
     const dir = o.pos.clone().sub(cam).normalize(), b = cam.dot(dir), disc = b * b - (cam.lengthSq() - 1);
     if (disc > 0 && -b - Math.sqrt(disc) > 0) continue;
     const at = place(o.pos, o, 9); if (!at) continue;
-    const [x, y] = at, sel = selected === o, hov = hover === o;
+    const [x, y] = at, sel = selected === o, hov = hover === o, big = o.famous || (o.mag != null && o.mag <= 9) || sel || hov, k = big ? 1 : 0.62;
+    ctx.globalAlpha = big ? 1 : 0.8;
     ctx.strokeStyle = ctx.fillStyle = sel || hov ? BRIGHT : o.kind === 'cluster' ? INK2 : BRASS;
-    ctx.lineWidth = 1.5;
-    if (o.kind === 'galaxy') { ctx.beginPath(); ctx.ellipse(x, y, 6, 3.6, -0.5, 0, 7); ctx.stroke(); }
-    else if (o.kind === 'nebula') { ctx.beginPath(); ctx.moveTo(x, y - 5); ctx.lineTo(x + 4, y); ctx.lineTo(x, y + 5); ctx.lineTo(x - 4, y); ctx.closePath(); ctx.fill(); }
-    else { ctx.beginPath(); ctx.arc(x, y, 2.6, 0, 7); ctx.fill(); }
+    ctx.lineWidth = big ? 1.5 : 1.1;
+    if (o.kind === 'galaxy') { ctx.beginPath(); ctx.ellipse(x, y, 6 * k, 3.6 * k, -0.5, 0, 7); ctx.stroke(); }
+    else if (o.kind === 'nebula') { ctx.beginPath(); ctx.moveTo(x, y - 5 * k); ctx.lineTo(x + 4 * k, y); ctx.lineTo(x, y + 5 * k); ctx.lineTo(x - 4 * k, y); ctx.closePath(); ctx.fill(); }
+    else { ctx.beginPath(); ctx.arc(x, y, 2.6 * k, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1;
     if (sel) { ctx.beginPath(); ctx.arc(x, y, 11, 0, 7); ctx.stroke(); }
-    if (sel || hov || (vis.labels && o.famous && dist > 2.4)) label(x, y, o.name, sel || hov ? BRIGHT : INK2);
+    if (sel || hov || (vis.labels && o.famous && dist > 2.4)) label(x, y, o.name, sel || hov ? BRIGHT : INK2, sel ? 14 : 9);
   }
 
   /* events: on the side of the Earth facing the camera */
@@ -258,7 +245,7 @@ function draw() {
     ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
     ctx.strokeStyle = 'rgba(5,8,13,.8)'; ctx.lineWidth = 1; ctx.stroke();
     if (sel) { ctx.strokeStyle = BRIGHT; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, r + 5, 0, 7); ctx.stroke(); }
-    if (sel || hover === e || (vis.labels && dist < 1.5)) label(x, y, e.name, sel || hover === e ? BRIGHT : INK2);
+    if (sel || hover === e || (vis.labels && dist < 1.5)) label(x, y, e.name, sel || hover === e ? BRIGHT : INK2, sel ? r + 8 : 9);
   }
 }
 
@@ -400,78 +387,6 @@ for (const c of document.querySelectorAll('[data-show]')) {
     const k = c.dataset.show;
     if (k === 'spin') return setSpin(!vis.spin);
     vis[k] = !vis[k]; c.setAttribute('aria-pressed', vis[k]);
+    if (k === 'lines' && lines) lines.visible = vis.lines;
   });
 }
-
-/* ---------- NASA Image and Video Library: live search ---------- */
-const API = 'https://images-api.nasa.gov/search';
-async function search(params) {
-  const u = new URL(API);
-  for (const [k, v] of Object.entries(params)) if (v !== '' && v != null) u.searchParams.set(k, v);
-  if (!u.searchParams.has('media_type')) u.searchParams.set('media_type', 'image');
-  let r;
-  try { r = await fetch(u); } catch { r = await fetch(u); }            /* one retry: an odd request fails to connect */
-  if (!r.ok) throw new Error(String(r.status));
-  const j = await r.json();
-  return { total: j.collection.metadata.total_hits, list: j.collection.items.map(i => {
-    const d = i.data[0];
-    return [d.nasa_id, d.title || 'Untitled', (d.date_created || '').slice(0, 10), d.center || '', d.photographer || d.secondary_creator || '',
-      (d.keywords || []).slice(0, 6), (d.description || '').replace(/\s+/g, ' ').trim(), d.media_type];
-  }) };
-}
-function openViewer([id, t, d, c, p, k, s, type]) {
-  $('vImg').dataset.id = id; $('vImg').dataset.try = 'medium'; $('vImg').src = `${A}${id}/${id}~medium.jpg`; $('vImg').alt = t;
-  $('vTitle').textContent = t; $('vDesc').textContent = s;
-  $('vFacts').innerHTML = (d ? `<dt>Date</dt><dd>${nice(d)}</dd>` : '') + (c ? `<dt>NASA centre</dt><dd>${CENTRES[c] || c} (${esc(c)})</dd>` : '') +
-    (type === 'video' ? '<dt>Type</dt><dd>Video (plays in the built page)</dd>' : '') +
-    (p ? `<dt>Photographer</dt><dd>${esc(p)}</dd>` : '') + `<dt>NASA ID</dt><dd class="mono">${esc(id)}</dd>`;
-  $('vKw').innerHTML = k.map(x => `<span class="tag">${esc(x)}</span>`).join('');
-  $('vFull').href = `${A}${id}/${id}~medium.jpg`;
-  $('viewer').showModal();
-}
-Object.assign(CENTRES, { JPL: 'Jet Propulsion Laboratory', KSC: 'Kennedy Space Center', MSFC: 'Marshall Space Flight Center',
-  HQ: 'NASA Headquarters', ARC: 'Ames Research Center', LARC: 'Langley Research Center', GRC: 'Glenn Research Center',
-  AFRC: 'Armstrong Flight Research Center', SSC: 'Stennis Space Center' });
-
-const lib = { page: 1, total: 0, busy: false, first: true };
-const sel = document.querySelectorAll('.libfilters select');
-const typeChips = document.querySelectorAll('.libfilters .seg .chip');
-function render(append, list) {
-  const start = append ? PICS.length : 0;
-  if (!append) PICS.length = 0;
-  PICS.push(...list);
-  const html = list.map((x, i) => `<button class="pic" data-j="${start + i}">
-      <span class="ph"><img src="${A}${x[0]}/${x[0]}~thumb.jpg" data-id="${esc(x[0])}" data-try="thumb" alt="${esc(x[1])}" loading="lazy"></span>
-      <span class="pt"><h3>${esc(x[1])}</h3><span class="meta">${x[2] ? nice(x[2]) : 'No date'} · ${esc(x[3] || 'NASA')}${x[7] === 'video' ? ' · Video' : ''}</span></span></button>`).join('');
-  append ? $('gallery').insertAdjacentHTML('beforeend', html) : ($('gallery').innerHTML = html);
-}
-async function libSearch(append = false) {
-  if (lib.busy) return;
-  const q = $('libQ').value.trim();
-  if (!q) { $('gallery').innerHTML = '<div class="state small" style="grid-column:1/-1">Type a place, a mission or a subject.</div>'; $('libCount').textContent = ''; return; }
-  lib.busy = true; lib.page = append ? lib.page + 1 : 1;
-  if (!append) { $('gallery').innerHTML = '<div class="state small" style="grid-column:1/-1">Searching NASA’s library…</div>'; $('libCount').textContent = ''; }
-  const centre = sel[0].value === 'Any' ? '' : sel[0].value.split(' ')[0];
-  const from = /^\d{4}$/.test(sel[1].value) ? sel[1].value : '', to = /^\d{4}$/.test(sel[2].value) ? sel[2].value : '';
-  try {
-    const r = await search({ q, center: centre, year_start: from, year_end: to, page: lib.page, page_size: 24,
-      media_type: typeChips[1].getAttribute('aria-pressed') === 'true' ? 'image,video' : 'image' });
-    lib.total = r.total;
-    if (!append && !r.list.length) $('gallery').innerHTML = `<div class="state small" style="grid-column:1/-1">No pictures found for “${esc(q)}”. Try fewer words or another spelling.</div>`;
-    else render(append, r.list);
-    const shown = PICS.length, cap = Math.min(lib.total, 10000);
-    $('libCount').textContent = lib.total ? `${lib.total.toLocaleString('en-GB')} found · showing ${shown}` : '';
-    document.querySelector('.more').hidden = shown >= cap;
-  } catch {
-    if (!append) $('gallery').innerHTML = '<div class="state small" style="grid-column:1/-1">NASA’s library can’t be reached right now. Try again in a moment.</div>';
-  }
-  lib.busy = false;
-}
-$('libQ').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); libSearch(); } });
-for (const c of document.querySelectorAll('.popular .chip')) c.addEventListener('click', () => libSearch());
-for (const s of sel) s.addEventListener('change', () => libSearch());
-typeChips.forEach((c, i) => c.addEventListener('click', () => { typeChips.forEach((x, j) => x.setAttribute('aria-pressed', i === j)); libSearch(); }));
-document.querySelector('.more .btn').addEventListener('click', () => libSearch(true));
-document.addEventListener('viewchange', e => { if (e.detail === 'library' && lib.first) { lib.first = false; libSearch(); } });
-/* the picture-tab button on the Earth map's place card searches straight away */
-document.addEventListener('click', e => { if (e.target.closest('.pop [data-q]')) { lib.first = false; libSearch(); } });

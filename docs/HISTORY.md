@@ -53,3 +53,16 @@ How NASA Data Projects came about, in order.
   solved starting from the previous frame, and the dots are drawn at 1.5× resolution rather than 2×.
 - The real data showed that NASA's list of near-Earth objects includes about 200 comets (Halley among them), which
   became their own colour on the map.
+
+## November 9, 2026 — Image Explorer, version 1
+
+- The plan was confirmed in the project's own chat (OpenLayers, eight GIBS layers, tabs, place search), and the
+  live services were checked first. The fire layers turned out to work only in the `epsg4326` projection, which set
+  the map's projection.
+- The first mock-up showed the daily satellite map. The developer found it disappointing (the gaps between
+  satellite passes, no detail down to houses) and asked for a globe like the solar system map, with pictures pinned
+  to places on Earth and to galaxies in the sky; the daily map was kept for following fires and storms.
+- NASA's event feed holds over 7,000 "open" events, most with no report in months; the globe shows those reported in
+  the last 30 days, about 35.
+- The globe mock-up was approved the same night and published with about 1,350 sky objects.
+

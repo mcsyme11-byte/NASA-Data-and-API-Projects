@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <!-- NASA Data Projects · Image Explorer · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
-<!-- Placeholder page: the project itself is built in its own chat (see README.md in this folder). -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Image Explorer · NASA Data Projects</title>
+  <meta name="description" content="The Earth from orbit on any day since 2000, a globe inside the real sky with NASA's events, galaxies and nebulae, and NASA's picture library.">
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.11.0/ol.css">
   <link rel="stylesheet" href="../shared/theme.css">
+  <link rel="stylesheet" href="../asteroid-tracker/tracker.css">
+  <link rel="stylesheet" href="explorer.css">
 </head>
 <body>
   <header class="topbar">
@@ -21,7 +24,7 @@
         <a href="../">Home</a>
         <a href="../asteroid-tracker/">Asteroids</a>
         <a href="../mars-data/">Mars</a>
-        <a href="../image-explorer/" aria-current="page">Images</a>
+        <a href="./" aria-current="page">Images</a>
       </nav>
     </div>
   </header>
@@ -30,19 +33,235 @@
     <div class="phead">
       <div class="eyebrow">Project 3</div>
       <h1>Image Explorer</h1>
-      <p class="lede">Search and filter NASA's pictures by date, place and mission, and slide through time over the whole Earth.</p>
+      <p class="lede">The Earth from orbit on any day since 2000, a globe inside the real sky with NASA's events, galaxies and nebulae, and NASA's picture library.</p>
     </div>
 
-    <div class="card">
-      <div class="shead" style="margin-top:0"><h2>Coming soon</h2><span class="pill info">Planned</span></div>
-      <p class="note">This page is being built. Data from NASA GIBS · NASA Image and Video Library.</p>
-      <p><a class="btn ghost" href="../">Back to all projects</a></p>
+    <div class="toolbar">
+      <nav class="tabs" aria-label="Image Explorer" role="tablist">
+        <button role="tab" aria-selected="true" aria-pressed="true" data-view="earth">Earth map</button>
+        <button role="tab" aria-selected="false" aria-pressed="false" data-view="globe">Globe</button>
+        <button role="tab" aria-selected="false" aria-pressed="false" data-view="library">Picture library</button>
+      </nav>
     </div>
+
+    <!-- ===================== EARTH MAP ===================== -->
+    <section id="view-earth">
+      <div class="datebar">
+        <button class="chip" id="dPrev" aria-label="Previous day">‹ Day</button>
+        <input type="date" id="dPick" aria-label="Date of the imagery">
+        <button class="chip" id="dNext" aria-label="Next day">Day ›</button>
+        <button class="chip" id="dLatest" aria-pressed="true">Latest</button>
+        <span class="grow"></span>
+        <select id="speed" aria-label="Playback speed">
+          <option value="1000">1 day a second</option>
+          <option value="500" selected>2 days a second</option>
+          <option value="250">4 days a second</option>
+        </select>
+        <button class="btn ghost play" id="play" aria-pressed="false">▶ Play</button>
+      </div>
+      <div class="slider">
+        <span class="end" id="sFrom"></span>
+        <input type="range" id="sDay" min="0" max="60" value="60" aria-label="Step through the last 60 days">
+        <span class="end" id="sTo"></span>
+      </div>
+
+      <div class="tiles" id="mapTiles">
+        <div class="tile"><div class="label">Date</div><div class="value" id="tDate">—</div><div class="note">UTC · one picture per day</div></div>
+        <div class="tile"><div class="label">Picture</div><div class="value" id="tBase">—</div><div class="note" id="tBaseNote">—</div></div>
+        <div class="tile"><div class="label">Satellite</div><div class="value" id="tSat">—</div><div class="note" id="tSatNote">—</div></div>
+        <div class="tile"><div class="label">On top</div><div class="value" id="tOver">—</div><div class="note" id="tOverNote">—</div></div>
+      </div>
+
+      <div class="explore" style="margin-top:22px">
+        <div class="side">
+          <div class="card place">
+            <h2>Find a place</h2>
+            <div class="placebox">
+              <label class="bigsearch">
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
+                <input type="search" id="placeQ" placeholder="A town, a country, or 51.1, -115.4" autocomplete="off" spellcheck="false"
+                  role="combobox" aria-expanded="false" aria-controls="placeList" aria-autocomplete="list" aria-label="Find a place or coordinates">
+              </label>
+              <ul class="suggest" id="placeList" role="listbox" hidden></ul>
+            </div>
+            <p class="note" style="margin:10px 0 0">Towns of 10,000 people or more, countries, or coordinates (latitude, longitude). Tap the map to see what is there.</p>
+          </div>
+
+          <div class="card">
+            <h2>Picture</h2>
+            <div class="lyr" id="baseList" role="radiogroup" aria-label="Picture"></div>
+          </div>
+
+          <div class="card">
+            <h2>On top</h2>
+            <div class="lyr multi" id="overList" aria-label="On top"></div>
+            <p class="note" style="margin:10px 0 0">Fires go with anything; the coloured layers show one at a time.</p>
+          </div>
+
+          <div class="card">
+            <h2>View</h2>
+            <div class="views">
+              <button class="chip" aria-pressed="true">World</button>
+              <button class="chip" disabled title="Coming in a later version">Arctic</button>
+              <button class="chip" disabled title="Coming in a later version">Antarctic</button>
+            </div>
+            <p class="note" style="margin:10px 0 0">Arctic and Antarctic views, which look straight down on the poles, come in a later version.</p>
+          </div>
+        </div>
+
+        <div class="mapcol">
+          <div class="frame mapframe">
+            <div id="map" aria-label="Map of the Earth, satellite imagery"></div>
+            <div class="maptag" id="mapTag"></div>
+            <div class="cursor" id="cursor" hidden></div>
+          </div>
+          <div class="legend" id="legend"></div>
+          <p class="note" id="mapSrc" style="margin:10px 0 0"></p>
+          <details class="howto">
+            <summary>How to read this</summary>
+            <p><b>One day at a time.</b> Each satellite photographs the Earth in strips as it circles, about 14 times a day, so
+              a day's picture is a patchwork. Dark wedges between strips are areas the satellite did not pass over that day.</p>
+            <p><b>Picture</b> is the base: a normal photograph (true colour), the Earth at night, or the ocean coloured by its
+              temperature. <b>On top</b> adds layers over it, each with its colour key under the map.</p>
+            <p><b>Play</b> steps through the days. Clouds move, fires spread and sea ice grows and shrinks with the seasons.</p>
+            <p><b>Latest</b> is the most recent full day. Some layers take a day or two longer to arrive; a blank map on the
+              newest days means that layer is not ready yet.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GLOBE ===================== -->
+    <section id="view-globe" hidden>
+      <div class="gbar">
+        <div class="seg" role="group" aria-label="Show on the globe">
+          <button class="chip" aria-pressed="true" data-show="events"><i class="key ev"></i>Events on Earth</button>
+          <button class="chip" aria-pressed="true" data-show="galaxy"><i class="key ga"></i>Galaxies</button>
+          <button class="chip" aria-pressed="true" data-show="nebula"><i class="key ne"></i>Nebulae</button>
+          <button class="chip" aria-pressed="true" data-show="cluster"><i class="key cl"></i>Star clusters</button>
+          <button class="chip" aria-pressed="true" data-show="lines">Constellations</button>
+          <button class="chip" aria-pressed="true" data-show="labels">Names</button>
+          <button class="chip" aria-pressed="true" data-show="spin">Turn slowly</button>
+        </div>
+        <div class="placebox gfind">
+          <label class="bigsearch">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
+            <input type="search" id="gQ" placeholder="Find: Andromeda, M42, wildfire…" autocomplete="off" spellcheck="false"
+              role="combobox" aria-expanded="false" aria-controls="gList" aria-autocomplete="list" aria-label="Find a sky object or an event">
+          </label>
+          <ul class="suggest" id="gList" role="listbox" hidden></ul>
+        </div>
+      </div>
+
+      <div class="gwrap">
+        <div class="frame globeframe" id="globeFrame">
+          <div id="globe" aria-label="A globe of the Earth inside the sky, with NASA events and the sky's best-known galaxies, nebulae and star clusters"></div>
+          <canvas id="gOver" aria-hidden="true"></canvas>
+          <div class="maptag" id="gTag">Loading the globe…</div>
+          <div class="gzoom">
+            <button class="chip" id="gIn" aria-label="Closer">+</button>
+            <button class="chip" id="gOut" aria-label="Farther">−</button>
+            <button class="chip" id="gHome" aria-label="Back to the starting view">⌂</button>
+          </div>
+        </div>
+        <aside class="card gcard" id="gCard" aria-live="polite">
+          <h2>Selected</h2>
+          <p class="note" style="margin:0">Tap a pin on the Earth or a marker in the sky. Zoom out to see the sky around the Earth.</p>
+        </aside>
+      </div>
+      <p class="note" id="gSrc" style="margin:10px 0 0"></p>
+      <details class="howto">
+        <summary>How to read this</summary>
+        <p><b>The Earth</b> is NASA's Blue Marble, a cloud-free picture made from many days of satellite images. It is
+          turned to match this moment: the stars behind it are the stars over each place right now.</p>
+        <p><b>Pins on the Earth</b> are natural events NASA has reported in the last 30 days (wildfires, volcanoes,
+          storms, ice), updated by NASA as they happen. <b>See it on the Earth map</b> opens the satellite picture for that day.</p>
+        <p><b>Markers in the sky</b> are galaxies (rings), nebulae (diamonds) and star clusters (dots) at their real
+          positions among the stars: every Messier object, every galaxy bright enough for a backyard telescope
+          (magnitude 12 or brighter) and every deep-sky object with a common name, about 1,350 in all. Famous ones are
+          named; hover over or tap any marker for its name. Each opens NASA's pictures of it.</p>
+        <p><b>Constellations</b> are drawn as faint lines between their main stars, to help find your way around.</p>
+        <p><b>Drag</b> to turn, <b>scroll or pinch</b> to zoom. Far objects are drawn on the sky's sphere; their true
+          distances run from hundreds to millions of light-years.</p>
+      </details>
+    </section>
+
+    <!-- ===================== PICTURE LIBRARY ===================== -->
+    <section id="view-library" hidden>
+      <label class="bigsearch">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
+        <input type="search" id="libQ" value="" placeholder="Search NASA's pictures: a place, mission or subject" aria-label="Search NASA's pictures" autocomplete="off">
+        <button class="qclear" id="libClear" type="button">Clear</button>
+      </label>
+      <div class="searchopts">
+        <div class="popular" aria-label="Missions">
+          <span class="note" style="margin-right:4px">Missions</span>
+          <button class="chip">Apollo 11</button><button class="chip">Hubble</button><button class="chip">James Webb</button>
+          <button class="chip">Artemis</button><button class="chip">Space Station</button><button class="chip">Voyager</button>
+          <button class="chip">Mars rovers</button>
+        </div>
+      </div>
+      <div class="libfilters">
+        <label>NASA centre
+          <select id="libCentre">
+            <option value="">Any</option><option>JSC · Johnson</option><option>GSFC · Goddard</option><option>JPL · Jet Propulsion Lab</option>
+            <option>KSC · Kennedy</option><option>MSFC · Marshall</option><option>HQ · Headquarters</option><option>ARC · Ames</option>
+          </select>
+        </label>
+        <label>From <select><option>Any year</option><option>1960</option><option>1980</option><option>2000</option><option>2020</option></select></label>
+        <label>To <select><option>Any year</option><option>2026</option><option>2020</option><option>2000</option></select></label>
+        <div class="seg" role="group" aria-label="Type">
+          <button class="chip" aria-pressed="true">Pictures</button>
+          <button class="chip" aria-pressed="false">Pictures and videos</button>
+        </div>
+      </div>
+
+      <div class="shead"><h2>Results</h2><span class="aside" id="libCount"></span></div>
+      <div class="gallery" id="gallery"><div class="state small" style="grid-column:1/-1">Type a place, a mission or a subject, or pick a mission.</div></div>
+      <div class="more" hidden><button class="btn ghost" type="button">Show more</button></div>
+      <details class="howto">
+        <summary>How to read this</summary>
+        <p><b>Dates</b> are the dates in NASA's records. For older pictures this can be the day the picture was added to the
+          library, not the day it was taken; the caption usually gives the real date.</p>
+        <p><b>NASA centre</b> is the NASA site that published the picture, for example Johnson Space Center (JSC) for
+          astronaut photos and Goddard (GSFC) for Earth-observing satellites.</p>
+        <p><b>Up to 10,000 results</b> can be shown for one search. A narrower search (a mission, a centre or a span of
+          years) reaches the rest.</p>
+      </details>
+    </section>
+
+    <dialog class="viewer" id="viewer" aria-label="Picture">
+      <button class="btn ghost vclose" id="vClose" type="button">Close</button>
+      <div class="vwrap">
+        <div class="vimg"><img id="vImg" alt=""></div>
+        <div class="vtext">
+          <h2>Picture</h2>
+          <h3 id="vTitle"></h3>
+          <dl class="facts" id="vFacts"></dl>
+          <p id="vDesc"></p>
+          <div class="kw" id="vKw"></div>
+          <p style="margin-top:16px"><a class="btn ghost" id="vFull" href="#" target="_blank" rel="noopener">Open large size</a></p>
+        </div>
+      </div>
+    </dialog>
 
     <footer class="footer">
       <p>Data courtesy of NASA. This is an independent project and isn't endorsed by NASA.</p>
+      <p>We acknowledge the use of imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of
+        NASA's Earth Science Data and Information System (ESDIS).</p>
+      <p>Pictures: NASA Image and Video Library. Events: NASA EONET. Place names: GeoNames (CC BY 4.0). Stars,
+        galaxies, nebulae and constellations: d3-celestial, © 2015 Olaf Frohn (BSD licence,
+        <a href="data/LICENSE-d3-celestial.txt">terms</a>). Map: OpenLayers. Globe: three.js.</p>
       <p class="credit"><strong>NASA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
     </footer>
   </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@10.11.0/dist/ol.js"></script>
+  <script src="app.js"></script>
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+                   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/" } }
+  </script>
+  <script type="module" src="globe.js"></script>
 </body>
 </html>

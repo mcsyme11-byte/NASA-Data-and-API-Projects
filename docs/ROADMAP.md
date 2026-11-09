@@ -32,29 +32,28 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
   "famous.json written").
 
-## 2. Image Explorer (plan confirmed Nov 9, 2026)
+## 2. Image Explorer (version 1 live Nov 9, 2026)
 
-- [ ] **Developer review of the mock-up** (`image-explorer/mockup.html` on the live site), several rounds expected:
-  the Earth map, the Globe tab (turning, zooming, events, sky markers, the selected card, find) and the live picture
-  library.
-- [ ] Globe: astronaut photos of Earth as pins (work out how to query eol.jsc.nasa.gov; daily file from GitHub
+- [ ] **Developer testing** at the developer's own pace, on a computer and a phone: the Earth map (dates, Play,
+  layers, place search, tapping the map), the Globe (turning, zooming, events, sky markers, find, the selected card,
+  "See it on the Earth map"), the Picture library (search, filters, Show more, the viewer).
+- [ ] Further rounds of changes to the globe, as the developer reviews it.
+- [ ] Globe: astronaut photos of Earth as pins (work out how to query eol.jsc.nasa.gov; a daily file from GitHub
   Actions, since web pages cannot call it).
-- [ ] Globe: confirm the positions of the hand-listed sky objects against SIMBAD; keep copies of the star and
-  Messier files in the repository; more famous Hubble and Webb targets if wanted.
-- [ ] Globe: sharper Earth close up (load finer Blue Marble tiles for the part in view), day and night shading if
-  wanted.
-- [ ] Build the page from the approved mock-up: `index.html`, `explorer.css`, `app.js`; remove `mockup.html`.
-- [ ] Each layer's dates read from GIBS (not a fixed lag), so the newest day and gaps are always right, without
+- [ ] Globe: confirm the four hand-listed sky positions against SIMBAD (see DATA-SOURCES.md).
+- [ ] Globe: sharper Earth close up (finer Blue Marble tiles for the part in view); day and night shading if wanted;
+  more objects (fainter galaxies) if wanted.
+- [ ] Earth map: each layer's dates read from GIBS rather than a fixed one-day lag for the MUR layers, without
   downloading the 5.8 MB layer list on every visit.
-- [ ] Colour keys drawn in the project's look from GIBS's colour maps, in place of GIBS's light legend images.
-- [ ] Arctic and Antarctic views (`epsg3413`, `epsg3031`).
-- [ ] Place list from GeoNames: build the file (cities, countries, mountains, lakes, rivers), credit GeoNames.
-- [ ] Live picture search: keywords, mission chips, NASA centre, years, pictures or pictures and videos, paging up
-  to NASA's 10,000-result limit; the viewer with the caption, details and all sizes; videos playable.
-- [ ] States: loading, no results, NASA out of reach, a missing picture, a layer with no picture for the day.
-- [ ] Shared parts used by both projects (tabs, "How to read this", the big search box) moved from
-  `asteroid-tracker/tracker.css` into `shared/theme.css`.
-- [ ] Checks at every width in DESIGN.md; keyboard use; reduced motion stops Play.
+- [ ] Earth map: colour keys drawn in the project's look from GIBS's colour maps, in place of GIBS's light legend images.
+- [ ] Earth map: Arctic and Antarctic views (`epsg3413`, `epsg3031`).
+- [ ] Place search: mountains, lakes, rivers and other natural features (GeoNames classes T and H).
+- [ ] Picture library: videos playable; all sizes of a picture listed in the viewer.
+- [ ] Shared parts used by both projects (tabs, "How to read this", the big search box, the tooltip) moved from
+  `asteroid-tracker/tracker.css` into `shared/theme.css`; the page still loads `tracker.css` for them.
+- [ ] Load OpenLayers and three.js from the repository rather than a CDN, so the page does not depend on jsDelivr.
+- [ ] Keyboard use of the globe's markers (today they are reached through Find). With reduced motion set, the globe
+  does not turn by itself and moves without animation; to be rechecked on a phone.
 
 ## 3. Mars Data (third)
 

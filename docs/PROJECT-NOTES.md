@@ -61,6 +61,10 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
   current sidereal time inside the real sky. Pins on the Earth: NASA EONET events (live) and, later, astronaut photos
   of Earth. Pins in the sky: all 110 Messier objects and famous Hubble and Webb targets, each opening NASA's pictures
   of it. Several rounds of mock-ups are expected.
+- **Decided Nov 9, 2026 (Image Explorer):** the developer approved the globe mock-up for publishing and asked to see
+  it with all the galaxies. Version 1 went live the same night with about 1,350 sky objects (every Messier object,
+  every named object and every galaxy to magnitude 12) and the constellations, the real place list (GeoNames) and the
+  live picture library. Further rounds of changes are expected.
 - **Not possible (Nov 9, 2026):** seeing individual houses. NASA's sharpest free imagery is about 30 m a pixel
   (Landsat) and the daily layers 250 m; houses need commercial imagery, which is neither NASA's nor free.
 

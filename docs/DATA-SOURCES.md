@@ -298,20 +298,38 @@ Checked Nov 9, 2026 (live requests from the published site):
   35 sea and lake ice, 1 storm), but only 35 with a report in the last 30 days. The globe asks for
   `status=open&days=30`.
 
-### Sky: stars and Messier objects, checked Nov 9, 2026
+### Sky: stars, galaxies, nebulae, clusters, constellations, checked Nov 9, 2026
 
-- From the d3-celestial project (Olaf Frohn, BSD licence) on GitHub, served through jsDelivr:
-  `data/stars.6.json` (5,044 stars to magnitude 6, with colour index `bv`) and `data/messier.json` (all 110 Messier
-  objects with designation, common name, type, magnitude and size in arcminutes).
-- Positions are given as `[right ascension, declination]` in degrees, with right ascension from −180 to 180
-  (M42 the Orion Nebula: 83.85, −5.45; M57: −76.6, that is 283.4°). Checked against known positions: Sirius
-  101.29, −16.72; M31 10.68, +41.27.
-- Types: `s`, `e`, `i` (spiral, elliptical, irregular galaxies, 40); `gc`, `oc`, `pos` (globular and open
-  clusters, groups of stars, 58); `pn`, `rn`, `sfr`, `snr` (nebulae, 12).
-- The built page keeps its own copy of these files in the repository rather than loading them from jsDelivr.
-- Famous Hubble and Webb targets outside the Messier list (Carina Nebula, Southern Ring Nebula, Stephan's Quintet,
-  the Magellanic Clouds and others) are listed by hand in the mock-up; their positions are to be confirmed against
-  the SIMBAD astronomical database before the page is built.
+- From the d3-celestial project (© 2015 Olaf Frohn, BSD 3-Clause licence, kept as
+  `image-explorer/data/LICENSE-d3-celestial.txt`), npm package `d3-celestial`, folder `data/`.
+- Positions are `[right ascension, declination]` in degrees, with right ascension from −180 to 180 (M42 the Orion
+  Nebula: 83.85, −5.45; M57: −76.6, that is 283.4°); the repository's files store 0 to 360. Checked against known
+  positions: Sirius 101.29, −16.72; M31 10.68, +41.27.
+- Files used: `stars.6.json` (5,044 stars to magnitude 6, with colour index), `messier.json` (110 Messier objects with
+  common names), `dsos.14.json` (15,809 deep-sky objects to magnitude 14, 10,336 of them galaxies),
+  `dsonames.json` (724 common names), `constellations.json` and `constellations.lines.json` (88 constellations, plus
+  Serpens drawn in two parts: 89 entries).
+- **Chosen for the globe** (`image-explorer/tools/build_sky.py`): every Messier object, every object with a common
+  name, and every galaxy of magnitude 12 or brighter (bright enough for a backyard telescope): 1,347 objects
+  (1,001 galaxies, 165 nebulae, 181 star clusters) on Nov 9, 2026.
+- Catalogue corrections made by the build: NGC 3372 named "Carina Nebula" (the catalogue says "η Car Nebula"),
+  NGC 3132 "Southern Ring Nebula" (the catalogue gives the name "Eight-Burst Planetary Nebula" to NGC 3132 and
+  "Southern Ring" to NGC 6563); objects split into several catalogue numbers (the Rosette Nebula, Stephan's Quintet)
+  keep the name on the first part and the number on the others; dark nebulae lose their magnitude, which describes
+  nothing visible.
+- Four famous targets are not in the catalogue and are listed by hand (J2000, degrees): the Cartwheel Galaxy (9.421,
+  −33.716), Westerlund 2 (156.0, −57.75), Cassiopeia A (350.85, +58.815) and Rho Ophiuchi (246.4, −23.45). To be
+  confirmed against SIMBAD (simbad.cds.unistra.fr).
+
+### Place names (GeoNames), checked Nov 9, 2026
+
+- GeoNames (geonames.org, CC BY 4.0) through the npm package `all-the-cities` 3.1.0 (MIT), which holds the 135,233
+  GeoNames places of 1,000 people or more with population and feature code.
+- `image-explorer/data/places.json` (`tools/build_places.mjs`): every place of 10,000 people or more and every
+  capital, 32,117 places (241 capitals), largest first, about 1.1 MB (about 0.5 MB as sent compressed). It loads the
+  first time the place search or the map is used.
+- Countries are found by their English names (the browser's `Intl.DisplayNames`) and shown around their capital.
+- Mountains, lakes and rivers are not in this list.
 
 ### Astronaut photos of Earth (Gateway to Astronaut Photography of Earth), checked Nov 9, 2026
 
@@ -319,15 +337,10 @@ Checked Nov 9, 2026 (live requests from the published site):
   the area shown. **Web pages cannot call it** (no CORS headers), so pins from it would come from a file refreshed
   by GitHub Actions, as the Asteroid Tracker's data is. How to query it is still to be worked out.
 
-### Place names (for the place search)
+### Place-name services not used
 
-- NASA's sources have no list of place names, so place search needs one of its own.
-- **OpenStreetMap's Nominatim service is not suitable:** its usage policy forbids search-as-you-type and allows at
-  most 1 request a second (checked Nov 9, 2026).
-- **Planned source: GeoNames** (download.geonames.org/export/dump), licensed CC BY 4.0, so pages credit
-  "GeoNames". `cities15000` (about 25,000 places of over 15,000 people, plus capitals) and countries, with mountains
-  (class T), lakes and rivers (class H) and other features to be chosen when the file is built, saved as one small
-  file in the repository, as the Asteroid Tracker does with its data.
+- **OpenStreetMap's Nominatim service** forbids search-as-you-type and allows at most 1 request a second (usage
+  policy, checked Nov 9, 2026), so the place list is a file in the repository instead.
 
 ## Using NASA material
 

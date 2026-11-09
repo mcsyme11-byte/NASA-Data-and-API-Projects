@@ -1,5 +1,19 @@
 # Change log
 
+## November 9, 2026 — Image Explorer version 1
+
+- **Live** at `image-explorer/`, from the approved mock-up; the mock-up files are removed. The home page lists the
+  project as live.
+- **Globe:** about 1,350 galaxies, nebulae and star clusters (every Messier object, every object with a common name
+  and every galaxy to magnitude 12), the 88 constellations drawn as faint lines with their names, 5,044 stars, all
+  from files kept in the repository (`image-explorer/data/`, built by `tools/build_sky.py`; d3-celestial, BSD
+  licence). Fainter objects are drawn smaller; famous ones are named.
+- **Place search:** 32,117 towns of 10,000 people or more and every capital (GeoNames), and countries by name, with
+  suggestions after every letter; tapping the map names the nearest town within about 100 km.
+- **Picture library:** live from the start, with an empty search box and a prompt.
+- Checked at 320–1440 px: no sideways scrolling, no script errors, and the "out of reach" messages when NASA cannot
+  be reached.
+
 ## November 9, 2026 — Asteroid Tracker: smooth spacecraft paths
 
 - Spacecraft paths on the map are drawn through every sample as smooth curves (centripetal Catmull-Rom) instead of
