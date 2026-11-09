@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<!-- NASA Data Projects · Image Explorer · mock-up for review · © 2026 Malcolm Syme · mcsyme11@gmail.com
+     The map is live (NASA GIBS tiles through OpenLayers); the picture results are a fixed sample from a real
+     NASA Image and Video Library search for "Iceland" (Nov 9, 2026). Replaced by the built page once approved. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image Explorer (mock-up) · NASA Data Projects</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#141B26">
+  <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.11.0/ol.css">
+  <link rel="stylesheet" href="../shared/theme.css">
+  <link rel="stylesheet" href="../asteroid-tracker/tracker.css">
+  <style>
+    /* ---- page-specific (moves to image-explorer/explorer.css in the built page) ---- */
+    .mocknote { margin-bottom: 22px; }
+    .mocknote b { font-weight: 400; color: var(--amber); text-transform: uppercase; letter-spacing: .22em; font-size: 11px; }
+
+    .datebar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .datebar input[type=date] { width: auto; min-width: 170px; text-align: center; }
+    .datebar .grow { flex: 1; }
+    .datebar .play { min-height: 36px; padding: 0 16px; font-size: 12.5px; }
+    .datebar select { width: auto; height: 36px; font-size: 14px; }
+
+    .slider { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; }
+    .slider input[type=range] { flex: 1; accent-color: var(--brass); height: 28px; min-width: 0; }
+    .slider .end { font-size: 12.5px; color: var(--muted); font-style: italic; white-space: nowrap; }
+
+    .explore { display: grid; grid-template-columns: 290px 1fr; gap: 22px; align-items: start; }
+    .side { display: flex; flex-direction: column; gap: 18px; }
+    .side .card { padding: 18px; }
+    .side h2 { margin: 0 0 10px; }
+    .lyr { display: flex; flex-direction: column; gap: 6px; }
+    .lyr button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 6px 12px; text-align: left;
+      background: transparent; border: 1px solid var(--line); border-radius: var(--r-btn); color: var(--ink2); font: 15px var(--font); cursor: pointer; }
+    .lyr button:hover { border-color: var(--brass-dim); }
+    .lyr button[aria-pressed="true"] { border-color: var(--brass); color: var(--ink); background: rgba(192, 160, 98, .07); }
+    .lyr .mark { flex: none; width: 14px; height: 14px; border: 1px solid var(--brass-dim); border-radius: 50%; }
+    .lyr.multi .mark { border-radius: 2px; }
+    .lyr button[aria-pressed="true"] .mark { background: var(--brass); border-color: var(--brass); box-shadow: inset 0 0 0 2px var(--card); }
+    .lyr .since { margin-left: auto; font-size: 11.5px; color: var(--muted); font-style: italic; white-space: nowrap; }
+    .views { display: flex; gap: 8px; flex-wrap: wrap; }
+    .views .chip[disabled] { color: var(--faint); cursor: default; }
+
+    .placebox { position: relative; }
+    .placebox .bigsearch { height: 48px; padding: 0 12px; }
+    .placebox .bigsearch input { font-size: 16px; }
+    .suggest { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20; margin: 0; padding: 4px 0; list-style: none;
+      background: var(--bg2); border: 1px solid var(--brass-dim); border-radius: var(--r-btn); max-height: 300px; overflow-y: auto; }
+    .suggest li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 12px; cursor: pointer; }
+    .suggest li[aria-selected="true"], .suggest li:hover { background: rgba(192, 160, 98, .10); }
+    .suggest li .k { font-size: 12px; color: var(--muted); font-style: italic; white-space: nowrap; }
+    .suggest li mark { background: none; color: var(--brass-bright); }
+
+    .mapframe { position: relative; height: 560px; }
+    #map { position: absolute; inset: 0; }
+    .ol-zoom { top: 10px; left: auto; right: 10px; }
+    .ol-control button { background: rgba(15, 21, 32, .9); color: var(--brass); border: 1px solid var(--brass-dim); border-radius: var(--r-btn);
+      font-family: var(--font); width: 32px; height: 32px; margin: 2px; }
+    .ol-control button:hover, .ol-control button:focus { background: var(--bg2); color: var(--brass-bright); outline: none; }
+    .ol-control { background: none; padding: 0; }
+    .ol-scale-line { left: 10px; bottom: 10px; background: rgba(15, 21, 32, .85); border-radius: var(--r-btn); padding: 3px 6px; }
+    .ol-scale-line-inner { border-color: var(--brass-dim); color: var(--ink2); font: 11px var(--font); }
+    .maptag { position: absolute; left: 10px; top: 10px; z-index: 2; background: rgba(15, 21, 32, .88); border: 1px solid var(--brass-dim);
+      border-radius: var(--r-btn); padding: 6px 10px; font-size: 13px; color: var(--ink2); pointer-events: none; }
+    .maptag strong { font-weight: 400; color: var(--brass-bright); }
+    .cursor { position: absolute; right: 10px; bottom: 10px; z-index: 2; background: rgba(15, 21, 32, .85); border-radius: var(--r-btn);
+      padding: 3px 8px; font: 12px var(--mono); color: var(--ink2); pointer-events: none; }
+
+    .pop { min-width: 230px; max-width: 280px; background: var(--bg2); border: 1px solid var(--brass-dim); border-radius: var(--r-card);
+      padding: 12px 14px; color: var(--ink); transform: translate(-50%, calc(-100% - 14px)); font-size: 14px; }
+    .pop::after { content: ""; position: absolute; left: 50%; bottom: -7px; width: 12px; height: 12px; margin-left: -6px; background: var(--bg2);
+      border-right: 1px solid var(--brass-dim); border-bottom: 1px solid var(--brass-dim); transform: rotate(45deg); }
+    .pop .eyebrow { font-size: 10px; letter-spacing: .26em; }
+    .pop .where { font-size: 17px; margin: 2px 0; }
+    .pop .ll { font: 12px var(--mono); color: var(--muted); }
+    .pop .btn { width: 100%; min-height: 36px; margin-top: 10px; font-size: 12px; letter-spacing: .16em; }
+    .pop .x { position: absolute; top: 6px; right: 8px; background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer; }
+
+    .legend { margin-top: 12px; display: grid; gap: 10px; }
+    .legend .row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; }
+    .legend .row span { font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); }
+    .legend img { width: 100%; max-width: 420px; height: auto; display: block; }
+    .firekey { display: inline-flex; align-items: center; gap: 8px; color: var(--ink2); font-size: 13px; }
+    .firekey i { width: 10px; height: 10px; border-radius: 50%; background: #E8763A; box-shadow: 0 0 0 2px rgba(232, 118, 58, .35); }
+
+    /* picture library */
+    .libfilters { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 14px; }
+    .libfilters label { display: flex; align-items: center; gap: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); }
+    .libfilters select { width: auto; min-width: 120px; text-transform: none; letter-spacing: 0; }
+    .gallery { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .pic { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-top-color: var(--brass-dim);
+      border-radius: var(--r-card); overflow: hidden; color: var(--ink); text-align: left; padding: 0; font: inherit; cursor: pointer; }
+    .pic:hover { border-color: var(--brass-dim); }
+    .pic:hover h3 { color: var(--brass-bright); }
+    .pic .ph { aspect-ratio: 4 / 3; background: var(--deep); overflow: hidden; }
+    .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pic .pt { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
+    .pic h3 { margin: 0; font-size: 15.5px; font-weight: 400; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .pic .meta { font-size: 12.5px; color: var(--muted); font-style: italic; }
+
+    dialog.viewer { width: min(1100px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; background: var(--card); color: var(--ink);
+      border: 1px solid var(--brass-dim); border-radius: var(--r-card); }
+    dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
+    .vwrap { display: grid; grid-template-columns: 1.5fr 1fr; }
+    .vimg { background: var(--deep); display: flex; align-items: center; justify-content: center; min-height: 320px; }
+    .vimg img { max-width: 100%; max-height: calc(100vh - 80px); display: block; }
+    .vtext { padding: 22px; overflow-y: auto; max-height: calc(100vh - 34px); }
+    .vtext h2 { margin-top: 0; }
+    .vtext h3 { font-size: 21px; font-weight: 400; margin: 0 0 12px; line-height: 1.3; }
+    .vtext p { color: var(--ink2); font-size: 15px; }
+    .facts { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; margin: 0 0 14px; font-size: 14px; }
+    .facts dt { font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); padding-top: 3px; }
+    .facts dd { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+    .kw { display: flex; flex-wrap: wrap; gap: 6px; }
+    .kw .tag { color: var(--ink2); }
+    .vclose { position: absolute; top: 10px; right: 10px; z-index: 2; }
+    .vclose.btn { min-height: 34px; width: auto; padding: 0 12px; font-size: 12px; }
+
+    @media (max-width: 1024px) {
+      .explore { grid-template-columns: 1fr; }
+      .side { display: grid; grid-template-columns: 1fr 1fr; }
+      .side .card.place { grid-column: 1 / -1; }
+      .vwrap { grid-template-columns: 1fr; }
+      .vtext { max-height: none; }
+      .vimg img { max-height: 60vh; }
+    }
+    @media (max-width: 760px) {
+      .side { grid-template-columns: 1fr; }
+      .mapframe { height: 420px; }
+      .datebar input[type=date] { flex: 1; min-width: 0; }
+      .datebar .grow { display: none; }
+      .datebar .play { flex: 1; width: auto; }
+      .legend .row { grid-template-columns: 1fr; gap: 4px; }
+      .libfilters label { width: 100%; justify-content: space-between; }
+      .libfilters select { flex: 1; max-width: 240px; }
+      .gallery { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .pic .pt { padding: 10px; }
+      .pic h3 { font-size: 14px; }
+      dialog.viewer { width: 100vw; max-width: 100vw; max-height: 100vh; height: 100vh; margin: 0; border-radius: 0; }
+      .vtext { padding: 16px; }
+    }
+    @media (max-width: 400px) { .gallery { grid-template-columns: 1fr; } .mapframe { height: 360px; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg>
+        NASA Data Projects
+      </a>
+      <nav class="nav" aria-label="Projects">
+        <a href="../">Home</a>
+        <a href="../asteroid-tracker/">Asteroids</a>
+        <a href="../mars-data/">Mars</a>
+        <a href="./" aria-current="page">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="phead">
+      <div class="eyebrow">Project 3</div>
+      <h1>Image Explorer</h1>
+      <p class="lede">The whole Earth from orbit on any day since 2000, and NASA's picture library searchable by place, mission and year.</p>
+    </div>
+
+    <div class="notice warn mocknote">
+      <span><b>Mock-up for review</b> · The map shows live NASA imagery. The picture results are a fixed sample from a
+      real library search for “Iceland”. The place search knows a short sample list; the built page carries the full list.</span>
+    </div>
+
+    <div class="toolbar">
+      <nav class="tabs" aria-label="Image Explorer" role="tablist">
+        <button role="tab" aria-selected="true" aria-pressed="true" data-view="earth">Earth map</button>
+        <button role="tab" aria-selected="false" aria-pressed="false" data-view="library">Picture library</button>
+      </nav>
+    </div>
+
+    <!-- ===================== EARTH MAP ===================== -->
+    <section id="view-earth">
+      <div class="datebar">
+        <button class="chip" id="dPrev" aria-label="Previous day">‹ Day</button>
+        <input type="date" id="dPick" aria-label="Date of the imagery">
+        <button class="chip" id="dNext" aria-label="Next day">Day ›</button>
+        <button class="chip" id="dLatest" aria-pressed="true">Latest</button>
+        <span class="grow"></span>
+        <select id="speed" aria-label="Playback speed">
+          <option value="1000">1 day a second</option>
+          <option value="500" selected>2 days a second</option>
+          <option value="250">4 days a second</option>
+        </select>
+        <button class="btn ghost play" id="play" aria-pressed="false">▶ Play</button>
+      </div>
+      <div class="slider">
+        <span class="end" id="sFrom"></span>
+        <input type="range" id="sDay" min="0" max="60" value="60" aria-label="Step through the last 60 days">
+        <span class="end" id="sTo"></span>
+      </div>
+
+      <div class="tiles" id="mapTiles">
+        <div class="tile"><div class="label">Date</div><div class="value" id="tDate">—</div><div class="note">UTC · one picture per day</div></div>
+        <div class="tile"><div class="label">Picture</div><div class="value" id="tBase">—</div><div class="note" id="tBaseNote">—</div></div>
+        <div class="tile"><div class="label">Satellite</div><div class="value" id="tSat">—</div><div class="note" id="tSatNote">—</div></div>
+        <div class="tile"><div class="label">On top</div><div class="value" id="tOver">—</div><div class="note" id="tOverNote">—</div></div>
+      </div>
+
+      <div class="explore" style="margin-top:22px">
+        <div class="side">
+          <div class="card place">
+            <h2>Find a place</h2>
+            <div class="placebox">
+              <label class="bigsearch">
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
+                <input type="search" id="placeQ" placeholder="A place, or 64.1, -21.9" autocomplete="off" spellcheck="false"
+                  role="combobox" aria-expanded="false" aria-controls="placeList" aria-autocomplete="list" aria-label="Find a place or coordinates">
+              </label>
+              <ul class="suggest" id="placeList" role="listbox" hidden></ul>
+            </div>
+            <p class="note" style="margin:10px 0 0">Names or coordinates (latitude, longitude). Tap the map to see what is there.</p>
+          </div>
+
+          <div class="card">
+            <h2>Picture</h2>
+            <div class="lyr" id="baseList" role="radiogroup" aria-label="Picture"></div>
+          </div>
+
+          <div class="card">
+            <h2>On top</h2>
+            <div class="lyr multi" id="overList" aria-label="On top"></div>
+          </div>
+
+          <div class="card">
+            <h2>View</h2>
+            <div class="views">
+              <button class="chip" aria-pressed="true">World</button>
+              <button class="chip" disabled title="In the built page">Arctic</button>
+              <button class="chip" disabled title="In the built page">Antarctic</button>
+            </div>
+            <p class="note" style="margin:10px 0 0">The Arctic and Antarctic views look straight down on the poles, where the world view stretches them.</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="frame mapframe">
+            <div id="map" aria-label="Map of the Earth, satellite imagery"></div>
+            <div class="maptag" id="mapTag"></div>
+            <div class="cursor" id="cursor" hidden></div>
+          </div>
+          <div class="legend" id="legend"></div>
+          <p class="note" id="mapSrc" style="margin:10px 0 0"></p>
+          <details class="howto">
+            <summary>How to read this</summary>
+            <p><b>One day at a time.</b> Each satellite photographs the Earth in strips as it circles, about 14 times a day, so
+              a day's picture is a patchwork. Dark wedges between strips are areas the satellite did not pass over that day.</p>
+            <p><b>Picture</b> is the base: a normal photograph (true colour), the Earth at night, or the ocean coloured by its
+              temperature. <b>On top</b> adds layers over it, each with its colour key under the map.</p>
+            <p><b>Play</b> steps through the days. Clouds move, fires spread and sea ice grows and shrinks with the seasons.</p>
+            <p><b>Latest</b> is the most recent full day. Some layers take a day or two longer to arrive; a blank map on the
+              newest days means that layer is not ready yet.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PICTURE LIBRARY ===================== -->
+    <section id="view-library" hidden>
+      <label class="bigsearch">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
+        <input type="search" id="libQ" value="Iceland" placeholder="Search NASA's pictures: a place, mission or subject" aria-label="Search NASA's pictures" autocomplete="off">
+        <button class="qclear" id="libClear" type="button">Clear</button>
+      </label>
+      <div class="searchopts">
+        <div class="popular" aria-label="Missions">
+          <span class="note" style="margin-right:4px">Missions</span>
+          <button class="chip">Apollo 11</button><button class="chip">Hubble</button><button class="chip">James Webb</button>
+          <button class="chip">Artemis</button><button class="chip">Space Station</button><button class="chip">Voyager</button>
+          <button class="chip">Mars rovers</button>
+        </div>
+      </div>
+      <div class="libfilters">
+        <label>NASA centre
+          <select id="libCentre">
+            <option value="">Any</option><option>JSC · Johnson</option><option>GSFC · Goddard</option><option>JPL · Jet Propulsion Lab</option>
+            <option>KSC · Kennedy</option><option>MSFC · Marshall</option><option>HQ · Headquarters</option><option>ARC · Ames</option>
+          </select>
+        </label>
+        <label>From <select><option>Any year</option><option>1960</option><option>1980</option><option>2000</option><option>2020</option></select></label>
+        <label>To <select><option>Any year</option><option>2026</option><option>2020</option><option>2000</option></select></label>
+        <div class="seg" role="group" aria-label="Type">
+          <button class="chip" aria-pressed="true">Pictures</button>
+          <button class="chip" aria-pressed="false">Pictures and videos</button>
+        </div>
+      </div>
+
+      <div class="shead"><h2>Results</h2><span class="aside" id="libCount"></span></div>
+      <div class="gallery" id="gallery"></div>
+      <div class="more"><button class="btn ghost" type="button">Show more</button></div>
+      <details class="howto">
+        <summary>How to read this</summary>
+        <p><b>Dates</b> are the dates in NASA's records. For older pictures this can be the day the picture was added to the
+          library, not the day it was taken; the caption usually gives the real date.</p>
+        <p><b>NASA centre</b> is the NASA site that published the picture, for example Johnson Space Center (JSC) for
+          astronaut photos and Goddard (GSFC) for Earth-observing satellites.</p>
+        <p><b>Up to 10,000 results</b> can be shown for one search. A narrower search (a mission, a centre or a span of
+          years) reaches the rest.</p>
+      </details>
+    </section>
+
+    <dialog class="viewer" id="viewer" aria-label="Picture">
+      <button class="btn ghost vclose" id="vClose" type="button">Close</button>
+      <div class="vwrap">
+        <div class="vimg"><img id="vImg" alt=""></div>
+        <div class="vtext">
+          <h2>Picture</h2>
+          <h3 id="vTitle"></h3>
+          <dl class="facts" id="vFacts"></dl>
+          <p id="vDesc"></p>
+          <div class="kw" id="vKw"></div>
+          <p style="margin-top:16px"><a class="btn ghost" id="vFull" href="#" target="_blank" rel="noopener">Open large size</a></p>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="footer">
+      <p>Data courtesy of NASA. This is an independent project and isn't endorsed by NASA.</p>
+      <p>We acknowledge the use of imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of
+        NASA's Earth Science Data and Information System (ESDIS).</p>
+      <p>Pictures: NASA Image and Video Library. Place names: GeoNames (CC BY 4.0). Map: OpenLayers.</p>
+      <p class="credit"><strong>NASA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@10.11.0/dist/ol.js"></script>
+  <script>
+  'use strict';
+  /* ---------- layers (GIBS, EPSG:4326; checked against GetCapabilities Nov 9, 2026) ---------- */
+  const GIBS = 'https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/';
+  const LEVELS = { '250m': 8, '500m': 7, '1km': 6, '2km': 5 };
+  const BASES = [
+    { id: 'truecolor', name: 'True colour', layer: 'MODIS_Terra_CorrectedReflectance_TrueColor', ext: 'jpg', set: '250m',
+      since: 2000, sat: 'Terra', inst: 'MODIS camera', note: 'A normal photograph' },
+    { id: 'night', name: 'Night lights', layer: 'VIIRS_NOAA20_DayNightBand', ext: 'png', set: '1km',
+      since: 2018, sat: 'NOAA-20', inst: 'VIIRS day/night band', note: 'Cities, fires and moonlit cloud',
+      legend: 'VIIRS_SNPP_DayNightBand_ENCC' },
+    { id: 'sst', name: 'Sea temperature', layer: 'GHRSST_L4_MUR_Sea_Surface_Temperature', ext: 'png', set: '1km',
+      since: 2002, sat: 'Several', inst: 'combined daily (MUR)', note: 'Ocean surface, °C', legend: 'GHRSST_Sea_Surface_Temperature' },
+  ];
+  const OVERS = [
+    { id: 'fires', name: 'Fires', layer: 'MODIS_Combined_Thermal_Anomalies_All', set: '1km', vector: true, since: 2002 },
+    { id: 'snow', name: 'Snow', layer: 'MODIS_Terra_NDSI_Snow_Cover', ext: 'png', set: '500m', since: 2000, legend: 'MODIS_NDSI_Snow_Cover' },
+    { id: 'clouds', name: 'Clouds', layer: 'MODIS_Terra_Cloud_Top_Temp_Day', ext: 'png', set: '2km', since: 2000, legend: 'MODIS_Cloud_Top_Temp', opacity: .75 },
+    { id: 'smoke', name: 'Smoke and dust', layer: 'MODIS_Terra_Aerosol', ext: 'png', set: '2km', since: 2000, legend: 'MODIS_VIIRS_AOD', opacity: .8 },
+    { id: 'ice', name: 'Sea ice', layer: 'GHRSST_L4_MUR_Sea_Ice_Concentration', ext: 'png', set: '1km', since: 2002, legend: 'GHRSST_Sea_Ice_Concentration' },
+  ];
+
+  /* ---------- dates ---------- */
+  const DAY = 864e5;
+  const iso = t => new Date(t).toISOString().slice(0, 10);
+  const LATEST = iso(Date.now() - DAY);                     // the last full UTC day
+  const nice = s => new Date(s + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  let date = LATEST;
+
+  /* ---------- map ---------- */
+  const proj = ol.proj.get('EPSG:4326');
+  function grid(set) {
+    const res = []; for (let z = 0; z <= LEVELS[set]; z++) res.push(0.5625 / 2 ** z);
+    return new ol.tilegrid.TileGrid({ origin: [-180, 90], extent: [-180, -90, 180, 90], resolutions: res, tileSize: 512 });
+  }
+  function rasterSource(L) {
+    return new ol.source.XYZ({
+      projection: proj, tileGrid: grid(L.set), crossOrigin: 'anonymous', transition: 150,
+      tileUrlFunction: c => `${GIBS}${L.layer}/default/${date}/${L.set}/${c[0]}/${c[2]}/${c[1]}.${L.ext}`,
+    });
+  }
+  const fireStyle = new ol.style.Style({ image: new ol.style.Circle({ radius: 3,
+    fill: new ol.style.Fill({ color: '#E8763A' }), stroke: new ol.style.Stroke({ color: 'rgba(232,118,58,.35)', width: 3 }) }) });
+  function vectorSource(L) {
+    return new ol.source.VectorTile({
+      projection: proj, tileGrid: grid(L.set), format: new ol.format.MVT(),
+      tileUrlFunction: c => `${GIBS}${L.layer}/default/${date}/${L.set}/${c[0]}/${c[2]}/${c[1]}.mvt`,
+    });
+  }
+  const layers = {};
+  for (const L of BASES) layers[L.id] = new ol.layer.Tile({ source: rasterSource(L), visible: L.id === 'truecolor' });
+  for (const L of OVERS) layers[L.id] = L.vector
+    ? new ol.layer.VectorTile({ source: vectorSource(L), style: fireStyle, visible: false, declutter: false })
+    : new ol.layer.Tile({ source: rasterSource(L), visible: false, opacity: L.opacity || 1 });
+
+  const popEl = document.createElement('div'); popEl.className = 'pop';
+  const popup = new ol.Overlay({ element: popEl, positioning: 'bottom-center', stopEvent: true, autoPan: { animation: { duration: 200 } } });
+  const map = new ol.Map({
+    target: 'map',
+    layers: [...BASES.map(L => layers[L.id]), ...OVERS.map(L => layers[L.id])],
+    overlays: [popup],
+    controls: ol.control.defaults.defaults({ attribution: false, rotate: false }).extend([new ol.control.ScaleLine()]),
+    view: new ol.View({ projection: proj, center: [-20, 55], zoom: 2, minZoom: 1, maxZoom: 10, extent: [-180, -90, 180, 90], constrainOnlyCenter: true }),
+  });
+  map.getView().fit([-180, -60, 180, 80], { size: map.getSize(), padding: [10, 10, 10, 10] });
+
+  function refreshSources() {
+    for (const L of [...BASES, ...OVERS]) layers[L.id].getSource().refresh();
+  }
+
+  /* ---------- layer pickers ---------- */
+  let base = 'truecolor'; const on = new Set();
+  const baseList = document.getElementById('baseList'), overList = document.getElementById('overList');
+  baseList.innerHTML = BASES.map(L => `<button role="radio" aria-checked="${L.id === base}" aria-pressed="${L.id === base}" data-id="${L.id}"><span class="mark"></span>${L.name}<span class="since">from ${L.since}</span></button>`).join('');
+  overList.innerHTML = OVERS.map(L => `<button aria-pressed="false" data-id="${L.id}"><span class="mark"></span>${L.name}<span class="since">from ${L.since}</span></button>`).join('');
+  baseList.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    base = b.dataset.id;
+    for (const x of baseList.children) { const s = x.dataset.id === base; x.setAttribute('aria-pressed', s); x.setAttribute('aria-checked', s); }
+    for (const L of BASES) layers[L.id].setVisible(L.id === base);
+    update();
+  });
+  overList.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const id = b.dataset.id; on.has(id) ? on.delete(id) : on.add(id);
+    b.setAttribute('aria-pressed', on.has(id)); layers[id].setVisible(on.has(id));
+    update();
+  });
+
+  /* ---------- tiles, legend, labels ---------- */
+  const $ = id => document.getElementById(id);
+  function update() {
+    const B = BASES.find(L => L.id === base), O = OVERS.filter(L => on.has(L.id));
+    $('tDate').textContent = nice(date);
+    $('tBase').textContent = B.name; $('tBaseNote').textContent = B.note;
+    $('tSat').textContent = B.sat; $('tSatNote').textContent = B.inst;
+    $('tOver').textContent = O.length ? O.length + (O.length === 1 ? ' layer' : ' layers') : 'Nothing';
+    $('tOverNote').textContent = O.length ? O.map(L => L.name).join(' · ') : 'Add fires, snow, clouds…';
+    $('mapTag').innerHTML = `<strong>${nice(date)}</strong> · ${B.name}${O.length ? ' + ' + O.map(L => L.name.toLowerCase()).join(', ') : ''}`;
+    const rows = [];
+    if (B.legend) rows.push(`<div class="row"><span>${B.name}</span><img src="https://gibs.earthdata.nasa.gov/legends/${B.legend}_H.svg" alt="Colour key for ${B.name}"></div>`);
+    for (const L of O) rows.push(L.vector
+      ? `<div class="row"><span>${L.name}</span><span class="firekey"><i></i>A fire or other hot spot seen that day</span></div>`
+      : `<div class="row"><span>${L.name}</span><img src="https://gibs.earthdata.nasa.gov/legends/${L.legend}_H.svg" alt="Colour key for ${L.name}"></div>`);
+    $('legend').innerHTML = rows.join('');
+    $('mapSrc').textContent = `Imagery: NASA GIBS · ${[B, ...O].map(L => L.layer).join(', ')}`;
+    $('dPick').value = date; $('dLatest').setAttribute('aria-pressed', date === LATEST);
+    $('dNext').disabled = date >= LATEST;
+    const from = Date.parse(LATEST) - 60 * DAY;
+    $('sFrom').textContent = nice(iso(from)); $('sTo').textContent = 'Latest';
+    $('sDay').value = Math.max(0, Math.round((Date.parse(date) - from) / DAY));
+  }
+  function setDate(d) {
+    if (d > LATEST) d = LATEST; if (d < '2000-02-24') d = '2000-02-24';
+    if (d === date) return; date = d; refreshSources(); update();
+  }
+
+  $('dPick').max = LATEST; $('dPick').min = '2000-02-24';
+  $('dPick').addEventListener('change', e => e.target.value && setDate(e.target.value));
+  $('dPrev').addEventListener('click', () => setDate(iso(Date.parse(date) - DAY)));
+  $('dNext').addEventListener('click', () => setDate(iso(Date.parse(date) + DAY)));
+  $('dLatest').addEventListener('click', () => setDate(LATEST));
+  $('sDay').addEventListener('input', e => setDate(iso(Date.parse(LATEST) - (60 - +e.target.value) * DAY)));
+
+  /* play: one step per tick; waits for the map to finish drawing before the next day */
+  let timer = null;
+  function stop() { clearTimeout(timer); timer = null; $('play').textContent = '▶ Play'; $('play').setAttribute('aria-pressed', 'false'); }
+  function tick() {
+    if (date >= LATEST) return stop();
+    setDate(iso(Date.parse(date) + DAY));
+    map.once('rendercomplete', () => { if (timer) timer = setTimeout(tick, +$('speed').value); });
+  }
+  $('play').addEventListener('click', () => {
+    if (timer) return stop();
+    if (date >= LATEST) setDate(iso(Date.parse(LATEST) - 30 * DAY));
+    $('play').textContent = '❚❚ Pause'; $('play').setAttribute('aria-pressed', 'true');
+    timer = setTimeout(tick, 50);
+  });
+
+  /* ---------- places (sample list; the built page uses GeoNames) ---------- */
+  const PLACES = [
+    ['Iceland', 'Country', 64.96, -19.02], ['Reykjavík', 'Iceland', 64.15, -21.94], ['Vatnajökull', 'Glacier, Iceland', 64.42, -16.83],
+    ['Canada', 'Country', 56.13, -106.35], ['Calgary', 'Alberta, Canada', 51.05, -114.07], ['Vancouver', 'British Columbia, Canada', 49.28, -123.12],
+    ['Banff', 'Alberta, Canada', 51.18, -115.57], ['Mount Everest', 'Mountain, Nepal · China', 27.99, 86.93], ['Sahara', 'Desert, Africa', 23.42, 12.0],
+    ['Amazon River', 'River, South America', -3.4, -60.0], ['Hawaii', 'Islands, United States', 20.8, -156.3], ['Cape Canaveral', 'Florida, United States', 28.39, -80.6],
+    ['Houston', 'Texas, United States', 29.76, -95.37], ['Greenland', 'Island, Denmark', 72.0, -40.0], ['Antarctica', 'Continent', -82.86, 135.0],
+    ['Great Barrier Reef', 'Reef, Australia', -18.29, 147.7], ['Sydney', 'Australia', -33.87, 151.21], ['Tokyo', 'Japan', 35.68, 139.69],
+    ['London', 'United Kingdom', 51.51, -0.13], ['Lake Baikal', 'Lake, Russia', 53.5, 108.2], ['Grand Canyon', 'Arizona, United States', 36.1, -112.1],
+  ];
+  const fmtLL = (lat, lon) => `${Math.abs(lat).toFixed(2)}° ${lat >= 0 ? 'N' : 'S'}, ${Math.abs(lon).toFixed(2)}° ${lon >= 0 ? 'E' : 'W'}`;
+  function parseLL(q) {
+    const m = q.trim().match(/^(-?\d{1,2}(?:\.\d+)?)\s*°?\s*([NS])?[\s,]+(-?\d{1,3}(?:\.\d+)?)\s*°?\s*([EW])?$/i);
+    if (!m) return null;
+    let lat = +m[1], lon = +m[3];
+    if (m[2] && /s/i.test(m[2])) lat = -Math.abs(lat); if (m[4] && /w/i.test(m[4])) lon = -Math.abs(lon);
+    return Math.abs(lat) <= 90 && Math.abs(lon) <= 180 ? [lat, lon] : null;
+  }
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const q = $('placeQ'), list = $('placeList'); let hits = [], sel = -1;
+  function suggest() {
+    const s = q.value.trim(); hits = []; sel = -1;
+    if (!s) { list.hidden = true; q.setAttribute('aria-expanded', 'false'); return; }
+    const ll = parseLL(s);
+    if (ll) hits.push({ name: fmtLL(ll[0], ll[1]), kind: 'Coordinates', lat: ll[0], lon: ll[1] });
+    const f = fold(s);
+    for (const [n, k, lat, lon] of PLACES) {
+      const i = fold(n).indexOf(f);
+      if (i === 0 || (i > 0 && fold(n)[i - 1] === ' ')) hits.push({ name: n, kind: k, lat, lon, i, len: s.length });
+    }
+    hits = hits.slice(0, 8);
+    list.innerHTML = hits.length ? hits.map((h, j) => `<li role="option" id="pl${j}" aria-selected="false" data-j="${j}"><span>${
+      h.i != null ? esc(h.name.slice(0, h.i)) + '<mark>' + esc(h.name.slice(h.i, h.i + h.len)) + '</mark>' + esc(h.name.slice(h.i + h.len)) : esc(h.name)
+    }</span><span class="k">${esc(h.kind)}</span></li>`).join('') : '<li aria-disabled="true"><span class="note">No place by that name in the sample list</span></li>';
+    list.hidden = false; q.setAttribute('aria-expanded', 'true');
+  }
+  function go(h) {
+    list.hidden = true; q.setAttribute('aria-expanded', 'false'); q.value = h.kind === 'Coordinates' ? h.name : h.name;
+    map.getView().animate({ center: [h.lon, h.lat], zoom: Math.max(map.getView().getZoom(), 5), duration: 700 });
+    showPop([h.lon, h.lat], h.kind === 'Coordinates' ? nearest(h.lat, h.lon) : h.name);
+  }
+  q.addEventListener('input', suggest);
+  q.addEventListener('keydown', e => {
+    if (list.hidden || !hits.length) { if (e.key === 'Enter') e.preventDefault(); return; }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault(); sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + hits.length) % hits.length;
+      [...list.children].forEach((li, j) => li.setAttribute('aria-selected', j === sel)); q.setAttribute('aria-activedescendant', 'pl' + sel);
+    } else if (e.key === 'Enter') { e.preventDefault(); go(hits[Math.max(sel, 0)]); }
+    else if (e.key === 'Escape') { list.hidden = true; q.setAttribute('aria-expanded', 'false'); }
+  });
+  list.addEventListener('mousedown', e => { const li = e.target.closest('li[data-j]'); if (li) { e.preventDefault(); go(hits[+li.dataset.j]); } });
+  q.addEventListener('blur', () => setTimeout(() => { list.hidden = true; q.setAttribute('aria-expanded', 'false'); }, 120));
+
+  /* ---------- tap the map ---------- */
+  function nearest(lat, lon) {
+    let best = null, bd = Infinity;
+    for (const [n, , a, b] of PLACES) { const d = Math.hypot(a - lat, (b - lon) * Math.cos(lat * Math.PI / 180)); if (d < bd) { bd = d; best = n; } }
+    return bd < 6 ? 'Near ' + best : 'Open water or remote land';
+  }
+  function showPop(c, label) {
+    const [lon, lat] = c, place = label.replace(/^Near /, '');
+    const term = /^Open water/.test(label) ? '' : place;
+    popEl.innerHTML = `<button class="x" aria-label="Close">×</button><div class="eyebrow">This spot</div><div class="where">${esc(label)}</div>
+      <div class="ll">${fmtLL(lat, lon)}</div>${term ? `<button class="btn" data-q="${esc(term)}">NASA pictures of ${esc(term)}</button>` : ''}`;
+    popup.setPosition(c);
+  }
+  popEl.addEventListener('click', e => {
+    if (e.target.closest('.x')) popup.setPosition(undefined);
+    const b = e.target.closest('[data-q]'); if (b) { $('libQ').value = b.dataset.q; show('library'); }
+  });
+  map.on('singleclick', e => showPop(e.coordinate, nearest(e.coordinate[1], e.coordinate[0])));
+  map.on('pointermove', e => { if (e.dragging) return; $('cursor').hidden = false; $('cursor').textContent = fmtLL(e.coordinate[1], e.coordinate[0]); });
+  map.getViewport().addEventListener('mouseleave', () => { $('cursor').hidden = true; });
+
+  /* ---------- tabs ---------- */
+  function show(v) {
+    for (const b of document.querySelectorAll('.tabs [data-view]')) { const s = b.dataset.view === v; b.setAttribute('aria-selected', s); b.setAttribute('aria-pressed', s); }
+    $('view-earth').hidden = v !== 'earth'; $('view-library').hidden = v !== 'library';
+    if (v === 'earth') map.updateSize(); else stop();
+    window.scrollTo({ top: 0 });
+  }
+  document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('[data-view]'); if (b) show(b.dataset.view); });
+
+  /* ---------- picture library (sample: a real search for "Iceland", Nov 9, 2026) ---------- */
+  const SAMPLE_TOTAL = 95;
+  const A = 'https://images-assets.nasa.gov/image/';
+  const PICS = [
+    ['GSFC_20171208_Archive_e000775', 'Iceland', '2017-12-08', 'GSFC', '', ['Iceland', 'winter', 'snow', 'ice'],
+      'Iceland, dressed in winter white, peaked through a hole in a complex system of clouds in late February, 2015. The Moderate Resolution Imaging Spectroradiometer (MODIS) aboard NASA’s Terra satellite captured this true-color image on February 21 as it passed over the region.'],
+    ['cloud-free-view-of-iceland_17168825861_o', 'Cloud-Free View of Iceland', '2015-04-15', 'GSFC', '', ['Iceland', 'MODIS'],
+      'This nearly cloud-free image of Iceland was captured by the MODIS instrument on board the Terra spacecraft on 04/15/2015 at 13:00 UTC.'],
+    ['GSFC_20171208_Archive_e000985', 'Iceland', '2017-12-08', 'GSFC', '', ['Iceland', 'summer', 'snow', 'ice'],
+      'On August 22, 2014 the Moderate Resolution Imaging Spectroradiometer (MODIS) aboard NASA’s Terra satellite captured a true-color image of a sunny summer day in Iceland.'],
+    ['jsc2026e405547', 'Artemis geology training in Iceland', '2026-07-25', 'JSC', 'James Blair', ['Artemis', 'astronauts', 'geology', 'Moon'],
+      'Participants in the Iceland geology field training expedition make observations and discuss the geologic features of the surrounding rocky cliffs in Iceland. Iceland serves as a lunar stand-in for training astronauts and mission support teams.'],
+    ['jsc2026e405382', 'Artemis geology training in Iceland', '2026-07-23', 'JSC', 'James Blair', ['Artemis', 'astronauts', 'geology', 'Moon'],
+      'An astronaut candidate walks across a lava flow in Iceland during an Artemis geology field training expedition.'],
+    ['jsc2026e406058', 'Artemis geology training in Iceland', '2026-07-27', 'JSC', 'James Blair', ['Artemis', 'astronauts', 'geology', 'Moon'],
+      'Participants in an Artemis geology field training expedition walk a tool cart across a volcanic landscape in Iceland.'],
+    ['jsc2024e055261', 'Artemis II crew geology training in Iceland', '2024-08-01', 'JSC', 'Robert Markowitz', ['Artemis', 'astronauts', 'geology', 'Moon'],
+      'Artemis II crew geology training in Iceland. Nautagil / Holuhraun science activity. Photo date: August 1, 2024. Location: Drekagil, Iceland.'],
+    ['jsc2024e055233', 'Artemis II crew geology training in Iceland', '2024-08-01', 'JSC', 'Robert Markowitz', ['Artemis', 'astronauts', 'geology', 'Moon'],
+      'Artemis II crew geology training in Iceland. Photo date: August 1, 2024. Location: Drekagil, Iceland.'],
+    ['S67-37714', 'Apollo astronaut geology training in Iceland', '2008-07-11', 'JSC', '', ['Apollo', 'geology', 'Iceland', 'Moon'],
+      'Apollo astronauts study rock formations during a geology field training in Iceland in 1967.'],
+    ['GSFC_20171208_Archive_e000814', 'Eruption at Bardarbunga, Iceland', '2017-12-08', 'GSFC', '', ['Bardarbunga', 'volcano'],
+      'The main caldera of Bardarbunga volcano is tucked beneath Iceland’s largest glacier, Vatnajökull. Beginning in August 2014, lava from Bardarbunga poured from fissures just north of Vatnajökull, creating the Holuhraun lava field.'],
+    ['jsc2026e405534', 'Artemis geology training in Iceland', '2026-07-24', 'JSC', 'James Blair', ['Artemis', 'astronauts', 'geology', 'Moon'],
+      'A navigation training activity in Iceland, part of an Artemis geology field training expedition.'],
+    ['jsc2026e406097', 'Artemis geology training in Iceland', '2026-07-28', 'JSC', 'James Blair', ['Artemis', 'astronauts', 'geology', 'Moon'],
+      'The Artemis geology training field team in a valley in Iceland’s Vatnajökull National Park.'],
+  ];
+  const CENTRES = { JSC: 'Johnson Space Center', GSFC: 'Goddard Space Flight Center' };
+  $('libCount').textContent = `${SAMPLE_TOTAL} pictures · showing ${PICS.length}`;
+  $('gallery').innerHTML = PICS.map(([id, t, d, c], j) => `<button class="pic" data-j="${j}">
+      <span class="ph"><img src="${A}${id}/${id}~thumb.jpg" alt="${esc(t)}" loading="lazy"></span>
+      <span class="pt"><h3>${esc(t)}</h3><span class="meta">${nice(d)} · ${c}</span></span></button>`).join('');
+  $('gallery').addEventListener('click', e => {
+    const b = e.target.closest('.pic'); if (!b) return;
+    const [id, t, d, c, p, k, s] = PICS[+b.dataset.j];
+    $('vImg').src = `${A}${id}/${id}~medium.jpg`; $('vImg').alt = t;
+    $('vTitle').textContent = t; $('vDesc').textContent = s;
+    $('vFacts').innerHTML = `<dt>Date</dt><dd>${nice(d)}</dd><dt>NASA centre</dt><dd>${CENTRES[c] || c} (${c})</dd>` +
+      (p ? `<dt>Photographer</dt><dd>${esc(p)}</dd>` : '') + `<dt>NASA ID</dt><dd class="mono">${esc(id)}</dd>`;
+    $('vKw').innerHTML = k.map(x => `<span class="tag">${esc(x)}</span>`).join('');
+    $('vFull').href = `${A}${id}/${id}~medium.jpg`;
+    $('viewer').showModal();
+  });
+  $('vClose').addEventListener('click', () => $('viewer').close());
+  $('viewer').addEventListener('click', e => { if (e.target === $('viewer')) $('viewer').close(); });
+  $('libClear').addEventListener('click', () => { $('libQ').value = ''; $('libQ').focus(); });
+  for (const c of document.querySelectorAll('.popular .chip')) c.addEventListener('click', () => { $('libQ').value = c.textContent; });
+
+  update();
+  </script>
+</body>
+</html>
