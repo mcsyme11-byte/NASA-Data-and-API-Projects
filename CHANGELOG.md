@@ -1,5 +1,11 @@
 # Change log
 
+## November 9, 2026 — shared files always load fresh
+
+- **Fixed:** browsers that had saved an older `shared/theme.css` kept showing the old layout (narrow text, an unstyled
+  Back button) after an update. Every page now links `theme.css` and `footer.js` with a version tag
+  (`?v=2026110902`), raised whenever either file changes, so the new copy is fetched at once.
+
 ## November 9, 2026 — site pages: full width and Back buttons
 
 - **Full width:** About, Privacy, Terms and Credits now use the page's full content width, like the other pages.

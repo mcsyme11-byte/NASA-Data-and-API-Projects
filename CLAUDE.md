@@ -35,6 +35,9 @@ inside its own folder.
   Contact, the licence and the source code). A new data source or library is added to `CREDITS.md` and the Credits
   page (`credits/index.html`) in the same change; anything new the site stores or sends is added to the Privacy page
   first.
+- **Version tags on shared files (since Nov 9, 2026):** pages link `shared/theme.css` and `shared/footer.js` with a
+  version tag (`?v=YYYYMMDDNN`). After changing either file, raise the tag in every page (one search-and-replace), so
+  browsers fetch the new copy instead of an old saved one.
 - **Respect NASA's terms:** show "Data courtesy of NASA" and that the project isn't endorsed by NASA; show the GIBS
   acknowledgement wherever GIBS imagery appears; never use NASA's insignia or logotype.
 - **Check facts about the data:** confirm endpoints, fields and limits against NASA's current documentation before

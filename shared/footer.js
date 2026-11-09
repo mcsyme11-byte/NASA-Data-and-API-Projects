@@ -7,7 +7,7 @@
 // Links are worked out from this file's own address, so they are right at any folder depth.
 
 const REPO = 'https://github.com/mcsyme11-byte/NASA-Data-and-API-Projects';
-const root = new URL('../', import.meta.url);
+const root = new URL("../", import.meta.url.split("?")[0]);
 
 const LINKS = [
   { label: 'About', href: new URL('about/', root).href, page: 'about' },
