@@ -22,9 +22,13 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] **Developer testing of the map, search and home preview:** dragging, pinching and zooming on a phone and a
   computer; Play at each speed; full screen and leaving it; Find; "Found by the end of" with Watch; "Close to Earth
   in"; the Search tab with "Found in"; the naming guide; the live preview on the home page.
-- [ ] Ideas (not decided): the asteroid's page reachable from every row of the "By year" tables (unnumbered objects
-  need their id from `neos.json`, a 1.8 MB download that the year view does not otherwise need); a short animation
-  of a famous close pass; the map in a Web Worker if playing ever needs more speed on large screens.
+- [ ] **Developer testing of the Nov 9 additions:** the five famous close passes on a computer and a phone (each
+  flies to Earth, plays and pauses at closest approach); zooming right in to Earth and to a selected asteroid; the
+  live clock; the full-screen and exit buttons; the "‹ Back" buttons (tracker → an asteroid → Back returns to the
+  same week, filters, open row and scroll position; the same from the map, the Search tab and the "By year" view);
+  every name in the "By year" tables opening its own page.
+- [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
+  "famous.json written").
 
 ## 2. Image Explorer (plan confirmed Nov 9, 2026)
 

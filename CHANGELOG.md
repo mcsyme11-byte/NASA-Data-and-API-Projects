@@ -1,5 +1,30 @@
 # Change log
 
+## November 9, 2026 — Asteroid Tracker: famous close passes, back buttons, smoother zoom
+
+- **Famous close passes** on the map: Apophis (2029), Duende (2013), 2020 QG (2020), 2019 OK (2019) and 2024 YR4
+  (2032, with its pass by the Moon). Each flies the map to Earth, plays the pass slowly and pauses at the moment of
+  closest approach, with a card of NASA's figures and a short account. Earth, the Moon and the asteroid are placed
+  from NASA/JPL Horizons (new monthly file `data/famous.json`); the distances shown match NASA's close-approach data
+  to within 16 km.
+- **Back buttons:** each asteroid's page, and the map when opened from another page, has a "‹ Back" button naming
+  where it returns to. Returning (with that button or the browser's) puts the tracker back on the same week or year,
+  filters, sort, open row, search words and scroll position, and the map back on the same view, selection, date and
+  filters.
+- NASA's answers are kept for an hour in the browser tab, so going back or reloading spends no extra requests.
+- **"By year" tables:** every name now opens that asteroid's own page (ids from `data/neos.json`, loaded in the
+  background); comets open JPL's page.
+- **Map:** zooming in goes down to Earth's true size; Earth, the Sun and the planets are drawn at true size when
+  large enough; the Moon's orbit appears near Earth; the scale bar switches to km close in. A **live clock**: on
+  today's date the map follows the present moment.
+- **Smoother:** the orbit maths runs in a background thread (Web Worker), and lines are cut to the visible area, so
+  zooming in close and playing stays at 60 frames a second (slow frames when playing zoomed in fell from about a
+  third to under 2%).
+- **Layout:** full-screen and exit-full-screen buttons now look different (with an "Exit" label); the spacecraft list
+  is a full-width card under the map instead of a tall side column; the "Found by" and "Close to Earth in" controls
+  stack on tablets instead of overlapping; a selected asteroid's label no longer touches its ring; starting a famous
+  pass scrolls the whole map into view.
+
 ## November 9, 2026 — Image Explorer: data checks and a mock-up for review
 
 - GIBS and the NASA Image and Video Library checked with live requests from the published site; findings recorded

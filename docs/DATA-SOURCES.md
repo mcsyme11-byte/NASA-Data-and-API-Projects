@@ -166,6 +166,19 @@ D (km) = 1329 ÷ √p × 10^(−H ÷ 5)
 - The International Space Station and Hubble are not on the map: 400–540 km above Earth, they sit inside Earth's dot
   at any scale it shows.
 
+### Horizons API (famous close passes), checked Nov 9, 2026
+
+- Same endpoint, written monthly (on the 1st, or with `--all`) to `data/famous.json` (about 490 KB) by
+  `fetch_map_data.py`. For each pass: the asteroid, Earth (`399`) and the Moon (`301`), with `VEC_TABLE=2`
+  (position and velocity), `CENTER='500@10'`, ecliptic, au and au/day.
+- Small bodies are named with a trailing semicolon: `'99942;'` for a numbered asteroid, `'DES=2020 QG;'` for one
+  known only by its code.
+- Samples: every 10 minutes within 12 hours of closest approach, hourly within 3 days, daily within 40 days
+  (339 per body). The page joins them with cubic Hermite interpolation (positions and velocities).
+- Check: the distance from Earth's centre at closest approach matches the JPL close-approach figures to within
+  16 km for all five passes; 2024 YR4's pass by the Moon gives 22,940 km against JPL's 22,938 km. Close-approach
+  distances are measured from the centre of Earth (or the Moon), not the surface.
+
 ### Asteroid names (Minor Planet Center rules)
 
 Used by `decodeCode()` in `asteroid-tracker/search.js`:

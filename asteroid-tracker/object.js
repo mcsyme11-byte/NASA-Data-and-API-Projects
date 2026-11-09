@@ -5,6 +5,7 @@
 // computed close approach (1900–2200). The orbit diagram (orbitview.js) places the asteroid and the planets at any
 // date from 1900 to 2050 (the planets' elements table is valid 1800–2050).
 
+import { backLink } from './back.js';
 import { nasaGet } from '../shared/nasa.js';
 import { fmt, sizeText, dateText, sizePicture, LD_KM } from './format.js';
 import { hoverTip, tipApi, hideTip } from './charts.js';
@@ -302,3 +303,5 @@ function renderAbout() {
 }
 
 load();
+
+backLink(document.getElementById('back'));

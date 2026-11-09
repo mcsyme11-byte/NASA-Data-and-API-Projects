@@ -11,6 +11,7 @@
 //   x1 = x·cos φ − y·sin φ,  y1 = x·sin φ + y·cos φ,  screen up = y1·cos θ + z·sin θ
 
 import { planetPosition, planetElements, orbitPath, PLANETS, jdFromMs } from './orbit.js';
+import { solvePositions } from './kepler.js';
 
 const RAD = Math.PI / 180;
 const K_GAUSS = 0.01720209895;                      // Gaussian gravitational constant: n (rad/day) = k / a^1.5
@@ -26,6 +27,8 @@ export const CLASSES = {
 export const COMET_CODES = new Set(['JFc', 'JFC', 'HTC', 'ETc', 'CTc', 'COM', 'PAR', 'HYP']);
 export const classOf = (code) => (COMET_CODES.has(code) ? 'COM' : code);
 const HAZ_RGB = [201, 103, 90];
+const AU_KM = 149597870.7;
+const RADIUS_KM = { Mercury: 2440, Venus: 6052, Earth: 6371, Mars: 3390, Jupiter: 69911, Saturn: 58232, Uranus: 25362, Neptune: 24622 };
 const FRESH_RGB = [255, 244, 214];                  // found in the year being shown
 const PLANET_COL = { Mercury: '#98A0AB', Venus: '#D1A956', Earth: '#8AA9C9', Mars: '#C9784A', Jupiter: '#B79AC8', Saturn: '#D1A956', Uranus: '#8FB996', Neptune: '#8AA9C9' };
 
@@ -61,56 +64,48 @@ export class Asteroids {
     }
     this.jd = null;
   }
-  // Positions at Julian date jd (au, ecliptic J2000). When the date has moved only a little since the last call
-  // (playing, stepping), each asteroid's previous eccentric anomaly is the starting guess for Kepler's equation,
-  // so one or two Newton steps are enough instead of four to eight. With quick = true (while playing), exactly one
-  // step is taken, starting from the stored sine and cosine: the error left is far below a pixel, and the next
-  // exact update (on pause) removes it.
+  // Positions at Julian date jd: in the background thread when one is running (see useWorker), otherwise here.
   update(jd, quick = false) {
-    if (jd === this.jd) return;
-    const warm = this.jd !== null && Math.abs(jd - this.jd) < 60;
-    this.jd = jd;
-    const { n, a, e, M0, nn, ep, b, m11, m12, m21, m22, m31, m32, x, y, z } = this;
-    const Ev = this.Ev || (this.Ev = new Float64Array(n));
-    const Sv = this.Sv || (this.Sv = new Float64Array(n)), Cv = this.Cv || (this.Cv = new Float64Array(n));
-    const TWO_PI = 2 * Math.PI, fast = quick && warm;
-    this.exact = !fast;
-    for (let k = 0; k < n; k++) {
-      const ek = e[k], M = M0[k] + nn[k] * (jd - ep[k]);      // mean anomaly, not wrapped, so E stays continuous
-      let E, sE, cE;
-      if (fast) {
-        E = Ev[k];
-        let d = (E - ek * Sv[k] - M) / (1 - ek * Cv[k]);
-        E -= d;
-        sE = Math.sin(E); cE = Math.cos(E);
-        // more steps only where the first one moved a lot (fast play, very stretched orbits)
-        for (let it = 0; it < 6 && (d > 1e-5 || d < -1e-5); it++) {
-          d = (E - ek * sE - M) / (1 - ek * cE);
-          E -= d; sE = Math.sin(E); cE = Math.cos(E);
-        }
-      } else {
-        if (warm) E = Ev[k];
-        else {
-          let Mw = M % TWO_PI; if (Mw > Math.PI) Mw -= TWO_PI; else if (Mw < -Math.PI) Mw += TWO_PI;
-          E = (ek < 0.8 ? Mw : (Mw < 0 ? -Math.PI : Math.PI)) + (M - Mw);
-        }
-        sE = 0; cE = 0;
-        for (let it = 0; it < 12; it++) {
-          sE = Math.sin(E); cE = Math.cos(E);
-          const d = (E - ek * sE - M) / (1 - ek * cE);
-          E -= d;
-          if (d < 1e-9 && d > -1e-9) { sE = Math.sin(E); cE = Math.cos(E); break; }
-        }
-      }
-      Ev[k] = E; Sv[k] = sE; Cv[k] = cE;
-      const xp = a[k] * (cE - ek), yp = b[k] * sE;
-      x[k] = m11[k] * xp + m12[k] * yp; y[k] = m21[k] * xp + m22[k] * yp; z[k] = m31[k] * xp + m32[k] * yp;
-    }
+    if (this.worker) { this._ask(jd, quick); return; }
+    solvePositions(this, jd, quick);
   }
-  // the whole orbit of one asteroid, for highlighting
+
+  // Start the background thread. The first positions are worked out here, so nothing has to wait for the thread.
+  // Two sets of position arrays take turns: one is drawn while the thread fills the other.
+  useWorker(onReady) {
+    let w;
+    try { w = new Worker(new URL('./orbitworker.js', import.meta.url), { type: 'module' }); } catch { return false; }
+    const cols = ['a', 'e', 'M0', 'nn', 'ep', 'b', 'm11', 'm12', 'm21', 'm22', 'm31', 'm32'];
+    w.postMessage({ init: Object.fromEntries(cols.map((c) => [c, this[c]])), n: this.n });
+    this.spare = [new Float32Array(this.n), new Float32Array(this.n), new Float32Array(this.n)];
+    this._busy = false; this._want = null;
+    w.onmessage = (ev) => {
+      const { jd, x, y, z } = ev.data;
+      this.spare = [this.x, this.y, this.z];
+      this.x = x; this.y = y; this.z = z; this.jd = jd;
+      this._busy = false;
+      onReady && onReady();
+      if (this._want && this._want.jd !== jd) { const t = this._want; this._want = null; this._ask(t.jd, t.quick); }
+    };
+    w.onerror = () => { this.worker = null; w.terminate(); };   // fall back to this thread
+    this.worker = w;
+    return true;
+  }
+  _ask(jd, quick) {
+    if (jd === this.jd && !this._busy) return;
+    if (this._busy || !this.spare) { this._want = { jd, quick }; return; }
+    this._busy = true;
+    const [x, y, z] = this.spare; this.spare = null;
+    this.worker.postMessage({ jd, quick, x, y, z }, [x.buffer, y.buffer, z.buffer]);
+  }
+
+  // the whole orbit of one asteroid, for highlighting (kept until another is asked for)
   path(k, steps = 360) {
+    if (this._path && this._path.k === k && this._path.steps === steps) return this._path.pts;
     const r = this.rows[k];
-    return orbitPath(+r[3], +r[4], +r[5] * RAD, +r[6] * RAD, +r[7] * RAD, steps);
+    const pts = orbitPath(+r[3], +r[4], +r[5] * RAD, +r[6] * RAD, +r[7] * RAD, steps);
+    this._path = { k, steps, pts };
+    return pts;
   }
 }
 
@@ -120,6 +115,23 @@ export function spacecraftAt(sc, jd) {
   if (!(f >= 0) || f > n - 1) return null;
   const i = Math.min(n - 2, Math.floor(f)), t = f - i, o = 2 + i * 3;
   return [s[o] + (s[o + 3] - s[o]) * t, s[o + 1] + (s[o + 4] - s[o + 1]) * t, s[o + 2] + (s[o + 5] - s[o + 2]) * t];
+}
+
+// Position at jd from samples [jd, x, y, z, vx, vy, vz] (au, au/day), by cubic Hermite interpolation between the two
+// samples around jd, which uses the velocities too; null outside the samples.
+export function hermiteAt(rows, jd) {
+  if (!rows || !rows.length || jd < rows[0][0] || jd > rows[rows.length - 1][0]) return null;
+  let lo = 0, hi = rows.length - 1;
+  while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (rows[mid][0] <= jd) lo = mid; else hi = mid; }
+  const a = rows[lo], b = rows[hi], h = b[0] - a[0];
+  if (h <= 0) return [a[1], a[2], a[3]];
+  const t = (jd - a[0]) / h, t2 = t * t, t3 = t2 * t;
+  const h00 = 2 * t3 - 3 * t2 + 1, h10 = t3 - 2 * t2 + t, h01 = -2 * t3 + 3 * t2, h11 = t3 - t2;
+  return [1, 2, 3].map((i) => h00 * a[i] + h10 * h * a[i + 3] + h01 * b[i] + h11 * h * b[i + 3]);
+}
+export function hermiteVel(rows, jd) {          // velocity (au/day), from the derivative of the same curve
+  const d = 1 / 1440, p = hermiteAt(rows, jd - d), q = hermiteAt(rows, jd + d);
+  return p && q ? [0, 1, 2].map((i) => (q[i] - p[i]) / (2 * d)) : null;
 }
 
 export class SolarMap {
@@ -139,6 +151,7 @@ export class SolarMap {
     this.selected = -1;
     this.labels = opts.labels !== false;
     this.quick = false;                                // true while playing: one Newton step per frame
+    this.tour = null;                                  // a famous pass: { k, asteroid, earth, moon } Horizons samples
     this.jd = jdFromMs(Date.now());
     this.planets = Object.keys(PLANETS);
     this._dirty = true; this._raf = null; this.onFrame = null;
@@ -167,20 +180,29 @@ export class SolarMap {
     this._raf = requestAnimationFrame(() => { this._raf = null; if (this._dirty) { this._dirty = false; this.draw(); } });
   }
   setDate(jd) { this.jd = jd; this.request(); }
-  setView(v) { Object.assign(this, v); this.tilt = Math.max(0, Math.min(90, this.tilt)); this.viewR = Math.max(0.004, Math.min(260, this.viewR)); this.request(); }
+  setView(v) { Object.assign(this, v); this.tilt = Math.max(0, Math.min(90, this.tilt)); this.viewR = Math.max(0.00006, Math.min(260, this.viewR)); this.request(); }   // zoom limits: about 9,000 km across (Earth fills the view) to past the Voyagers
 
   // ---------------------------------------------------------------- positions
+  // During a famous pass, Earth, the Moon and that asteroid come from NASA/JPL Horizons (which includes Earth's own
+  // pull), so the pass is drawn as it really happened; outside the samples the usual formulas take over.
+  earthAt(jd) { return (this.tour && hermiteAt(this.tour.earth, jd)) || planetPosition('Earth', jd); }
+  moonAt(jd) { return this.tour ? hermiteAt(this.tour.moon, jd) : null; }
+  tourAst(jd) { return this.tour ? hermiteAt(this.tour.asteroid, jd) : null; }
+  asteroidPos(k) {
+    const t = this.tour && this.tour.k === k ? this.tourAst(this.jd) : null;
+    return t || [this.ast.x[k], this.ast.y[k], this.ast.z[k]];
+  }
   _planetOrbits() {
-    const yr = Math.round((this.jd - 2451545) / 365.25);
-    if (this._planetCache && this._planetCache.yr === yr) return this._planetCache.paths;
+    const yr = Math.round((this.jd - 2451545) / 365.25), fine = this.viewR < 0.1;   // more points when zoomed in
+    if (this._planetCache && this._planetCache.yr === yr && this._planetCache.fine === fine) return this._planetCache.paths;
     const paths = {};
-    for (const n of this.planets) { const e = planetElements(n, this.jd); paths[n] = orbitPath(e.a, e.e, e.i, e.O, e.w, n === 'Mercury' ? 120 : 200); }
-    this._planetCache = { yr, paths };
+    for (const n of this.planets) { const e = planetElements(n, this.jd); paths[n] = orbitPath(e.a, e.e, e.i, e.O, e.w, fine ? 4000 : n === 'Mercury' ? 120 : 200); }
+    this._planetCache = { yr, paths, fine };
     return paths;
   }
   centerPos() {
-    if (this.center === 'Earth') return planetPosition('Earth', this.jd);
-    if (this.center && this.center.asteroid !== undefined && this.ast) { const k = this.center.asteroid; return [this.ast.x[k], this.ast.y[k], this.ast.z[k]]; }
+    if (this.center === 'Earth') return this.earthAt(this.jd);
+    if (this.center && this.center.asteroid !== undefined && this.ast) return this.asteroidPos(this.center.asteroid);
     if (this.center && this.center.craft !== undefined) return spacecraftAt(this.spacecraft[this.center.craft], this.jd) || [0, 0, 0];
     return [0, 0, 0];
   }
@@ -213,12 +235,14 @@ export class SolarMap {
       const amt = this.viewR > 8 ? 0.55 : 0.8;                   // fainter when far out, so the cloud doesn't glare
       const W4 = W * 4;
       const fmax = this.foundMax, fnd = A.found, only = this.only;
+      const skip = this.tour && this.tourAst(this.jd) ? this.tour.k : -1;
       const fresh = fmax < 9999 ? fmax : -1;             // found in the year shown: drawn brighter
       for (let k = 0; k < A.n; k++) {
         if (f === 'haz' && !haz[k]) continue;
         if (Hm[k] > hmax) continue;
         if (fnd[k] > fmax) continue;
         if (only && !only.has(k)) continue;
+        if (k === skip) continue;
         const x = X[k] - c[0], y = Y[k] - c[1], z = Z[k] - c[2];
         const x1 = x * cf - y * sf, y1 = x * sf + y * cf;
         const sx = (cx + x1 * s) | 0, sy = (cy - (y1 * ct + z * st) * s) | 0;
@@ -237,22 +261,67 @@ export class SolarMap {
     // 2. vector layers on top: plane of Earth's orbit, planets' orbits, the Sun, bodies, labels
     ctx.save();
     ctx.lineJoin = 'round';
+    // Lines are sent to the canvas only where they cross the visible area (plus a margin). Zoomed in close, the
+    // planets' orbits and the spacecraft paths would otherwise be shapes millions of pixels long, with hundreds of
+    // thousands of dashes, which makes a graphics processor stutter even though almost none of it shows.
+    const M = 40 * dpr, X0 = -M, Y0 = -M, X1 = W + M, Y1 = H + M;
+    // Each segment is cut to that area (Liang-Barsky clipping), so even a segment that runs from far off one side to
+    // far off the other is drawn only where it shows. For dashed lines, the cut start is moved back to where a dash
+    // begins, so the pattern stays in step with the full line and does not shimmer as the view moves.
+    const clip = (ax, ay, bx, by) => {
+      const dx = bx - ax, dy = by - ay; let t0 = 0, t1 = 1;
+      const edge = (pp, q) => { if (pp === 0) return q >= 0; const r = q / pp;
+        if (pp < 0) { if (r > t1) return false; if (r > t0) t0 = r; } else { if (r < t0) return false; if (r < t1) t1 = r; } return true; };
+      if (edge(-dx, ax - X0) && edge(dx, X1 - ax) && edge(-dy, ay - Y0) && edge(dy, Y1 - ay)) return [t0, t1];
+      return null;
+    };
     const line = (pts, stroke, width, dash) => {
+      const P = dash ? (dash[0] + dash[1]) * dpr : 0;
       ctx.beginPath();
-      for (let i = 0; i < pts.length; i++) { const p = proj(pts[i][0], pts[i][1], pts[i][2]); if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); }
+      let prev = null, open = false, acc = 0;
+      for (let i = 0; i < pts.length; i++) {
+        const p = proj(pts[i][0], pts[i][1], pts[i][2]);
+        if (prev) {
+          const len = Math.hypot(p[0] - prev[0], p[1] - prev[1]);
+          const t = len > 0 ? clip(prev[0], prev[1], p[0], p[1]) : null;
+          if (t) {
+            if (!open || t[0] > 0) {                       // a new piece starts here
+              let d0 = t[0] * len;
+              if (P) d0 = Math.max(0, d0 - ((acc + d0) % P));
+              const u = d0 / len;
+              ctx.moveTo(prev[0] + (p[0] - prev[0]) * u, prev[1] + (p[1] - prev[1]) * u); open = true;
+            }
+            ctx.lineTo(prev[0] + (p[0] - prev[0]) * t[1], prev[1] + (p[1] - prev[1]) * t[1]);
+            if (t[1] < 1) open = false;                    // leaves the area: the next piece starts afresh
+          } else open = false;
+          acc += len;
+        }
+        prev = p;
+      }
       ctx.strokeStyle = stroke; ctx.lineWidth = width * dpr; ctx.setLineDash(dash ? dash.map((d) => d * dpr) : []); ctx.stroke();
     };
     const paths = this._planetOrbits();
     const visible = (r) => r * s > 6 * dpr;                   // skip orbits too small to see
     for (const n of this.planets) {
-      const a = PLANETS[n].el[0];
-      if (!visible(a) || a > this.viewR * 40) continue;
+      if (!visible(PLANETS[n].el[0])) continue;      // too small to see; off-screen parts are skipped by line()
       line(paths[n], n === 'Earth' ? 'rgba(138,169,201,.85)' : 'rgba(94,103,117,.75)', n === 'Earth' ? 1.4 : 1);
     }
-    // the asteroid belt's place, faintly, as two rings at 2.1 and 3.3 au when the view is wide enough
-    // (the main belt itself is not drawn: these are near-Earth objects only)
+    // close to Earth: the Moon's orbit for scale (384,400 km), in the plane of Earth's orbit
+    this.moonRing = null;
+    if (this.viewR < 0.06) {
+      const e = this.earthAt(this.jd), r = 384400 / 149597870.7, ring = [];
+      for (let a = 0; a <= 360; a += 3) ring.push([e[0] + r * Math.cos(a * RAD), e[1] + r * Math.sin(a * RAD), e[2]]);
+      line(ring, 'rgba(180,175,162,.55)', 1);
+      const q = proj(e[0] + r * Math.SQRT1_2, e[1] - r * Math.SQRT1_2, e[2]);
+      this.moonRing = q;
+    }
     // selected asteroid's orbit
-    if (this.ast && this.selected >= 0) line(this.ast.path(this.selected), 'rgba(226,200,142,.9)', 1.5);
+    if (this.ast && this.selected >= 0) {
+      if (this.tour && this.tour.k === this.selected && this.tourAst(this.jd)) {
+        const tr = this.tour.asteroid, mine = tr.map((r) => [r[1], r[2], r[3]]);
+        line(mine, 'rgba(226,200,142,.9)', 1.5);            // the path it really flew (Horizons)
+      } else line(this.ast.path(this.selected, this.viewR < 0.1 ? 4000 : 360), 'rgba(226,200,142,.9)', 1.5);
+    }
     // spacecraft tracks
     for (const sc of this.spacecraft) {
       if (!sc.show) continue;
@@ -265,22 +334,36 @@ export class SolarMap {
       if (pts.length > 1) line(pts, 'rgba(237,230,211,.28)', 1, [2, 4]);
     }
     // Sun
-    const sun = proj(0, 0, 0), sr = 7 * dpr;
-    const g = ctx.createRadialGradient(sun[0], sun[1], 0, sun[0], sun[1], sr * 4);
-    g.addColorStop(0, 'rgba(226,200,142,.95)'); g.addColorStop(0.3, 'rgba(192,160,98,.35)'); g.addColorStop(1, 'rgba(192,160,98,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sun[0], sun[1], sr * 4, 0, 7); ctx.fill();
-    ctx.fillStyle = '#E2C88E'; ctx.beginPath(); ctx.arc(sun[0], sun[1], sr * 0.7, 0, 7); ctx.fill();
+    // the Sun: a glow, and its true size (696,000 km) once that is bigger than the marker
+    const sun = proj(0, 0, 0), sTrue = (696000 / AU_KM) * s, sr = Math.max(7 * dpr, sTrue / 0.7);
+    if (sun[0] > -sr * 4 && sun[1] > -sr * 4 && sun[0] < W + sr * 4 && sun[1] < H + sr * 4) {
+      const g = ctx.createRadialGradient(sun[0], sun[1], 0, sun[0], sun[1], sr * 4);
+      g.addColorStop(0, 'rgba(226,200,142,.95)'); g.addColorStop(0.3, 'rgba(192,160,98,.35)'); g.addColorStop(1, 'rgba(192,160,98,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sun[0], sun[1], sr * 4, 0, 7); ctx.fill();
+      ctx.fillStyle = '#E2C88E'; ctx.beginPath(); ctx.arc(sun[0], sun[1], sr * 0.7, 0, 7); ctx.fill();
+    }
 
     this.bodies = [];                                           // for picking and labels
     this.boxes = [];
     for (const n of this.planets) {
-      const a = PLANETS[n].el[0];
-      if (!visible(a) || a > this.viewR * 40) continue;
-      const p = planetPosition(n, this.jd), q = proj(p[0], p[1], p[2]);
-      const r = (n === 'Earth' ? 4.5 : ['Jupiter', 'Saturn'].includes(n) ? 5 : 3.5) * dpr;
+      if (!visible(PLANETS[n].el[0])) continue;
+      const p = n === 'Earth' ? this.earthAt(this.jd) : planetPosition(n, this.jd), q = proj(p[0], p[1], p[2]);
+      // a marker, or the planet's true size when zoomed in far enough for that to be bigger
+      const r = Math.max((n === 'Earth' ? 4.5 : ['Jupiter', 'Saturn'].includes(n) ? 5 : 3.5) * dpr, RADIUS_KM[n] / AU_KM * s);
+      if (q[0] < -r || q[1] < -r || q[0] > W + r || q[1] > H + r) continue;
       ctx.fillStyle = PLANET_COL[n]; ctx.strokeStyle = '#0C1119'; ctx.lineWidth = 1.5 * dpr;
       ctx.beginPath(); ctx.arc(q[0], q[1], r, 0, 7); ctx.fill(); ctx.stroke();
       this.bodies.push({ kind: 'planet', name: n, x: q[0], y: q[1], r, col: n === 'Earth' ? '#8AA9C9' : '#B4AFA2' });
+    }
+    // the Moon (during a famous pass, from Horizons)
+    const moon = this.moonAt(this.jd);
+    if (moon) {
+      const q = proj(moon[0], moon[1], moon[2]), r = Math.max(3 * dpr, 1737.4 / AU_KM * s);
+      if (q[0] > -r && q[1] > -r && q[0] < W + r && q[1] < H + r) {
+        ctx.fillStyle = '#B4AFA2'; ctx.strokeStyle = '#0C1119'; ctx.lineWidth = 1.5 * dpr;
+        ctx.beginPath(); ctx.arc(q[0], q[1], r, 0, 7); ctx.fill(); ctx.stroke();
+        this.bodies.push({ kind: 'moon', name: 'Moon', x: q[0], y: q[1], r, col: '#B4AFA2' });
+      }
     }
     // highlighted asteroids (this week's visitors) and the selected one
     if (this.ast) {
@@ -292,12 +375,12 @@ export class SolarMap {
         ctx.beginPath(); ctx.arc(q[0], q[1], 3.5 * dpr, 0, 7); ctx.stroke();
       }
       if (this.selected >= 0) {
-        const k = this.selected, q = proj(A.x[k], A.y[k], A.z[k]);
+        const k = this.selected, sp = this.asteroidPos(k), q = proj(sp[0], sp[1], sp[2]);
         ctx.fillStyle = A.haz[k] ? '#C9675A' : '#E2C88E';
         ctx.beginPath(); ctx.arc(q[0], q[1], 4.5 * dpr, 0, 7); ctx.fill();
         ctx.strokeStyle = '#E2C88E'; ctx.setLineDash([3 * dpr, 3 * dpr]);
         ctx.beginPath(); ctx.arc(q[0], q[1], 10 * dpr, 0, 7); ctx.stroke(); ctx.setLineDash([]);
-        this.bodies.push({ kind: 'asteroid', name: A.rows[k][1].trim(), x: q[0], y: q[1], r: 6 * dpr, col: '#E2C88E', k });
+        this.bodies.push({ kind: 'asteroid', name: A.rows[k][1].trim(), x: q[0], y: q[1], r: 11 * dpr, col: '#E2C88E', k });   // r clears the 10 px ring
       }
     }
     // spacecraft: a small brass cross in a ring
@@ -319,6 +402,7 @@ export class SolarMap {
       for (const b of this.bodies) this.boxes.push([b.x - b.r, b.y - b.r, b.x + b.r, b.y + b.r]);
       const order = this.bodies.slice().sort((p, q) => (q.kind === 'asteroid') - (p.kind === 'asteroid') || (q.name === 'Earth') - (p.name === 'Earth'));
       for (const b of order) if (!b.quiet) this._label(ctx, b, W, H, dpr);
+      if (this.moonRing) this._label(ctx, { name: "the Moon's orbit", x: this.moonRing[0], y: this.moonRing[1], r: 2 * dpr, col: '#98A0AB' }, W, H, dpr);
     }
     ctx.restore();
     this.frameMs = performance.now() - t0;

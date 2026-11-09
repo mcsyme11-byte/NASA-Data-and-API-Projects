@@ -13,6 +13,20 @@
 const KEY_STORE = 'nasa-data-projects.api-key';
 const API_ROOT = 'https://api.nasa.gov';
 const cache = new Map();   // answers kept for this visit, so the same request never costs twice
+// Answers are also kept for an hour in this browser tab (sessionStorage), so going back to a page, or reloading it,
+// does not spend another request. The key is left out of what is stored. Tab storage is about 5 MB, so a full or
+// unavailable store is simply skipped.
+const TAB_STORE = 'nasa-data-projects.answer.', TAB_TTL_MS = 60 * 60 * 1000;
+function fromTab(id) {
+  try {
+    const v = JSON.parse(sessionStorage.getItem(TAB_STORE + id));
+    if (v && Date.now() - v.t < TAB_TTL_MS) return v.data;
+  } catch { /* nothing kept */ }
+  return undefined;
+}
+function toTab(id, data) {
+  try { sessionStorage.setItem(TAB_STORE + id, JSON.stringify({ t: Date.now(), data })); } catch { /* full or unavailable */ }
+}
 
 export const DEMO_KEY = 'DEMO_KEY';   // NASA's shared key: 30 requests an hour, 50 a day, per connection
 
@@ -41,10 +55,11 @@ export class NasaError extends Error {
 export async function nasaGet(path, params = {}) {
   const url = new URL(API_ROOT + path);
   for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== null) url.searchParams.set(k, v);
+  const id = url.toString();   // before the key is added: the answer is the same whichever key asks
   url.searchParams.set('api_key', getKey());
-
-  const id = url.toString();
   if (cache.has(id)) return cache.get(id);
+  const kept = fromTab(id);
+  if (kept !== undefined) { cache.set(id, kept); return kept; }
 
   let res;
   try {
@@ -62,6 +77,7 @@ export async function nasaGet(path, params = {}) {
 
   const data = await res.json();
   cache.set(id, data);
+  toTab(id, data);
   return data;
 }
 

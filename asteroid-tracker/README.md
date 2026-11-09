@@ -46,7 +46,7 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
 | NASA/JPL Close-Approach Data (`ssd-api.jpl.nasa.gov/cad.api`) | By year | none | Daily files, `data/YYYY.json` and `data/years.json` (the API blocks calls from web pages) |
 | JPL approximate planetary elements | The orbit diagram's and the map's planets | none | Copied into `orbit.js` (valid 1800–2050) |
 | NASA/JPL Small-Body Database Query API | Map and search | none | Daily file `data/neos.json` (and `data/preview.json`) |
-| NASA/JPL Horizons | The map's spacecraft | none | Daily file `data/spacecraft.json` |
+| NASA/JPL Horizons | The map's spacecraft and famous close passes | none | Daily file `data/spacecraft.json`; monthly `data/famous.json` |
 
 Limits: the `feed` covers at most 7 days per request; `DEMO_KEY` allows 30 requests an hour and 50 a day per
 connection, a personal key 1,000 an hour. Details: [docs/DATA-SOURCES.md](../docs/DATA-SOURCES.md).
@@ -63,6 +63,9 @@ asteroid-tracker/
 ├── object.js                    the asteroid page: loading, the diagram's controls, the approaches chart and list
 ├── map.js                       the map page: controls, selection, Find, year filters, full screen
 ├── skymap.js                    the map's renderer: 43,000 orbits in typed arrays, drawn into a pixel buffer
+├── kepler.js                    the map's orbit solving, shared by the page and the background thread
+├── orbitworker.js               the background thread (Web Worker) that solves the orbits while the map plays
+├── back.js                      the "‹ Back" buttons and keeping a page's place when returning to it
 ├── preview.js                   the home page's live preview of the map
 ├── mapdata.js                   loads the map's and search's data files
 ├── search.js                    search over every name, ids, name decoding, result cards
@@ -72,7 +75,7 @@ asteroid-tracker/
 ├── orbitview.js                 the orbit diagram: projection, views, drawing, labels, dragging
 ├── format.js                    units, the size rule and number formatting
 ├── fetch_close_approaches.py    writes data/YYYY.json and data/years.json (daily, GitHub Actions)
-├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json (daily)
+├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json (daily), data/famous.json (monthly)
 ├── data/                        the files above
 └── README.md                    this file
 ```

@@ -3,11 +3,12 @@
 // map.html[?focus=<SBDB spkid>]  The renderer is skymap.js; the data (all near-Earth asteroids, spacecraft tracks,
 // this week's visitors) comes from mapdata.js, which reads the daily files in data/.
 
-import { SolarMap, Asteroids, CLASSES, COL, spacecraftAt, classOf, COMET_CODES } from './skymap.js';
-import { planetPosition, jdFromMs, msFromJd, dist, LD_AU } from './orbit.js';
+import { SolarMap, Asteroids, CLASSES, COL, spacecraftAt, classOf, COMET_CODES, hermiteAt, hermiteVel } from './skymap.js';
+import { planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM } from './orbit.js';
 import { fmt, sizeText, diameterM } from './format.js';
 import { loadMapData } from './mapdata.js';
 import { searchNames, neowsId, decodeName } from './search.js';
+import { backLink, placeKeeper, scrollBack } from './back.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -25,6 +26,8 @@ async function start() {
     return;
   }
   ast = new Asteroids(data.rows);
+  ast.update(jdFromMs(Date.now()));                   // first positions here, then the background thread takes over
+  ast.useWorker(() => map && map.request());
   $('#count').textContent = fmt(ast.n);
   map = new SolarMap($('#map'), { asteroids: ast, spacecraft: data.spacecraft.map((c) => ({ ...c, show: true })) });
   // this week's visitors: rings on the map
@@ -34,7 +37,7 @@ async function start() {
   map.onView = () => { syncButtons(); $('#hint').classList.add('gone'); };
   map.onTap = (e) => select(map.pick(e.clientX, e.clientY, 14));
   map.onHover = hover; map.onLeave = () => ($('#tip').hidden = true);
-  setDate(Date.now());
+  setDate(Date.now(), true);
   buildLegend(); buildCraft();
   setupYears();
   const focus = new URLSearchParams(location.search).get('focus');
@@ -43,39 +46,89 @@ async function start() {
     if (k >= 0) { select({ kind: 'asteroid', k, name: data.rows[k][COL.name] }); centre({ asteroid: k }); map.setView({ viewR: 1.6 }); syncButtons(); }
   }
   $('#loading').hidden = true;
+  if (place) restorePlace(place);
   syncButtons();
 }
+
+// ---------------------------------------------------------------- coming back to the same view
+// On Back or a reload, the map returns to the view it was left in: zoom, angle, centre, selection, date (or the live
+// clock), speed, filters and spacecraft. A famous pass in progress starts again from its beginning.
+const pdesOf = (k) => String(data.rows[k][COL.pdes]);
+const place = placeKeeper('map', () => {
+  if (!map) return {};
+  const c = map.center, s = selected;
+  return {
+    viewR: map.viewR, spin: map.spin, tilt: map.tilt, tour: tour ? tour.id : null,
+    center: typeof c === 'object' && c ? (c.asteroid !== undefined ? { asteroid: pdesOf(c.asteroid) } : { craft: c.craft }) : c,
+    sel: !s ? null : s.kind === 'asteroid' || s.kind === 'tour' ? { kind: 'asteroid', pdes: pdesOf(s.k) } : s.kind === 'craft' ? { kind: 'craft', i: s.i } : s.kind === 'planet' ? { kind: 'planet', name: s.name } : null,
+    ms: live ? null : nowMs(), speed: $('#speed').value, filter: map.filter,
+    foundBy: $('#foundBy').value, closeIn: $('#closeIn').value, craft: map.spacecraft.map((c2) => !!c2.show),
+  };
+});
+let pendingCloseIn = null;   // applied once the list of years has loaded
+function restorePlace(p) {
+  const kOf = (pdes) => data.rows.findIndex((r) => String(r[COL.pdes]) === pdes);
+  if (p.tour && PASSES[p.tour]) { startTour(p.tour); scrollBack(p.scrollY); return; }
+  if (Array.isArray(p.craft) && p.craft.length === map.spacecraft.length) { map.spacecraft.forEach((c, i) => (c.show = p.craft[i])); buildCraft(); }
+  if ([...$('#speed').options].some((o) => o.value === p.speed)) $('#speed').value = p.speed;
+  if (['all', 'haz', 'big', 'km'].includes(p.filter)) map.filter = p.filter;
+  if (p.foundBy && Number(p.foundBy) !== Number($('#foundBy').value)) { $('#foundBy').value = p.foundBy; $('#foundBy').dispatchEvent(new Event('input')); }
+  if (p.closeIn) pendingCloseIn = p.closeIn;
+  if (Number.isFinite(p.ms)) setDate(p.ms);
+  if (p.sel) {
+    if (p.sel.kind === 'asteroid') { const k = kOf(p.sel.pdes); if (k >= 0) select({ kind: 'asteroid', k, name: data.rows[k][COL.name].trim() }); }
+    else if (p.sel.kind === 'craft' && map.spacecraft[p.sel.i]) select({ kind: 'craft', i: p.sel.i, name: map.spacecraft[p.sel.i].name });
+    else if (p.sel.kind === 'planet' && p.sel.name) select({ kind: 'planet', name: p.sel.name });
+  }
+  const c = p.center;
+  if (c === 'Sun' || c === 'Earth') map.center = c;
+  else if (c && c.asteroid !== undefined) { const k = kOf(c.asteroid); if (k >= 0) map.center = { asteroid: k }; }
+  else if (c && Number.isInteger(c.craft) && map.spacecraft[c.craft]) map.center = { craft: c.craft };
+  if (Number.isFinite(p.viewR) && Number.isFinite(p.tilt) && Number.isFinite(p.spin)) map.setView({ viewR: p.viewR, tilt: p.tilt, spin: p.spin });
+  $('#hint').classList.add('gone');
+  scrollBack(p.scrollY);
+}
+backLink($('#back'));
 
 // ---------------------------------------------------------------- after each frame: date, scale bar
 function afterFrame(m) {
   // a scale bar of a round length about 80–160 px long
   const pxPerAu = (Math.min(m.cv.width, m.cv.height) / 2 - 10 * m.dpr) / m.viewR / m.dpr;
-  const steps = [0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100];
+  const steps = [0.00002, 0.00005, 0.0001, 0.0002, LD_AU / 2, LD_AU, 2 * LD_AU, 5 * LD_AU, 10 * LD_AU, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100];
   const u = steps.find((v) => v * pxPerAu >= 70) || 100;
   $('#scaleBar').style.width = Math.round(u * pxPerAu) + 'px';
-  $('#scaleLbl').textContent = u < 0.05 ? `${fmt(u / LD_AU, 0)} Moon distances` : `${u} au · ${fmt(u * 149.6, u < 1 ? 1 : 0)} million km`;
+  const nLd = Math.round(u / LD_AU), kmTxt = u < LD_AU * 0.9 ? `${fmt(u * AU_KM)} km` : null;   // under 1 Moon distance: km
+  $('#scaleLbl').textContent = kmTxt ? kmTxt : u < 0.05 ? `${fmt(nLd)} Moon distance${nLd === 1 ? '' : 's'}` : `${u} au · ${fmt(u * 149.6, u < 1 ? 1 : 0)} million km`;
   if (selected && m._lastSelDay !== shownDay) { m._lastSelDay = shownDay; showSelected(false); }
+  else if (selected && selected.kind === 'tour' && performance.now() - (m._tourT || 0) > 150) { m._tourT = performance.now(); showSelected(false); }
 }
 
 // ---------------------------------------------------------------- date and play
-let shownDay = null;
-function setDate(ms) {
+// "Live": showing the present moment, the map's clock keeps running in real time (updated every 20 seconds)
+let shownDay = null, live = false;
+function setDate(ms, isLive = false) {
+  live = isLive;
   ms = Math.max(MIN_MS, Math.min(MAX_MS, ms));
   map.setDate(jdFromMs(ms));
   const day = Math.floor(ms / DAY);
-  if (day === shownDay) return;                       // the text changes only once a day of map time
+  $('#mSub').textContent = live ? `live · ${new Date(ms).toISOString().slice(11, 16)} UTC` : Math.abs(ms - Date.now()) < DAY ? 'today' : '';
+  $('#mSub').classList.toggle('live', live);
+  if (day === shownDay) return;                       // the date text changes only once a day of map time
   shownDay = day;
   $('#mDate').textContent = new Date(ms).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
   $('#date').value = new Date(ms).toISOString().slice(0, 10);
-  $('#mSub').textContent = Math.abs(ms - Date.now()) < DAY ? 'today' : '';
 }
+setInterval(() => { if (live && !playing && !document.hidden && map) setDate(Date.now(), true); }, 20000);
 const nowMs = () => msFromJd(map.jd);
 let last = 0, raf = null;
 function tick(t) {
   if (!playing) return;
   const dt = last ? Math.min(0.1, (t - last) / 1000) : 0; last = t;
-  const next = nowMs() + dt * Number($('#speed').value) * DAY;
+  const cur = nowMs(), next = cur + dt * Number($('#speed').value) * DAY;
   if (next >= MAX_MS) { setDate(MAX_MS); stop(); return; }
+  if (tour && !tour.paused && cur < tour.tMs && next >= tour.tMs) {     // pause exactly at the closest moment
+    tour.paused = true; setDate(tour.tMs); stop(); banner('Closest approach'); showSelected(true); return;
+  }
   setDate(next);
   raf = requestAnimationFrame(tick);
 }
@@ -83,7 +136,7 @@ function play() { playing = true; map.quick = true; last = 0; $('#play').setAttr
 function stop() { if (playing) { map.quick = false; map.ast.jd = null; map.request(); } playing = false; if (raf) cancelAnimationFrame(raf); raf = null; $('#play').setAttribute('aria-pressed', 'false'); $('#play').textContent = '▶ Play'; }
 $('#play').addEventListener('click', () => (playing ? stop() : play()));
 $$('[data-step]').forEach((b) => b.addEventListener('click', () => { stop(); setDate(nowMs() + Number(b.dataset.step) * DAY); }));
-$('#today').addEventListener('click', () => { stop(); setDate(Date.now()); });
+$('#today').addEventListener('click', () => { stop(); setDate(Date.now(), true); });
 $('#date').addEventListener('change', (e) => { const ms = Date.parse(e.target.value + 'T00:00:00Z'); if (!isNaN(ms)) { stop(); setDate(ms); } });
 document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
 
@@ -134,9 +187,13 @@ $('#weekBtn').addEventListener('click', (e) => {
 // full screen: the browser's own where it allows it for page elements, otherwise the map fills the window
 const frameEl = $('#mapframe');
 const isFull = () => !!document.fullscreenElement || frameEl.classList.contains('pseudo-full');
+// icons: four corners pointing out (full screen) or pointing in, with the word "Exit" (leave full screen)
+const ICON_OPEN = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ICON_CLOSE = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function syncFull() {
   const on = isFull();
-  $('#full').textContent = on ? '⤡' : '⤢';
+  $('#full').innerHTML = on ? ICON_CLOSE + '<span>Exit</span>' : ICON_OPEN;
+  $('#full').classList.toggle('wide', on);
   $('#full').setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
   $('#full').title = on ? 'Exit full screen (Esc)' : 'Full screen';
   map && map.resize();
@@ -153,17 +210,19 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && frameEl.
 // ---------------------------------------------------------------- selection
 function select(b) {
   if (!b) return;
+  if (tour && b.kind === 'asteroid' && b.k === tour.k) b = { kind: 'tour', k: b.k, name: tour.P.title };
   if (b.kind === 'planet' && b.name === 'Earth') b = { kind: 'planet', name: 'Earth' };
   selected = b;
-  map.selected = b.kind === 'asteroid' ? b.k : -1;
+  map.selected = b.kind === 'asteroid' || b.kind === 'tour' ? b.k : -1;
   $('#cSel').disabled = false;
   map.request();
   showSelected(true);
 }
 function showSelected(full) {
   const b = selected; if (!b || !map) return;
-  const earth = planetPosition('Earth', map.jd);
+  const earth = map.earthAt(map.jd);
   let pos = null, html = '';
+  if (b.kind === 'tour') { tourCard(full); return; }
   if (b.kind === 'asteroid') {
     const r = data.rows[b.k], H = r[COL.H], d = r[COL.diameter];
     const size = d ? { dmin: d * 1000, dmax: d * 1000, measured: true } : H !== null ? { dmin: diameterM(H, 0.25), dmax: diameterM(H, 0.05) } : { dmin: NaN, dmax: NaN };
@@ -171,7 +230,7 @@ function showSelected(full) {
     const cls = CLASSES[classOf(r[COL.cls])] || { name: r[COL.cls] || '—', note: '' };
     const dec = comet ? null : decodeName(r[COL.name]);
     const seen = !comet && r[COL.firstSeen] && r[COL.found] && r[COL.firstSeen] < r[COL.found] ? `<div><dt>First seen</dt><dd>${r[COL.firstSeen]}, in older images found later</dd></div>` : '';
-    pos = [ast.x[b.k], ast.y[b.k], ast.z[b.k]];
+    pos = map.asteroidPos(b.k);
     const page = comet ? `https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=${encodeURIComponent(r[COL.pdes])}` : `object.html?id=${neowsId(r)}`;
     if (full) html = `<h3>${esc(r[COL.name].trim())}</h3>
       <p class="tags">${r[COL.pha] === 'Y' ? '<span class="tag haz">Potentially hazardous</span>' : ''}<span class="tag">${esc(cls.name)}</span></p>
@@ -184,8 +243,11 @@ function showSelected(full) {
     if (full) html = `<h3>${esc(c.name)}</h3><p class="note" style="margin-top:4px">${esc(c.note || '')}</p>
       <dl class="mini"><div><dt>From the Sun</dt><dd id="sSun"></dd></div><div><dt>From Earth</dt><dd id="sEarth"></dd></div></dl>
       <p class="dlinks"><button class="btn ghost" id="selCentre">Centre on it</button></p>`;
+  } else if (b.kind === 'moon') {
+    pos = map.moonAt(map.jd);
+    if (full) html = `<h3>The Moon</h3><dl class="mini"><div><dt>From Earth</dt><dd id="sEarth"></dd></div></dl>`;
   } else {
-    pos = planetPosition(b.name, map.jd);
+    pos = b.name === 'Earth' ? earth : planetPosition(b.name, map.jd);
     if (full) html = `<h3>${esc(b.name)}</h3><dl class="mini"><div><dt>From the Sun</dt><dd id="sSun"></dd></div>${b.name === 'Earth' ? '' : '<div><dt>From Earth</dt><dd id="sEarth"></dd></div>'}</dl>
       <p class="dlinks"><button class="btn ghost" id="selCentre">Centre on it</button></p>`;
   }
@@ -296,6 +358,8 @@ function setupYears() {
   fetch('data/years.json').then((r) => (r.ok ? r.json() : null)).then((ix) => {
     if (!ix) return;
     $('#closeIn').innerHTML = '<option value="">Any year</option>' + ix.years.slice().reverse().map((y) => `<option value="${y.year}">${y.year} · ${fmt(y.counts['10'])} passes</option>`).join('');
+    if (pendingCloseIn && [...$('#closeIn').options].some((o) => o.value === pendingCloseIn)) { $('#closeIn').value = pendingCloseIn; $('#closeIn').dispatchEvent(new Event('change')); }
+    pendingCloseIn = null;
   }).catch(() => {});
   const byDes = new Map(data.rows.map((r, k) => [String(r[COL.pdes]), k]));
   $('#closeIn').addEventListener('change', async (e) => {
@@ -315,5 +379,109 @@ function stopWatch() {
   watching = null;
   $('#watch').setAttribute('aria-pressed', 'false'); $('#watch').textContent = '▶ Watch the discoveries';
 }
+
+// ---------------------------------------------------------------- famous close passes
+// Facts checked Nov 9, 2026: times and distances from the NASA/JPL close-approach data (distances from Earth's
+// centre); positions from NASA/JPL Horizons (data/famous.json); stories from NASA/JPL and news reports of the time.
+const PASSES = {
+  'apophis-2029': { km: 38011, des: '99942', title: 'Apophis', view: 0.4, pre: 0.25, speed: 0.0416667, stories: [
+    'On April 13, 2029, Apophis, a rock about 340 m across, will pass closer than the satellites that circle 36,000 km above the equator, bright enough to be seen without a telescope from the Eastern Hemisphere.',
+    'When it was found in 2004 it briefly had a 2.7% chance of hitting Earth in 2029. Later observations, and radar in 2021, ruled out any impact for at least a century. NASA\'s OSIRIS-APEX spacecraft will meet it just after the pass.'] },
+  'duende-2013': { km: 34058, des: '367943', title: 'Duende (2012 DA14)', view: 0.4, pre: 0.25, speed: 0.0416667, stories: [
+    'Found a year earlier by an amateur observatory in Spain, Duende passed inside the ring of weather and TV satellites on February 15, 2013.',
+    'Earlier that same day, by coincidence, an unrelated, smaller rock exploded over Chelyabinsk in Russia. Nobody had seen that one coming. Duende\'s pass also bent its orbit: it now spends most of its time closer to the Sun than Earth.'] },
+  '2020qg-2020': { km: 9302, des: '2020 QG', title: '2020 QG', view: 0.12, pre: 0.0625, speed: 0.00694444, stories: [
+    'A car-sized rock that skimmed about 2,900 km above the southern Indian Ocean on August 16, 2020, one of the closest misses ever recorded.',
+    'It came from the direction of the Sun, where telescopes cannot look, and was only found about six hours after it had passed. Had it hit, it would have burned up as a bright fireball. Earth\'s pull bent its path sharply: watch the curve.'] },
+  '2019ok-2019': { km: 71345, des: '2019 OK', title: '2019 OK', view: 0.7, pre: 0.0625, speed: 0.00694444, stories: [
+    'An asteroid roughly 60 to 130 m across that passed at about a fifth of the Moon\'s distance on July 25, 2019.',
+    'It was spotted by an observatory in Brazil only about a day before, a reminder of how many mid-sized asteroids are still undiscovered.'] },
+  '2024yr4-2032': { km: 278330, moonKm: 22938, des: '2024 YR4', title: '2024 YR4', view: 1.8, pre: 0.6, speed: 0.0416667, moon: true, stories: [
+    'Found on December 27, 2024 by a telescope in Chile, this rock about 60 m across briefly had a 3.1% chance of hitting Earth on December 22, 2032. Further observations ruled that out within weeks.',
+    'Its chance of hitting the Moon then rose to about 4%, until observations by the James Webb Space Telescope in early 2026 ruled that out too. Keep playing after the pass by Earth: about six and a half hours later it passes the Moon.'] },
+};
+let tour = null, famousData = null;
+async function startTour(id) {
+  const P = PASSES[id];
+  try {
+    if (!famousData) famousData = await (await fetch('data/famous.json')).json();
+  } catch { banner('The famous passes could not be loaded. Try again.', 3000); return; }
+  const f = famousData.passes.find((p) => p.id === id);
+  const k = data.rows.findIndex((r) => String(r[COL.pdes]) === P.des);
+  if (!f || k < 0) { banner('That pass is not available.', 3000); return; }
+  stop();
+  const tMs = Date.parse(f.closest.replace(' ', 'T') + ':00Z');
+  tour = { id, P, f, k, tMs, paused: false };
+  map.tour = { k, asteroid: f.asteroid, earth: f.earth, moon: f.moon };
+  $$('[data-pass]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.pass === id));
+  // Bring the whole map into view below the sticky header, so the tour is seen from its start.
+  const fr = frameEl.getBoundingClientRect();
+  if (!isFull() && (fr.top < 64 || fr.bottom > innerHeight)) {
+    frameEl.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
+  selected = { kind: 'tour', k, name: P.title };
+  map.selected = k; $('#cSel').disabled = false;
+  map.center = 'Earth';
+  setDate(tMs - P.pre * DAY);
+  $('#speed').value = String(P.speed);
+  map.filter = 'all'; map.only = null; $('#closeIn').value = ''; map.foundMax = 9999; $('#foundBy').value = $('#foundBy').max; $('#foundBy').dispatchEvent(new Event('input'));
+  showSelected(true); syncButtons();
+  animateTo({ viewR: P.view * LD_AU, tilt: 35 }, 1400);
+  banner(`${P.title}: ${new Date(tMs).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}`, 2600);
+  setTimeout(() => { if (tour && tour.id === id && !playing) play(); }, reduce ? 200 : 1500);
+}
+function endTour() {
+  tour = null; map.tour = null; map.selected = -1; selected = null;
+  $$('[data-pass]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+  stop(); map.center = 'Sun'; $('#speed').value = '10'; setDate(Date.now(), true);
+  $('#selBody').innerHTML = '<p class="note">Tap a dot, a planet or a spacecraft on the map, or use "Find an asteroid".</p>';
+  $('#cSel').disabled = true;
+  animateTo({ viewR: 1.7, tilt: 55 }, 900); syncButtons();
+}
+function tourCard(full) {
+  const { P, f, k, tMs } = tour, r = data.rows[k], jd = map.jd;
+  const AUKM = AU_KM, tj = jdFromMs(tMs);
+  const va = hermiteVel(f.asteroid, tj), ve = hermiteVel(f.earth, tj);
+  const vRel = Math.hypot(va[0] - ve[0], va[1] - ve[1], va[2] - ve[2]) * AUKM / 86400;
+  let moonLine = '';
+  if (P.moon) {
+    let best = [1e12, 0];
+    for (let j = tj; j < tj + 1; j += 1 / 1440) { const p = hermiteAt(f.asteroid, j), m = hermiteAt(f.moon, j); if (!p || !m) break; const d = Math.hypot(p[0] - m[0], p[1] - m[1], p[2] - m[2]) * AUKM; if (d < best[0]) best = [d, j]; }
+    moonLine = `<div><dt>Past the Moon</dt><dd><b>${fmt(P.moonKm)} km</b> from its centre, ${new Date(msFromJd(best[1])).toISOString().slice(11, 16)} UTC</dd></div>`;
+  }
+  const now = tourNow();
+  if (full) {
+    const past = tMs < Date.now();
+    $('#selBody').innerHTML = `<div class="tourcard">
+      <div class="label">Famous close pass</div>
+      <h3>${esc(r[COL.name].trim())}</h3>
+      <p class="when">${past ? 'Passed' : 'Will pass'} ${new Date(tMs).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}, ${new Date(tMs).toISOString().slice(11, 16)} UTC</p>
+      <dl class="mini facts">
+        <div><dt>Closest to Earth</dt><dd><b>${fmt(P.km)} km</b> from its centre, about ${fmt(Math.round((P.km - 6371) / 100) * 100)} km above the surface</dd></div>
+        ${moonLine}
+        <div><dt>Speed past Earth</dt><dd>${fmt(vRel, 1)} km/s</dd></div>
+        <div><dt>Size, est.</dt><dd>${sizeText(r[COL.diameter] ? { dmin: r[COL.diameter] * 1000, dmax: r[COL.diameter] * 1000, measured: true } : { dmin: diameterM(r[COL.H], 0.25), dmax: diameterM(r[COL.H], 0.05) })}</dd></div>
+        <div><dt>Now on the map</dt><dd id="tourNow">${now}</dd></div>
+      </dl>
+      ${P.stories.map((t) => `<p class="story">${esc(t)}</p>`).join('')}
+      <p class="src">Positions: NASA/JPL Horizons, including Earth's pull. Closest-approach figures: NASA/JPL close-approach data.</p>
+      <p class="dlinks"><button class="btn" id="tourReplay">Replay</button><button class="btn ghost" id="tourEnd">End tour</button><a class="linkbtn" href="object.html?id=${neowsId(r)}">Its page ›</a></p>
+    </div>`;
+    $('#tourReplay').addEventListener('click', () => startTour(tour.id));
+    $('#tourEnd').addEventListener('click', endTour);
+  } else if ($('#tourNow')) $('#tourNow').textContent = now;
+}
+function tourNow() {
+  const jd = map.jd, a = map.tourAst(jd), e = map.earthAt(jd);
+  if (!a) return 'outside the tour\'s dates: the asteroid is placed from its orbit';
+  const d = Math.hypot(a[0] - e[0], a[1] - e[1], a[2] - e[2]);
+  return d / LD_AU < 2 ? `${fmt(Math.round(d * AU_KM))} km from Earth's centre` : `${fmt(d / LD_AU, 1)} Moon distances from Earth`;
+}
+let bannerTimer = null;
+function banner(text, ms = 2200) {
+  const b = $('#tourBanner'); b.textContent = text; b.hidden = false;
+  clearTimeout(bannerTimer); bannerTimer = setTimeout(() => (b.hidden = true), ms);
+}
+$$('[data-pass]').forEach((b) => b.addEventListener('click', () => startTour(b.dataset.pass)));
 
 start();

@@ -32,6 +32,17 @@ How NASA Data Projects came about, in order.
 - The orbit maths was checked before the diagram was drawn: Earth's distance from the Sun at perihelion and
   aphelion, and an asteroid's distance from Earth on the day of a close approach, matched NASA's figures.
 
+## November 9, 2026 — famous close passes and going back
+
+- The developer reported choppy frames when zoomed in close, a poorly laid-out spacecraft list, identical full-screen
+  and exit icons, and the lack of a way back to the exact spot on the previous page; he also asked whether the map
+  shows Earth where it is right now. All were addressed, together with three approved ideas: links for every name
+  in the "By year" tables, famous close passes, and a background thread for the orbit maths.
+- The zoomed-in slowness came from lines that ran far off screen: the browser still worked out every dash of them.
+  Cutting each line to the visible area removed it.
+- Two-body orbits cannot show a famous pass correctly, because Earth's pull bends the asteroid's path during the
+  pass. Precise positions from NASA/JPL Horizons are used for those passes instead.
+
 ## November 8–9, 2026 — the solar system map
 
 - The developer asked for a map of all the asteroids around the Sun that could be turned smoothly and seen from

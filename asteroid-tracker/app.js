@@ -12,6 +12,9 @@ import { fmt, sizeText, dateText, sizePicture, diameterM, LD_KM, DAY_MS } from '
 import { scatter, perDay, biggest, yearChart, perYear, hideTip } from './charts.js';
 import { mountSearch } from './searchview.js';
 import { loadNeos } from './mapdata.js';
+import { COL, COMET_CODES } from './skymap.js';
+import { neowsId } from './search.js';
+import { placeKeeper, scrollBack } from './back.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -84,6 +87,7 @@ function toObject(o) {
   };
 }
 
+let keepRow = null;   // the open row and "show all", put back once when the page is returned to
 async function loadWeek() {
   const start = state.weekStart, end = start + 6 * DAY_MS;
   state.week = null; state.weekError = null; state.selected = null; state.showAll = false;
@@ -101,6 +105,8 @@ async function loadWeek() {
     const feed = await nasaGet('/neo/rest/v1/feed', { start_date: isoDate(new Date(start)), end_date: isoDate(new Date(end)) });
     if (start !== state.weekStart) return;   // the user moved on to another week meanwhile
     state.week = Object.values(feed.near_earth_objects || {}).flat().map(toObject);
+    if (keepRow && keepRow.weekStart === start) { state.selected = keepRow.selected; state.showAll = keepRow.showAll; }
+    keepRow = null;
   } catch (e) {
     if (start !== state.weekStart) return;
     state.weekError = e;
@@ -371,11 +377,24 @@ function renderYear() {
   perYear($('#cYears'), state.index.years, { maxLd: max, selected: year, current, onPick: (y) => goYear(y) });
 }
 
-// A link for an object in the year tables: the asteroid's own page when NASA's id can be worked out (numbered
-// asteroids: NeoWs id = 2,000,000 + number), otherwise JPL's page for the designation.
+// A link for an object in the year tables: the asteroid's own page. Its NeoWs id comes from the list of all
+// near-Earth objects (data/neos.json, loaded in the background when the year view opens); until that arrives, or
+// for an object not in it, numbered asteroids still get theirs (NeoWs id = 2,000,000 + number). Comets, and objects
+// with no id, link to JPL's page for the designation.
+let idByDes = null;
+function loadIds() {
+  if (idByDes) return;
+  idByDes = new Map();
+  loadNeos().then((d) => {
+    for (const r of d.rows) idByDes.set(String(r[COL.pdes]), COMET_CODES.has(r[COL.cls]) ? null : neowsId(r));
+    if (state.view === 'year' && state.year) renderYear();
+  }).catch(() => {});
+}
 function objectLink(o) {
+  const id = o.des !== undefined && o.des !== null ? idByDes && idByDes.get(String(o.des)) : undefined;
+  if (id) return `object.html?id=${id}&t=${o.t}`;
   const num = /^\s*(\d+)\s/.exec(o.name);
-  if (num) return `object.html?id=${2000000 + Number(num[1])}&t=${o.t}`;
+  if (num && id !== null) return `object.html?id=${2000000 + Number(num[1])}&t=${o.t}`;
   return `https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=${encodeURIComponent(o.des || o.name.replace(/[()]/g, ''))}`;
 }
 
@@ -413,7 +432,7 @@ function setView(v, year) {
   $('#view-year').hidden = v !== 'year';
   $('#view-search').hidden = v !== 'search';
   hideTip();
-  if (v === 'year') { if (year || !state.year) loadYear(year || state.yearShown); else renderYear(); }
+  if (v === 'year') { loadIds(); if (year || !state.year) loadYear(year || state.yearShown); else renderYear(); }
   else if (v === 'search') { if (!search) search = mountSearch($('#view-search'), () => loadNeos().then((d) => d.rows)); setTimeout(() => search.focus(), 0); }
   else if (state.week) renderFiltered();
 }
@@ -433,5 +452,32 @@ addEventListener('resize', () => {
 // ---------------------------------------------------------------- start
 showKeyState();
 if (location.hash === '#key') toggleKeyCard(true);
+
+// Coming back (Back button, or a reload): the same week or year, filters, sort, open row, search words and scroll
+// position as when the page was left. Kept in this browser tab only.
+const place = placeKeeper('tracker', () => ({
+  hash: location.hash, weekStart: state.weekStart, sortKey: state.sortKey, sortDir: state.sortDir,
+  filter: { ...state.filter, dist: Number.isFinite(state.filter.dist) ? state.filter.dist : null },
+  selected: state.selected, showAll: state.showAll, maxLd: state.maxLd, q: $('#q') ? $('#q').value : '',
+}));
+const has = (sel, v) => [...$(sel).options].some((o) => o.value === String(v));
+if (place && place.hash === location.hash) {
+  if (Number.isFinite(place.weekStart)) state.weekStart = sundayOf(place.weekStart);
+  const f = place.filter || {};
+  state.filter = { haz: !!f.haz, size: has('#fSize', f.size) ? Number(f.size) : 0, dist: f.dist !== null && has('#fDist', f.dist) ? Number(f.dist) : Infinity, day: f.day || '' };
+  $('#fSize').value = String(state.filter.size); $('#fDist').value = String(state.filter.dist);
+  $$('[data-haz]').forEach((x) => x.setAttribute('aria-pressed', x.dataset.haz === (state.filter.haz ? 'haz' : 'all')));
+  if (has('#sortSel', `${place.sortKey}:${place.sortDir}`)) { state.sortKey = place.sortKey; state.sortDir = place.sortDir; $('#sortSel').value = `${place.sortKey}:${place.sortDir}`; }
+  else if (['t', 'ld', 'dmax', 'v', 'name'].includes(place.sortKey) && Math.abs(place.sortDir) === 1) { state.sortKey = place.sortKey; state.sortDir = place.sortDir; }
+  if (Number.isFinite(place.maxLd) && $(`[data-ld="${place.maxLd}"]`)) { state.maxLd = place.maxLd; $$('[data-ld]').forEach((x) => x.setAttribute('aria-pressed', Number(x.dataset.ld) === state.maxLd)); }
+  keepRow = { weekStart: state.weekStart, selected: place.selected || null, showAll: !!place.showAll };
+}
 loadWeek();
 setView(hashView(), hashYear());
+if (place && place.hash === location.hash) {
+  if (state.view === 'search' && place.q) search.set(place.q);
+  const t0 = performance.now();
+  scrollBack(place.scrollY, () => state.view === 'week' ? !!(state.week || state.weekError)
+    : state.view === 'year' ? !!(state.year || state.yearError) && (!!idByDes?.size || performance.now() - t0 > 1500)
+    : !!document.querySelector('#view-search .rmain') || performance.now() - t0 > 2500);
+}

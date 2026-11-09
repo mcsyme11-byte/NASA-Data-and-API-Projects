@@ -31,6 +31,15 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
   screen's resolution; nothing is redrawn unless something changed. Measured with all 43,186 objects: dragging at
   60 frames a second on every screen tested; playing at 60 on standard and phone screens and 50–55 on 2× desktop and
   tablet screens, on a test machine without a graphics processor.
+- **Map performance (Nov 9, 2026):** the Kepler solving moved to a background thread (`orbitworker.js`, sharing
+  `kepler.js` with the page, which falls back to solving itself if a worker cannot start); lines are cut to the
+  visible area before drawing. Measured: playing at a median of 60 frames a second at every width, zoomed in or out.
+- **Decided Nov 9, 2026 (Asteroid Tracker):** famous close passes are placed from Horizons positions
+  (`data/famous.json`), not two-body orbits, because Earth's pull bends the path during a close pass. Five passes:
+  Apophis 2029, Duende 2013, 2020 QG, 2019 OK and 2024 YR4 (2032).
+- **Decided Nov 9, 2026 (Asteroid Tracker):** "‹ Back" uses the browser's own Back when the previous page is part of
+  the site; the tracker and the map keep their place in the browser tab (`back.js`), and NASA's answers are kept
+  for an hour in the tab (`shared/nasa.js`), so returning costs no requests.
 - **Decided Nov 8, 2026 (Asteroid Tracker):** the orbit diagram computes positions itself (two-body Kepler orbits from
   NASA's elements; planets from JPL's approximate elements), so it works offline from the one NeoWs answer. Its
   limits are shown on the page; NASA's official close-approach figures are shown beside it.

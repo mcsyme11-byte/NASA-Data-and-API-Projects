@@ -127,6 +127,13 @@ table.neo tr.msg td::before { content: none; }
 #yearSel { width: auto; min-width: 120px; margin-top: 2px; text-align: center; }
 
 /* ---- one asteroid (object.html) ---- */
+/* back to the previous page: a clear button above the page heading */
+.backlink { display: inline-flex; align-items: center; min-height: 40px; margin-top: 18px; padding: 0 16px 0 12px;
+  border: 1px solid var(--brass-dim); border-radius: 999px; color: var(--brass); font-size: 15px; text-decoration: none; }
+.backlink:hover { border-color: var(--brass); color: var(--brass-bright); }
+.backlink:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+.backlink[hidden] { display: none; }
+.backlink:not([hidden]) + .phead { padding-top: 18px; }
 .phead .eyebrow a { color: var(--brass); }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .tag { color: var(--ink2); }
@@ -215,7 +222,7 @@ table.neo tr.out td { color: var(--muted); }
 /* ---- solar system map ---- */
 .mapcard { padding: 16px; }
 .maplayout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
-.mapframe { position: relative; background: var(--deep); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden;
+.mapframe { scroll-margin-top: 72px; position: relative; background: var(--deep); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden;
   height: min(74vh, 760px); min-height: 380px; }
 .mapframe:fullscreen { height: 100vh; border-radius: 0; }
 #map { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; outline: none; }
@@ -229,7 +236,9 @@ table.neo tr.out td { color: var(--muted); }
 .findlist li.none { color: var(--muted); font-style: italic; cursor: default; }
 .ovl-zoom { right: 12px; bottom: 12px; display: flex; flex-direction: column; gap: 6px; pointer-events: auto; }
 .mbtn { width: 38px; height: 38px; border-radius: var(--r-btn); border: 1px solid var(--line2); background: rgba(12, 17, 25, .88); color: var(--ink);
-  font: 18px var(--font); cursor: pointer; }
+  font: 18px var(--font); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0; }
+.mbtn.wide { width: auto; padding: 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: .18em; }
+.ovl-zoom { align-items: flex-end; }
 .mbtn:hover { border-color: var(--brass); color: var(--brass); }
 .ovl-scale { left: 14px; bottom: 12px; display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: var(--ink2); }
 .ovl-scale i { display: block; height: 6px; border: 1.5px solid var(--ink2); border-top: 0; }
@@ -242,7 +251,7 @@ table.neo tr.out td { color: var(--muted); }
 .mapside { display: flex; flex-direction: column; gap: 14px; }
 .selcard { padding: 16px; }
 .selcard h3, .result h3 { font-weight: 400; font-size: 19px; margin: 6px 0 4px; }
-.mapside .label, .selcard .label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
+.mapside .label, .selcard .label, .craftbox .label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
 dl.mini { margin: 8px 0 0; display: grid; gap: 6px; }
 dl.mini div { display: grid; grid-template-columns: 110px 1fr; gap: 8px; font-size: 14px; }
@@ -250,17 +259,28 @@ dl.mini dt { color: var(--muted); font-size: 12.5px; font-style: italic; }
 dl.mini dd { margin: 0; }
 .selcard .dlinks { margin-top: 12px; }
 .selcard .btn { min-height: 38px; padding: 0 14px; font-size: 12.5px; }
-.legendbox { padding: 4px 2px; }
+.legendbox { padding: 16px; }
+.legendbox .note { margin: 8px 0 0; font-size: 13px; }
+#mSub.live { color: var(--green); font-style: normal; letter-spacing: .04em; }
+#mSub.live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-right: 6px; vertical-align: 1px; }
 .classlist, .craftlist { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 8px; font-size: 14px; }
 .classlist li { display: flex; gap: 10px; align-items: flex-start; }
 .classlist i { flex: none; width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
 .classlist i.ring { background: none; border: 1.5px solid var(--brass-bright); }
 .classlist b, .craftlist b { font-weight: 400; color: var(--ink); }
-.craftlist li { display: flex; flex-direction: column; }
+.craftlist li { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: baseline; }
+.craftlist li::before { content: "✛"; color: var(--ink2); font-size: 12px; grid-row: span 2; }
+.craftlist .note { grid-column: 2; font-size: 13px; }
 .craftlist .linkbtn { text-align: left; padding: 0; }
+/* the spacecraft: a full-width card under the map, in as many columns as fit */
+.craftbox { margin-top: 18px; }
+.craftbox .label .aside { margin-left: 10px; letter-spacing: .04em; text-transform: none; font-style: italic; color: var(--muted); font-size: 12.5px; }
+.craftbox .craftlist { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 12px 22px; margin: 12px 0 10px; }
 @media (max-width: 1100px) {
   .maplayout { grid-template-columns: 1fr; }
-  .mapside { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .mapside { display: flex; flex-direction: column; gap: 14px; }
+  .mapside .classlist { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px 22px; }
+  .selcard dl.mini { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); column-gap: 22px; }
 }
 @media (max-width: 760px) {
   .mapcard { padding: 10px; }
@@ -316,7 +336,7 @@ input[type=search]::-webkit-search-cancel-button { -webkit-appearance: none; app
 
 /* map: the two year controls */
 .mapbar.years { align-items: flex-start; gap: 16px 32px; padding-top: 12px; border-top: 1px solid var(--line); }
-.yearctl { display: flex; flex-direction: column; gap: 6px; min-width: 260px; flex: 1; }
+.yearctl { display: flex; flex-direction: column; gap: 6px; min-width: 340px; flex: 1; }   /* button, slider and year need about 340 px: narrower, the two controls stack */
 .yearctl .note { margin: 0; }
 .yearrow { display: flex; align-items: center; gap: 12px; }
 .yearrow input[type=range] { flex: 1; accent-color: var(--brass); min-width: 120px; height: 28px; }
@@ -349,3 +369,16 @@ body.noscroll { overflow: hidden; }
   .yearrow select { flex: 1; min-width: 0; }
 }
 .yearctl .barlbl { align-self: flex-start; margin: 0; }
+
+/* map: famous passes */
+.mapbar.famous { padding-top: 12px; border-top: 1px solid var(--line); }
+.tourcard h3 { margin-bottom: 2px; }
+.tourcard .when { font-size: 13px; color: var(--muted); font-style: italic; margin: 0 0 8px; }
+.tourcard .story { font-size: 14.5px; color: var(--ink2); margin: 10px 0 0; }
+.tourcard .story + .story { margin-top: 8px; }
+.tourcard .facts { margin-top: 10px; }
+.tourcard .facts dd b { font-weight: 400; color: var(--brass-bright); }
+.tourcard .src { font-size: 12.5px; color: var(--muted); font-style: italic; margin: 10px 0 0; }
+.tourbanner { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); background: rgba(12, 17, 25, .9); border: 1px solid var(--brass-dim);
+  border-radius: 999px; padding: 6px 16px; font-size: 13.5px; color: var(--brass-bright); pointer-events: none; white-space: nowrap; }
+@media (max-width: 760px) { .tourbanner { top: auto; bottom: 64px; font-size: 12.5px; } .mapbar.famous .seg { width: 100%; } .mapbar.famous .chip { flex: 1 1 45%; } }
