@@ -8,6 +8,8 @@
 #   preview.json     the potentially hazardous ones only, for the home page's live preview
 #   spacecraft.json  positions of selected spacecraft around the Sun from NASA/JPL Horizons, every few days from
 #                    launch (or 1977) to a year ahead
+#   soon.json        the close passes from a day ago to 15 days ahead, with each asteroid's NeoWs id, for the home
+#                    page's "closest pass in the next 7 days" (read from the close-approach files written just before)
 #   famous.json      for the map's famous close passes: precise positions and velocities of the asteroid, Earth and
 #                    the Moon (Horizons, which includes Earth's pull), every 10 minutes within 12 hours of closest
 #                    approach, hourly within 3 days, daily within 40 days. Refreshed when missing or a month old.
@@ -228,6 +230,31 @@ def famous():
     return out
 
 
+def neows_id(row):
+    """NeoWs id: 2,000,000 + number for a numbered asteroid, else SBDB's spkid (as the web pages work it out)."""
+    m = re.match(r'\s*(\d+)\s', row[1])
+    return 2000000 + int(m.group(1)) if m else row[0]
+
+
+def soon(rows, now):
+    """Close passes from a day ago to 15 days ahead: [name, time_ms_utc, distance_ld, h, neows_id or None, designation].
+    Comets (no NeoWs page) get no id."""
+    ids = {str(r[2]): (None if r[13] in ('JFc', 'JFC', 'HTC', 'ETc', 'CTc', 'COM', 'PAR', 'HYP') else neows_id(r)) for r in rows}
+    t0 = (now - dt.timedelta(days=1)).timestamp() * 1000
+    t1 = (now + dt.timedelta(days=15)).timestamp() * 1000
+    out = []
+    for y in sorted({(now - dt.timedelta(days=1)).year, (now + dt.timedelta(days=15)).year}):
+        try:
+            with open(os.path.join(DATA, '%d.json' % y), encoding='utf-8') as fh:
+                yr = json.load(fh)
+        except (OSError, ValueError):
+            continue
+        for name, t, ld, h, _d, des in yr['rows']:
+            if t0 <= t <= t1:
+                out.append([name, t, ld, h, ids.get(str(des)), des])
+    return sorted(out, key=lambda r: r[1])
+
+
 def write_if_changed(name, obj, keys):
     path = os.path.join(DATA, name)
     try:
@@ -258,6 +285,10 @@ def main():
         write_if_changed('neos.json', {'source': src, 'updated': stamp, 'count': count, 'fields': fields, 'rows': rows}, ['rows'])
         pha = [r for r in rows if r[12] == 'Y']
         write_if_changed('preview.json', {'source': src, 'updated': stamp, 'total': len(pha), 'fields': fields, 'rows': pha}, ['rows'])
+        write_if_changed('soon.json', {'source': 'NASA/JPL SBDB Close-Approach Data API, within 10 Moon distances; ids from the '
+                                       'SBDB Query API', 'updated': stamp,
+                                       'fields': ['name', 'time_ms_utc', 'distance_ld', 'h', 'neows_id', 'designation'],
+                                       'rows': soon(rows, now)}, ['rows'])
     except Exception as e:
         failed += 1
         print('neos: could not reach the SBDB Query API (%s)' % e)
