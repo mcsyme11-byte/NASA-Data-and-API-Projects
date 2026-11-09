@@ -615,6 +615,7 @@
   function fallback(img) {
     const n = NEXT[img.dataset.try];
     if (n) { img.dataset.try = n; img.src = `${A}${img.dataset.id}/${img.dataset.id}~${n}.jpg`; }
+    else if (img.id === 'vImg') { img.removeAttribute('src'); img.alt = 'Picture unavailable'; }
     else img.replaceWith(Object.assign(document.createElement('span'), { className: 'nopic', textContent: 'Picture unavailable' }));
   }
   document.addEventListener('error', e => { if (e.target.matches?.('img[data-try]')) fallback(e.target); }, true);

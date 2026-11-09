@@ -1,5 +1,16 @@
 # Change log
 
+## November 9, 2026 — Image Explorer: data checks and a mock-up for review
+
+- GIBS and the NASA Image and Video Library checked with live requests from the published site; findings recorded
+  in `docs/DATA-SOURCES.md` (the fire layers work only in the `epsg4326` projection; the library allows 10,000
+  results per search; dates and missing picture sizes explained).
+- Plan recorded in `docs/PROJECT-NOTES.md`: OpenLayers, eight layers, two tabs, place search, Arctic and Antarctic
+  views.
+- **Mock-up** (`image-explorer/mockup.html`): a live map of NASA imagery with the eight layers, date controls, a
+  day-by-day slider and Play, sample place search, tapping the map, and the picture library with a fixed sample of
+  real results and the picture viewer.
+
 ## November 9, 2026 — Asteroid Tracker: solar system map, search, home preview, names explained
 
 - **Solar System Map** (`asteroid-tracker/map.html`): all 43,186 known near-Earth objects (asteroids and 209 comets)

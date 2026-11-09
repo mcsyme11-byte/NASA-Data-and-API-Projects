@@ -35,13 +35,21 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
   NASA's elements; planets from JPL's approximate elements), so it works offline from the one NeoWs answer. Its
   limits are shown on the page; NASA's official close-approach figures are shown beside it.
 
+- **Decided Nov 9, 2026 (Image Explorer):** one page with two tabs, "Earth map" and "Picture library". The map uses
+  OpenLayers in the `epsg4326` projection (the fire layers work only there; see DATA-SOURCES.md), with Arctic and
+  Antarctic views. Eight layers to start: true colour, night lights and sea temperature as the picture underneath;
+  fires, snow, clouds, smoke and dust, and sea ice on top (fires with anything, the coloured layers one at a time).
+  A date picker, a day-by-day slider and Play. Place search with suggestions after every letter (names and
+  coordinates); tapping the map offers NASA's pictures of that place. The picture library is images first, with
+  videos available as a filter. A mock-up comes first (`image-explorer/mockup.html`).
+
 ## How it's built (starting plan; each project's chat confirms it)
 
 | Part | Built with | Why |
 |---|---|---|
 | Web pages | Plain HTML, CSS and JavaScript modules, no build step | Free hosting on GitHub Pages; easy to read and learn from |
 | Charts | Hand-drawn SVG, styled to DESIGN.md (Asteroid Tracker); chosen per project | No library to load; matches the look exactly |
-| Maps (Image Explorer) | A web map library (for example Leaflet or OpenLayers) showing GIBS tiles | GIBS serves standard map tiles |
+| Maps (Image Explorer) | OpenLayers 10 (BSD licence, from a CDN), `epsg4326` and the two polar projections | Handles GIBS's tile grids, vector fire tiles and polar views; Leaflet does not without add-ons |
 | Mars analysis | Python 3 (pandas, matplotlib) in `mars-data/analysis/` | Cleaning and statistics are easiest in Python; it writes small summary files the web page reads |
 
 ## API keys

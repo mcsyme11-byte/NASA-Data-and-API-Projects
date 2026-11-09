@@ -1,7 +1,7 @@
 # Data sources
 
 Every NASA source the projects use or may use, with how to reach it, what it needs, and its limits.
-Checked November 8, 2026. Each project's chat confirms the details again before building on them.
+Checked November 8, 2026 (Image Explorer sources: November 9, 2026). Each project's chat confirms the details again before building on them.
 
 ## Keys at a glance
 
@@ -183,25 +183,94 @@ Used by `decodeCode()` in `asteroid-tracker/search.js`:
 
 ### GIBS (Global Imagery Browse Services)
 
-- **What:** over 1,000 satellite imagery layers of Earth, as map tiles, by date.
+- **What:** over 1,000 satellite imagery layers of Earth, as map tiles, by date (1,332 layers on Nov 9, 2026).
 - **No key.** Tile URL pattern (WMTS, REST):
   ```
-  https://gibs.earthdata.nasa.gov/wmts/{projection}/best/{Layer}/default/{YYYY-MM-DD}/{TileMatrixSet}/{z}/{y}/{x}.{jpg|png}
+  https://gibs.earthdata.nasa.gov/wmts/{projection}/best/{Layer}/default/{YYYY-MM-DD}/{TileMatrixSet}/{z}/{y}/{x}.{jpg|png|mvt}
   ```
-  For a normal web map use `epsg3857` with a `GoogleMapsCompatible_LevelN` tile set (N is the layer's deepest zoom).
-- **Layer list and dates:** the GetCapabilities document,
-  `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/wmts.cgi?SERVICE=WMTS&REQUEST=GetCapabilities`.
-- **Limits:** each layer has its own image format, deepest zoom and date range; asking outside them gives blank
-  tiles or errors.
+- **Layer list and dates:** the GetCapabilities document of each projection, for example
+  `https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/wmts.cgi?SERVICE=WMTS&REQUEST=GetCapabilities`.
 - **Required acknowledgement** (NASA asks every user of GIBS to show it):
   > We acknowledge the use of imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of
   > NASA's Earth Science Data and Information System (ESDIS).
+
+Checked Nov 9, 2026 (live requests from the published site):
+- **Browsers may call it** (CORS allowed): tiles and the GetCapabilities documents load from a web page.
+- **Projections:** `epsg4326` (the world as a flat grid of latitude and longitude, 1,332 layers), `epsg3857` (web
+  map, 1,332 layers), `epsg3413` (Arctic, 303 layers) and `epsg3031` (Antarctic, 263 layers).
+- **The fire layers only work in `epsg4326`** (and the polar projections): they are vector tiles (`.mvt`, points),
+  listed in `epsg3857` but every `epsg3857` request returned 404 (eight tiles at zoom 0–7, two dates), while the
+  same tiles in `epsg4326` returned data. **The Image Explorer therefore uses `epsg4326`**, as NASA Worldview does.
+- **`epsg4326` tile sets:** 512 px tiles from the top-left corner (−180°, 90°); level 0 is 0.5625° per pixel (2 × 1
+  tiles), each level halves it. Deepest level: `250m` 8, `500m` 7, `1km` 6, `2km` 5. Tile path order is
+  `{level}/{row}/{column}`.
+- **Answers:** a tile outside a layer's dates returns 404 (true colour on 1990-01-01; the MUR layers on a day not yet
+  processed); a level deeper than the layer's set returns 400. The page treats these as "no picture here", not as
+  errors.
+- **Size of the layer list:** the `epsg3857` GetCapabilities document is about 5.8 MB, too large to load on every
+  visit; each layer's dates are also available on their own (the `…/all/--{TimeEnd}.xml` and `{TimeStart}--{TimeEnd}`
+  templates under each layer's `ResourceURL`).
+- **Colour keys:** each coloured layer lists an SVG legend (`https://gibs.earthdata.nasa.gov/legends/{name}_H.svg`,
+  dark text on a light background) and a colour map (`https://gibs.earthdata.nasa.gov/colormaps/v1.3/{name}.xml`).
+
+The eight layers chosen (Nov 9, 2026), with their tile sets in `epsg4326` and first dates:
+
+| On the page | GIBS layer | Tile set · format | From |
+|---|---|---|---|
+| True colour | `MODIS_Terra_CorrectedReflectance_TrueColor` | 250m · jpg | 2000-02-24 |
+| Night lights | `VIIRS_NOAA20_DayNightBand` | 1km · png | 2018-01-05 |
+| Sea temperature | `GHRSST_L4_MUR_Sea_Surface_Temperature` | 1km · png | 2002-06-01 |
+| Fires | `MODIS_Combined_Thermal_Anomalies_All` | 1km · mvt (points) | 2002-07-04 |
+| Snow | `MODIS_Terra_NDSI_Snow_Cover` | 500m · png | 2000-02-24 |
+| Clouds | `MODIS_Terra_Cloud_Top_Temp_Day` | 2km · png | 2000-02-24 |
+| Smoke and dust | `MODIS_Terra_Aerosol` (aerosol optical depth, land and ocean) | 2km · png | 2000-02-24 |
+| Sea ice | `GHRSST_L4_MUR_Sea_Ice_Concentration` | 1km · png | 2002-06-01 |
+
+- Most layers have gaps in their dates (several ranges in the layer list); the page reads them rather than assuming
+  every day exists.
+- **Newest day:** on Nov 9, 2026 the MODIS and VIIRS layers reached Nov 8 or 9; the two MUR layers (sea temperature,
+  sea ice) reached Nov 7.
+- **Night lights:** `VIIRS_Black_Marble` (cloud-free city lights) exists only for 2012 and 2016, so the daily
+  day/night band is used; it also shows moonlit cloud and fires.
+- `Reference_Features_15m` and `Reference_Labels_15m` (coastlines, borders and names from OpenStreetMap) are
+  available as overlays if wanted later; they require the OpenStreetMap credit.
 
 ### NASA Image and Video Library
 
 - `https://images-api.nasa.gov/search?q=...&media_type=image` (no key).
 - Filters: `q` (keywords), `center` (for example JPL, GSFC), `year_start`, `year_end`, `keywords`, `page`.
 - Each result has a title, description, date, NASA centre and keywords; `asset/{nasa_id}` lists the image sizes.
+
+Checked Nov 9, 2026 (live requests from the published site):
+- **Browsers may call it** (CORS allowed), for searches, `asset/{nasa_id}` and the image files. One search request
+  failed to connect and worked when repeated, so the page retries once before showing an error.
+- **Answer:** `collection.items[]`, each with `data[0]` (`title`, `description`, `date_created`, `center`,
+  `keywords`, `media_type`, `nasa_id`, and sometimes `photographer`, `secondary_creator`, `location`, `album`,
+  `description_508`) and `links[]` (image sizes with width and height; `rel: "preview"` is the thumbnail);
+  `collection.metadata.total_hits`; `collection.links` with `next` and `prev` pages.
+- **Paging:** 100 results per page by default; `page_size` sets it (for example 24). **At most 10,000 results** per
+  search: page 100 of 100 works, page 101 returns 400 ("Maximum number of search results have been displayed").
+- `center` ignores letter case (`gsfc` = `GSFC`); `media_type=image,video` returns both. Examples: "hubble" 4,960
+  results, 598 from GSFC, 249 from 1990–1995; "apollo" 5,940 images and 222 videos.
+- **`date_created` is the date in NASA's records,** sometimes not the date the picture was taken (an Apollo picture
+  from 1967 carries 2008-07-11); the caption usually gives the real date.
+- **`location` is where the picture was published or taken** (for example "Greenbelt, MD" for Goddard), not a map
+  position: no result has coordinates. Searching by place therefore searches the words in titles, captions and
+  keywords.
+- **File names:** `https://images-assets.nasa.gov/image/{nasa_id}/{nasa_id}~{thumb|small|medium|large|orig}.jpg`.
+  A size listed by `asset/{nasa_id}` can still be missing from the server (`GSFC_20171208_Archive_e000775`: `small`
+  loads, `thumb` and `medium` fail), so the page tries the next size before showing "Picture unavailable".
+  `asset/{nasa_id}` and older records give `http://` links; the page always uses `https://`.
+
+### Place names (for the place search)
+
+- NASA's sources have no list of place names, so place search needs one of its own.
+- **OpenStreetMap's Nominatim service is not suitable:** its usage policy forbids search-as-you-type and allows at
+  most 1 request a second (checked Nov 9, 2026).
+- **Planned source: GeoNames** (download.geonames.org/export/dump), licensed CC BY 4.0, so pages credit
+  "GeoNames". `cities15000` (about 25,000 places of over 15,000 people, plus capitals) and countries, with mountains
+  (class T), lakes and rivers (class H) and other features to be chosen when the file is built, saved as one small
+  file in the repository, as the Asteroid Tracker does with its data.
 
 ## Using NASA material
 

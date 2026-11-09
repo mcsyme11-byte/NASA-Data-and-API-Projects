@@ -26,13 +26,22 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   need their id from `neos.json`, a 1.8 MB download that the year view does not otherwise need); a short animation
   of a famous close pass; the map in a Web Worker if playing ever needs more speed on large screens.
 
-## 2. Image Explorer (second)
+## 2. Image Explorer (plan confirmed Nov 9, 2026)
 
-- [ ] Confirm the plan in its own chat (map library, which GIBS layers to offer first).
-- [ ] Earth by date: a GIBS map with a date picker and a few layers (true colour, fires, snow, night lights).
-- [ ] A time slider to step day by day.
-- [ ] NASA Image Library search: keywords, mission, centre, years; results grid; a full-size view with the caption.
-- [ ] The GIBS acknowledgement on the page.
+- [ ] **Developer review of the mock-up** (`image-explorer/mockup.html` on the live site): the map, the layers,
+  the date controls, place search, tapping the map, the picture library and the picture viewer.
+- [ ] Build the page from the approved mock-up: `index.html`, `explorer.css`, `app.js`; remove `mockup.html`.
+- [ ] Each layer's dates read from GIBS (not a fixed lag), so the newest day and gaps are always right, without
+  downloading the 5.8 MB layer list on every visit.
+- [ ] Colour keys drawn in the project's look from GIBS's colour maps, in place of GIBS's light legend images.
+- [ ] Arctic and Antarctic views (`epsg3413`, `epsg3031`).
+- [ ] Place list from GeoNames: build the file (cities, countries, mountains, lakes, rivers), credit GeoNames.
+- [ ] Live picture search: keywords, mission chips, NASA centre, years, pictures or pictures and videos, paging up
+  to NASA's 10,000-result limit; the viewer with the caption, details and all sizes; videos playable.
+- [ ] States: loading, no results, NASA out of reach, a missing picture, a layer with no picture for the day.
+- [ ] Shared parts used by both projects (tabs, "How to read this", the big search box) moved from
+  `asteroid-tracker/tracker.css` into `shared/theme.css`.
+- [ ] Checks at every width in DESIGN.md; keyboard use; reduced motion stops Play.
 
 ## 3. Mars Data (third)
 
