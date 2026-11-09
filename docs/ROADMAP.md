@@ -32,8 +32,15 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 2. Image Explorer (plan confirmed Nov 9, 2026)
 
-- [ ] **Developer review of the mock-up** (`image-explorer/mockup.html` on the live site): the map, the layers,
-  the date controls, place search, tapping the map, the picture library and the picture viewer.
+- [ ] **Developer review of the mock-up** (`image-explorer/mockup.html` on the live site), several rounds expected:
+  the Earth map, the Globe tab (turning, zooming, events, sky markers, the selected card, find) and the live picture
+  library.
+- [ ] Globe: astronaut photos of Earth as pins (work out how to query eol.jsc.nasa.gov; daily file from GitHub
+  Actions, since web pages cannot call it).
+- [ ] Globe: confirm the positions of the hand-listed sky objects against SIMBAD; keep copies of the star and
+  Messier files in the repository; more famous Hubble and Webb targets if wanted.
+- [ ] Globe: sharper Earth close up (load finer Blue Marble tiles for the part in view), day and night shading if
+  wanted.
 - [ ] Build the page from the approved mock-up: `index.html`, `explorer.css`, `app.js`; remove `mockup.html`.
 - [ ] Each layer's dates read from GIBS (not a fixed lag), so the newest day and gaps are always right, without
   downloading the 5.8 MB layer list on every visit.

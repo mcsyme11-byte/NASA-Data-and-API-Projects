@@ -1,5 +1,15 @@
 # Change log
 
+## November 9, 2026 — Image Explorer: the Globe tab (mock-up)
+
+- **Globe tab** in the mock-up: NASA's Blue Marble Earth, turned to the current sidereal time, inside the real sky
+  (5,044 stars). Pins on the Earth for the natural events NASA EONET reported in the last 30 days; markers in the
+  sky for the 110 Messier objects and famous Hubble and Webb targets (galaxies as rings, nebulae as diamonds, star
+  clusters as dots). Drag to turn, scroll or pinch to zoom, turn slowly, find by name, show or hide each kind.
+  Selecting a sky object shows its facts and NASA's pictures of it; selecting an event opens the Earth map on that
+  place and day.
+- **Picture library** in the mock-up now searches NASA live, with the centre, year and type filters and Show more.
+
 ## November 9, 2026 — Asteroid Tracker: famous close passes, back buttons, smoother zoom
 
 - **Famous close passes** on the map: Apophis (2029), Duende (2013), 2020 QG (2020), 2019 OK (2019) and 2024 YR4

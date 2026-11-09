@@ -276,6 +276,47 @@ Checked Nov 9, 2026 (live requests from the published site):
   unavailable".
   `asset/{nasa_id}` and older records give `http://` links; the page always uses `https://`.
 
+### Blue Marble (the globe's surface), checked Nov 9, 2026
+
+- `BlueMarble_NextGeneration` (also `BlueMarble_ShadedRelief` and `BlueMarble_ShadedRelief_Bathymetry`): NASA's
+  cloud-free composite of the whole Earth. Not listed in the GetCapabilities documents, but the tiles load:
+  `https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/BlueMarble_NextGeneration/default/default/500m/{level}/{row}/{column}.jpeg`
+  (`default` in place of a date; levels 0–7 of the `500m` set).
+- The globe joins level 2 (15 tiles, 2,560 × 1,280 pixels, about 16 km a pixel) and then level 3 (50 tiles,
+  5,120 × 2,560, about 8 km a pixel) where the graphics card accepts a picture that wide.
+
+### EONET (Earth Observatory Natural Event Tracker), checked Nov 9, 2026
+
+- `https://eonet.gsfc.nasa.gov/api/v3/events` (no key; **browsers may call it**). Categories (`/api/v3/categories`):
+  drought, dust and haze, earthquakes, floods, landslides, manmade, sea and lake ice, severe storms, snow,
+  temperature extremes, volcanoes, water colour, wildfires.
+- Each event: `id`, `title`, `categories[]`, `sources[]` (the reporting agency's page), `closed`, and `geometry[]`
+  (dated points, sometimes polygons, with `magnitudeValue` and `magnitudeUnit`, for example acres for fires).
+- **Many events stay open long after their last report:** 7,236 open on Nov 9, 2026 (7,168 wildfires, 32 volcanoes,
+  35 sea and lake ice, 1 storm), but only 35 with a report in the last 30 days. The globe asks for
+  `status=open&days=30`.
+
+### Sky: stars and Messier objects, checked Nov 9, 2026
+
+- From the d3-celestial project (Olaf Frohn, BSD licence) on GitHub, served through jsDelivr:
+  `data/stars.6.json` (5,044 stars to magnitude 6, with colour index `bv`) and `data/messier.json` (all 110 Messier
+  objects with designation, common name, type, magnitude and size in arcminutes).
+- Positions are given as `[right ascension, declination]` in degrees, with right ascension from −180 to 180
+  (M42 the Orion Nebula: 83.85, −5.45; M57: −76.6, that is 283.4°). Checked against known positions: Sirius
+  101.29, −16.72; M31 10.68, +41.27.
+- Types: `s`, `e`, `i` (spiral, elliptical, irregular galaxies, 40); `gc`, `oc`, `pos` (globular and open
+  clusters, groups of stars, 58); `pn`, `rn`, `sfr`, `snr` (nebulae, 12).
+- The built page keeps its own copy of these files in the repository rather than loading them from jsDelivr.
+- Famous Hubble and Webb targets outside the Messier list (Carina Nebula, Southern Ring Nebula, Stephan's Quintet,
+  the Magellanic Clouds and others) are listed by hand in the mock-up; their positions are to be confirmed against
+  the SIMBAD astronomical database before the page is built.
+
+### Astronaut photos of Earth (Gateway to Astronaut Photography of Earth), checked Nov 9, 2026
+
+- `https://eol.jsc.nasa.gov`: photos taken from the space station and earlier missions, each with the position of
+  the area shown. **Web pages cannot call it** (no CORS headers), so pins from it would come from a file refreshed
+  by GitHub Actions, as the Asteroid Tracker's data is. How to query it is still to be worked out.
+
 ### Place names (for the place search)
 
 - NASA's sources have no list of place names, so place search needs one of its own.

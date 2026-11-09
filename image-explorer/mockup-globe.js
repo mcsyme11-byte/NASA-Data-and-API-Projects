@@ -78,6 +78,7 @@ function init() {
     rotateSpeed: 0.5, zoomSpeed: 0.9, autoRotate: vis.spin, autoRotateSpeed: 0.35 });
   controls.addEventListener('start', () => { fly = null; if (vis.spin) setSpin(false); });
 
+  camera.aspect = (frame.clientWidth || 1) / (frame.clientHeight || 1);
   earth = new THREE.Group(); earth.rotation.y = gmst(); scene.add(earth);
   earthMat = new THREE.MeshBasicMaterial({ color: 0x1a2333 });
   earth.add(new THREE.Mesh(new THREE.SphereGeometry(1, 128, 64), earthMat));
@@ -212,7 +213,6 @@ function run() {
 }
 
 const BRASS = '#C0A062', BRIGHT = '#E2C88E', INK2 = '#B4AFA2';
-window.__g = { get camera() { return camera; }, get sky() { return sky; }, get hits() { return hits; }, get earth() { return earth; } };
 function draw() {
   const w = frame.clientWidth, h = frame.clientHeight, d = over.width / w;
   ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, w, h);
@@ -289,12 +289,14 @@ function wirePointer() {
 }
 
 /* ---------- camera moves ---------- */
-/* stand on the far side of the Earth from a sky direction, a little to one side, so the sky shows beside the Earth */
+/* stand on the far side of the Earth from a sky direction, a little to one side, so the sky shows beside the Earth.
+   Narrow (portrait) screens see less sky to the sides, so the view stands farther back and closer to the line. */
 function skyView(u, dist) {
+  const narrow = camera.aspect < 1;
   u = u.clone().normalize();
   const side = new THREE.Vector3(0, 1, 0).cross(u);
   if (side.lengthSq() < 1e-6) side.set(1, 0, 0);
-  return u.negate().add(side.normalize().multiplyScalar(0.45)).normalize().multiplyScalar(dist);
+  return u.negate().add(side.normalize().multiplyScalar(narrow ? 0.17 : 0.45)).normalize().multiplyScalar(narrow ? Math.max(dist, 8) : dist);
 }
 function home(animate = true) {
   const p = skyView(vec(HOME.dec, HOME.ra, 1), HOME.dist);

@@ -52,12 +52,23 @@ How NASA Data Projects is built, the decisions made so far, and how to run and p
   coordinates); tapping the map offers NASA's pictures of that place. The picture library is images first, with
   videos available as a filter. A mock-up comes first (`image-explorer/mockup.html`).
 
+- **Decided Nov 9, 2026 (Image Explorer):** after the first mock-up the developer asked for a globe of the Earth that
+  turns and zooms like the Asteroid Tracker's solar system map, with NASA pictures pinned to places on the Earth and
+  to galaxies and nebulae in the sky around it. The daily Earth map stays. The page now has three tabs: **Earth
+  map · Globe · Picture library**. The globe uses three.js (MIT licence) with NASA's Blue Marble, turned to the
+  current sidereal time inside the real sky. Pins on the Earth: NASA EONET events (live) and, later, astronaut photos
+  of Earth. Pins in the sky: all 110 Messier objects and famous Hubble and Webb targets, each opening NASA's pictures
+  of it. Several rounds of mock-ups are expected.
+- **Not possible (Nov 9, 2026):** seeing individual houses. NASA's sharpest free imagery is about 30 m a pixel
+  (Landsat) and the daily layers 250 m; houses need commercial imagery, which is neither NASA's nor free.
+
 ## How it's built (starting plan; each project's chat confirms it)
 
 | Part | Built with | Why |
 |---|---|---|
 | Web pages | Plain HTML, CSS and JavaScript modules, no build step | Free hosting on GitHub Pages; easy to read and learn from |
 | Charts | Hand-drawn SVG, styled to DESIGN.md (Asteroid Tracker); chosen per project | No library to load; matches the look exactly |
+| Globe (Image Explorer) | three.js 0.187 (MIT licence, from a CDN), WebGL | A textured Earth, 5,000 stars and markers drawn smoothly; the markers and names are drawn on a 2D layer above |
 | Maps (Image Explorer) | OpenLayers 10 (BSD licence, from a CDN), `epsg4326` and the two polar projections | Handles GIBS's tile grids, vector fire tiles and polar views; Leaflet does not without add-ons |
 | Mars analysis | Python 3 (pandas, matplotlib) in `mars-data/analysis/` | Cleaning and statistics are easiest in Python; it writes small summary files the web page reads |
 
