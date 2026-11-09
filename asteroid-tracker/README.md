@@ -74,8 +74,10 @@ asteroid-tracker/
 ├── orbit.js                     orbit maths: Kepler's equation, planet and asteroid positions (JPL elements)
 ├── orbitview.js                 the orbit diagram: projection, views, drawing, labels, dragging
 ├── format.js                    units, the size rule and number formatting
+├── compare.js                   sizes next to familiar objects ("about the length of a school bus"), with its rules
+├── soon.js                      the home page's "closest pass, next 7 days"
 ├── fetch_close_approaches.py    writes data/YYYY.json and data/years.json (daily, GitHub Actions)
-├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json (daily), data/famous.json (monthly)
+├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json, data/soon.json (daily), data/famous.json (monthly)
 ├── data/                        the files above
 └── README.md                    this file
 ```

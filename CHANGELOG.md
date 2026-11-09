@@ -1,5 +1,18 @@
 # Change log
 
+## November 9, 2026 — Asteroid Tracker: closest pass on the home page, size comparisons, three more famous passes
+
+- **Home page:** a line under the live map shows the closest asteroid pass of the next 7 days, in the visitor's time
+  zone, with its distance, size comparison and a link to its page (new daily file `data/soon.json`).
+- **Size comparisons** on each asteroid's page, in the tracker's row details and on the map's cards: "about the
+  length of a school bus (12 m)", "about 2 times the length of a Canadian football field (137 m)". One rule set
+  (`compare.js`) replaces the earlier phrase.
+- **Famous close passes:** three more, Toutatis (2004), 2012 TC4 (2017) and 2023 BU (2023), now eight in date order.
+  Times, distances and speeds now come from NASA/JPL close-approach data stored with each pass, so they follow NASA's
+  latest figures (2020 QG: 9,317 km; Duende: 34,053 km; 2019 OK: 71,355 km). The pass path is smoothed between
+  samples; the Moon's-orbit label shows only when the ring is large enough to label clearly.
+- **Data job:** a backup daily run at 14:47 UTC, and a push that rebases onto other work and retries.
+
 ## November 9, 2026 — site pages: About, Privacy, Terms, Credits, Contact
 
 - **Five new pages:** About (what the site is, the projects, how it works, who made it), Privacy (nothing collected;

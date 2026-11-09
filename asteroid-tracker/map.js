@@ -5,7 +5,7 @@
 
 import { SolarMap, Asteroids, CLASSES, COL, spacecraftAt, classOf, COMET_CODES, hermiteAt, hermiteVel } from './skymap.js';
 import { planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM } from './orbit.js';
-import { fmt, sizeText, diameterM } from './format.js';
+import { fmt, sizeText, sizePicture, diameterM, LD_KM } from './format.js';
 import { loadMapData } from './mapdata.js';
 import { searchNames, neowsId, decodeName } from './search.js';
 import { backLink, placeKeeper, scrollBack } from './back.js';
@@ -236,7 +236,7 @@ function showSelected(full) {
     if (full) html = `<h3>${esc(r[COL.name].trim())}</h3>
       <p class="tags">${r[COL.pha] === 'Y' ? '<span class="tag haz">Potentially hazardous</span>' : ''}<span class="tag">${esc(cls.name)}</span></p>
       ${dec ? `<p class="decode">${esc(dec)}</p>` : ''}
-      <dl class="mini">${comet ? '' : `<div><dt>Size, est.</dt><dd>${sizeText(size)}</dd></div>`}<div><dt>Orbit</dt><dd>${esc(cls.note)}</dd></div>${seen}
+      <dl class="mini">${comet ? '' : `<div><dt>Size, est.</dt><dd>${sizeText(size)}<span class="cmp">${esc(sizePicture(size))}</span></dd></div>`}<div><dt>Orbit</dt><dd>${esc(cls.note)}</dd></div>${seen}
       <div><dt>From the Sun</dt><dd id="sSun"></dd></div><div><dt>From Earth</dt><dd id="sEarth"></dd></div></dl>
       <p class="dlinks"><a class="btn" href="${page}"${comet ? ' target="_blank" rel="noopener"' : ''}>${comet ? 'JPL\'s page ›' : 'Open its page ›'}</a><button class="btn ghost" id="selCentre">Centre on it</button></p>`;
   } else if (b.kind === 'craft') {
@@ -384,20 +384,32 @@ function stopWatch() {
 // ---------------------------------------------------------------- famous close passes
 // Facts checked Nov 9, 2026: times and distances from the NASA/JPL close-approach data (distances from Earth's
 // centre); positions from NASA/JPL Horizons (data/famous.json); stories from NASA/JPL and news reports of the time.
+// The famous passes. Times and distances come from NASA/JPL close-approach data in data/famous.json (cad);
+// here: the view (half-width in Moon distances), how many days before closest approach the tour starts, the playing
+// speed (days of map time a second), and the account shown on the card.
 const PASSES = {
-  'apophis-2029': { km: 38011, des: '99942', title: 'Apophis', view: 0.4, pre: 0.25, speed: 0.0416667, stories: [
+  'toutatis-2004': { des: '4179', title: 'Toutatis', view: 12, pre: 3, speed: 0.25, stories: [
+    'A lumpy, elongated rock about 5 km long, Toutatis passed about four times the Moon\'s distance from Earth on September 29, 2004. At the time, NASA called it the closest pass this century by any known asteroid of its size.',
+    'In December 2012, China\'s Chang\'e 2 spacecraft flew past it about 3 km away and photographed it. Its next notably close pass to Earth is in 2069.'] },
+  '2012tc4-2017': { des: '2012 TC4', title: '2012 TC4', view: 0.5, pre: 0.3, speed: 0.0416667, stories: [
+    'A house-sized rock, which radar measured at roughly 10 to 20 m, that passed about an eighth of the way to the Moon on October 12, 2017. The Pan-STARRS telescope in Hawaii had found it in 2012, a week before an earlier close pass.',
+    'Observatories around the world used this pass for the first global planetary defence exercise: tracking it as if it might hit, to test how quickly they could find, measure and warn. It turned out to be long and narrow, tumbling about once every 12 minutes.'] },
+  '2023bu-2023': { des: '2023 BU', title: '2023 BU', view: 0.12, pre: 0.0625, speed: 0.00694444, stories: [
+    'A rock a few metres across, about the size of a box truck, that passed about 3,600 km above the southern tip of South America on January 27, 2023 (UTC): one of the closest passes by a known asteroid ever recorded.',
+    'An amateur astronomer, Gennadiy Borisov, found it only six days earlier. Earth\'s pull reshaped its orbit: its year around the Sun went from 359 days to 425. Watch the bend in its path.'] },
+  'apophis-2029': { des: '99942', title: 'Apophis', view: 0.4, pre: 0.25, speed: 0.0416667, stories: [
     'On April 13, 2029, Apophis, a rock about 340 m across, will pass closer than the satellites that circle 36,000 km above the equator, bright enough to be seen without a telescope from the Eastern Hemisphere.',
     'When it was found in 2004 it briefly had a 2.7% chance of hitting Earth in 2029. Later observations, and radar in 2021, ruled out any impact for at least a century. NASA\'s OSIRIS-APEX spacecraft will meet it just after the pass.'] },
-  'duende-2013': { km: 34058, des: '367943', title: 'Duende (2012 DA14)', view: 0.4, pre: 0.25, speed: 0.0416667, stories: [
+  'duende-2013': { des: '367943', title: 'Duende (2012 DA14)', view: 0.4, pre: 0.25, speed: 0.0416667, stories: [
     'Found a year earlier by an amateur observatory in Spain, Duende passed inside the ring of weather and TV satellites on February 15, 2013.',
     'Earlier that same day, by coincidence, an unrelated, smaller rock exploded over Chelyabinsk in Russia. Nobody had seen that one coming. Duende\'s pass also bent its orbit: it now spends most of its time closer to the Sun than Earth.'] },
-  '2020qg-2020': { km: 9302, des: '2020 QG', title: '2020 QG', view: 0.12, pre: 0.0625, speed: 0.00694444, stories: [
+  '2020qg-2020': { des: '2020 QG', title: '2020 QG', view: 0.12, pre: 0.0625, speed: 0.00694444, stories: [
     'A car-sized rock that skimmed about 2,900 km above the southern Indian Ocean on August 16, 2020, one of the closest misses ever recorded.',
     'It came from the direction of the Sun, where telescopes cannot look, and was only found about six hours after it had passed. Had it hit, it would have burned up as a bright fireball. Earth\'s pull bent its path sharply: watch the curve.'] },
-  '2019ok-2019': { km: 71345, des: '2019 OK', title: '2019 OK', view: 0.7, pre: 0.0625, speed: 0.00694444, stories: [
+  '2019ok-2019': { des: '2019 OK', title: '2019 OK', view: 0.7, pre: 0.0625, speed: 0.00694444, stories: [
     'An asteroid roughly 60 to 130 m across that passed at about a fifth of the Moon\'s distance on July 25, 2019.',
     'It was spotted by an observatory in Brazil only about a day before, a reminder of how many mid-sized asteroids are still undiscovered.'] },
-  '2024yr4-2032': { km: 278330, moonKm: 22938, des: '2024 YR4', title: '2024 YR4', view: 1.8, pre: 0.6, speed: 0.0416667, moon: true, stories: [
+  '2024yr4-2032': { des: '2024 YR4', title: '2024 YR4', view: 1.8, pre: 0.6, speed: 0.0416667, moon: true, stories: [
     'Found on December 27, 2024 by a telescope in Chile, this rock about 60 m across briefly had a 3.1% chance of hitting Earth on December 22, 2032. Further observations ruled that out within weeks.',
     'Its chance of hitting the Moon then rose to about 4%, until observations by the James Webb Space Telescope in early 2026 ruled that out too. Keep playing after the pass by Earth: about six and a half hours later it passes the Moon.'] },
 };
@@ -411,7 +423,7 @@ async function startTour(id) {
   const k = data.rows.findIndex((r) => String(r[COL.pdes]) === P.des);
   if (!f || k < 0) { banner('That pass is not available.', 3000); return; }
   stop();
-  const tMs = Date.parse(f.closest.replace(' ', 'T') + ':00Z');
+  const tMs = Date.parse((f.cad ? f.cad.cd : f.closest).replace(' ', 'T') + ':00Z');
   tour = { id, P, f, k, tMs, paused: false };
   map.tour = { k, asteroid: f.asteroid, earth: f.earth, moon: f.moon };
   $$('[data-pass]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.pass === id));
@@ -445,12 +457,14 @@ function tourCard(full) {
   const va = hermiteVel(f.asteroid, tj), ve = hermiteVel(f.earth, tj);
   const vRel = Math.hypot(va[0] - ve[0], va[1] - ve[1], va[2] - ve[2]) * AUKM / 86400;
   let moonLine = '';
-  if (P.moon) {
+  const km = f.cad ? f.cad.km : null, moonKm = f.cad && f.cad.moon ? f.cad.moon.km : null;
+  if (P.moon && moonKm) {
     let best = [1e12, 0];
     for (let j = tj; j < tj + 1; j += 1 / 1440) { const p = hermiteAt(f.asteroid, j), m = hermiteAt(f.moon, j); if (!p || !m) break; const d = Math.hypot(p[0] - m[0], p[1] - m[1], p[2] - m[2]) * AUKM; if (d < best[0]) best = [d, j]; }
-    moonLine = `<div><dt>Past the Moon</dt><dd><b>${fmt(P.moonKm)} km</b> from its centre, ${new Date(msFromJd(best[1])).toISOString().slice(11, 16)} UTC</dd></div>`;
+    moonLine = `<div><dt>Past the Moon</dt><dd><b>${fmt(moonKm)} km</b> from its centre, ${f.cad.moon.cd ? f.cad.moon.cd.slice(11) : new Date(msFromJd(best[1])).toISOString().slice(11, 16)} UTC</dd></div>`;
   }
   const now = tourNow();
+  const sz = r[COL.diameter] ? { dmin: r[COL.diameter] * 1000, dmax: r[COL.diameter] * 1000, measured: true } : { dmin: diameterM(r[COL.H], 0.25), dmax: diameterM(r[COL.H], 0.05) };
   if (full) {
     const past = tMs < Date.now();
     $('#selBody').innerHTML = `<div class="tourcard">
@@ -458,10 +472,10 @@ function tourCard(full) {
       <h3>${esc(r[COL.name].trim())}</h3>
       <p class="when">${past ? 'Passed' : 'Will pass'} ${new Date(tMs).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}, ${new Date(tMs).toISOString().slice(11, 16)} UTC</p>
       <dl class="mini facts">
-        <div><dt>Closest to Earth</dt><dd><b>${fmt(P.km)} km</b> from its centre, about ${fmt(Math.round((P.km - 6371) / 100) * 100)} km above the surface</dd></div>
+        ${km ? `<div><dt>Closest to Earth</dt><dd><b>${fmt(km)} km</b> from its centre, ${km < 100000 ? `about ${fmt(Math.round((km - 6371) / 100) * 100)} km above the surface` : `${fmt(km / LD_KM, 1)} Moon distances`}</dd></div>` : ''}
         ${moonLine}
-        <div><dt>Speed past Earth</dt><dd>${fmt(vRel, 1)} km/s</dd></div>
-        <div><dt>Size, est.</dt><dd>${sizeText(r[COL.diameter] ? { dmin: r[COL.diameter] * 1000, dmax: r[COL.diameter] * 1000, measured: true } : { dmin: diameterM(r[COL.H], 0.25), dmax: diameterM(r[COL.H], 0.05) })}</dd></div>
+        <div><dt>Speed past Earth</dt><dd>${fmt(f.cad ? f.cad.v_rel : vRel, 1)} km/s</dd></div>
+        <div><dt>Size, est.</dt><dd>${sizeText(sz)}<span class="cmp">${esc(sizePicture(sz))}</span></dd></div>
         <div><dt>Now on the map</dt><dd id="tourNow">${now}</dd></div>
       </dl>
       ${P.stories.map((t) => `<p class="story">${esc(t)}</p>`).join('')}

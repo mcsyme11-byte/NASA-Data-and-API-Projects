@@ -41,6 +41,18 @@
     .liveBtn { position: absolute; right: 18px; bottom: 18px; }
     .liveframe:hover .liveBtn { filter: brightness(1.08); }
     .livenote { margin: 10px 0 0; }
+    /* the closest asteroid pass of the coming week (asteroid-tracker/soon.js) */
+    .soon { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-top: 12px; padding: 12px 16px;
+      background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--brass-dim); border-radius: var(--r-card); }
+    .soon[hidden] { display: none; }
+    .soon .eyebrow { flex-basis: 100%; }
+    @media (max-width: 420px) { .soon .eyebrow { letter-spacing: .18em; } }
+    .soon .name { font-size: 20px; color: var(--ink); text-decoration: none; }
+    .soon .name:hover { color: var(--brass-bright); }
+    .soon .facts { color: var(--ink2); flex: 1 1 320px; }
+    .soon .linkbtn { color: var(--brass); text-decoration: none; white-space: nowrap; margin-left: auto; }
+    .soon .linkbtn:hover { color: var(--brass-bright); }
+    .soon a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
     @media (max-width: 760px) {
       .liveframe { height: 340px; }
       .liveinfo { max-width: 85%; }
@@ -91,6 +103,7 @@
         </span>
         <span class="btn liveBtn"><span class="long">Explore the solar system ›</span><span class="short">Explore the map ›</span></span>
       </a>
+      <div class="soon" id="soon" hidden></div>
       <p class="note livenote">The full map shows all 43,000 known near-Earth asteroids and comets, the planets, and spacecraft from Parker Solar Probe to the Voyagers, at any date and from any angle.</p>
     </section>
 
@@ -143,6 +156,11 @@
     mountPreview(document.getElementById('preview'), 'asteroid-tracker/data/preview.json', {
       onCount: (n) => { document.getElementById('liveCount').textContent = n.toLocaleString('en-CA') + ' potentially hazardous asteroids'; },
     }).catch(() => { document.querySelector('.livemap').hidden = true; });
+  </script>
+  <script type="module">
+    // the closest asteroid pass of the coming week (asteroid-tracker/soon.js); hidden if the data cannot be loaded
+    import { mountSoon } from './asteroid-tracker/soon.js';
+    mountSoon(document.getElementById('soon'), 'asteroid-tracker/data/soon.json', 'asteroid-tracker/').catch(() => {});
   </script>
   <script>
     // a quiet field of brass and cream stars behind the page (decoration only)

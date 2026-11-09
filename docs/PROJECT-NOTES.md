@@ -133,9 +133,17 @@ Run it by hand: `python3 dev/check_wording.py`.
 photos of Earth into `image-explorer/data/astronaut.json` if the secret `EOL_API_KEY` is set, and commits the file if
 it changed.
 
-`.github/workflows/asteroid-data.yml` runs once a day (06:17 UTC) and on demand (Actions › Asteroid data › Run
-workflow, with "all" to refresh every year): it refreshes the Asteroid Tracker's close-approach files, every
-near-Earth object's orbit and the spacecraft positions from JPL, and commits them if they changed.
+`.github/workflows/asteroid-data.yml` runs twice a day (06:17 UTC, and 14:47 UTC as a backup) and on demand
+(Actions › Asteroid data › Run workflow, with "all" to refresh every year): it refreshes the Asteroid Tracker's
+close-approach files, every near-Earth object's orbit, the spacecraft positions and the coming passes (`soon.json`)
+from JPL, and commits them if they changed. If other work has been pushed meanwhile, it rebases onto it and retries
+the push (up to five times).
+
+**Decided Nov 9, 2026 (Asteroid Tracker):** a backup daily run, after GitHub did not start the 06:17 run that day.
+The size comparisons (`compare.js`) replace the earlier "school buses / football fields" phrase everywhere, with one
+rule set; the famous passes take their times and distances from NASA/JPL close-approach data in `famous.json` rather
+than figures typed into the page; Chelyabinsk (2013) is not a famous pass, because no orbit exists for it (it was not
+seen before it entered the atmosphere).
 
 ## Writing style
 

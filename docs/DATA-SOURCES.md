@@ -170,8 +170,8 @@ D (km) = 1329 ÷ √p × 10^(−H ÷ 5)
 
 ### Horizons API (famous close passes), checked Nov 9, 2026
 
-- Same endpoint, written monthly (on the 1st, or with `--all`) to `data/famous.json` (about 490 KB) by
-  `fetch_map_data.py`. For each pass: the asteroid, Earth (`399`) and the Moon (`301`), with `VEC_TABLE=2`
+- Same endpoint, written monthly (on the 1st, or with `--all`, or when the list of passes changes) to
+  `data/famous.json` (about 780 KB, eight passes) by `fetch_map_data.py`. For each pass: the asteroid, Earth (`399`) and the Moon (`301`), with `VEC_TABLE=2`
   (position and velocity), `CENTER='500@10'`, ecliptic, au and au/day.
 - Small bodies are named with a trailing semicolon: `'99942;'` for a numbered asteroid, `'DES=2020 QG;'` for one
   known only by its code.
@@ -180,6 +180,17 @@ D (km) = 1329 ÷ √p × 10^(−H ÷ 5)
 - Check: the distance from Earth's centre at closest approach matches the JPL close-approach figures to within
   16 km for all five passes; 2024 YR4's pass by the Moon gives 22,940 km against JPL's 22,938 km. Close-approach
   distances are measured from the centre of Earth (or the Moon), not the surface.
+- Since Nov 9, 2026 each pass also stores `cad`: NASA/JPL close-approach data for that date (`cad.api`, `des`,
+  `body=Earth` or `Moon`, `dist-max=0.2`, dates ±3 days): `cd` (UTC time), `km` (from the centre) and `v_rel` (km/s).
+  The tour and its card use these. They differ slightly from earlier published figures because orbits are refined
+  (for example 2020 QG: 9,317 km in 2026, 9,302 km as first published).
+
+### soon.json (home page), added Nov 9, 2026
+
+- Written daily by `fetch_map_data.py` from the close-approach year files: every pass within 10 Moon distances from a
+  day before the run to 15 days after it, as `[name, time_ms_utc, distance_ld, h, neows_id, designation]`. The NeoWs
+  id is 2,000,000 + number for numbered asteroids, otherwise the SBDB `spkid`; comets get none. The home page shows
+  the closest pass between the moment it is opened and 7 days later, in the visitor's time zone.
 
 ### Asteroid names (Minor Planet Center rules)
 

@@ -9,6 +9,7 @@
 //                    p = 0.25 (bright surface) gives the smallest likely size, p = 0.05 (dark) the largest.
 //                    Example: H = 22 → 106 m to 237 m. NASA's NeoWs gives this range itself; JPL's data gives H only.
 
+import { compareSize } from './compare.js';
 import { fmt } from '../shared/nasa.js';
 export { fmt };
 
@@ -39,10 +40,8 @@ export function dateText(t, withTime = false) {
 }
 
 // Things people can picture
+// The size next to something familiar (rules in compare.js), as a note: "about 3 times the length of an NHL hockey rink (61 m)".
 export function sizePicture(o) {
-  const mid = Math.sqrt(o.dmin * o.dmax);
-  if (mid >= 1000) return `about ${fmt(mid / 1000, 1)} km across, wider than ${fmt(mid / 110, 0)} football fields in a row`;
-  if (mid >= 110) return `about ${fmt(mid / 110, 1)} football fields long`;
-  if (mid >= 12) return `about ${fmt(mid / 12, 1)} school buses long`;
-  return `about the size of ${mid < 3 ? 'a car' : 'a house'}`;
+  const t = compareSize(o.dmin, o.dmax);
+  return t ? t[0].toLowerCase() + t.slice(1) : '';
 }

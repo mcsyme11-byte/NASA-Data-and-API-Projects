@@ -17,9 +17,10 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] **Developer testing of the additions:** an asteroid's page (open one from a row's details), the orbit
   diagram (Top / Tilted / Side, drag to turn, Play, the slider, Near Earth, tapping an approach), and past years
   in the "By year" view.
-- [ ] Watch for the scheduled "Asteroid data" run at 06:17 UTC: on Nov 9, 2026 GitHub did not start it (no scheduled
-  run that day); the job was started by hand at 12:01 UTC and succeeded. If scheduled runs keep failing to start,
-  consider a second daily time in the workflow.
+- [ ] Watch the scheduled "Asteroid data" runs (06:17 and the 14:47 backup, added Nov 9, 2026): at least one should
+  run each day.
+- [ ] **Developer testing of the home page's "closest pass, next 7 days" line, the size comparisons and the three new
+  famous passes** (Toutatis, 2012 TC4, 2023 BU), on a computer and a phone.
 - [ ] **Developer testing of the map, search and home preview:** dragging, pinching and zooming on a phone and a
   computer; Play at each speed; full screen and leaving it; Find; "Found by the end of" with Watch; "Close to Earth
   in"; the Search tab with "Found in"; the naming guide; the live preview on the home page.

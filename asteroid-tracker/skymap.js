@@ -350,14 +350,22 @@ export class SolarMap {
       const e = this.earthAt(this.jd), r = 384400 / 149597870.7, ring = [];
       for (let a = 0; a <= 360; a += 3) ring.push([e[0] + r * Math.cos(a * RAD), e[1] + r * Math.sin(a * RAD), e[2]]);
       line(ring, 'rgba(180,175,162,.55)', 1);
-      const q = proj(e[0] + r * Math.SQRT1_2, e[1] - r * Math.SQRT1_2, e[2]);
-      this.moonRing = q;
+      const q = proj(e[0] + r * Math.SQRT1_2, e[1] - r * Math.SQRT1_2, e[2]), c = proj(e[0], e[1], e[2]);
+      if (Math.hypot(q[0] - c[0], q[1] - c[1]) > 46 * dpr) this.moonRing = q;   // labelled only when the ring is large enough
     }
     // selected asteroid's orbit
     if (this.ast && this.selected >= 0) {
       if (this.tour && this.tour.k === this.selected && this.tourAst(this.jd)) {
-        const tr = this.tour.asteroid, mine = tr.map((r) => [r[1], r[2], r[3]]);
-        line(mine, 'rgba(226,200,142,.9)', 1.5);            // the path it really flew (Horizons)
+        // the path it really flew (Horizons), with 8 points between samples along the Hermite curve, so the bend
+        // made by Earth's pull stays smooth however far in the view is zoomed
+        const T = this.tour;
+        if (!T.fine) {
+          T.fine = [];
+          const tr = T.asteroid;
+          for (let i = 0; i + 1 < tr.length; i++) for (let j = 0; j < 8; j++) T.fine.push(hermiteAt(tr, tr[i][0] + (tr[i + 1][0] - tr[i][0]) * j / 8));
+          const z = tr[tr.length - 1]; T.fine.push([z[1], z[2], z[3]]);
+        }
+        line(T.fine, 'rgba(226,200,142,.9)', 1.5);
       } else line(this.ast.path(this.selected, this.viewR < 0.1 ? 4000 : 360), 'rgba(226,200,142,.9)', 1.5);
     }
     // spacecraft tracks

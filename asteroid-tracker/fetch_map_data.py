@@ -239,7 +239,7 @@ def neows_id(row):
 def soon(rows, now):
     """Close passes from a day ago to 15 days ahead: [name, time_ms_utc, distance_ld, h, neows_id or None, designation].
     Comets (no NeoWs page) get no id."""
-    ids = {str(r[2]): (None if r[13] in ('JFc', 'JFC', 'HTC', 'ETc', 'CTc', 'COM', 'PAR', 'HYP') else neows_id(r)) for r in rows}
+    ids = {str(r[2]): (None if r[13] in COMETS else neows_id(r)) for r in rows}
     t0 = (now - dt.timedelta(days=1)).timestamp() * 1000
     t1 = (now + dt.timedelta(days=15)).timestamp() * 1000
     out = []
