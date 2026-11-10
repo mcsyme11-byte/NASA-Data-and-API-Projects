@@ -60,6 +60,11 @@ inside its own folder.
 - Explain things with examples and clear, concise, correct notes. When teaching a method, give a clear set of rules
   saying which formula or step to use in which situation.
 
+## Protected main branch (since Nov 10, 2026)
+
+`main` has a ruleset that blocks force pushes and its deletion. Pull and rebase before pushing; never force-push. To
+undo a change, make a new commit (`git revert <commit>`).
+
 ## Writing style
 
 **Rule (decided Nov 8, 2026): all documentation is written in a professional tone, as project documentation, never

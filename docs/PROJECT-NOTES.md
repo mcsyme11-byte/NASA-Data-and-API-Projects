@@ -4,6 +4,11 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## Decisions
 
+- **Decided Nov 10, 2026:** the repository stays a single public repository (no separate private copy: only the
+  developer and the chats he works with can push; others can only fork, comment or propose changes, which need his
+  approval). `main` is protected by a branch ruleset, "Protect main": deletion of `main` and force pushes to it are
+  blocked; ordinary pushes from the chats and the daily data jobs are unaffected. History on `main` is therefore never
+  rewritten: a mistake is undone with a new commit (`git revert`), not by force-pushing over it.
 - **Decided Nov 9, 2026:** ESA (the European Space Agency) data is added **alongside** NASA's across the projects;
   NASA stays the main source, and ESA is added where it helps. Each project's chat changes its own project; the
   project-wide files (name, CLAUDE.md, credits, terms, footers) are changed in the general chat. The rules for ESA

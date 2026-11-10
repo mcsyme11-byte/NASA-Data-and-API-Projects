@@ -1,5 +1,10 @@
 # Change log
 
+## November 10, 2026 — main branch protected
+
+- A branch ruleset, "Protect main", blocks force pushes to `main` and its deletion. Ordinary pushes (the chats and the
+  daily data jobs) work as before. Mistakes are undone with a new commit (`git revert`).
+
 ## November 10, 2026 — Asteroid Tracker: the map tilts all the way round
 
 - The map's tilt is no longer stopped at "straight down" (0°) and "edge-on" (90°): dragging up or down, or the ↑ ↓
