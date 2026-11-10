@@ -1,5 +1,10 @@
 # Change log
 
+## November 10, 2026 — Asteroid Tracker: the map tilts all the way round
+
+- The map's tilt is no longer stopped at "straight down" (0°) and "edge-on" (90°): dragging up or down, or the ↑ ↓
+  keys, carry on past edge-on to underneath and round again. The Top, Tilted and Side buttons turn the short way back.
+
 ## November 9, 2026 — Image Explorer: searching message names the libraries
 
 - While a search runs, the Picture library says which libraries it is asking, following From: "Searching NASA's and

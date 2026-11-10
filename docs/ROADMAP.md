@@ -38,6 +38,8 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] **Developer testing of the ESA additions (Nov 9, 2026),** on a computer and a phone: the Impact risk tab
   (filters, sorting, row details, the links to ESA's and NASA's pages), an asteroid page's "Impact risk" section, the
   ESA tiles in a week row's details, the map's "On a risk list" filter and the arrow buttons that appear with ✥.
+- [ ] **Developer testing of the map's free tilt (Nov 10, 2026):** drag up and down past edge-on to look from
+  underneath and round again, on a computer and a phone; the Top, Tilted and Side buttons bring the view back.
 - [ ] Watch the "Fetch impact-risk lists and ESA close approaches" step in the "Asteroid data" runs: ESA calls its
   automated access experimental, so a change of format stops the step (the previous files are kept) and needs a fix
   in `fetch_risk.py`.

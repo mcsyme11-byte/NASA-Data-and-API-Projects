@@ -14,6 +14,9 @@ import { planetPosition, planetElements, orbitPath, PLANETS, jdFromMs } from './
 import { solvePositions } from './kepler.js';
 
 const RAD = Math.PI / 180;
+// Angles in degrees, kept between −180 and 180. Tilt turns freely: 0 looks down on the planets' plane, 90 is edge-on,
+// 180 looks up at it from below, and dragging past either end carries on round.
+export const wrap180 = (a) => ((a % 360) + 540) % 360 - 180;
 const K_GAUSS = 0.01720209895;                      // Gaussian gravitational constant: n (rad/day) = k / a^1.5
 // orbit classes: colours in DESIGN.md's series order, and plain names
 export const CLASSES = {
@@ -221,7 +224,7 @@ export class SolarMap {
     this._raf = requestAnimationFrame(() => { this._raf = null; if (this._dirty) { this._dirty = false; this.draw(); } });
   }
   setDate(jd) { this.jd = jd; this.request(); }
-  setView(v) { Object.assign(this, v); this.tilt = Math.max(0, Math.min(90, this.tilt)); this.viewR = Math.max(0.00006, Math.min(260, this.viewR)); this.request(); }   // zoom limits: about 9,000 km across (Earth fills the view) to past the Voyagers
+  setView(v) { Object.assign(this, v); this.tilt = wrap180(this.tilt); this.spin = wrap180(this.spin); this.viewR = Math.max(0.00006, Math.min(260, this.viewR)); this.request(); }   // zoom limits: about 9,000 km across (Earth fills the view) to past the Voyagers
 
   // ---------------------------------------------------------------- positions
   // During a famous pass, Earth, the Moon and that asteroid come from NASA/JPL Horizons (which includes Earth's own

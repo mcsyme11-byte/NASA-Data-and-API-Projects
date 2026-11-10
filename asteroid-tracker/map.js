@@ -3,7 +3,7 @@
 // map.html[?focus=<SBDB spkid>]  The renderer is skymap.js; the data (all near-Earth asteroids, spacecraft tracks,
 // this week's visitors) comes from mapdata.js, which reads the daily files in data/.
 
-import { SolarMap, Asteroids, CLASSES, COL, spacecraftAt, classOf, COMET_CODES, hermiteAt, hermiteVel } from './skymap.js';
+import { SolarMap, wrap180, Asteroids, CLASSES, COL, spacecraftAt, classOf, COMET_CODES, hermiteAt, hermiteVel } from './skymap.js';
 import { planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM } from './orbit.js';
 import { fmt, sizeText, sizePicture, diameterM, LD_KM } from './format.js';
 import { loadMapData } from './mapdata.js';
@@ -145,7 +145,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) stop(
 
 // ---------------------------------------------------------------- view controls
 function syncButtons() {
-  $$('[data-v]').forEach((b) => b.setAttribute('aria-pressed', Math.abs(map.tilt - VIEWS[b.dataset.v].tilt) < 1));
+  $$('[data-v]').forEach((b) => b.setAttribute('aria-pressed', Math.abs(wrap180(map.tilt - VIEWS[b.dataset.v].tilt)) < 1));
   $$('[data-r]').forEach((b) => b.setAttribute('aria-pressed', Math.abs(Math.log(map.viewR / Number(b.dataset.r))) < 0.05));
   const c = map.center;
   $$('[data-c]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.c === 'sel' ? typeof c === 'object' : c === b.dataset.c));
@@ -160,8 +160,8 @@ function animateTo(target, ms = 600) {
   const step = (t) => {
     const f = Math.min(1, (t - t0) / ms), e = f < 0.5 ? 2 * f * f : 1 - (-2 * f + 2) ** 2 / 2;
     const v = {};
-    if (target.tilt !== undefined) v.tilt = from.tilt + (target.tilt - from.tilt) * e;
-    if (target.spin !== undefined) v.spin = from.spin + (target.spin - from.spin) * e;
+    if (target.tilt !== undefined) v.tilt = from.tilt + wrap180(target.tilt - from.tilt) * e;      // the short way round
+    if (target.spin !== undefined) v.spin = from.spin + wrap180(target.spin - from.spin) * e;
     if (target.viewR !== undefined) v.viewR = Math.exp(Math.log(from.viewR) + (Math.log(target.viewR) - Math.log(from.viewR)) * e);
     if (target.panX !== undefined) { v.panX = from.panX + (target.panX - from.panX) * e; v.panY = from.panY + (target.panY - from.panY) * e; }
     map.setView(v);
