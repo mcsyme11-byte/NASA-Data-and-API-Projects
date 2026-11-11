@@ -54,7 +54,7 @@ def label_value(lbl: str, key: str) -> str:
     return m.group(1).strip() if m else ""
 
 
-def process_sol(chunk: str, sol_dir: str, mod_names: list[str], adr_names: list[list[str]]) -> dict:
+def process_sol(chunk: str, sol_dir: str, mod_names: list[str], adr_names: list[str]) -> dict:
     sol = int(sol_dir.strip("/")[3:])
     url = BASE + "DATA/" + chunk + "/" + sol_dir
     files = listing(url)
@@ -78,16 +78,18 @@ def process_sol(chunk: str, sol_dir: str, mod_names: list[str], adr_names: list[
     adr = None
     if len(adr_tab) == 1:
         araw = get(url + adr_tab[0])
+        albl_name = adr_tab[0][:-4] + ".LBL"
+        albl = get(url + albl_name).decode("ascii", "replace") if albl_name in files else ""
         res["files"].append({"sol": sol, "file": chunk + "/" + sol_dir + adr_tab[0], "bytes": len(araw),
-                             "sha256": hashlib.sha256(araw).hexdigest(), "product_version": "", "created": ""})
-        for names in adr_names:  # the geometry columns alone, or followed by the correction columns
-            try:
-                adr = rems.read_table(araw, names)
-                break
-            except ValueError:
-                continue
-        if adr is None:
-            res["note"] = "ADR columns not recognised; rover height not available"
+                             "sha256": hashlib.sha256(araw).hexdigest(),
+                             "product_version": label_value(albl, "PRODUCT_VERSION_ID"),
+                             "created": label_value(albl, "PRODUCT_CREATION_TIME")})
+        try:
+            adr = rems.read_adr(araw, adr_names, albl)
+        except ValueError as e:  # the weather data is still used; the sol has no rover height
+            res["note"] = f"ADR not used: {e}"
+    else:
+        res["note"] = f"{len(adr_tab)} ADR tables in the folder; no rover height"
     cleaned, report = rems.clean(df, sol)
     res["report"] = report
     res["summary"] = rems.summarise(cleaned, sol, adr)
@@ -129,6 +131,9 @@ def write_report(chunk: str, results: list[dict], expected: range) -> str:
              f"- Sols with a data folder: {len(got)}; processed: {len(ok)}",
              f"- Sols with no folder (no REMS data released): {len(no_folder)}"
              + (f" — {', '.join(map(str, no_folder))}" if no_folder else ""),
+             f"- Sols without rover height (ADR file missing or unreadable): "
+             f"{sum(1 for r in ok if r.get('note'))}"
+             + "".join(f"\n  - sol {r['sol']}: {r['note']}" for r in ok if r.get("note")),
              f"- Sols with a problem (not processed): {len(problems)}"
              + "".join(f"\n  - sol {r['sol']}: {r['problem']}" for r in problems)]
     if len(summ):
@@ -149,7 +154,7 @@ def write_report(chunk: str, results: list[dict], expected: range) -> str:
         lines.append(f"| {label} | {tot[f'{name}_missing']:,} | {tot[f'{name}_failed_flags']:,} | "
                      f"{tot[f'{name}_outside_limits']:,} | {tot[f'{name}_kept']:,} ({pct(tot[f'{name}_kept'], n)}) |")
     lines += ["", "Kept with a note (not removed):", "",
-              f"- Pressure readings from oscillator 1 (the sensor's second oscillator, used in short checks): "
+              f"- Pressure readings from oscillator 1 (the sensor has two; oscillator 2 is used most of the time): "
               f"{tot['pressure_oscillator_1']:,}",
               f"- Ground temperature readings with the sensor's power supply flagged out of range: "
               f"{tot['ground_temp_power_out_of_range']:,} ({pct(tot['ground_temp_power_out_of_range'], tot['ground_temp_kept'])} of kept)"]
@@ -182,7 +187,7 @@ def write_report(chunk: str, results: list[dict], expected: range) -> str:
     return "\n".join(lines)
 
 
-def run_chunk(chunk: str, mod_names: list[str], adr_names: list[list[str]]) -> None:
+def run_chunk(chunk: str, mod_names: list[str], adr_names: list[str]) -> None:
     m = re.match(r"SOL_(\d{5})_(\d{5})$", chunk)
     if not m:
         raise ValueError(f"not a chunk folder name: {chunk}")
@@ -228,8 +233,7 @@ def main() -> None:
     rems.check_columns(mod_names, rems.MODRDR_COLUMNS, "MODRDR")
     geom = rems.columns_from_fmt(get(BASE + "LABEL/ADR_GEOM6.FMT").decode("ascii", "replace"))
     rems.check_columns(geom, rems.ADR_NEEDED, "ADR", exact=False)
-    corr = rems.columns_from_fmt(get(BASE + "LABEL/ADR_CORRECTIONS6.FMT").decode("ascii", "replace"))
-    adr_names = [geom, geom + [c for c in corr if c not in geom]]
+    adr_names = geom
     for c in a.chunks:
         if c not in chunks:
             sys.exit(f"{c} is not a chunk in the archive")

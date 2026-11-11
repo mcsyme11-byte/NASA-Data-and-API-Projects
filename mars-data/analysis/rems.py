@@ -73,6 +73,22 @@ def read_table(raw: bytes, names: list[str]) -> pd.DataFrame:
     return df
 
 
+def read_adr(raw: bytes, geom_names: list[str], label: str) -> pd.DataFrame:
+    """The geometry table of an ADR file. Each ADR file holds two tables one after the other: corrections (4 columns),
+    then geometry (16 columns); the geometry rows are the ones with the geometry table's number of columns, and their
+    count must match the label's ROWS for REMS_ADR_GEOMETRY_TABLE."""
+    rows = [r for r in csv.reader(io.StringIO(raw.decode("ascii", "replace")), skipinitialspace=True)
+            if len(r) == len(geom_names)]
+    m = re.search(r"OBJECT\s*=\s*REMS_ADR_GEOMETRY_TABLE.*?\bROWS\s*=\s*(\d+)", label, re.S)
+    if m and int(m.group(1)) != len(rows):
+        raise ValueError(f"ADR: label says {m.group(1)} geometry rows, file has {len(rows)}")
+    df = pd.DataFrame(rows, columns=geom_names)
+    for c in ["TIMESTAMP", "ROVER_POSITION_X", "ROVER_POSITION_Y", "ROVER_POSITION_Z"]:
+        col = df[c].str.strip()
+        df[c] = pd.to_numeric(col.where(~col.map(is_missing)), errors="coerce")
+    return df
+
+
 def char_is(flags: pd.Series, i: int, value: str = "1") -> pd.Series:
     """True where character i (counted from the left, after stripping padding) equals value."""
     return flags.str.len().gt(i) & (flags.str[i] == value)

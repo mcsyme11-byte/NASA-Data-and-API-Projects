@@ -1,1 +1,3 @@
+# Chunks to process (one per line). Rules 1.0.
+# 2026-11-11: chunk 1 re-run with the two-table ADR reader.
 SOL_00001_00089
