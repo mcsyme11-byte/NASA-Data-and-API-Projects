@@ -53,15 +53,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   variables › Actions › New repository secret) and run Actions › Astronaut photos › Run workflow once. Until then the
   globe hides the astronaut photos. The first real run is the first test of `fetch_astronaut_photos.py` against the
   API (it was tested on records shaped like the API documentation's examples).
-- [ ] **Developer testing** at the developer's own pace, on a computer and a phone: the Earth map (dates, Play,
-  layers, place search with towns and natural features, tapping the map, the Arctic and Antarctic views), the Globe
-  (turning, zooming, events, sky markers, find, the selected card, "See it on the Earth map"), the Picture library
-  (search, results as you type, spelling suggestions and corrections, mission buttons, Behind the scenes, filters,
-  Pictures / Pictures and videos / Videos, playing a video, Show more, the viewer, "See it in the sky").
-- [ ] **Check the ESA pictures on the live site** with a browser: searches such as "crab nebula", "saturn" and the
-  James Webb and Hubble buttons; an ESA picture's credit line, caption and details in the viewer; the From filter.
-  The build was tested on pages copied from ESA's markup of Nov 9, 2026; the workspace used for the build cannot
-  reach ESA's sites.
 - [ ] Picture library: ESA's videos (esawebb.org/videos, esahubble.org/videos) beside NASA's, if wanted.
 - [ ] Picture library: tune the ranking further as the developer reviews searches (the weights are in `scoreOf` in
   `image-explorer/app.js`).
@@ -81,7 +72,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] Picture library: subtitles for videos (NASA's files cannot be attached from another site; would need a copy).
 - [ ] Shared parts used by both projects (tabs, "How to read this", the big search box, the tooltip) moved from
   `asteroid-tracker/tracker.css` into `shared/theme.css`; the page still loads `tracker.css` for them.
-- [ ] Load OpenLayers, proj4js and three.js from the repository rather than a CDN, so the page does not depend on jsDelivr.
 - [ ] Keyboard use of the globe's markers (today they are reached through Find). With reduced motion set, the globe
   does not turn by itself and moves without animation; to be rechecked on a phone.
 

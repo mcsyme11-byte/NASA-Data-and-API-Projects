@@ -11,7 +11,7 @@ import os, re, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEXT = ('.md', '.txt', '.py', '.js', '.mjs', '.html', '.css', '.yml', '.yaml', '.sh', '.json', '.csv', '.svg',
         '.ipynb', '.example', '.gitignore')
-SKIP_DIRS = ('node_modules/', '.git/')
+SKIP_DIRS = ('node_modules/', '.git/', 'image-explorer/vendor/')   # vendor: third-party libraries, copied unchanged
 SKIP_FILES = {'dev/check_wording.py',            # it names the patterns it looks for
               'docs/CLAUDE-PROJECT-SETUP.md'}    # the Claude project's instructions, word for word
 

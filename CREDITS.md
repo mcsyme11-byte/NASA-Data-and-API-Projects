@@ -42,7 +42,7 @@ example "ESA/DLR/FU Berlin, CC BY-SA 3.0 IGO"), the licence is linked, changes a
 shared under the same licence. Other material on ESA's website may be used for educational and informational purposes
 with ESA's credit (ESA's terms and conditions, esa.int). ESA's logo is not used: it needs ESA's written permission.
 
-## Code libraries (loaded from the jsDelivr CDN)
+## Code libraries (copies kept in the repository, `image-explorer/vendor/`, each with its licence file)
 
 | Library | Version | Used for | Licence |
 |---|---|---|---|

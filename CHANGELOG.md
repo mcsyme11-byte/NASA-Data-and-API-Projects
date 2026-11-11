@@ -1,5 +1,12 @@
 # Change log
 
+## November 10, 2026 — Image Explorer: code libraries served from the site
+
+- OpenLayers 10.11.0, proj4js 2.22.0 and three.js 0.187.0 are kept in `image-explorer/vendor/` (unchanged, each with
+  its licence) and loaded from the site instead of the jsDelivr CDN, so the page no longer depends on jsDelivr.
+  jsDelivr is removed from the Privacy page; the wording check skips the vendor folder.
+- The developer's testing of the Image Explorer (Nov 10, 2026) passed, including ESA's pictures on the live site.
+
 ## November 10, 2026 — main branch protected
 
 - A branch ruleset, "Protect main", blocks force pushes to `main` and its deletion. Ordinary pushes (the chats and the
