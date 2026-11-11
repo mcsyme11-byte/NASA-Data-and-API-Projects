@@ -68,9 +68,34 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 3. Mars Data (third)
 
-- [ ] Confirm the dataset in its own chat (REMS MODRDR as the first choice).
-- [ ] Download a first batch of sols; look at the files' columns.
-- [ ] Cleaning: missing and impossible values, units, gaps marked.
-- [ ] Organise by sol, Ls (season) and time of day.
+Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated automatically by a GitHub Actions job.
+
+**Data and analysis**
+- [ ] Check each source against the agency's current documentation and record it in `docs/DATA-SOURCES.md` with its
+  exact credit line: Curiosity REMS (MODRDR), Perseverance MEDA, Mars Express MaRS profiles (ESA, CC BY-NC 3.0 IGO).
+- [ ] Test that GitHub's servers can reach the NASA PDS Atmospheres Node and ESA's Planetary Science Archive (the
+  project's cloud workspace cannot).
+- [ ] Download a first batch of REMS sols; look at the files' columns. Confirm the newest sol in the archive (the REMS
+  page gives sol 4488, its volume list sols 1–3778).
+- [ ] Cleaning: missing and impossible values, confidence flags, units, gaps marked.
+- [ ] Organise by sol, Ls (season), time of day and site.
 - [ ] Statistics: daily highs and lows, seasonal averages, relationships between measurements.
+- [ ] Add MEDA (Jezero Crater) and the MaRS profiles (ESA) to the same pipeline.
+
+**Automatic updates**
+- [ ] GitHub Actions job "Mars data", twice a week to start (to be reduced to weekly once stable): check each
+  mission's archive for new or replaced files, download only those, clean and summarise with the same code, run the
+  checks, and commit the summaries if they changed.
+- [ ] Manifest of processed files (name, size, checksum), committed, so nothing is downloaded twice and replaced
+  files are reprocessed.
+- [ ] Checks before saving: expected columns, values within physical limits, sol count never decreasing, no
+  duplicate sols. On any failure the previous summaries are kept and the job stops with an error.
+- [ ] Email notice: when a run finds new data, the job opens a GitHub issue ("New Mars data: …"), which GitHub emails
+  to the repository owner; a failed run is reported the same way.
+- [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
+
+**Page**
+- [ ] Charts page mock-up for approval: pressure over the Mars year, one sol hour by hour, daily highs and lows,
+  season × time of day, one relationship; later the Mars Express profiles.
 - [ ] Charts page in the project's look; a short write-up of what the patterns show.
+- [ ] `CREDITS.md`, the Credits page and the Privacy page updated for the new sources in the same change.

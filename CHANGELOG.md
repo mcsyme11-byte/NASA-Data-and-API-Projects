@@ -1,5 +1,12 @@
 # Change log
 
+## November 11, 2026 — Mars Data: plan for automatic updates
+
+- The plan for Mars Data is set in `docs/ROADMAP.md` and `docs/PROJECT-NOTES.md`: three missions (Curiosity REMS,
+  Perseverance MEDA, Mars Express MaRS), a GitHub Actions job twice a week that picks up new archive releases with
+  checks before anything is saved, and an email notice through a GitHub issue when new data arrives or a run fails.
+  Planning only; nothing is built yet.
+
 ## November 10, 2026 — Image Explorer: sharper globe close up; day and night
 
 - Zooming in on the globe lays finer Blue Marble pictures over the part of the Earth in view: about 4 km a pixel

@@ -4,6 +4,14 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## Decisions
 
+- **Decided Nov 11, 2026 (Mars Data):** the project follows a fixed set of three missions and updates itself as new
+  data is published: NASA's Curiosity (REMS, Gale Crater) and Perseverance (MEDA, Jezero Crater), and ESA's Mars
+  Express (MaRS temperature and pressure profiles, CC BY-NC 3.0 IGO). InSight is not followed (the mission ended in
+  2022). Mission data reaches the public archives in batches, months after it is measured, so "up to date" means each
+  new batch is picked up soon after release, not live readings. A GitHub Actions job checks the archives twice a
+  week to start (weekly once stable), downloads only new or replaced files, processes them with the same code as the
+  rest, and commits the summaries only if every check passes; otherwise the previous summaries stay. New data and
+  failed runs open a GitHub issue, which reaches the developer by email. Raw downloads are never committed.
 - **Decided Nov 10, 2026:** the repository stays a single public repository (no separate private copy: only the
   developer and the chats he works with can push; others can only fork, comment or propose changes, which need his
   approval). `main` is protected by a branch ruleset, "Protect main": deletion of `main` and force pushes to it are
