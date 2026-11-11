@@ -407,7 +407,7 @@ function showPop(c, label) {
   const [lon, lat] = toLL(c), place = label.replace(/^Near /, '');
   const term = /^(Open water|This spot)/.test(label) ? '' : place;
   popEl.innerHTML = `<button class="x" aria-label="Close">×</button><div class="eyebrow">This spot</div><div class="where">${esc(label)}</div>
-    <div class="ll">${fmtLL(lat, lon)}</div>${term ? `<button class="btn" data-q="${esc(term)}">NASA pictures of ${esc(term)}</button>` : ''}`;
+    <div class="ll">${fmtLL(lat, lon)}</div>${term ? `<button class="btn" data-q="${esc(term)}">Pictures of ${esc(term)}</button>` : ''}`;
   const px = map.getPixelFromCoordinate(c);
   popEl.classList.toggle('below', !px || px[1] < 190);       /* opens below the spot near the top of the map */
   const w = map.getSize()[0], room = 150;                    /* and slides inward near the sides */

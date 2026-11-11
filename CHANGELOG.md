@@ -24,6 +24,7 @@
   a name typed in full is shown first, then the most widely named places (Antarctica's many small named features
   last). It is built by the manual job "Build smaller places"
   (`.github/workflows/build-places.yml`, `tools/build_geonames_features.py`).
+- The map's place card offers "Pictures of …" (NASA's and ESA's libraries) instead of "NASA pictures of …".
 
 ## November 10, 2026 — Asteroid Tracker: risk colour on the map, ESA and NASA compared, share links
 
