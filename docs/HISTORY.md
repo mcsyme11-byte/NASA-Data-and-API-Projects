@@ -91,3 +91,8 @@ How NASA and ESA Data Projects came about, in order.
   map. Neither centre's server answers web pages directly, so the twice-daily data job copies both lists.
 - The first run showed a speed given as "nan", which made the file unreadable in a browser; the job now keeps only
   finite numbers.
+
+## November 11, 2026 — Project Record
+
+- The project gained a Project Record: the whole project as one PDF, rebuilt by GitHub after every change except the
+  daily data updates, in the same way as the developer's other projects.

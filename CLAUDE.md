@@ -60,6 +60,19 @@ inside its own folder.
 - Explain things with examples and clear, concise, correct notes. When teaching a method, give a clear set of rules
   saying which formula or step to use in which situation.
 
+## Project Record (since Nov 11, 2026)
+
+`docs/NASA and ESA Data Projects - Project Record.pdf` is the whole project as one PDF, built from the repository by
+`docs/record/` (see its README). **GitHub rebuilds it automatically** (`.github/workflows/project-record.yml`) after
+every push to main and commits it as "Project Record rebuilt (automatic)". Pushes that change only data files
+(`asteroid-tracker/data/`, `image-explorer/data/`, `mars-data/data/`: the daily data updates) don't start a rebuild.
+So: **never build or commit the PDF yourself** (two builds at once clash). Pull and rebase before every push, since
+the automatic commit lands on main. After pushing, check a few minutes later that the automatic commit arrived
+(`git fetch` and `git log -1 origin/main`); only if the run failed, fix the cause. **Everything goes in:** every
+Markdown or text document in the repository is in the record; one not yet listed in `PARTS`
+(`docs/record/build_record.js`) lands in a "Newly added documents" Part by itself. When you add a document, add it to
+its proper Part in `PARTS` in the same change. Keep "Where things stand" in `docs/record/front.md` current.
+
 ## Protected main branch (since Nov 10, 2026)
 
 `main` has a ruleset that blocks force pushes and its deletion. Pull and rebase before pushing; never force-push. To

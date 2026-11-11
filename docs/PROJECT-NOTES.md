@@ -4,6 +4,14 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## Decisions
 
+- **Decided Nov 11, 2026:** the project has a **Project Record**, `docs/NASA and ESA Data Projects - Project Record.pdf`:
+  the whole project as one PDF (front matter, roadmap, history, change log, each project, data sources, design,
+  decisions and working rules, the site's pages, licence and credits, repository history, glossary), built from the
+  repository by `docs/record/` in the same way as the Flight Deck Suite's and Hot Mic's. GitHub rebuilds it after every
+  push to main and commits it; chats never build it themselves. Pushes that change only data files (the daily data
+  updates, in the `data/` folders) don't start a rebuild, since none of those files are in the record; the Repository
+  History counts them instead of listing them. The record is public, like the repository; its build stops if a
+  personal detail would end up in it.
 - **Decided Nov 11, 2026 (Mars Data):** the whole Curiosity record (sol 1 to the newest released sol) is used from
   the start, not a single Mars year. It is downloaded and cleaned in chunks (a range of sols at a time), each chunk
   checked and its cleaning results recorded before the next is processed: rows kept and removed, the reason for each

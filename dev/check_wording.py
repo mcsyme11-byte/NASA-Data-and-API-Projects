@@ -13,6 +13,7 @@ TEXT = ('.md', '.txt', '.py', '.js', '.mjs', '.html', '.css', '.yml', '.yaml', '
         '.ipynb', '.example', '.gitignore')
 SKIP_DIRS = ('node_modules/', '.git/', 'image-explorer/vendor/')   # vendor: third-party libraries, copied unchanged
 SKIP_FILES = {'dev/check_wording.py',            # it names the patterns it looks for
+              'docs/record/build.sh',            # the record's own personal-details check names the same patterns
               'docs/CLAUDE-PROJECT-SETUP.md',    # the Claude project's instructions, word for word
               'image-explorer/data/features-more.json'}   # 85,000 place names from GeoNames (Malcolm Island and the like)
 
@@ -52,7 +53,8 @@ def main():
             continue
         for n, line in enumerate(lines, 1):
             for name, rx, allowed in RULES:
-                if f in allowed:
+                # data files hold real names (a place called Malcolm Island); only keys are checked in them
+                if f in allowed or ('/data/' in '/' + f and name != 'API key'):
                     continue
                 if rx.search(line):
                     shown = line.strip()[:140] if name != 'API key' else '(value hidden)'

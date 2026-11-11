@@ -1,0 +1,79 @@
+# NASA and ESA Data Projects · Project Record · © 2026 Malcolm Syme · mcsyme11@gmail.com
+#
+# Rebuilds "docs/NASA and ESA Data Projects - Project Record.pdf" on GitHub after every push to main and commits it as
+# "Project Record rebuilt (automatic)". This is the only place the record is built (since Nov 11, 2026), so chats
+# never build or commit the PDF themselves and never clash over it.
+# Skipped (decided Nov 11, 2026): pushes that change only data files (the daily asteroid and astronaut-photo updates and
+# other data refreshes, in the data/ folders) or only the record itself; none of those files are in the record. A push
+# that also changes anything else rebuilds it as usual.
+# If several pushes arrive close together, only the newest one is built. Its own commit doesn't start another run.
+# Run it by hand: GitHub › Actions › Project Record › Run workflow.
+
+name: Project Record
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/NASA and ESA Data Projects - Project Record.pdf'
+      - 'asteroid-tracker/data/**'
+      - 'image-explorer/data/**'
+      - 'mars-data/data/**'
+  workflow_dispatch:
+
+concurrency:
+  group: project-record
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Get the repository (full history, for the Repository History chapter)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # its own Python, so the packages below are seen by the build's "python3 -I" (which ignores per-user packages)
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Tools (LibreOffice, Python and Node packages)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends libreoffice-writer fonts-dejavu-core fontconfig unzip poppler-utils
+          pip install --quiet "pypdf>=5" "fonttools>=4.50"
+          npm install -g --silent docx@9.8.1 marked@18.0.10
+
+      - name: Georgia's twin font (Gelasio), so the pages lay out as in Word
+        run: |
+          sh docs/record/fonts.sh
+          fc-list | grep -qi gelasio || { echo "STOP: Gelasio didn't install"; exit 1; }
+
+      - name: Build the Project Record
+        run: |
+          sh docs/record/build.sh
+          pdffonts "docs/NASA and ESA Data Projects - Project Record.pdf" | grep -q Gelasio || { echo "STOP: the PDF isn't set in Gelasio"; exit 1; }
+
+      - name: Commit it
+        run: |
+          git config user.name "Project Record (automatic)"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "docs/NASA and ESA Data Projects - Project Record.pdf"
+          if git diff --cached --quiet; then echo "The record is already up to date."; exit 0; fi
+          git commit -q -m "Project Record rebuilt (automatic)"
+          if git push -q origin HEAD:main; then echo "Pushed."; exit 0; fi
+          # someone pushed meanwhile: put this rebuild on top of theirs (never a force push; main is protected)
+          git pull -q --rebase origin main && git push -q origin HEAD:main && echo "Pushed after catching up." && exit 0
+          echo "Couldn't push (another change landed first); the next run builds it again."

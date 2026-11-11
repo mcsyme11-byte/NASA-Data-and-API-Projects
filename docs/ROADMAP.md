@@ -6,7 +6,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 ## 0. Repository (set up Nov 8, 2026)
 
 
-- [ ] Optional: a **Project Record** PDF rebuilt automatically after every push, as in the Flight Deck Suite and Hot Mic.
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 

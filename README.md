@@ -26,8 +26,8 @@ NASA-ESA-Data-and-API-Projects/
 ├── asteroid-tracker/   Project 1
 ├── image-explorer/     Project 2
 ├── mars-data/          Project 3 (Python analysis + a charts page)
-├── docs/               design guide, data sources, notes, roadmap, history
-└── .github/workflows/  checks after every push, and the daily data updates
+├── docs/               design guide, data sources, notes, roadmap, history, and the Project Record (record/ builds it)
+└── .github/workflows/  checks after every push, the daily data updates, and the Project Record rebuild
 ```
 
 - **Pages run in the browser,** with no build step: plain HTML, CSS and JavaScript, hosted free on GitHub Pages.
@@ -55,6 +55,7 @@ NASA-ESA-Data-and-API-Projects/
 | [docs/PROJECT-NOTES.md](docs/PROJECT-NOTES.md) | How it's built, decisions, how to run and publish |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | What's next and every pending to-do |
 | [docs/HISTORY.md](docs/HISTORY.md) | How the project came about, in order |
+| [Project Record (PDF)](docs/NASA%20and%20ESA%20Data%20Projects%20-%20Project%20Record.pdf) | The whole project as one PDF, rebuilt automatically after every change ([how](docs/record/README.md)) |
 | [CHANGELOG.md](CHANGELOG.md) | Every change, newest first |
 | [LICENSE.md](LICENSE.md) | The MIT License (the project's own code and documents) |
 | [CREDITS.md](CREDITS.md) | Every outside data source and library, with its terms |

@@ -1,5 +1,16 @@
 # Change log
 
+## November 11, 2026 — Project Record
+
+- **Project Record:** `docs/NASA and ESA Data Projects - Project Record.pdf`, the whole project as one PDF (cover,
+  Document control, contents, 14 Parts, glossary), built from the repository by `docs/record/`, adapted from the
+  Flight Deck Suite's and Hot Mic's records.
+- **Rebuilt automatically** by `.github/workflows/project-record.yml` after every push to main, except pushes that
+  change only data files (the daily data updates); the Repository History counts those instead of listing them.
+- The build stops if a personal detail would end up in the record; the agencies' public contact addresses quoted in
+  the data-source notes are allowed.
+- **Wording check:** data files are checked for keys only, since they hold real place and object names.
+
 ## November 10, 2026 — Image Explorer: ESA's videos; smaller places in place search
 
 - **ESA's videos:** with "Pictures and videos" or "Videos", searches also ask ESA/Webb and ESA/Hubble's video
