@@ -30,6 +30,10 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   variables › Actions › New repository secret) and run Actions › Astronaut photos › Run workflow once. Until then the
   globe hides the astronaut photos. The first real run is the first test of `fetch_astronaut_photos.py` against the
   API (it was tested on records shaped like the API documentation's examples).
+- [ ] **Developer testing of the Nov 10, 2026 additions,** on a computer and a phone: the Earth map's colour keys and
+  the note under the map when a layer shows another day; place search for smaller places (for example Moraine Lake,
+  Mount Rundle); the globe zoomed in close (sharper Earth) and the Day and night button; ESA videos with "Pictures and
+  videos" or "Videos".
 - [ ] Picture library: tune the ranking further as the developer reviews searches (the weights are in `scoreOf` in
   `image-explorer/app.js`).
 - [ ] Polar views: a sea ice layer that works through the polar night. GIBS's microwave sea-ice records ended
