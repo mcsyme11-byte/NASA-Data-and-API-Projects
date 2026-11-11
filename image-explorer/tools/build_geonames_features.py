@@ -10,8 +10,10 @@
 #   python3 image-explorer/tools/build_geonames_features.py allCountries.zip alternateNamesV2.zip [limit]
 #
 # Keeps natural features (lakes, rivers, glaciers, peaks, passes, valleys, islands, parks and more) that have an
-# English Wikipedia article (a sign that a place is known beyond its own area), ranked by how many languages'
-# Wikipedias have an article on it. Places already in
+# English Wikipedia article (a sign that a place is known beyond its own area). Ranked by how widely a place is
+# named: its other names (translations and spellings) plus three for each further Wikipedia link; Antarctica's many
+# small named features (most with a short Wikipedia article) come last. Importance 5 is the top 2%, 6 the next 8%,
+# 7 the next 20%, 8 the next 30%, 9 the rest; Antarctica 10. Places already in
 # features.json (Natural Earth, the larger features) are left out.
 # Writes image-explorer/data/features-more.json: [name, kind, latitude, longitude, importance], importance 5–9
 # (Natural Earth's own features are 0–10; the most-named places get 5).
@@ -74,12 +76,13 @@ with zipfile.ZipFile(sys.argv[1]) as z, z.open('allCountries.txt') as f:
         seen[key] = 1
         if code in ('MT', 'PK', 'VLC') and row[15]:
             kind = f'{kind} · {int(row[15]):,} m'
-        kept.append((links[row[0]], name, kind, lat, lon, row[8]))
+        kept.append((names + 3 * max(0, links[row[0]] - 1) - (1000 if row[8] == 'AQ' else 0), name, kind, lat, lon, row[8]))
 
 kept.sort(key=lambda r: -r[0])
 kept = kept[:LIMIT]
-rank = lambda c: 5 if c >= 20 else 6 if c >= 10 else 7 if c >= 5 else 8 if c >= 3 else 9 if c >= 2 else 10   # by Wikipedia languages
-out = [[n, k, la, lo, rank(c), cc] for c, n, k, la, lo, cc in kept]
+N = len(kept)
+rank = lambda i, cc: 10 if cc == 'AQ' else 5 if i < .02 * N else 6 if i < .1 * N else 7 if i < .3 * N else 8 if i < .6 * N else 9
+out = [[n, k, la, lo, rank(i, cc), cc] for i, (c, n, k, la, lo, cc) in enumerate(kept)]
 OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
 print(f'{len(out):,} places, {OUT.stat().st_size / 1e6:.2f} MB → {OUT}')
 print('kinds kept:', Counter(k.split(' ·')[0] for _, _, k, *_ in kept).most_common())
