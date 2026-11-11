@@ -63,6 +63,7 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] Picture library: subtitles for videos (NASA's files cannot be attached from another site; would need a copy).
 - [ ] Shared parts used by both projects (tabs, "How to read this", the big search box, the tooltip) moved from
   `asteroid-tracker/tracker.css` into `shared/theme.css`; the page still loads `tracker.css` for them.
+- [ ] Globe: more sky objects (fainter galaxies), if wanted.
 - [ ] Keyboard use of the globe's markers (today they are reached through Find). With reduced motion set, the globe
   does not turn by itself and moves without animation; to be rechecked on a phone.
 

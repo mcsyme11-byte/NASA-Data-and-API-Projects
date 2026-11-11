@@ -92,7 +92,9 @@ async function loadEarth() {
 }
 
 /* ---------- sharper close up (decided Nov 10, 2026): once the view comes close, a patch of finer Blue Marble tiles
-   (about 4, 2 or 1 km a pixel) is laid over the part of the Earth in view, a little above the surface ---------- */
+   (about 4, 2, 1 or 0.5 km a pixel) is laid over the part of the Earth in view, a little above the surface.
+   The level is the one with at least one picture pixel for each screen pixel: the view is about 42° × height a
+   screen across per Earth radius of height, and level z has 2^z / 0.5625 pixels a degree. ---------- */
 let patch = null, patchKey = '', patchBusy = false, lastLook = 0;
 const BM = 'https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/BlueMarble_NextGeneration/default/default/500m/';
 function detail() {
@@ -100,20 +102,20 @@ function detail() {
   if (now - lastLook < 400 || patchBusy || fly) return;       /* looked at a few times a second, once the view is still */
   lastLook = now;
   const alt = camera.position.length() - 1;
-  const z = alt < 0.12 ? 6 : alt < 0.3 ? 5 : alt < 0.7 ? 4 : 0;
-  if (patch) patch.visible = !!z;
+  const z = alt < 0.16 ? 7 : alt < 0.32 ? 6 : alt < 0.65 ? 5 : alt < 1.3 ? 4 : 0;
+  if (patch) patch.visible = !!z;                              /* the old patch stays until the new one is in */
   if (!z) return;
   const local = camera.position.clone().applyMatrix4(earth.matrixWorld.clone().invert()).normalize();
   const lat = Math.asin(local.y) / D2R, lon = Math.atan2(-local.z, local.x) / D2R;
   const span = 288 / 2 ** z, cols = Math.ceil(360 / span), rows = Math.ceil(180 / span);   /* degrees a 512 px tile */
-  const c0 = Math.floor((lon + 180) / span) - 1, r0 = Math.max(0, Math.min(rows - 4, Math.floor((90 - lat) / span) - 1));
+  const c0 = Math.floor((lon + 180) / span) - 2, r0 = Math.max(0, Math.min(rows - 4, Math.floor((90 - lat) / span) - 1));   /* 5 × 4 tiles */
   const key = `${z} ${c0} ${r0}`;
   if (key === patchKey) return;
   patchKey = key; patchBusy = true;
-  const cv = document.createElement('canvas'); cv.width = cv.height = 2048; const g = cv.getContext('2d');
+  const cv = document.createElement('canvas'); cv.width = 2560; cv.height = 2048; const g = cv.getContext('2d');
   let ok = 0;
-  Promise.all(Array.from({ length: 16 }, (_, i) => new Promise(done => {
-    const x = i % 4, y = Math.floor(i / 4), col = ((c0 + x) % cols + cols) % cols, row = r0 + y, img = new Image();
+  Promise.all(Array.from({ length: 20 }, (_, i) => new Promise(done => {
+    const x = i % 5, y = Math.floor(i / 5), col = ((c0 + x) % cols + cols) % cols, row = r0 + y, img = new Image();
     if (row >= rows) return done();
     img.crossOrigin = 'anonymous';
     img.onload = () => { g.drawImage(img, x * 512, y * 512); ok++; done(); };
@@ -127,10 +129,10 @@ function detail() {
     /* the canvas runs past the south pole on the last rows: show only the part with picture */
     const vFrac = (north - south) / (4 * span); tex.repeat.set(1, vFrac); tex.offset.set(0, 1 - vFrac);
     /* three.js spheres start at longitude -180 (phi = longitude + 180°) and measure theta from the north pole */
-    const geo = new THREE.SphereGeometry(1.0006, 64, 64, (west + 180) * D2R, 4 * span * D2R, (90 - north) * D2R, (north - south) * D2R);
+    const geo = new THREE.SphereGeometry(1.0006, 80, 64, (west + 180) * D2R, 5 * span * D2R, (90 - north) * D2R, (north - south) * D2R);
     if (patch) { patch.geometry.dispose(); patch.material.map.dispose(); patch.material.dispose(); earth.remove(patch); }
     patch = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, polygonOffset: true, polygonOffsetFactor: -1 }));
-    patch.visible = camera.position.length() - 1 < 0.7;
+    patch.userData.z = z; patch.visible = true;
     earth.add(patch);
   });
 }

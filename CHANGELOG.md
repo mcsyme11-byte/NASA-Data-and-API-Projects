@@ -16,8 +16,9 @@
 
 ## November 10, 2026 — Image Explorer: sharper globe close up; day and night
 
-- Zooming in on the globe lays finer Blue Marble pictures over the part of the Earth in view: about 4 km a pixel
-  when close, 2 km closer, 1 km closest (from about 8 km before).
+- Zooming in on the globe lays finer Blue Marble pictures over the part of the Earth in view, about 4, 2, 1 and
+  0.5 km a pixel as the view comes closer (about 8 km before); each level starts where the one before would show
+  fewer picture pixels than screen pixels.
 - **Day and night:** the half of the Earth facing away from the Sun is shaded, with a soft edge for twilight, from the
   Sun's position at the current time; the Earth keeps turning with the time while the page is open. A "Day and night"
   button turns the shading off.
