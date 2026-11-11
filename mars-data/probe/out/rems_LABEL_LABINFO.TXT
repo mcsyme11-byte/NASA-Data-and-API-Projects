@@ -1,0 +1,28 @@
+PDS_VERSION_ID        = PDS3
+RECORD_TYPE           = STREAM
+
+OBJECT                = TEXT
+  PUBLICATION_DATE    = 2015-07-31
+  NOTE                = "Description of contents of LABEL directory"
+END_OBJECT            = TEXT
+END
+
+The LABEL directory contains the RDRs and ADRs format (FMT) files
+These files describe the columns of tables found in the REMS RDR and
+ADR data products. They are referenced from the label files (LBL) of
+each data product and they are included in this separate directory to
+avoid duplication.
+                                                      
+The following files are found in this directory.
+
+LABINFO.TXT - This file.
+
+TELRDR6.FMT - TEL RDR (Thermal and Electrical magnitudes) tables format.
+
+ENVRDR6.FMT - ENV RDR (Environmental magnitudes) tables format.
+
+MODRDR6.FMT - MOD RDR (Magnitudes from models applied) tables format
+
+ADR_CORRECTIONS6.FMT - Corrections ADR tables format.
+
+ADR_GEOM6.FMT - Geometry ADR tables format.
