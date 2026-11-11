@@ -15,6 +15,112 @@ export function chanceText(p) {
   const n = 1 / p, r = n >= 100 ? Number(n.toPrecision(2)) : Math.round(n);
   return `1 in ${fmt(Math.max(1, r))}` + (p >= 0.001 ? ` <span class="s">${fmt(p * 100, p >= 0.1 ? 0 : p >= 0.01 ? 1 : 2)}%</span>` : '');
 }
+// ---- ESA and NASA compared: a small chart for one object (the asteroid page) ----
+// Two panels: (1) the chance of the most likely impact and of all possible impacts together, on a log scale, one lane
+// for ESA (square) and one for NASA (circle); (2) the years in which each centre finds an impact possible.
+// Shapes and the lane labels, not only colour, tell the two centres apart.
+const SVGNS = 'http://www.w3.org/2000/svg';
+const svgEl = (tag, attrs, parent) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+// text colour goes in style, not the fill attribute: the page's .chart text rule would override the attribute
+const svgText = (parent, attrs, t) => {
+  const { fill, ...rest } = attrs, e = svgEl('text', rest, parent);
+  if (fill) e.style.fill = fill;
+  e.textContent = t; return e;
+};
+const plainChance = (p) => { const n = 1 / p; return `1 in ${fmt(Math.max(1, n >= 100 ? Number(n.toPrecision(2)) : Math.round(n)))}`; };
+const DECADE = { 0: 'certain', 1: '1 in 10', 2: '1 in 100', 3: '1 in 1,000', 4: '1 in 10,000', 5: '1 in 100,000', 6: '1 in 1 million',
+  7: '1 in 10 million', 8: '1 in 100 million', 9: '1 in 1 billion', 10: '1 in 10 billion', 11: '1 in 100 billion', 12: '1 in 1 trillion' };
+const yearsOf = (y) => { const m = /^(\d{4})(?:-(\d{4}))?$/.exec(String(y || '')); return m ? [Number(m[1]), Number(m[2] || m[1])] : null; };
+export const RISK_COL = { esa: '#C0A062', nasa: '#8AA9C9' };
+
+export function riskChart(svg, r) {
+  const W = Math.max(280, Math.round(svg.parentElement.clientWidth || 600)), narrow = W < 520;
+  svg.innerHTML = '';
+  const who = [['esa', 'ESA', r.esa], ['nasa', 'NASA', r.nasa]];
+  const vals = who.flatMap(([, , c]) => (c ? [c.ip, c.cum] : [])).filter((v) => v > 0);
+  if (!vals.length) { svg.setAttribute('viewBox', `0 0 ${W} 1`); return false; }
+  // log axis in whole decades covering the values, at least three decades wide, never past "certain"
+  let low10 = Math.floor(Math.log10(Math.min(...vals))), top10 = Math.ceil(Math.log10(Math.max(...vals)));
+  if (top10 === Math.log10(Math.max(...vals)) && top10 < 0) top10 += 1;
+  while (top10 - low10 < 3) { if (top10 < 0) top10++; else low10--; }
+  top10 = Math.min(0, top10); low10 = Math.max(-12, low10);
+  const m = { l: 50, r: 16 }, X = (p) => m.l + (Math.log10(p) - low10) / (top10 - low10) * (W - m.l - m.r);
+  const lane = 18, rowH = 2 * lane + 26;
+  let y = 4;
+  const rows = [['ip', 'Chance of the most likely impact'], ['cum', 'Chance of any of the possible impacts']];
+  svgText(svg, { x: 0, y: y + 12, class: 'axt' }, 'Impact chance');
+  y += 24;
+  const top = y;
+  rows.forEach(([key, title]) => {
+    svgText(svg, { x: m.l, y: y + 10, fill: '#EDE6D3' }, title);
+    who.forEach(([k, label, c], i) => {
+      const ly = y + 24 + i * lane;
+      svgText(svg, { x: m.l - 8, y: ly + 4, 'text-anchor': 'end' }, label);
+      svgEl('line', { x1: m.l, x2: W - m.r, y1: ly, y2: ly, stroke: 'rgba(237,230,211,.12)' }, svg);
+      if (!c || !(c[key] > 0)) { svgText(svg, { x: m.l + 4, y: ly + 4, 'font-style': 'italic' }, c ? 'not given' : 'not listed'); return; }
+      const x = X(Math.max(10 ** low10, c[key])), col = RISK_COL[k];
+      if (k === 'esa') svgEl('rect', { x: x - 5, y: ly - 5, width: 10, height: 10, fill: col }, svg);
+      else svgEl('circle', { cx: x, cy: ly, r: 5.5, fill: col }, svg);
+      const t = plainChance(c[key]), right = x + 10 + t.length * 6.6 <= W - m.r;
+      svgText(svg, { x: right ? x + 10 : x - 10, y: ly + 4, 'text-anchor': right ? 'start' : 'end', fill: col }, t);
+    });
+    y += rowH;
+  });
+  // decade grid and labels (every other one when narrow)
+  for (let d = low10; d <= top10; d++) {
+    const x = X(10 ** d);
+    svgEl('line', { x1: x, x2: x, y1: top + 14, y2: y - 10, stroke: 'rgba(237,230,211,.08)' }, svg);
+    if (!narrow || (top10 - d) % 2 === 0) svgText(svg, { x, y: y + 4, 'text-anchor': d === top10 ? 'end' : d === low10 ? 'start' : 'middle' }, DECADE[-d] || `10^${d}`);
+  }
+  y += 14;
+  svgText(svg, { x: W - m.r, y: y + 6, 'text-anchor': 'end', 'font-style': 'italic' }, 'more likely →');
+  y += 18;
+  // years of possible impacts
+  const span = who.map(([k, label, c]) => [k, label, c && yearsOf(c.years), c && c.date ? Number(String(c.date).slice(0, 4)) : null, !!c]);
+  const ys = span.flatMap(([, , yy]) => yy || []);
+  if (ys.length) {
+    let a = Math.min(...ys), b = Math.max(...ys) + 1;
+    const pad = Math.max(2, Math.round((b - a) * 0.06)); a -= pad; b += pad;
+    const step = [1, 2, 5, 10, 20, 25, 50, 100, 200].find((s2) => (b - a) / s2 <= (narrow ? 4 : 8)) || 250;
+    const Y = (yr) => m.l + (yr - a) / (b - a) * (W - m.l - m.r);
+    svgText(svg, { x: 0, y: y + 12, class: 'axt' }, 'Years of possible impacts');
+    y += 24; const t0 = y;
+    span.forEach(([k, label, yy, likely, listed], i) => {
+      const ly = y + 8 + i * lane, col = RISK_COL[k];
+      svgText(svg, { x: m.l - 8, y: ly + 4, 'text-anchor': 'end' }, label);
+      svgEl('line', { x1: m.l, x2: W - m.r, y1: ly, y2: ly, stroke: 'rgba(237,230,211,.12)' }, svg);
+      if (!yy) { svgText(svg, { x: m.l + 4, y: ly + 4, 'font-style': 'italic' }, listed ? (likely ? `not given; most likely ${likely}` : 'not given') : 'not listed'); return; }
+      const x1 = Y(yy[0]), x2 = Math.max(Y(yy[1] + 1), x1 + 3);
+      svgEl('rect', { x: x1, y: ly - 4, width: x2 - x1, height: 8, rx: 2, fill: col, opacity: k === 'esa' ? 0.85 : 0.75 }, svg);
+      if (likely) { const xl = Y(likely + 0.5); svgEl('line', { x1: xl, x2: xl, y1: ly - 8, y2: ly + 8, stroke: '#EDE6D3', 'stroke-width': 2 }, svg); }
+      // the label goes after the bar, else before it, else inside it (dark on the bar), so it never covers the lane name
+      const lbl = yy[0] === yy[1] ? String(yy[0]) : `${yy[0]}–${yy[1]}`, est = lbl.length * 6.6;
+      if (x2 + 8 + est <= W - m.r) svgText(svg, { x: x2 + 8, y: ly + 4, fill: col }, lbl);
+      else if (x1 - 8 - est >= m.l) svgText(svg, { x: x1 - 8, y: ly + 4, 'text-anchor': 'end', fill: col }, lbl);
+      else {
+        svgEl('rect', { x: x1, y: ly - 7, width: x2 - x1, height: 14, rx: 2, fill: col }, svg);
+        if (likely) { const xl = Y(likely + 0.5); svgEl('line', { x1: xl, x2: xl, y1: ly - 9, y2: ly + 9, stroke: '#EDE6D3', 'stroke-width': 2 }, svg); }
+        const xm = likely && Y(likely + 0.5) - x1 < est + 14 ? x2 - 6 : x1 + 6;   // keep clear of the white tick
+        svgText(svg, { x: xm, y: ly + 4, 'text-anchor': xm === x1 + 6 ? 'start' : 'end', fill: '#141B26', 'font-weight': 600 }, lbl);
+      }
+    });
+    y += 8 + 2 * lane;
+    for (let yr = Math.ceil(a / step) * step; yr <= b; yr += step) {
+      const x = Y(yr);
+      svgEl('line', { x1: x, x2: x, y1: t0, y2: y - 6, stroke: 'rgba(237,230,211,.08)' }, svg);
+      svgText(svg, { x, y: y + 6, 'text-anchor': 'middle' }, String(yr));
+    }
+    y += 14;
+    svgText(svg, { x: m.l, y: y + 8, 'font-style': 'italic' }, 'white tick: the most likely impact');
+    y += 12;
+  }
+  svg.setAttribute('viewBox', `0 0 ${W} ${y + 4}`);
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', 'ESA and NASA compared. ' + who.map(([, label, c]) => (c
+    ? `${label}: most likely impact ${plainChance(c.ip)}${c.cum > 0 ? `, all impacts together ${plainChance(c.cum)}` : ''}${c.years ? `, possible in ${c.years}` : ''}.`
+    : `${label}: not listed.`)).join(' '));
+  return true;
+}
 const ps = (v) => (v === null || v === undefined ? '' : (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(2));
 const dateText = (d) => (d ? new Date(d + 'T00:00:00Z').toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }) : '');
 // pages for one object at each centre

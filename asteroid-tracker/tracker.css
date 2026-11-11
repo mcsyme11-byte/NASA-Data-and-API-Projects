@@ -18,6 +18,8 @@
 .weeklabel { display: flex; flex-direction: column; min-width: 190px; text-align: center; }
 .weeklabel strong { font-weight: 400; font-size: 18px; }
 .weeknav .chip:last-child { margin-left: auto; }
+.weeknav #thisWeek { margin-left: auto; }
+.weeknav .sharemsg { flex-basis: 100%; text-align: right; }
 
 .tile .value small { font-size: 15px; color: var(--ink2); }
 .tile .sub { font-size: 13px; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -35,6 +37,10 @@
 .tiles.two .value.none { color: var(--muted); font-size: 20px; }
 .riskcard { padding: 16px 18px; }
 .riskcard .note { margin: 12px 0 0; }
+.riskcmp { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.riskcmp > .label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
+.riskcmp .label .aside { text-transform: none; letter-spacing: .02em; font-style: italic; color: var(--muted); margin-left: 6px; font-size: 12.5px; }
+.riskcmp .chart { margin-top: 8px; }
 @media (max-width: 760px) { .tiles.two { grid-template-columns: 1fr; } .filters input[type="search"] { flex: 1; width: auto; } }
 
 .charts { display: grid; gap: 22px; grid-template-columns: 1fr 1fr; margin-top: 22px; }
@@ -213,6 +219,8 @@ table.neo tr.out td { color: var(--muted); }
   .weeknav .weeklabel { min-width: 0; }
   .weeknav .weeklabel strong { font-size: 16px; }
   .weeknav #thisWeek, .weeknav #thisYear { grid-column: 1 / -1; justify-content: center; }
+  .weeknav #thisWeek { margin-left: 0; }
+  .weeknav #shareWeek, .weeknav .sharemsg { grid-column: 1 / -1; justify-content: center; text-align: center; }
 }
 @media (max-width: 420px) {
   .timebar .chip { font-size: 12px; padding: 0 4px; }
@@ -288,6 +296,7 @@ dl.mini dd { margin: 0; }
 .classlist li { display: flex; gap: 10px; align-items: flex-start; }
 .classlist i { flex: none; width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
 .classlist i.ring { background: none; border: 1.5px solid var(--brass-bright); }
+.classlist i.diamond { background: rgb(236, 122, 166); }
 .classlist b, .craftlist b { font-weight: 400; color: var(--ink); }
 .craftlist li { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: baseline; }
 .craftlist li::before { content: "✛"; color: var(--ink2); font-size: 12px; grid-row: span 2; }
@@ -404,3 +413,8 @@ body.noscroll { overflow: hidden; }
 .tourbanner { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); background: rgba(12, 17, 25, .9); border: 1px solid var(--brass-dim);
   border-radius: 999px; padding: 6px 16px; font-size: 13.5px; color: var(--brass-bright); pointer-events: none; white-space: nowrap; }
 @media (max-width: 760px) { .tourbanner { top: auto; bottom: 64px; font-size: 12.5px; } .mapbar.famous .seg { width: 100%; } .mapbar.famous .chip { flex: 1 1 45%; } }
+
+/* share links */
+.sharemsg { font-size: 13px; font-style: italic; color: var(--muted); align-self: center; }
+.sharemsg label { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; font-style: normal; }
+.sharemsg .sharelink { width: min(340px, 72vw); font: 12.5px var(--font); color: var(--ink); background: var(--deep); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }

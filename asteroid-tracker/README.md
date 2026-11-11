@@ -80,6 +80,7 @@ asteroid-tracker/
 ├── soon.js                      the home page's "closest pass, next 7 days"
 ├── risk.js                      the Impact risk tab: ESA's and NASA's lists side by side, filters, sorting, details
 ├── esa.js                       reads ESA's close approaches and both risk lists for the week's details, the asteroid page and the map
+├── share.js                     "Share this view" and "Share this week": the view as a link, opened by the share sheet or copied
 ├── fetch_close_approaches.py    writes data/YYYY.json and data/years.json (daily, GitHub Actions)
 ├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json, data/soon.json (daily), data/famous.json (monthly)
 ├── fetch_risk.py                writes data/risk.json (ESA NEOCC and NASA/JPL Sentry) and data/esa_close.json (daily)

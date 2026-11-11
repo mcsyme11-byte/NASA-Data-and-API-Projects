@@ -10,13 +10,11 @@
 // Projection, the same as the orbit diagram (orbitview.js): spin φ about the ecliptic pole, then tilt θ:
 //   x1 = x·cos φ − y·sin φ,  y1 = x·sin φ + y·cos φ,  screen up = y1·cos θ + z·sin θ
 
-import { planetPosition, planetElements, orbitPath, PLANETS, jdFromMs } from './orbit.js';
+import { planetPosition, planetElements, orbitPath, PLANETS, jdFromMs, wrap180 } from './orbit.js';
+export { wrap180 };
 import { solvePositions } from './kepler.js';
 
 const RAD = Math.PI / 180;
-// Angles in degrees, kept between −180 and 180. Tilt turns freely: 0 looks down on the planets' plane, 90 is edge-on,
-// 180 looks up at it from below, and dragging past either end carries on round.
-export const wrap180 = (a) => ((a % 360) + 540) % 360 - 180;
 const K_GAUSS = 0.01720209895;                      // Gaussian gravitational constant: n (rad/day) = k / a^1.5
 // orbit classes: colours in DESIGN.md's series order, and plain names
 export const CLASSES = {
@@ -30,6 +28,7 @@ export const CLASSES = {
 export const COMET_CODES = new Set(['JFc', 'JFC', 'HTC', 'ETc', 'CTc', 'COM', 'PAR', 'HYP']);
 export const classOf = (code) => (COMET_CODES.has(code) ? 'COM' : code);
 const HAZ_RGB = [201, 103, 90];
+const RISK_RGB = [236, 122, 166];                  // asteroids on an impact-risk list (rose: no orbit type uses it)
 const AU_KM = 149597870.7;
 const RADIUS_KM = { Mercury: 2440, Venus: 6052, Earth: 6371, Mars: 3390, Jupiter: 69911, Saturn: 58232, Uranus: 25362, Neptune: 24622 };
 const FRESH_RGB = [255, 244, 214];                  // found in the year being shown
@@ -187,6 +186,8 @@ export class SolarMap {
     this.panMode = false;                              // the pan button: a plain drag pans instead of turning the view
     this.filter = 'all';                               // 'all' | 'haz' | 'big' | 'km' | 'risk'
     this.riskSet = null;                               // Set of row indexes on an impact-risk list (ESA or NASA)
+    this.riskMark = true;                              // colour them rose (and, zoomed in, ring each with a diamond)
+    this.riskFlag = null;                              // Uint8Array, 1 for each row on a risk list (built from riskSet)
     this.foundMax = 9999;                              // show only objects found by the end of this year
     this.only = null;                                  // a Set of indices: show only these (close passes in a year)
     this.colorBy = 'class';                            // 'class' | 'plain'
@@ -280,6 +281,8 @@ export class SolarMap {
       const amt = this.viewR > 8 ? 0.55 : 0.8;                   // fainter when far out, so the cloud doesn't glare
       const W4 = W * 4;
       const fmax = this.foundMax, fnd = A.found, only = this.only, rs = this.riskSet;
+      if (rs && (!this.riskFlag || this.riskFlag.n !== rs.size)) { this.riskFlag = new Uint8Array(A.n); rs.forEach((k) => (this.riskFlag[k] = 1)); this.riskFlag.n = rs.size; }
+      const rf = this.riskMark && rs ? this.riskFlag : null;
       const skip = this.tour && this.tourAst(this.jd) ? this.tour.k : -1;
       const fresh = fmax < 9999 ? fmax : -1;             // found in the year shown: drawn brighter
       for (let k = 0; k < A.n; k++) {
@@ -293,13 +296,15 @@ export class SolarMap {
         const x1 = x * cf - y * sf, y1 = x * sf + y * cf;
         const sx = (cx + x1 * s) | 0, sy = (cy - (y1 * ct + z * st) * s) | 0;
         if (sx < 0 || sy < 0 || sx >= W - 1 || sy >= H - 1) continue;
-        const rgb = fnd[k] === fresh ? FRESH_RGB : haz[k] && f !== 'all' ? HAZ_RGB : plain ? cols[0] : cols[cls[k]];
+        const risky = rf && rf[k] && fnd[k] !== fresh;      // on a risk list: rose, always 2 × 2 pixels and a little brighter
+        const rgb = fnd[k] === fresh ? FRESH_RGB : risky ? RISK_RGB : haz[k] && f !== 'all' ? HAZ_RGB : plain ? cols[0] : cols[cls[k]];
+        const a2 = risky ? 1 : amt;
         let o = sy * W4 + sx * 4;
         // additive blend: dense regions glow
-        px[o] += rgb[0] * amt; px[o + 1] += rgb[1] * amt; px[o + 2] += rgb[2] * amt;
-        if (big === 2) { o += 4; px[o] += rgb[0] * amt; px[o + 1] += rgb[1] * amt; px[o + 2] += rgb[2] * amt;
-          o += W4 - 4; px[o] += rgb[0] * amt; px[o + 1] += rgb[1] * amt; px[o + 2] += rgb[2] * amt;
-          o += 4; px[o] += rgb[0] * amt; px[o + 1] += rgb[1] * amt; px[o + 2] += rgb[2] * amt; }
+        px[o] += rgb[0] * a2; px[o + 1] += rgb[1] * a2; px[o + 2] += rgb[2] * a2;
+        if (big === 2 || risky) { o += 4; px[o] += rgb[0] * a2; px[o + 1] += rgb[1] * a2; px[o + 2] += rgb[2] * a2;
+          o += W4 - 4; px[o] += rgb[0] * a2; px[o + 1] += rgb[1] * a2; px[o + 2] += rgb[2] * a2;
+          o += 4; px[o] += rgb[0] * a2; px[o + 1] += rgb[1] * a2; px[o + 2] += rgb[2] * a2; }
       }
     }
     ctx.putImageData(this.img, 0, 0);
@@ -429,6 +434,19 @@ export class SolarMap {
         const q = proj(A.x[k], A.y[k], A.z[k]);
         ctx.strokeStyle = A.haz[k] ? '#C9675A' : '#E2C88E';
         ctx.beginPath(); ctx.arc(q[0], q[1], 3.5 * dpr, 0, 7); ctx.stroke();
+      }
+      // asteroids on an impact-risk list, zoomed in (closer than about Venus's distance across): a small diamond round
+      // each, drawn as one path. Further out they are many hundreds on screen, and their rose colour is enough.
+      if (this.riskMark && this.riskSet && this.riskSet.size && this.viewR <= 0.35) {
+        const f = this.filter, hmax = f === 'big' ? 22 : f === 'km' ? 17.75 : 99, d = 4 * dpr;
+        ctx.strokeStyle = 'rgba(236,122,166,.9)'; ctx.lineWidth = 1.2 * dpr; ctx.beginPath();
+        for (const k of this.riskSet) {
+          if ((f === 'haz' && !A.haz[k]) || A.H[k] > hmax || A.found[k] > this.foundMax || (this.only && !this.only.has(k))) continue;
+          const q = proj(A.x[k], A.y[k], A.z[k]);
+          if (q[0] < -d || q[1] < -d || q[0] > W + d || q[1] > H + d) continue;
+          ctx.moveTo(q[0], q[1] - d); ctx.lineTo(q[0] + d, q[1]); ctx.lineTo(q[0], q[1] + d); ctx.lineTo(q[0] - d, q[1]); ctx.closePath();
+        }
+        ctx.stroke();
       }
       if (this.selected >= 0) {
         const k = this.selected, sp = this.asteroidPos(k), q = proj(sp[0], sp[1], sp[2]);

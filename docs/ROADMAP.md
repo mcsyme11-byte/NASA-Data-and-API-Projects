@@ -10,34 +10,14 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
-- [ ] **Developer testing**, at the developer's own pace: the live page with real data on a computer and a phone;
-  both views, the filters, sorting, row details, key settings (save and remove the personal key).
-- [ ] **Developer testing of the additions:** an asteroid's page (open one from a row's details), the orbit
-  diagram (Top / Tilted / Side, drag to turn, Play, the slider, Near Earth, tapping an approach), and past years
-  in the "By year" view.
 - [ ] Watch the scheduled "Asteroid data" runs (06:17 and the 14:47 backup, added Nov 9, 2026): at least one should
   run each day.
-- [ ] **Developer testing of the home page's "closest pass, next 7 days" line, the size comparisons and the three new
-  famous passes** (Toutatis, 2012 TC4, 2023 BU), on a computer and a phone.
-- [ ] **Developer testing of map panning** with a mouse (right, middle and Shift drag), a trackpad (the ✥ button)
-  and a phone (two fingers), and of the "‹ Back" buttons going back exactly one page.
-- [ ] **Developer testing of the orbit diagram's close-approach rings,** the countdown, Play stopping at the approach,
-  the new speeds, and turning a famous pass off by pressing its button again.
-- [ ] **Developer testing of the map, search and home preview:** dragging, pinching and zooming on a phone and a
-  computer; Play at each speed; full screen and leaving it; Find; "Found by the end of" with Watch; "Close to Earth
-  in"; the Search tab with "Found in"; the naming guide; the live preview on the home page.
-- [ ] **Developer testing of the Nov 9 additions:** the five famous close passes on a computer and a phone (each
-  flies to Earth, plays and pauses at closest approach); zooming right in to Earth and to a selected asteroid; the
-  live clock; the full-screen and exit buttons; the "‹ Back" buttons (tracker → an asteroid → Back returns to the
-  same week, filters, open row and scroll position; the same from the map, the Search tab and the "By year" view);
-  every name in the "By year" tables opening its own page.
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
   "famous.json written").
-- [ ] **Developer testing of the ESA additions (Nov 9, 2026),** on a computer and a phone: the Impact risk tab
-  (filters, sorting, row details, the links to ESA's and NASA's pages), an asteroid page's "Impact risk" section, the
-  ESA tiles in a week row's details, the map's "On a risk list" filter and the arrow buttons that appear with ✥.
-- [ ] **Developer testing of the map's free tilt (Nov 10, 2026):** drag up and down past edge-on to look from
-  underneath and round again, on a computer and a phone; the Top, Tilted and Side buttons bring the view back.
+- [ ] **Developer testing of the Nov 10 additions,** on a computer and a phone: the orbit diagram turning past
+  edge-on with a mouse; the rose risk-list dots on the map, the diamonds when zoomed in, and "Show in their orbit
+  colours"; the "ESA and NASA compared" chart on an asteroid page (for example Bennu, 1950 DA, Duende); "Share this
+  view" on the map and "Share this week" on the tracker, opened on another device.
 - [ ] Watch the "Fetch impact-risk lists and ESA close approaches" step in the "Asteroid data" runs: ESA calls its
   automated access experimental, so a change of format stops the step (the previous files are kept) and needs a fix
   in `fetch_risk.py`.

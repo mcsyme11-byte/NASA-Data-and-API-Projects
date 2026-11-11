@@ -15,6 +15,7 @@ import { loadNeos } from './mapdata.js';
 import { COL, COMET_CODES } from './skymap.js';
 import { neowsId } from './search.js';
 import { placeKeeper, scrollBack } from './back.js';
+import { takeShared, linkWith, shareButton } from './share.js';
 import { mountRisk, chanceText } from './risk.js';
 import { esaApproach, riskOf } from './esa.js';
 
@@ -201,6 +202,11 @@ function weekTable(list) {
     }).join('');
   }
   fillEsa();
+  if (scrollToOpen && state.selected === scrollToOpen) {        // a shared link with a row open: bring it into view once
+    scrollToOpen = null;
+    const tr = $(`#weekTable tr[data-id="${CSS.escape(state.selected)}"]`);
+    if (tr) requestAnimationFrame(() => tr.scrollIntoView({ block: 'center' }));
+  }
   $('#moreRow').hidden = rows.length <= ROWS;
   $('#moreBtn').textContent = state.showAll ? 'Show fewer' : `Show all ${rows.length}`;
   $$('#weekTable th[data-k]').forEach((th) =>
@@ -478,6 +484,10 @@ addEventListener('resize', () => {
 showKeyState();
 if (location.hash === '#key') toggleKeyCard(true);
 
+// A shared week (index.html?view=1&week=YYYY-MM-DD&open=<NeoWs id>&haz=1&size=140&dist=10) opens that week, with
+// those filters and that row open. Read before placeKeeper, which then never applies.
+let scrollToOpen = null;
+const sharedWeek = takeShared(['week', 'open', 'haz', 'size', 'dist']);
 // Coming back (Back button, or a reload): the same week or year, filters, sort, open row, search words and scroll
 // position as when the page was left. Kept in this browser tab only.
 const place = placeKeeper('tracker', () => ({
@@ -486,7 +496,15 @@ const place = placeKeeper('tracker', () => ({
   selected: state.selected, showAll: state.showAll, maxLd: state.maxLd, q: $('#q') ? $('#q').value : '',
 }));
 const has = (sel, v) => [...$(sel).options].some((o) => o.value === String(v));
-if (place && place.hash === location.hash) {
+if (sharedWeek) {
+  const t = Date.parse((sharedWeek.week || '') + 'T00:00:00Z');
+  if (Number.isFinite(t)) state.weekStart = sundayOf(t);
+  state.filter = { haz: sharedWeek.haz === '1', size: has('#fSize', sharedWeek.size) ? Number(sharedWeek.size) : 0,
+    dist: has('#fDist', sharedWeek.dist) ? Number(sharedWeek.dist) : Infinity, day: '' };
+  $('#fSize').value = String(state.filter.size); $('#fDist').value = String(state.filter.dist);
+  $$('[data-haz]').forEach((x) => x.setAttribute('aria-pressed', x.dataset.haz === (state.filter.haz ? 'haz' : 'all')));
+  if (sharedWeek.open) { keepRow = { weekStart: state.weekStart, selected: sharedWeek.open, showAll: true }; scrollToOpen = sharedWeek.open; }
+} else if (place && place.hash === location.hash) {
   if (Number.isFinite(place.weekStart)) state.weekStart = sundayOf(place.weekStart);
   const f = place.filter || {};
   state.filter = { haz: !!f.haz, size: has('#fSize', f.size) ? Number(f.size) : 0, dist: f.dist !== null && has('#fDist', f.dist) ? Number(f.dist) : Infinity, day: f.day || '' };
@@ -499,7 +517,11 @@ if (place && place.hash === location.hash) {
 }
 loadWeek();
 setView(hashView(), hashYear());
-if (place && place.hash === location.hash) {
+shareButton($('#shareWeek'), $('#shareWeekMsg'), () => linkWith({
+  week: isoDate(new Date(state.weekStart)), open: state.selected || '', haz: state.filter.haz ? '1' : '',
+  size: state.filter.size || '', dist: Number.isFinite(state.filter.dist) ? state.filter.dist : '',
+}), 'This week\'s close approaches · Asteroid Tracker');
+if (!sharedWeek && place && place.hash === location.hash) {
   if (state.view === 'search' && place.q) search.set(place.q);
   const t0 = performance.now();
   scrollBack(place.scrollY, () => state.view === 'week' ? !!(state.week || state.weekError)

@@ -108,3 +108,7 @@ export function orbitPath(a, e, i, O, w, steps = 360) {
 }
 
 export const dist = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]);
+
+// Angles in degrees, kept between −180 and 180. Tilt turns freely: 0 looks down on the planets' plane, 90 is edge-on,
+// 180 looks up at it from below, and dragging past either end carries on round.
+export const wrap180 = (a) => ((a % 360) + 540) % 360 - 180;

@@ -1,5 +1,19 @@
 # Change log
 
+## November 10, 2026 — Asteroid Tracker: risk colour on the map, ESA and NASA compared, share links
+
+- **Orbit diagram:** the tilt turns all the way round with a mouse, as on the map; "seen from below" labels the view
+  from underneath.
+- **Map:** asteroids on ESA's or NASA's impact-risk list are drawn in rose (2 × 2 pixels) and, zoomed in closer than
+  about 0.35 au, ringed with a small diamond; "Show in their orbit colours" under Orbit types turns this off (kept on
+  Back and reload).
+- **Asteroid page:** "ESA and NASA compared", a chart of both centres' chances (the most likely impact and all
+  possible impacts together, on a log scale) and the years in which each finds an impact possible, with the most
+  likely year marked. ESA's special risk list gives no years or total chance; the chart says "not given" there.
+- **Share links:** "Share this view" on the map (zoom, angle, centre, selection, date, filters, or the famous pass in
+  progress) and "Share this week" on the tracker (the week, filters and open row). On a phone the share sheet opens;
+  elsewhere the link is copied, or shown ready to copy. The link's settings are removed from the address once applied.
+
 ## November 11, 2026 — Projects numbered in build order; Mars Data uses the whole Curiosity record
 
 - Image Explorer is now Project 2 and Mars Data Project 3, on the home page (in that order), the project pages and

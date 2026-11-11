@@ -128,6 +128,11 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   on-screen arrow buttons for panning on phones. Neither centre's server allows calls from web pages, so the data job
   writes `data/risk.json` and `data/esa_close.json`. NASA stays the main source; every figure says which agency it
   comes from. The developer waived the mock-up step for this addition ("just do as much as you can").
+- **Decided Nov 10, 2026 (Asteroid Tracker):** asteroids on an impact-risk list are drawn in rose on the map, a
+  colour no orbit type uses, at 2 × 2 pixels; diamond outlines are added only when zoomed in, because at full view
+  about 2,500 outlines covered the map. Share links carry the view in plain, readable parameters (`view=1` marks a
+  shared link) and are removed from the address once applied, so Back and reload return to where the user was;
+  nothing is stored or sent, so the Privacy page is unchanged.
 - **Decided Nov 9, 2026 (licence position):** ESA's NEOCC portal has no licence of its own and refers to ESA's general
   terms, which allow educational and informational use with ESA's credit. The figures are shown with the credit
   "ESA NEO Coordination Centre (©ESA)" and no ESA logo; if a question arises, the NEOCC is asked by email

@@ -8,7 +8,7 @@
 //   x1 = x·cos φ − y·sin φ,   y1 = x·sin φ + y·cos φ
 //   screen right = x1,   screen up = y1·cos θ + z·sin θ,   towards the viewer = −y1·sin θ + z·cos θ
 
-import { planetPosition, planetElements, asteroidPosition, orbitPath, rotate, dist, LD_AU } from './orbit.js';
+import { planetPosition, planetElements, asteroidPosition, orbitPath, rotate, dist, LD_AU, wrap180 } from './orbit.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const RAD = Math.PI / 180;
@@ -73,7 +73,9 @@ export class OrbitView {
     if (this._raf) return;
     this._raf = requestAnimationFrame(() => { this._raf = null; this.draw(); this.onViewChange && this.onViewChange(); });
   }
-  setView({ tilt, spin }) { if (tilt !== undefined) this.tilt = Math.max(0, Math.min(90, tilt)); if (spin !== undefined) this.spin = spin; this.draw(); }
+  setView({ tilt, spin }) { if (tilt !== undefined) this.tilt = wrap180(tilt); if (spin !== undefined) this.spin = wrap180(spin); this.draw(); }
+  // true when the view looks at the plane of Earth's orbit at a slant (not straight down or straight up from below)
+  get slanted() { return Math.abs(Math.sin(this.tilt * RAD)) > 0.05; }
 
   // ---- drawing ----
   draw() {
@@ -89,7 +91,7 @@ export class OrbitView {
     this.center = earth;
     const R = this.nearEarth ? this.nearRadius : this.fitR / this.zoom;
     this.s = (Math.min(W, H) / 2 - 18) / R;
-    const vb = this.tilt > 3;   // tilted: draw the plane of Earth's orbit for depth
+    const vb = this.slanted;   // tilted: draw the plane of Earth's orbit for depth
     if (W >= 640) this.boxes.push([0, 0, 190, 84]);
     this.boxes.push([0, H - 40, 260, H], [W - 130, H - 30, W, H]);
 
@@ -113,9 +115,9 @@ export class OrbitView {
     const nLd = Math.round(unit / LD_AU);
     const ulabel = this.nearEarth ? (nLd === 1 ? '1 Moon distance (384,400 km)' : `${nLd} Moon distances`) : `${unit} au = ${(unit * 149.6).toLocaleString('en-CA', { maximumFractionDigits: 1 })} million km`;
     const t = el('text', { x: bx, y: by - 8, fill: C.ink2, 'font-size': 11 }, svg); t.textContent = ulabel;
-    if (this.tilt === 0 && !this.nearEarth) {
+    if (!this.slanted && !this.nearEarth) {
       const v = el('text', { x: W - 14, y: H - 14, 'text-anchor': 'end', fill: C.muted, 'font-size': 11, 'font-style': 'italic' }, svg);
-      v.textContent = 'seen from above';
+      v.textContent = Math.abs(this.tilt) < 90 ? 'seen from above' : 'seen from below';
     }
     svg.setAttribute('aria-label', `Orbit diagram on ${new Date((jd - 2440587.5) * 86400000).toISOString().slice(0, 10)}: the Sun, ${this.planets.join(', ')} and ${this.name}, ` +
       `${dist(earth, ast).toFixed(3)} au from Earth and ${Math.hypot(...ast).toFixed(3)} au from the Sun.`);
@@ -175,7 +177,7 @@ export class OrbitView {
     const [ex, ey] = this._proj(earth), [ax, ay] = this._proj(ast);
     el('line', { x1: ex, y1: ey, x2: ax, y2: ay, stroke: C.ink2, 'stroke-width': 1, 'stroke-dasharray': '3 4', opacity: 0.8 }, g);
     // drop lines: how far above or below Earth's orbital plane the asteroid is (tilted views)
-    if (this.tilt > 3) {
+    if (this.slanted) {
       const [bx, by] = this._proj([ast[0], ast[1], 0]);
       el('line', { x1: ax, y1: ay, x2: bx, y2: by, stroke: col, 'stroke-width': 1, 'stroke-dasharray': '1 3' }, g);
       el('circle', { cx: bx, cy: by, r: 2, fill: col, opacity: 0.6 }, g);
@@ -242,7 +244,7 @@ export class OrbitView {
     const R = this.nearRadius;
     // Moon's orbit (1 LD) and 10 LD ring, in the plane of Earth's orbit
     const ring = (r) => { const pts = []; for (let a = 0; a <= 360; a += 3) pts.push([earth[0] + r * Math.cos(a * RAD), earth[1] + r * Math.sin(a * RAD), earth[2]]); return pts; };
-    if (this.tilt > 3) el('path', { d: this._path(ring(R * 0.98), true), fill: C.brass, 'fill-opacity': 0.035 }, g);
+    if (this.slanted) el('path', { d: this._path(ring(R * 0.98), true), fill: C.brass, 'fill-opacity': 0.035 }, g);
     for (const [r, lab] of [[LD_AU, "the Moon's orbit"], [10 * LD_AU, '10 Moon distances'], [50 * LD_AU, '50 Moon distances']]) {
       if (r > R * 1.4 || r * this.s < 8) continue;
       el('path', { d: this._path(ring(r), true), fill: 'none', stroke: r === LD_AU ? C.ink2 : C.line2, 'stroke-width': 1, 'stroke-dasharray': r === LD_AU ? '' : '3 4', opacity: 0.8 }, g);
@@ -353,8 +355,8 @@ export class OrbitView {
       const dx = e.clientX - d.x, dy = e.clientY - d.y;
       if (!d.moved && Math.hypot(dx, dy) < 4) return;
       if (!d.moved) { d.moved = true; try { svg.setPointerCapture(e.pointerId); } catch { /* not supported */ } svg.classList.add('dragging'); this.tip && this.tip.hide(); }
-      this.spin = d.spin + dx * 0.4;
-      if (e.pointerType === 'mouse') this.tilt = Math.max(0, Math.min(90, d.tilt + dy * 0.35));
+      this.spin = wrap180(d.spin + dx * 0.4);
+      if (e.pointerType === 'mouse') this.tilt = wrap180(d.tilt + dy * 0.35);   // turns all the way round, as on the map
       this.requestDraw();
     });
     const end = (e) => { if (this.dragging && this.dragging.id === e.pointerId) { this.dragging = null; svg.classList.remove('dragging'); } };

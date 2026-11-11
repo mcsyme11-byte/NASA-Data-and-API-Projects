@@ -9,11 +9,11 @@ import { backLink } from './back.js';
 import { nasaGet } from '../shared/nasa.js';
 import { fmt, sizeText, dateText, sizePicture, LD_KM } from './format.js';
 import { hoverTip, tipApi, hideTip } from './charts.js';
-import { asteroidElements, asteroidPosition, planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM } from './orbit.js';
+import { asteroidElements, asteroidPosition, planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM, wrap180 } from './orbit.js';
 import { OrbitView } from './orbitview.js';
 import { decodeName } from './search.js';
 import { esaApproach, riskOf } from './esa.js';
-import { chanceText } from './risk.js';
+import { chanceText, riskChart } from './risk.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -184,7 +184,7 @@ function readouts() {
 
 // ---------------------------------------------------------------- controls
 function syncViewButtons() {
-  $$('[data-tilt]').forEach((b) => b.setAttribute('aria-pressed', Math.abs(state.view.tilt - Number(b.dataset.tilt)) < 0.5));
+  $$('[data-tilt]').forEach((b) => b.setAttribute('aria-pressed', Math.abs(wrap180(state.view.tilt - Number(b.dataset.tilt))) < 0.5));
 }
 $$('[data-tilt]').forEach((b) => b.addEventListener('click', () => { state.view.setView({ tilt: Number(b.dataset.tilt), spin: state.view.spin }); syncViewButtons(); }));
 $('#zoomIn').addEventListener('click', () => { const v = state.view; if (v.nearEarth) v.nearRadius = Math.max(0.004, v.nearRadius / 1.6); else v.zoom = Math.min(12, v.zoom * 1.5); v.draw(); });
@@ -342,8 +342,15 @@ function showRisk(n) {
       : `<div class="tile"><div class="label">${who}</div><div class="value none">Not listed</div><div class="note">${none}</div></div>`;
     const any = r.esa || r.nasa;
     box.innerHTML = `<div class="tiles two">${side('ESA NEOCC', r.esa, 'ESA has found no chance of an impact.')}${side('NASA/JPL Sentry', r.nasa, 'NASA has found no chance of an impact.')}</div>
+      ${any ? `<div class="riskcmp"><div class="label">ESA and NASA compared <span class="aside">each centre's own calculation; ■ ESA, ● NASA</span></div><svg class="chart" id="riskChart"></svg></div>` : ''}
       <p class="note">${any ? 'An impact chance is a measure of how uncertain the orbit still is; it almost always falls to zero as more observations come in. ' : 'Neither centre has found any chance of this object hitting Earth. '}Both lists are checked daily. <a href="./#risk">Every object on the lists, and how to read the scales ›</a><br>
       Impact-risk data: ESA NEO Coordination Centre (©ESA), list of ${esc(r.esaUpdated || 'an unknown date')}; NASA/JPL Sentry.</p>`;
+    const svg = box.querySelector('#riskChart');
+    if (svg) {
+      riskChart(svg, r);
+      let w = svg.parentElement.clientWidth;
+      new ResizeObserver(() => { const w2 = svg.parentElement.clientWidth; if (w2 !== w) { w = w2; riskChart(svg, r); } }).observe(svg.parentElement);
+    }
   });
 }
 

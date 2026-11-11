@@ -10,6 +10,7 @@ import { loadMapData } from './mapdata.js';
 import { searchNames, neowsId, decodeName } from './search.js';
 import { backLink, placeKeeper, scrollBack } from './back.js';
 import { riskDesignations } from './esa.js';
+import { takeShared, linkWith, shareButton } from './share.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -40,6 +41,7 @@ async function start() {
   map.onHover = hover; map.onLeave = () => ($('#tip').hidden = true);
   setDate(Date.now(), true);
   buildLegend(); buildCraft();
+  loadRisk();
   setupYears();
   const focus = new URLSearchParams(location.search).get('focus');
   if (focus) {
@@ -47,7 +49,9 @@ async function start() {
     if (k >= 0) { select({ kind: 'asteroid', k, name: data.rows[k][COL.name] }); centre({ asteroid: k }); map.setView({ viewR: 1.6 }); syncButtons(); }
   }
   $('#loading').hidden = true;
-  if (place) restorePlace(place);
+  if (shared) restorePlace(shared);
+  else if (place) restorePlace(place);
+  shareButton($('#shareBtn'), $('#shareMsg'), shareLink, 'Solar system map · Asteroid Tracker');
   syncButtons();
 }
 
@@ -55,6 +59,9 @@ async function start() {
 // On Back or a reload, the map returns to the view it was left in: zoom, angle, centre, selection, date (or the live
 // clock), speed, filters and spacecraft. A famous pass in progress starts again from its beginning.
 const pdesOf = (k) => String(data.rows[k][COL.pdes]);
+// A shared link (map.html?view=1&…) opens that view; read before placeKeeper so its parameters are gone from the address.
+const SHARE_KEYS = ['r', 'tilt', 'spin', 'px', 'py', 'c', 'sel', 'date', 'f', 'found', 'close', 'tour'];
+const shared = sharedPlace(takeShared(SHARE_KEYS));
 const place = placeKeeper('map', () => {
   if (!map) return {};
   const c = map.center, s = selected;
@@ -63,15 +70,49 @@ const place = placeKeeper('map', () => {
     center: typeof c === 'object' && c ? (c.asteroid !== undefined ? { asteroid: pdesOf(c.asteroid) } : { craft: c.craft }) : c,
     sel: !s ? null : s.kind === 'asteroid' || s.kind === 'tour' ? { kind: 'asteroid', pdes: pdesOf(s.k) } : s.kind === 'craft' ? { kind: 'craft', i: s.i } : s.kind === 'planet' ? { kind: 'planet', name: s.name } : null,
     ms: live ? null : nowMs(), speed: $('#speed').value, filter: map.filter,
-    foundBy: $('#foundBy').value, closeIn: $('#closeIn').value, craft: map.spacecraft.map((c2) => !!c2.show),
+    foundBy: $('#foundBy').value, closeIn: $('#closeIn').value, craft: map.spacecraft.map((c2) => !!c2.show), riskMark: map.riskMark,
   };
 });
+// shared-link parameters → the same shape placeKeeper saves, so restorePlace() applies both
+//   c and sel: "a:<designation>" an asteroid, "s:<n>" a spacecraft, "p:<name>" a planet; date: ISO time (absent = live)
+function sharedPlace(q) {
+  if (!q) return null;
+  const num = (v) => (v === undefined || v === '' ? NaN : Number(v));
+  const ref = (v) => {
+    const m = /^([asp]):(.+)$/.exec(v || ''); if (!m) return null;
+    return m[1] === 'a' ? { asteroid: m[2] } : m[1] === 's' ? { craft: Number(m[2]) } : { planet: m[2] };
+  };
+  const c = q.c === 'Sun' || q.c === 'Earth' ? q.c : ref(q.c), s2 = ref(q.sel), t = Date.parse(q.date || '');
+  return {
+    tour: q.tour || null, viewR: num(q.r), tilt: num(q.tilt), spin: num(q.spin), panX: num(q.px) || 0, panY: num(q.py) || 0,
+    center: c && c.planet ? null : c,
+    sel: !s2 ? null : s2.asteroid !== undefined ? { kind: 'asteroid', pdes: s2.asteroid } : s2.craft !== undefined ? { kind: 'craft', i: s2.craft } : { kind: 'planet', name: s2.planet },
+    ms: Number.isFinite(t) ? t : null, filter: q.f || 'all', foundBy: q.found || null, closeIn: q.close || '', shared: true,
+  };
+}
+// the current view as a shared link
+function shareLink() {
+  if (tour) return linkWith({ tour: tour.id });
+  const c = map.center, s2 = selected, r = (v, n) => String(Number(v.toPrecision(n)));
+  const ref = (x) => (!x ? '' : x.asteroid !== undefined ? 'a:' + pdesOf(x.asteroid) : x.craft !== undefined ? 's:' + x.craft : '');
+  return linkWith({
+    r: r(map.viewR, 4), tilt: map.tilt.toFixed(1), spin: map.spin.toFixed(1),
+    px: map.panX ? r(map.panX, 5) : '', py: map.panY ? r(map.panY, 5) : '',
+    c: typeof c === 'string' ? (c === 'Sun' ? '' : c) : ref(c),
+    sel: !s2 ? '' : s2.kind === 'asteroid' ? 'a:' + pdesOf(s2.k) : s2.kind === 'craft' ? 's:' + s2.i : s2.kind === 'planet' ? 'p:' + s2.name : '',
+    date: live ? '' : new Date(nowMs()).toISOString().slice(0, 16) + 'Z',
+    f: map.filter === 'all' ? '' : map.filter,
+    found: Number($('#foundBy').value) < Number($('#foundBy').max) ? $('#foundBy').value : '',
+    close: $('#closeIn').value,
+  });
+}
 let pendingCloseIn = null;   // applied once the list of years has loaded
 function restorePlace(p) {
   const kOf = (pdes) => data.rows.findIndex((r) => String(r[COL.pdes]) === pdes);
   if (p.tour && PASSES[p.tour]) { startTour(p.tour); scrollBack(p.scrollY); return; }
   if (Array.isArray(p.craft) && p.craft.length === map.spacecraft.length) { map.spacecraft.forEach((c, i) => (c.show = p.craft[i])); buildCraft(); }
   if ([...$('#speed').options].some((o) => o.value === p.speed)) $('#speed').value = p.speed;
+  if (p.riskMark === false) { map.riskMark = false; buildLegend(); }
   if (['all', 'haz', 'big', 'km'].includes(p.filter)) map.filter = p.filter;
   else if (p.filter === 'risk') setFilter('risk');
   if (p.foundBy && Number(p.foundBy) !== Number($('#foundBy').value)) { $('#foundBy').value = p.foundBy; $('#foundBy').dispatchEvent(new Event('input')); }
@@ -206,27 +247,33 @@ $$('[data-c]').forEach((b) => b.addEventListener('click', () => {
   if (b.dataset.c === 'sel') { if (selected) centre(selected.kind === 'asteroid' ? { asteroid: selected.k } : selected.kind === 'craft' ? { craft: selected.i } : selected.name); }
   else centre(b.dataset.c);
 }));
-// "On a risk list": the objects on ESA's or NASA's impact-risk list (data/risk.json), loaded on first use
+// Asteroids on ESA's or NASA's impact-risk list (data/risk.json): loaded once the map is up, marked with a small
+// diamond, and the "On a risk list" filter. If the list can't be loaded, the map works as before without them.
 let riskLoad = null;
-async function setFilter(f) {
-  if (f === 'risk' && !map.riskSet) {
+function loadRisk() {
+  riskLoad = riskLoad || riskDesignations().then((des) => {
     const chip = $('[data-f="risk"]');
-    chip.textContent = 'Loading…';
-    riskLoad = riskLoad || riskDesignations();
-    const des = await riskLoad;
     if (!des) {
       riskLoad = null;
       chip.textContent = 'Risk list unavailable';
       chip.title = 'The impact-risk list could not be loaded. Press to try again.';
-      f = map.filter === 'risk' ? 'all' : map.filter;
-      map.filter = f; map.request(); syncButtons();
-      return;
+      buildLegend();
+      return false;
     }
     const byDes = new Map(data.rows.map((r, k) => [String(r[COL.pdes]), k]));
     map.riskSet = new Set();
     des.forEach((d) => { const k = byDes.get(d); if (k !== undefined) map.riskSet.add(k); });
     chip.textContent = `On a risk list (${fmt(map.riskSet.size)})`;
     chip.title = "Asteroids on ESA's or NASA's impact-risk list";
+    buildLegend(); map.request();
+    return true;
+  });
+  return riskLoad;
+}
+async function setFilter(f) {
+  if (f === 'risk' && !map.riskSet) {
+    $('[data-f="risk"]').textContent = 'Loading…';
+    if (!(await loadRisk())) { map.filter = map.filter === 'risk' ? 'all' : map.filter; map.request(); syncButtons(); return; }
   }
   map.filter = f; map.request(); syncButtons();
 }
@@ -343,7 +390,11 @@ function buildLegend() {
   const counts = {}; for (let k = 0; k < ast.n; k++) { const c = classOf(data.rows[k][COL.cls]); counts[c] = (counts[c] || 0) + 1; }
   $('#classlist').innerHTML = Object.entries(CLASSES).map(([code, c]) =>
     `<li><i style="background:rgb(${c.rgb.join(',')})"></i><span><b>${c.name}</b> · ${fmt(counts[code] || 0)}<br><span class="note">${c.note}</span></span></li>`).join('') +
-    `<li><i class="ring"></i><span><b>This week's visitors</b> · ${fmt(map.highlight.size)}</span></li>`;
+    `<li><i class="ring"></i><span><b>This week's visitors</b> · ${fmt(map.highlight.size)}</span></li>` +
+    (map.riskSet ? `<li><i class="diamond"></i><span><b>On an impact-risk list</b> · ${fmt(map.riskSet.size)}<br><span class="note">ESA's or NASA's; rose, and ringed with a diamond when zoomed in. ` +
+      `<button class="linkbtn" id="riskMarkBtn" aria-pressed="${!map.riskMark}">${map.riskMark ? 'Show in their orbit colours' : 'Mark them again'}</button></span></span></li>` : '');
+  const rb = $('#riskMarkBtn');
+  if (rb) rb.addEventListener('click', () => { map.riskMark = !map.riskMark; map.request(); buildLegend(); $('#riskMarkBtn').focus(); });
 }
 function buildCraft() {
   $('#craftlist').innerHTML = map.spacecraft.map((c, i) => `<li><button class="linkbtn" data-craft="${i}">${esc(c.name)}</button><span class="note">${esc(c.short || '')}</span></li>`).join('');
