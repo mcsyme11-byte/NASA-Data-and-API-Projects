@@ -1,5 +1,12 @@
 # Change log
 
+## November 10, 2026 — Image Explorer: colour keys in the project's look
+
+- The Earth map's colour keys are drawn on the page from GIBS's colour maps: the colour bar, up to seven labelled
+  values, the two ends, and the measurement and its units (cloud-top temperature in °C instead of kelvin); a layer's
+  categories (for example snow's) as small swatches. GIBS's own legend picture stands in while a colour map loads or
+  if it cannot be read.
+
 ## November 10, 2026 — Image Explorer: each Earth map layer's days read from GIBS
 
 - Each layer's days are read from GIBS (its time domain) instead of a fixed lag: a layer shows the chosen day, or its

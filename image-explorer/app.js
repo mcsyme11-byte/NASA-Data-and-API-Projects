@@ -178,6 +178,44 @@ overList.addEventListener('click', e => {
 
 /* ---------- tiles, legend, labels ---------- */
 const $ = id => document.getElementById(id);
+/* colour keys drawn in the page's look from GIBS's colour maps (decided Nov 10, 2026): each map lists its colours in
+   order, the ones with a label, and its units. Kelvin is shown as °C. GIBS's own legend picture stands in while the
+   colour map loads, or if it cannot be read. */
+const KEYS = new Map();                                    /* legend name → { bars, classes } | null loading | false */
+const num = t => t.replace(/-?\d+(\.\d+)?/g, n => String(+(+n).toFixed(2)));
+function loadKey(name) {
+  if (KEYS.has(name)) return;
+  KEYS.set(name, null);
+  fetch(`https://gibs.earthdata.nasa.gov/colormaps/v1.3/${name}.xml`).then(r => r.ok ? r.text() : Promise.reject(new Error(r.status))).then(t => {
+    const d = new DOMParser().parseFromString(t, 'text/xml'), bars = [], classes = [];
+    for (const cm of d.querySelectorAll('ColorMap')) {
+      const lg = cm.querySelector('Legend'); if (!lg) continue;
+      const es = [...lg.querySelectorAll('LegendEntry')], kelvin = cm.getAttribute('units') === 'K';
+      const fix = txt => { txt = num(txt || ''); return kelvin ? txt.replace(/-?\d+(\.\d+)?/g, n => String(Math.round(+n - 273.15))) : txt; };
+      if (lg.getAttribute('type') === 'classification') {
+        for (const e of es) { const tip = e.getAttribute('tooltip') || ''; if (!/^(fill|no data|missing data)$/i.test(tip)) classes.push([e.getAttribute('rgb'), tip]); }
+        continue;
+      }
+      const n = es.length, stops = es.map((e, i) => `rgb(${e.getAttribute('rgb')}) ${(i / n * 100).toFixed(2)}% ${((i + 1) / n * 100).toFixed(2)}%`);
+      /* labelled entries; a range such as "1.99 – 2.42" shows its first value; at most 7 labels */
+      let ticks = es.map((e, i) => e.getAttribute('showLabel') === 'true' ? [((i + .5) / n * 100).toFixed(2), fix(e.getAttribute('label') || e.getAttribute('tooltip')).split(/\s+[–-]\s+/)[0]] : null).filter(Boolean);
+      if (ticks.length > 7) { const step = Math.ceil(ticks.length / 7); ticks = ticks.filter((_, i) => i % step === 0); }
+      bars.push({ title: cm.getAttribute('title'), units: kelvin ? '°C' : cm.getAttribute('units') || '', grad: stops.join(','), ticks,
+        min: fix(lg.getAttribute('minLabel')), max: fix(lg.getAttribute('maxLabel')) });
+    }
+    KEYS.set(name, bars.length || classes.length ? { bars, classes } : false); update();
+  }).catch(() => KEYS.set(name, false));
+}
+function keyHtml(name, label) {
+  loadKey(name);
+  const k = KEYS.get(name);
+  if (!k) return `<img src="https://gibs.earthdata.nasa.gov/legends/${name}_H.svg" alt="Colour key for ${esc(label)}">`;
+  return `<div class="ckey" role="img" aria-label="Colour key for ${esc(label)}">` + k.bars.map(b => `
+    <div class="cbar" style="background:linear-gradient(90deg,${b.grad})"></div>
+    <div class="cticks">${b.ticks.map(([x, t]) => `<span style="left:${x}%">${esc(t)}</span>`).join('')}</div>
+    <div class="cends"><span>${esc(b.min)}</span><span>${esc(b.title)}${b.units ? ', ' + esc(b.units) : ''}</span><span>${esc(b.max)}</span></div>`).join('') +
+    (k.classes.length ? `<div class="cclass">${k.classes.map(([c, t]) => `<span><i style="background:rgb(${c})"></i>${esc(t)}</span>`).join('')}</div>` : '') + '</div>';
+}
 function update() {
   const B = spec(BASES.find(L => L.id === base)), O = OVERS.filter(L => on.has(L.id)).map(spec).filter(Boolean);
   $('tDate').textContent = nice(date);
@@ -187,10 +225,10 @@ function update() {
   $('tOverNote').textContent = O.length ? O.map(L => L.name).join(' · ') : 'Add fires, snow, clouds…';
   $('mapTag').innerHTML = `<strong>${nice(date)}</strong> · ${view === 'world' ? '' : V().name + ' · '}${B.name}${O.length ? ' + ' + O.map(L => L.name.toLowerCase()).join(', ') : ''}`;
   const rows = [];
-  if (B.legend) rows.push(`<div class="row"><span>${B.name}</span><img src="https://gibs.earthdata.nasa.gov/legends/${B.legend}_H.svg" alt="Colour key for ${B.name}"></div>`);
+  if (B.legend) rows.push(`<div class="row"><span>${B.name}</span>${keyHtml(B.legend, B.name)}</div>`);
   for (const L of O) rows.push(L.vector || L.key
     ? `<div class="row"><span>${L.name}</span><span class="firekey"><i${L.key ? ` style="background:${L.key[0]};box-shadow:none;border-radius:2px"` : ''}></i>${L.key ? L.key[1] : 'A fire or other hot spot seen that day'}</span></div>`
-    : `<div class="row"><span>${L.name}</span><img src="https://gibs.earthdata.nasa.gov/legends/${L.legend}_H.svg" alt="Colour key for ${L.name}"></div>`);
+    : `<div class="row"><span>${L.name}</span>${keyHtml(L.legend, L.name)}</div>`);
   $('legend').innerHTML = rows.join('');
   [B, ...O].forEach(loadDomain);
   const behind = [B, ...O].filter(L => dayFor(L) !== date);

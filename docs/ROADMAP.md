@@ -60,7 +60,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] Further rounds of changes to the globe, as the developer reviews it.
 - [ ] Globe: sharper Earth close up (finer Blue Marble tiles for the part in view); day and night shading if wanted;
   more objects (fainter galaxies) if wanted.
-- [ ] Earth map: colour keys drawn in the project's look from GIBS's colour maps, in place of GIBS's light legend images.
 - [ ] Place search: smaller natural features (Natural Earth 1:10m leaves out, for example, Lake Louise and the Bow
   River).
 - [ ] Picture library: subtitles for videos (NASA's files cannot be attached from another site; would need a copy).

@@ -257,6 +257,10 @@ Checked Nov 9, 2026 (live requests from the published site):
   example `2002-06-01/2021-02-19/P1D,2021-02-22/2022-11-08/P1D,…`; an unknown layer returns 404. Checked Nov 10, 2026:
   MUR sea temperature misses six short runs of days (newest day two days back), true colour misses nine runs in
   2000–2022; MODIS layers end on the current, still incomplete UTC day. Browsers may read it.
+- **Colour maps (used since Nov 10, 2026 for the colour keys):** each `ColorMap` in the v1.3 XML has a `Legend`
+  (`continuous`, `discrete` or `classification`) with `LegendEntry` elements in order (`rgb`, `tooltip`, and on some
+  `showTick`, `showLabel` and `label`), `minLabel` and `maxLabel`, and the map's `title` and `units` (for example °C,
+  %, K). A "No Data" map lists the colour for missing values. Browsers may read them.
 - **Colour keys:** each coloured layer lists an SVG legend (`https://gibs.earthdata.nasa.gov/legends/{name}_H.svg`,
   dark text on a light background) and a colour map (`https://gibs.earthdata.nasa.gov/colormaps/v1.3/{name}.xml`).
 
