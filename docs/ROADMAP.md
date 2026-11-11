@@ -31,7 +31,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   variables › Actions › New repository secret) and run Actions › Astronaut photos › Run workflow once. Until then the
   globe hides the astronaut photos. The first real run is the first test of `fetch_astronaut_photos.py` against the
   API (it was tested on records shaped like the API documentation's examples).
-- [ ] Picture library: ESA's videos (esawebb.org/videos, esahubble.org/videos) beside NASA's, if wanted.
 - [ ] Picture library: tune the ranking further as the developer reviews searches (the weights are in `scoreOf` in
   `image-explorer/app.js`).
 - [ ] Polar views: a sea ice layer that works through the polar night. GIBS's microwave sea-ice records ended

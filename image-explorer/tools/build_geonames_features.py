@@ -10,7 +10,8 @@
 #   python3 image-explorer/tools/build_geonames_features.py allCountries.zip alternateNamesV2.zip [limit]
 #
 # Keeps natural features (lakes, rivers, glaciers, peaks, passes, valleys, islands, parks and more) that have an
-# English Wikipedia article (a sign that a place is known beyond its own area), most-named first. Places already in
+# English Wikipedia article (a sign that a place is known beyond its own area), ranked by how many languages'
+# Wikipedias have an article on it. Places already in
 # features.json (Natural Earth, the larger features) are left out.
 # Writes image-explorer/data/features-more.json: [name, kind, latitude, longitude, importance], importance 5–9
 # (Natural Earth's own features are 0–10; the most-named places get 5).
@@ -32,15 +33,17 @@ CODES = {   # (the number is no longer used as a filter; the Wikipedia link deci
     'PRK': ('Park', 4), 'RESN': ('Nature reserve', 4), 'RESF': ('Forest reserve', 5), 'FRST': ('Forest', 4),
     'CRTR': ('Crater', 2), 'ATOL': ('Atoll', 2), 'RF': ('Reef', 3), 'BCH': ('Beach', 5), 'DLTA': ('Delta', 2),
 }
-LIMIT = int(sys.argv[3]) if len(sys.argv) > 3 else 60000        # at most this many places, the most-named first
+LIMIT = int(sys.argv[3]) if len(sys.argv) > 3 else 400000       # at most this many places, the best known first
 
-wiki, english = set(), {}                                        # places with an English Wikipedia article; English names
+wiki, links, english = set(), Counter(), {}                      # places with an English Wikipedia article; Wikipedia languages; English names
 with zipfile.ZipFile(sys.argv[2]) as z, z.open('alternateNamesV2.txt') as f:
     for line in io.TextIOWrapper(f, encoding='utf-8'):
         # id, place, language, name, preferred, short, colloquial, historic, from, to
         c = line.rstrip('\n').split('\t')
         if len(c) < 4: continue
-        if c[2] == 'link' and 'en.wikipedia.org/' in c[3]: wiki.add(c[1])
+        if c[2] == 'link' and '.wikipedia.org/' in c[3]:
+            links[c[1]] += 1
+            if 'en.wikipedia.org/' in c[3]: wiki.add(c[1])
         elif c[2] == 'en' and not (len(c) > 7 and (c[6] == '1' or c[7] == '1')):
             if c[1] not in english or (len(c) > 4 and c[4] == '1'): english[c[1]] = c[3]   # the preferred English name wins
 
@@ -71,11 +74,12 @@ with zipfile.ZipFile(sys.argv[1]) as z, z.open('allCountries.txt') as f:
         seen[key] = 1
         if code in ('MT', 'PK', 'VLC') and row[15]:
             kind = f'{kind} · {int(row[15]):,} m'
-        kept.append((names, name, kind, lat, lon, row[8]))
+        kept.append((links[row[0]], name, kind, lat, lon, row[8]))
 
 kept.sort(key=lambda r: -r[0])
 kept = kept[:LIMIT]
-out = [[n, k, la, lo, max(5, 9 - min(4, (c - 2) // 3)), cc] for c, n, k, la, lo, cc in kept]
+rank = lambda c: 5 if c >= 20 else 6 if c >= 10 else 7 if c >= 5 else 8 if c >= 3 else 9 if c >= 2 else 10   # by Wikipedia languages
+out = [[n, k, la, lo, rank(c), cc] for c, n, k, la, lo, cc in kept]
 OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
 print(f'{len(out):,} places, {OUT.stat().st_size / 1e6:.2f} MB → {OUT}')
 print('kinds kept:', Counter(k.split(' ·')[0] for _, _, k, *_ in kept).most_common())

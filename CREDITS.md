@@ -17,7 +17,7 @@ there in the same change.
 | NASA EONET (Earth Observatory Natural Event Tracker) | Image Explorer: events on the globe | NASA data |
 | Gateway to Astronaut Photography of Earth, Earth Science and Remote Sensing Unit, NASA Johnson Space Center | Image Explorer: astronaut photos on the globe | NASA material; credit the unit |
 | d3-celestial, © 2015 Olaf Frohn | Image Explorer: stars, galaxies, nebulae, clusters and constellations | BSD 3-Clause, kept as `image-explorer/data/LICENSE-d3-celestial.txt` |
-| GeoNames (geonames.org), through the `all-the-cities` package (MIT) | Image Explorer: place search (towns, cities, capitals) | GeoNames: Creative Commons Attribution 4.0 |
+| GeoNames (geonames.org), through the `all-the-cities` package (MIT) and GeoNames' own downloads | Image Explorer: place search (towns, cities, capitals; smaller natural features with an English Wikipedia article) | GeoNames: Creative Commons Attribution 4.0 |
 | Natural Earth (naturalearthdata.com) | Image Explorer: mountains, lakes and rivers in place search | Public domain |
 | NASA Planetary Data System (planned) | Mars Data | NASA data |
 
@@ -32,8 +32,8 @@ with its exact credit line, in the same change that adds it, and ESA's credit is
 
 | Source | Used for | Terms |
 |---|---|---|
-| ESA/Webb picture archive (esawebb.org) | Image Explorer: Picture library and the globe's pictures, beside NASA's | CC BY 4.0 (esawebb.org/copyright); each picture's own credit line, shown in full with it, for example "NASA, ESA, CSA, STScI. Image Processing: J. Depasquale (STScI)"; captions credited to ESA/Webb |
-| ESA/Hubble picture archive (esahubble.org) | Image Explorer: Picture library and the globe's pictures, beside NASA's | CC BY 4.0 (esahubble.org/copyright); each picture's own credit line, shown in full with it, for example "NASA, ESA, and STScI"; captions credited to ESA/Hubble |
+| ESA/Webb picture and video archives (esawebb.org) | Image Explorer: Picture library and the globe's pictures, beside NASA's | CC BY 4.0 (esawebb.org/copyright); each picture's own credit line, shown in full with it, for example "NASA, ESA, CSA, STScI. Image Processing: J. Depasquale (STScI)"; captions credited to ESA/Webb |
+| ESA/Hubble picture and video archives (esahubble.org) | Image Explorer: Picture library and the globe's pictures, beside NASA's | CC BY 4.0 (esahubble.org/copyright); each picture's own credit line, shown in full with it, for example "NASA, ESA, and STScI"; captions credited to ESA/Hubble |
 | ESA NEO Coordination Centre (NEOCC, neo.ssa.esa.int): risk list, special risk list, close approaches | Asteroid Tracker: ESA's impact-risk list beside NASA's, and ESA's close-approach distances | ESA's terms for educational and informational use; credit "ESA NEO Coordination Centre (©ESA)" |
 
 **ESA's terms:** some ESA images, videos and other works are released, where expressly stated, under the Creative

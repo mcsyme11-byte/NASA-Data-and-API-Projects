@@ -1,5 +1,17 @@
 # Change log
 
+## November 10, 2026 — Image Explorer: ESA's videos; smaller places in place search
+
+- **ESA's videos:** with "Pictures and videos" or "Videos", searches also ask ESA/Webb and ESA/Hubble's video
+  archives. An ESA video plays the small file from ESA's servers and links the full HD file; the viewer shows its
+  credit line (with line breaks, including the music credit), length and release date, and notes that the music has
+  its own terms.
+- **Smaller places in place search:** about 85,000 lakes, rivers, glaciers, peaks, passes, islands, parks and other
+  natural features from GeoNames that have an English Wikipedia article (for example Lake Louise, Moraine Lake, the Bow
+  River, Mount Rundle, the Athabasca Glacier), with their English names. The list loads after the main place list;
+  a name typed in full is shown first. It is built by the manual job "Build smaller places"
+  (`.github/workflows/build-places.yml`, `tools/build_geonames_features.py`).
+
 ## November 10, 2026 — Asteroid Tracker: risk colour on the map, ESA and NASA compared, share links
 
 - **Orbit diagram:** the tilt turns all the way round with a mouse, as on the map; "seen from below" labels the view

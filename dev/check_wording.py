@@ -13,7 +13,8 @@ TEXT = ('.md', '.txt', '.py', '.js', '.mjs', '.html', '.css', '.yml', '.yaml', '
         '.ipynb', '.example', '.gitignore')
 SKIP_DIRS = ('node_modules/', '.git/', 'image-explorer/vendor/')   # vendor: third-party libraries, copied unchanged
 SKIP_FILES = {'dev/check_wording.py',            # it names the patterns it looks for
-              'docs/CLAUDE-PROJECT-SETUP.md'}    # the Claude project's instructions, word for word
+              'docs/CLAUDE-PROJECT-SETUP.md',    # the Claude project's instructions, word for word
+              'image-explorer/data/features-more.json'}   # 85,000 place names from GeoNames (Malcolm Island and the like)
 
 RULES = [
     # a first name on its own (the credit "Malcolm Syme" is fine everywhere)

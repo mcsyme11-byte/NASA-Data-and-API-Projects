@@ -487,7 +487,7 @@ function openViewer(x) {
   if (x.lib) return openEsa(x);
   const [id, t, d, c, p, k, s, type] = x, base = assets(type), img = $('vImg'), vid = $('vVid'), video = type === 'video';
   $('vTitle').dataset.id = id; $('vCredit').hidden = true;
-  img.hidden = video; vid.hidden = !video; vid.pause(); vid.removeAttribute('src'); vid.load();
+  img.hidden = video; vid.hidden = !video; vid.onerror = null; vid.pause(); vid.removeAttribute('src'); vid.load();
   img.dataset.id = id; img.dataset.base = base; img.dataset.try = 'medium'; img.alt = t;
   if (!video) img.src = `${base}${id}/${id}~medium.jpg`;
   $('vTitle').textContent = t; $('vDesc').textContent = s;
@@ -522,22 +522,27 @@ function esaHtml(node) {                          /* text and plain web links on
   const walk = n => { for (const c of n.childNodes) {
     if (c.nodeType === 3) out += esc(c.textContent);
     else if (c.nodeName === 'A' && /^https?:\/\//i.test(c.getAttribute('href') || '')) out += `<a href="${esc(c.getAttribute('href'))}" target="_blank" rel="noopener">${esc(c.textContent)}</a>`;
-    else if (c.nodeType === 1) { walk(c); if (/^(P|BR|DIV)$/.test(c.nodeName)) out += ' '; }
+    else if (c.nodeName === 'BR') out += '<br>';
+    else if (c.nodeType === 1) { walk(c); if (/^(P|DIV)$/.test(c.nodeName)) out += '<br>'; }
   } };
-  walk(node); return out.replace(/\s+/g, ' ').trim();
+  walk(node); return out.replace(/\s+/g, ' ').replace(/(\s*<br>\s*)+$/, '').replace(/^(\s*<br>\s*)+/, '').replace(/(\s*<br>\s*){2,}/g, '<br>').trim();
 }
 function openEsa(x) {
-  const s = ESA[x.lib], [id, t] = x, img = $('vImg'), vid = $('vVid');
-  img.hidden = false; vid.hidden = true; vid.pause(); vid.removeAttribute('src'); vid.load();
-  img.dataset.try = 'esa'; img.alt = t; img.src = `${s.cdn}/archives/images/screen/${id}.jpg`;
+  const s = ESA[x.lib], [id, t] = x, img = $('vImg'), vid = $('vVid'), video = x[7] === 'video';
+  img.hidden = video; vid.hidden = !video; vid.pause(); vid.removeAttribute('src'); vid.load();
+  if (video) {                                    /* the small file plays; full HD is linked */
+    vid.poster = x.thumb; vid.src = `${s.cdn}/archives/videos/medium_podcast/${id}.mp4`;
+    vid.onerror = () => { if (!/hd_1080p25_screen/.test(vid.src)) vid.src = `${s.cdn}/archives/videos/hd_1080p25_screen/${id}.mp4`; };
+  } else { img.dataset.try = 'esa'; img.alt = t; img.src = `${s.cdn}/archives/images/screen/${id}.jpg`; }
   $('vTitle').textContent = t; $('vTitle').dataset.id = id; $('vDesc').textContent = ''; $('vKw').innerHTML = ''; $('vNote').hidden = true;
   const facts = (rows = []) => { $('vFacts').innerHTML = rows.filter(r => r[1]).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('') +
     `<dt>Library</dt><dd>${s.name}</dd><dt>ESA ID</dt><dd class="mono">${esc(id)}</dd>`; };
   facts([['Released', x.potw || (x.year ? String(x.year) : '')]]);
   $('vCredit').hidden = false; $('vCreditText').textContent = 'Reading the credit line from ESA\u2019s page…';
-  $('vLicence').innerHTML = `<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> · caption: ${s.name} · <a href="${esc(x.page)}" target="_blank" rel="noopener">The picture on ${s.site.replace('https://', '')}</a>`;
-  $('vFull').href = `${s.cdn}/archives/images/large/${id}.jpg`; $('vFull').textContent = 'Open large size';
-  $('vKind').textContent = (x.score < 0 ? 'Behind the scenes · ' : '') + 'Picture · ' + s.name;
+  $('vLicence').innerHTML = `<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>${video ? ' (music under its own terms)' : ''} · caption: ${s.name} · <a href="${esc(x.page)}" target="_blank" rel="noopener">The ${video ? 'video' : 'picture'} on ${s.site.replace('https://', '')}</a>`;
+  $('vFull').href = video ? `${s.cdn}/archives/videos/hd_1080p25_screen/${id}.mp4` : `${s.cdn}/archives/images/large/${id}.jpg`;
+  $('vFull').textContent = video ? 'Open the full HD video' : 'Open large size';
+  $('vKind').textContent = (x.score < 0 ? 'Behind the scenes · ' : '') + (video ? 'Video · ' : 'Picture · ') + s.name;
   const sky = window.focusSky && skyIn(t);
   $('vSky').hidden = !sky;
   if (sky) { $('vSky').dataset.id = sky.id; $('vSky').textContent = `See ${sky.name} in the sky`; }
@@ -552,7 +557,8 @@ function openEsa(x) {
     for (const tr of d.querySelectorAll('tr')) { const k = tr.querySelector('th')?.textContent.replace(/\s+/g, ' ').trim().replace(/:$/, ''), v = tr.querySelector('td'); if (k && v && !(k in rows)) rows[k] = v; }
     const txt = k => rows[k] ? rows[k].textContent.replace(/\s+/g, ' ').trim() : '';
     const cat = rows.Category ? [...rows.Category.querySelectorAll('a')].map(a => a.textContent.trim()).filter(Boolean).join(' · ') || txt('Category') : '';
-    facts([['Released', txt('Release date').replace(/,\s*\d{1,2}:\d{2}$/, '') || x.potw], ['Type', txt('Type')], ['Constellation', txt('Constellation')], ['Category', cat]]);
+    facts([['Released', txt('Release date').replace(/,\s*\d{1,2}:\d{2}$/, '') || x.potw], ['Type', video ? 'Video' : txt('Type')], ['Length', txt('Duration')],
+      ['Constellation', txt('Constellation')], ['Category', cat]]);
     /* the caption: the paragraphs before the credit line in the same column */
     const col = cr.parentElement, paras = [];
     for (const el of col.querySelectorAll('p')) {
@@ -773,13 +779,18 @@ function unjs(s) {
 }
 const STR = "'((?:\\\\.|[^'\\\\])*)'";
 const ESA_ROW = new RegExp(`\\{\\s*id:\\s*${STR},\\s*title:\\s*${STR},\\s*width:\\s*\\d+,\\s*height:\\s*\\d+,\\s*src:\\s*${STR},\\s*url:\\s*${STR},\\s*potw:\\s*${STR}`, 'g');
-async function esaSearch(key, words, page) {
-  const s = ESA[key], u = `${s.site}/images/${page > 1 ? `page/${page}/` : ''}${words ? '?search=' + encodeURIComponent(words) : ''}`;
+/* videos (added Nov 10, 2026): the video archive's pages carry no list in their script; each result is a thumbnail
+   picture (archives/videos/videoframe/{id}.jpg) whose alt text is the title. Files: medium_podcast/{id}.mp4 (small),
+   hd_1080p25_screen/{id}.mp4 (full HD). */
+async function esaSearch(key, words, page, kind = 'images') {
+  const s = ESA[key], u = `${s.site}/${kind}/${page > 1 ? `page/${page}/` : ''}${words ? '?search=' + encodeURIComponent(words) : ''}`;
   let r;
   try { r = await fetch(u); } catch { r = await fetch(u); }            /* one retry, as for NASA */
   if (r.status === 404) return { total: 0, list: [] };                 /* a page past the last one */
   if (!r.ok) throw new Error(String(r.status));
-  const h = await r.text(), start = h.indexOf('var images = ['), end = start < 0 ? -1 : h.indexOf('];', start);
+  const h = await r.text();
+  if (kind === 'videos') return esaVideos(key, h);
+  const start = h.indexOf('var images = ['), end = start < 0 ? -1 : h.indexOf('];', start);
   const block = start < 0 ? '' : h.slice(start, end < 0 ? undefined : end), list = [];
   for (const m of block.matchAll(ESA_ROW)) {
     const id = unjs(m[1]), row = [id, unjs(m[2]) || 'Untitled', '', s.name, '', [], '', 'image'];
@@ -788,9 +799,22 @@ async function esaSearch(key, words, page) {
   const n = h.match(/Showing\s+\d+\s+to\s+\d+\s+of\s+(\d+)/);
   return { total: n ? +n[1] : list.length, list };
 }
-function cachedEsa(key, words, page) {
-  const k = `esa ${key} ${page} ${words}`;
-  if (!cache.has(k)) cache.set(k, esaSearch(key, words, page).catch(e => { cache.delete(k); throw e; }));
+function esaVideos(key, h) {
+  const s = ESA[key], d = new DOMParser().parseFromString(h, 'text/html'), list = [], seen = new Set();
+  for (const im of d.querySelectorAll('img')) {
+    const src = im.getAttribute('src') || im.getAttribute('data-src') || '', m = src.match(/\/archives\/videos\/videoframe\/([A-Za-z0-9_-]+)\.jpg/);
+    if (!m || seen.has(m[1])) continue;
+    seen.add(m[1]);
+    const id = m[1], title = (im.getAttribute('alt') || '').replace(/^Video thumbnail for\s+/i, '').trim() || 'Untitled';
+    list.push(Object.assign([id, title, '', s.name, '', [], '', 'video'],
+      { lib: key, thumb: src.replace(/^http:/, 'https:').replace(/^\/\//, 'https://'), page: `${s.site}/videos/${id}/`, potw: '', year: esaYear(id) }));
+  }
+  const n = h.match(/Showing\s+\d+\s+to\s+\d+\s+of\s+(\d+)/);
+  return { total: n ? +n[1] : list.length, list };
+}
+function cachedEsa(key, words, page, kind = 'images') {
+  const k = `esa ${key} ${kind} ${page} ${words}`;
+  if (!cache.has(k)) cache.set(k, esaSearch(key, words, page, kind).catch(e => { cache.delete(k); throw e; }));
   return cache.get(k);
 }
 const thumbOf = x => x.lib ? x.thumb : `${assets(x[7])}${x[0]}/${x[0]}~thumb.jpg`;
@@ -812,28 +836,30 @@ async function mixedPics(term, n = 6) {
 async function runSearch(q, page, st) {
   const f = filters(), from = fromSel(), key = fold(q);
   const terms = PRESETS[key] || [q], size = terms.length > 1 ? 18 : 24;
-  const useEsa = from !== 'nasa' && f.media_type !== 'video';
-  const esaAsk = !useEsa ? [] : ESA_PRESETS[key] || (PRESETS[key] ? [] : Object.keys(ESA).map(k => [k, q]));
+  const kinds = { image: ['images'], 'image,video': ['images', 'videos'], video: ['videos'] }[f.media_type] || ['images'];
+  const esaAsk = from === 'nasa' ? [] : (ESA_PRESETS[key] || (PRESETS[key] ? [] : Object.keys(ESA).map(k => [k, q])))
+    .flatMap(([k, w]) => kinds.map(kind => [k, w, kind]));
+  const slot = ([k, , kind]) => `${k} ${kind}`;
   const jobs = [];
   if (from !== 'esa') terms.forEach((t, i) => {
     if (st && (page - 1) * size >= Math.min(st.nasa[i] ?? 0, 10000)) return;
     jobs.push({ who: 'nasa', i, p: cached({ q: t, ...f, page, page_size: size }) });
   });
-  for (const [k, words] of esaAsk) {
-    if (st && (page - 1) * ESA_PAGE >= (st.esa[k] ?? 0)) continue;
-    jobs.push({ who: k, p: cachedEsa(k, words, page) });
+  for (const a of esaAsk) {
+    if (st && (page - 1) * ESA_PAGE >= (st.esa[slot(a)] ?? 0)) continue;
+    jobs.push({ who: a[0], slot: slot(a), p: cachedEsa(a[0], a[1], page, a[2]) });
   }
   const done = await Promise.allSettled(jobs.map(j => j.p));
   if (jobs.length && done.every(d => d.status === 'rejected')) throw new Error('out of reach');
   const next = { nasa: from !== 'esa' ? terms.map((_, i) => st?.nasa[i] ?? 0) : [], esa: { ...(st?.esa || {}) } }, failed = new Set();
   const y0 = +f.year_start || 0, y1 = +f.year_end || 9999, byYear = !!(f.year_start || f.year_end);
-  const ids = new Set(page > 1 ? PICS.map(x => (x.lib || 'nasa') + ' ' + x[0]) : []), list = [], seen = {};
+  const ids = new Set(page > 1 ? PICS.map(x => (x.lib || 'nasa') + ' ' + x[7] + ' ' + x[0]) : []), list = [], seen = {};
   jobs.forEach((j, n) => {
     const d = done[n];
     if (d.status === 'rejected') { failed.add(j.who === 'nasa' ? 'NASA' : ESA[j.who].name); return; }
-    if (j.who === 'nasa') next.nasa[j.i] = d.value.total; else next.esa[j.who] = d.value.total;
+    if (j.who === 'nasa') next.nasa[j.i] = d.value.total; else next.esa[j.slot] = d.value.total;
     for (const x of d.value.list) {
-      const id = (x.lib || 'nasa') + ' ' + x[0];
+      const id = (x.lib || 'nasa') + ' ' + x[7] + ' ' + x[0];
       if (ids.has(id) || (x.lib && byYear && !(x.year >= y0 && x.year <= y1))) continue;
       ids.add(id); seen[j.who === 'nasa' ? 'nasa' : x.lib] = (seen[j.who === 'nasa' ? 'nasa' : x.lib] || 0) + 1;
       x.score = scoreOf(x) + (x.lib ? 2 : 0);                    /* ESA's archives are telescope science pictures */
@@ -843,8 +869,8 @@ async function runSearch(q, page, st) {
   list.sort((a, b) => Math.min(b.score, 4) - Math.min(a.score, 4) || a.n - b.n);
   const counts = [];
   if (from !== 'esa' && next.nasa.length) counts.push(['NASA', Math.max(0, ...next.nasa)]);
-  for (const [k] of esaAsk) counts.push([ESA[k].name, next.esa[k] ?? 0]);
-  const more = next.nasa.some(t => page * size < Math.min(t, 10000)) || esaAsk.some(([k]) => page * ESA_PAGE < (next.esa[k] ?? 0));
+  for (const a of esaAsk) counts.push([ESA[a[0]].name + (a[2] === 'videos' ? ' videos' : kinds.length > 1 ? ' pictures' : ''), next.esa[slot(a)] ?? 0]);
+  const more = next.nasa.some(t => page * size < Math.min(t, 10000)) || esaAsk.some(a => page * ESA_PAGE < (next.esa[slot(a)] ?? 0));
   return { list, st: next, counts, failed: [...failed], more, total: counts.reduce((a, c) => a + c[1], 0) };
 }
 const card = (x, j) => `<button class="pic${x[7] === 'video' ? ' video' : ''}" data-j="${j}">

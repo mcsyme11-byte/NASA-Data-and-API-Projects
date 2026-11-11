@@ -442,6 +442,14 @@ archives to the Picture library. Checked with requests from GitHub's servers and
   its own credit line, to be shown in full, unchanged and beside the picture, with active links online. ESA/Webb and
   ESA/Hubble logos need written consent; the material must not suggest endorsement. Music, papers and code are not
   under CC BY 4.0.
+- **Videos (used since Nov 10, 2026):** `/videos/?search={words}` and `/videos/page/{n}/?search={words}` on both sites,
+  50 a page, "Showing 1 to … of N" as for pictures, but no list in the page's script: each result is a thumbnail
+  `https://cdn.{site}/archives/videos/videoframe/{id}.jpg` whose `alt` is the title (on esawebb.org prefixed "Video
+  thumbnail for"). A video's page (`/videos/{id}/`) has the title, caption, credit line (`<div class="credit">`, often
+  with a music credit) and a table with Id, Release date, Duration and Category. Files:
+  `archives/videos/medium_podcast/{id}.mp4` (small), `hd_1080p25_screen/{id}.mp4` (full HD), `ultra_hd/{id}.mp4` (Webb);
+  a Hubblecast in full HD is about 86 MB. The videos are under CC BY 4.0 except their music, which has its own terms.
+  Checked Nov 10, 2026 from a web page: listing pages, video pages and files load from a browser.
 - **Used since Nov 9, 2026** by the Image Explorer's Picture library and the globe's selected card (live search,
   thumbnails `thumb300y`, viewer `screen`, "Open large size" `large`). A page past the last answers 404 and is treated
   as empty.

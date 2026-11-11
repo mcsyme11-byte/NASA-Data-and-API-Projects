@@ -7,7 +7,7 @@ on:
     inputs:
       limit:
         description: Most places to keep
-        default: '60000'
+        default: '400000'
 permissions:
   contents: write
 jobs:
