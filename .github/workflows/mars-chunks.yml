@@ -1,0 +1,43 @@
+# NASA and ESA Data Projects · Mars Data: process chunks of Curiosity REMS data · © 2026 Malcolm Syme · mcsyme11@gmail.com
+#
+# Runs on the mars-probe branch while the cleaning is being checked chunk by chunk: processes the chunks listed in
+# mars-data/analysis/chunks.txt with run_rems.py and commits the summaries and cleaning reports to the branch.
+# Replaced by the scheduled "Mars data" job on main once every chunk has been checked.
+
+name: Mars data chunks (checking)
+
+on:
+  push:
+    branches: [mars-probe]
+    paths: [mars-data/analysis/chunks.txt]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mars-chunks
+  cancel-in-progress: false
+
+jobs:
+  chunks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pandas
+        run: pip install pandas==2.2.3
+      - name: Process the listed chunks
+        working-directory: mars-data/analysis
+        run: python3 run_rems.py $(grep -v '^#' chunks.txt)
+      - name: Commit the summaries and reports to the branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898309+github-actions[bot]@users.noreply.github.com"
+          git add mars-data/data/rems
+          git commit -m "Mars data: REMS chunks $(grep -v '^#' mars-data/analysis/chunks.txt | tr '\n' ' ')processed" || echo "Nothing new"
+          git pull --rebase origin mars-probe
+          git push origin HEAD:mars-probe
