@@ -1,3 +1,8 @@
 # Chunks to process (one per line). Rules 1.0.
-# 2026-11-11: chunk 1 re-run with the two-table ADR reader.
-SOL_00001_00089
+# 2026-11-11: the rest of the first Mars year, sols 90-707.
+SOL_00090_00179
+SOL_00180_00269
+SOL_00270_00359
+SOL_00360_00449
+SOL_00450_00583
+SOL_00584_00707
