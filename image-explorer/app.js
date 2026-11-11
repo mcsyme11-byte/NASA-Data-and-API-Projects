@@ -784,8 +784,11 @@ const ESA_ROW = new RegExp(`\\{\\s*id:\\s*${STR},\\s*title:\\s*${STR},\\s*width:
    hd_1080p25_screen/{id}.mp4 (full HD). */
 async function esaSearch(key, words, page, kind = 'images') {
   const s = ESA[key], u = `${s.site}/${kind}/${page > 1 ? `page/${page}/` : ''}${words ? '?search=' + encodeURIComponent(words) : ''}`;
+  /* an archive that has not answered in 12 s is left out of this search (ESA's video search can take 30 s on a first
+     request); one retry when the connection fails at once */
+  const ask = () => { const c = new AbortController(), t = setTimeout(() => c.abort(), 12000); return fetch(u, { signal: c.signal }).finally(() => clearTimeout(t)); };
   let r;
-  try { r = await fetch(u); } catch { r = await fetch(u); }            /* one retry, as for NASA */
+  try { r = await ask(); } catch (e) { if (e.name === 'AbortError') throw Object.assign(new Error('slow'), { slow: true }); r = await ask(); }
   if (r.status === 404) return { total: 0, list: [] };                 /* a page past the last one */
   if (!r.ok) throw new Error(String(r.status));
   const h = await r.text();
@@ -856,7 +859,7 @@ async function runSearch(q, page, st) {
   const ids = new Set(page > 1 ? PICS.map(x => (x.lib || 'nasa') + ' ' + x[7] + ' ' + x[0]) : []), list = [], seen = {};
   jobs.forEach((j, n) => {
     const d = done[n];
-    if (d.status === 'rejected') { failed.add(j.who === 'nasa' ? 'NASA' : ESA[j.who].name); return; }
+    if (d.status === 'rejected') { failed.add((j.who === 'nasa' ? 'NASA' : ESA[j.who].name + (j.slot.endsWith('videos') ? ' videos' : '')) + (d.reason?.slow ? ' did not answer in time' : ' out of reach')); return; }
     if (j.who === 'nasa') next.nasa[j.i] = d.value.total; else next.esa[j.slot] = d.value.total;
     for (const x of d.value.list) {
       const id = (x.lib || 'nasa') + ' ' + x[7] + ' ' + x[0];
@@ -929,7 +932,7 @@ async function libSearch(append = false, opt = {}) {
     const parts = r.counts.filter(c => c[1]).map(([w, n]) => `${w}: ${n.toLocaleString('en-GB')} found`);
     if (r.list.length || PICS.length) parts.push(`${main} shown`);
     if (back) parts.push(`${back} behind the scenes`);
-    parts.push(...r.failed.map(w => `${w} out of reach`));
+    parts.push(...r.failed);
     $('libCount').innerHTML = r.total || r.failed.length ? parts.map(p => `<span>${esc(p)}</span>`).join(' · ') : '';
     document.querySelector('.more').hidden = !r.more;
   } catch {

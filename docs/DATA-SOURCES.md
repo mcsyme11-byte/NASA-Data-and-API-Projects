@@ -449,7 +449,8 @@ archives to the Picture library. Checked with requests from GitHub's servers and
   with a music credit) and a table with Id, Release date, Duration and Category. Files:
   `archives/videos/medium_podcast/{id}.mp4` (small), `hd_1080p25_screen/{id}.mp4` (full HD), `ultra_hd/{id}.mp4` (Webb);
   a Hubblecast in full HD is about 86 MB. The videos are under CC BY 4.0 except their music, which has its own terms.
-  Checked Nov 10, 2026 from a web page: listing pages, video pages and files load from a browser.
+  Checked Nov 10, 2026 from a web page: listing pages, video pages and files load from a browser. A first video search
+  on esahubble.org took about 30 s (3 s when repeated), so the page waits at most 12 s for each ESA archive.
 - **Used since Nov 9, 2026** by the Image Explorer's Picture library and the globe's selected card (live search,
   thumbnails `thumb300y`, viewer `screen`, "Open large size" `large`). A page past the last answers 404 and is treated
   as empty.

@@ -16,7 +16,8 @@
 - **ESA's videos:** with "Pictures and videos" or "Videos", searches also ask ESA/Webb and ESA/Hubble's video
   archives. An ESA video plays the small file from ESA's servers and links the full HD file; the viewer shows its
   credit line (with line breaks, including the music credit), length and release date, and notes that the music has
-  its own terms.
+  its own terms. The page waits at most 12 s for each ESA archive; a slower one is left out of that search, and the
+  results line says it did not answer in time.
 - **Smaller places in place search:** about 85,000 lakes, rivers, glaciers, peaks, passes, islands, parks and other
   natural features from GeoNames that have an English Wikipedia article (for example Lake Louise, Moraine Lake, the Bow
   River, Mount Rundle, the Athabasca Glacier), with their English names. The list loads after the main place list;
