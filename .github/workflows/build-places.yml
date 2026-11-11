@@ -15,10 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download GeoNames (allCountries.zip)
-        run: curl -sSfL -o allCountries.zip https://download.geonames.org/export/dump/allCountries.zip && ls -l allCountries.zip
+      - name: Download GeoNames (allCountries.zip, alternateNamesV2.zip)
+        run: |
+          curl -sSfL -o allCountries.zip https://download.geonames.org/export/dump/allCountries.zip
+          curl -sSfL -o alternateNamesV2.zip https://download.geonames.org/export/dump/alternateNamesV2.zip
+          ls -l *.zip
       - name: Build features-more.json
-        run: python3 image-explorer/tools/build_geonames_features.py allCountries.zip "${{ inputs.limit }}"
+        run: python3 image-explorer/tools/build_geonames_features.py allCountries.zip alternateNamesV2.zip "${{ inputs.limit }}"
       - uses: actions/upload-artifact@v4
         with:
           name: features-more
