@@ -1,0 +1,32 @@
+# NASA and ESA Data Projects · Mars Data archive probe (one-off) · © 2026 Malcolm Syme · mcsyme11@gmail.com
+#
+# Runs only on the mars-probe branch. Checks that NASA's PDS Atmospheres Node and ESA's Planetary Science Archive can
+# be reached from GitHub's servers, maps the folders, and commits the findings to mars-data/probe/out/ on that branch.
+# The branch and this file are deleted once the findings are recorded in docs/DATA-SOURCES.md.
+
+name: Mars data probe (one-off)
+
+on:
+  push:
+    branches: [mars-probe]
+    paths: [mars-data/probe/probe.py, .github/workflows/mars-probe.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe the archives
+        run: python3 mars-data/probe/probe.py
+      - name: Commit the findings to the probe branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898309+github-actions[bot]@users.noreply.github.com"
+          git add mars-data/probe/out
+          git commit -m "Mars data probe: findings" || echo "Nothing new"
+          git push origin HEAD:mars-probe
