@@ -21,7 +21,8 @@
 - **Smaller places in place search:** about 85,000 lakes, rivers, glaciers, peaks, passes, islands, parks and other
   natural features from GeoNames that have an English Wikipedia article (for example Lake Louise, Moraine Lake, the Bow
   River, Mount Rundle, the Athabasca Glacier), with their English names. The list loads after the main place list;
-  a name typed in full is shown first. It is built by the manual job "Build smaller places"
+  a name typed in full is shown first, then the most widely named places (Antarctica's many small named features
+  last). It is built by the manual job "Build smaller places"
   (`.github/workflows/build-places.yml`, `tools/build_geonames_features.py`).
 
 ## November 10, 2026 — Asteroid Tracker: risk colour on the map, ESA and NASA compared, share links
