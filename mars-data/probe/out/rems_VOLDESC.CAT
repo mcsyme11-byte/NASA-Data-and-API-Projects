@@ -1,0 +1,50 @@
+PDS_VERSION_ID               = PDS3
+RECORD_TYPE                   = STREAM                                        
+                                                                              
+OBJECT                        = VOLUME
+  VOLUME_SERIES_NAME          = "MISSION TO MARS"
+  VOLUME_SET_NAME             = "MSL: THE REMS REDUCED DATA RECORD"
+  VOLUME_SET_ID               = "SP_CAB_MSLREM_1XXX"
+  VOLUMES                     = 1
+  VOLUME_NAME                 = "REMS RDR DATA"
+  VOLUME_ID                   = MSLREM_1001
+  VOLUME_FORMAT               = "ISO-9660_LEVEL2"
+  VOLUME_VERSION_ID           = "VERSION 42"
+  MEDIUM_TYPE                 = "ELECTRONIC"
+  DATA_SET_ID                 = {"MSL-M-REMS-3-TELRDR-V1.0",
+                                 "MSL-M-REMS-4-ENVRDR-V1.0",
+                                 "MSL-M-REMS-5-MODRDR-V1.0",
+                                 "MSL-M-REMS-6-ADR-V1.0",
+                                 "MSL-M-REMS-5-UVRDR-V1.0"}
+  PUBLICATION_DATE            = 2013-02-27
+  DESCRIPTION                 = "This volume contains processed 
+                                 data from the Mars Science 
+                                 Laboratory REMS instrument."
+  MISSION_NAME                = "MARS SCIENCE LABORATORY"
+  INSTRUMENT_HOST_NAME        = "MARS SCIENCE LABORATORY"
+
+  OBJECT                      = DATA_PRODUCER
+    INSTITUTION_NAME          = "CENTRO DE ASTROBIOLOGIA"
+    FACILITY_NAME             = "NULL"
+    FULL_NAME                 = "JOSE A RODRIGUEZ MANFREDI"
+    ADDRESS_TEXT              = "Centro de Astrobiologia (CSIC/INTA)
+                                 Instituto Nacional de Tecnica Aeroespacial
+                                 Ctra de Torrejon a Ajalvir, km 4
+                                 28850 Torrejon de Ardoz, Madrid Spain"
+  END_OBJECT                  = DATA_PRODUCER
+
+  OBJECT                      = CATALOG
+    ^MISSION_CATALOG          = "MSL_MISSION.CAT"
+    ^INSTRUMENT_HOST_CATALOG  = "MSL_INSTHOST.CAT"
+    ^INSTRUMENT_CATALOG       = "REMS_INST.CAT"
+    ^DATA_SET_CATALOG         = {"REMS_TELRDR_DS.CAT",
+                                 "REMS_ENVRDR_DS.CAT",
+                                 "REMS_MODRDR_DS.CAT",
+                                 "REMS_ADR_DS.CAT",
+                                 "REMS_UVRDR_DS.CAT"}
+    ^REFERENCE_CATALOG        = {"REMS_REF.CAT", "MSL_REF.CAT"}
+    ^PERSONNEL_CATALOG        = "REMS_PERSON.CAT"
+  END_OBJECT                  = CATALOG
+
+END_OBJECT                    = VOLUME
+END

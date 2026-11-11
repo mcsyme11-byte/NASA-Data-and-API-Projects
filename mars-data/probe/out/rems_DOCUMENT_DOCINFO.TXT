@@ -1,0 +1,53 @@
+PDS_VERSION_ID        = PDS3
+RECORD_TYPE           = STREAM
+
+OBJECT                = TEXT
+  PUBLICATION_DATE    = 2015-12-04
+  NOTE                = "Description of contents of DOCUMENT directory"
+END_OBJECT            = TEXT
+END
+
+The DOCUMENT directory contains documentation useful to understand the
+data products included in this volume and its organization.
+
+DOCINFO.TXT - This file
+
+REMS_RDR_SIS.TXT - The REMS RDR data product Software Specification
+Interface in plain text format. This document describes the format of
+the RDR data products.
+
+REMS_RDR_SIS.PDF - The REMS RDR Data Products Software Specification
+Interface in pdf format.
+
+REMS_RDR_SIS.LBL - A label file describing both the REMS_RDR_SIS.PDF
+and REMS_RDR_SIS.TXT files.
+
+REMS_RDR_VOLSIS.TXT - The REMS RDR archive volume Software Interface
+Specification in plain text format. This document describes the
+structure and content of this volume.
+
+REMS_RDR_VOLSIS.PDF - The REMS RDR archive volume Software Interface
+Specification in pdf format.
+
+REMS_RDR_VOLSIS.LBL - A label file describing both the
+REMS_RDR_VOLSIS.TXT and the REMS_RDR_VOLSIS.PDF documents.
+
+WIND_PROCESSING.TXT - Document explaining how wind speed an direction
+are calculated, in plain text format.
+
+WIND_PROCESSING.PDF - Document explaining how wind speed an direction
+are calculated, in plain pdf format.
+
+WIND_PROCESSING.LBL - A label file describing both the
+WIND_PROCESSING.TXT and the WIND_PROCESSING.PDF documents.
+
+DATA_EVENTS.TXT - List of events that have an impact in REMS regular
+measurement cadence.
+
+MSL_LDD.FUL - MSL specific keywords for PDS.
+
+MSL_LDD.LBL - A label file describing MSL_LDD.FUL.
+
+PDSDD.FUL - PDS Data Dictionary.
+
+PDSDD.LBL - A label file describing PDSDD.FUL.

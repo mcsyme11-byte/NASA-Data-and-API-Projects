@@ -1,0 +1,1062 @@
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 1
+        NAME            = "TIMESTAMP"
+        UNIT            = "SECOND"
+        DESCRIPTION     = "Number of seconds since noon 1-Jan-2000"
+        DATA_TYPE       = ASCII_INTEGER
+        START_BYTE      = 1
+        BYTES           = 10
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 2
+        NAME            = "LMST"
+        DESCRIPTION     = "Local Mean Solar Time. It is in the format
+                           SSSSSMHH:MM:SS.sss where:
+                           SS  - Sol number (00000-99999)
+                           M   - sol/time separator
+                           HH  - hour (0-23)
+                           MM  - minute (0-59)
+                           SS  - second (0-59)
+                           sss - fractions of second (000-999)"
+        DATA_TYPE       = CHARACTER
+        START_BYTE      = 13
+        BYTES           = 18
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 3
+        NAME            = "LTST"
+        DESCRIPTION     = "Local True Solar Time with respect to the 
+                           rover position. It is in the format 
+                           SSSSS HH:MM:SS.sss where:
+                           SS  - Sol number (00000-99999)
+                           HH  - hour (0-23)
+                           MM  - minute (0-59)
+                           SS  - second (0-59)"
+        DATA_TYPE       = CHARACTER
+        START_BYTE      = 34
+        BYTES           = 14
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 4
+        NAME            = "BOOM1_PCONV_1"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 1"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 50
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 5
+        NAME            = "BOOM1_PCONV_2"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 2"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 58
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 6
+        NAME            = "BOOM1_PCONV_3"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 3"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 66
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 7
+        NAME            = "BOOM1_PCONV_4"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 4"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 74
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 8
+        NAME            = "BOOM1_PCONV_5"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 5"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 82
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 9
+        NAME            = "BOOM1_PCONV_6"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 6"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 90
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 10
+        NAME            = "BOOM1_PCONV_7"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 7"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 98
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 11
+        NAME            = "BOOM1_PCONV_8"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 8"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 106
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 12
+        NAME            = "BOOM1_PCONV_9"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 9"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 114
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 13
+        NAME            = "BOOM1_PCONV_10"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 10"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 122
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 14
+        NAME            = "BOOM1_PCONV_11"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 11"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 130
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 15
+        NAME            = "BOOM1_PCONV_12"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor convective power 12"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 138
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 16
+        NAME            = "BOOM2_PCONV_1"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 1"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 146
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 17
+        NAME            = "BOOM2_PCONV_2"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 2"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 154
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 18
+        NAME            = "BOOM2_PCONV_3"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 3"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 162
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 19
+        NAME            = "BOOM2_PCONV_4"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 4"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 170
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 20
+        NAME            = "BOOM2_PCONV_5"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 5"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 178
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 21
+        NAME            = "BOOM2_PCONV_6"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 6"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 186
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 22
+        NAME            = "BOOM2_PCONV_7"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 7"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 194
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 23
+        NAME            = "BOOM2_PCONV_8"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 8"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 202
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 24
+        NAME            = "BOOM2_PCONV_9"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 9"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 210
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 25
+        NAME            = "BOOM2_PCONV_10"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 10"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 218
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 26
+        NAME            = "BOOM2_PCONV_11"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 11"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 226
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 27
+        NAME            = "BOOM2_PCONV_12"
+        UNIT            = "MILLIWATT"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor convective power 12"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 234
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 28
+        NAME            = "BOOM1_THOT_1"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 1"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 242
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 29
+        NAME            = "BOOM1_THOT_2"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 2"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 250
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 30
+        NAME            = "BOOM1_THOT_3"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 3"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 258
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 31
+        NAME            = "BOOM1_THOT_4"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 4"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 266
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 32
+        NAME            = "BOOM1_THOT_5"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 5"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 274
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 33
+        NAME            = "BOOM1_THOT_6"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 6"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 282
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 34
+        NAME            = "BOOM1_THOT_7"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 7"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 290
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 35
+        NAME            = "BOOM1_THOT_8"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 8"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 298
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 36
+        NAME            = "BOOM1_THOT_9"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 9"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 306
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 37
+        NAME            = "BOOM1_THOT_10"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 10"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 314
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 38
+        NAME            = "BOOM1_THOT_11"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 11"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 322
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 39
+        NAME            = "BOOM1_THOT_12"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor hot temperature 12"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 330
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 40
+        NAME            = "BOOM2_THOT_1"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 1"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 338
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 41
+        NAME            = "BOOM2_THOT_2"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 2"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 346
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 42
+        NAME            = "BOOM2_THOT_3"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 3"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 354
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 43
+        NAME            = "BOOM2_THOT_4"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 4"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 362
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 44
+        NAME            = "BOOM2_THOT_5"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 5"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 370
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 45
+        NAME            = "BOOM2_THOT_6"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 6"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 378
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 46
+        NAME            = "BOOM2_THOT_7"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 7"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 386
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 47
+        NAME            = "BOOM2_THOT_8"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 8"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 394
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 48
+        NAME            = "BOOM2_THOT_9"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 9"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 402
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 49
+        NAME            = "BOOM2_THOT_10"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 10"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 410
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 50
+        NAME            = "BOOM2_THOT_11"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 11"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 418
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 51
+        NAME            = "BOOM2_THOT_12"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor hot temperature 12"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 426
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 52
+        NAME            = "BOOM1_TCOLD_1"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor cold temperature 1"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 434
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 53
+        NAME            = "BOOM1_TCOLD_2"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor cold temperature 2"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 442
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 54
+        NAME            = "BOOM1_TCOLD_3"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 wind sensor cold temperature 3"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 450
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 55
+        NAME            = "BOOM2_TCOLD_1"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor cold temperature 1"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 458
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 56
+        NAME            = "BOOM2_TCOLD_2"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor cold temperature 2"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 466
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 57
+        NAME            = "BOOM2_TCOLD_3"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 wind sensor cold temperature 3"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 474
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 58
+        NAME            = "THERMOPILE_A_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "GTS thermopile A temperature (band 8-14 um)"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 482
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 59
+        NAME            = "THERMOPILE_B_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "GTS thermopile B temperature (band 16-20 um)"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 490
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 60
+        NAME            = "THERMOPILE_C_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "GTS thermopile C temperature (band 14-15 um)"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 498
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 61
+        NAME            = "CALIBRATION_PLATE_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "GTS calibration plate temperature"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 506
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 62
+        NAME            = "THERMOPILE_A_VOLTAGE"
+        UNIT            = "MICROVOLT"
+        FORMAT          = "F8.2"
+        DESCRIPTION     = "GTS thermopile A voltage"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 514
+        BYTES           = 8
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 63
+        NAME            = "THERMOPILE_B_VOLTAGE"
+        UNIT            = "MICROVOLT"
+        FORMAT          = "F8.2"
+        DESCRIPTION     = "GTS thermopile B voltage"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 523
+        BYTES           = 8
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 64
+        NAME            = "THERMOPILE_C_VOLTAGE"
+        UNIT            = "MICROVOLT"
+        FORMAT          = "F8.2"
+        DESCRIPTION     = "GTS thermopile C voltage"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 532
+        BYTES           = 8
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 65
+        NAME            = "THERMOPILE_A_BETA"
+        FORMAT          = "F4.2"
+        DESCRIPTION     = "GTS thermopile A degradation correction factor"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 541
+        BYTES           = 4
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 66
+        NAME            = "THERMOPILE_B_BETA"
+        FORMAT          = "F4.2"
+        DESCRIPTION     = "GTS thermopile B degradation correction factor"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 546
+        BYTES           = 4
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 67
+        NAME            = "THERMOPILE_C_BETA"
+        FORMAT          = "F4.2"
+        DESCRIPTION     = "GTS thermopile C degradation correction factor"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 551
+        BYTES           = 4
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 68
+        NAME            = "BOOM1_AIR_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 ATS boom internal temperature (mean of the
+                           three thermopile temperatures)"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 556
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 69
+        NAME            = "BOOM1_INTERMEDIATE_AIR_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 ATS intermediate temperature"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 564
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 70
+        NAME            = "BOOM1_TIP_AIR_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 1 ATS tip temperature"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 572
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 71
+        NAME            = "BOOM2_AIR_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 ATS boom internal temperature "
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 580
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 72
+        NAME            = "BOOM2_INTERMEDIATE_AIR_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 ATS intermediate temperature"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 588
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 73
+        NAME            = "BOOM2_TIP_AIR_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Boom 2 ATS tip temperature"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 596
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 74
+        NAME            = "UV_A"
+        UNIT            = "NANOAMPERE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Band A ultraviolet photodiode output current"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 604
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 75
+        NAME            = "UV_B"
+        UNIT            = "NANOAMPERE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Band B ultraviolet photodiode output current"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 612
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 76
+        NAME            = "UV_C"
+        UNIT            = "NANOAMPERE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Band C ultraviolet photodiode output current"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 620
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 77
+        NAME            = "UV_ABC"
+        UNIT            = "NANOAMPERE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Band A+B+C ultraviolet photodiode output current"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 628
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 78
+        NAME            = "UV_D"
+        UNIT            = "NANOAMPERE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Band D ultraviolet photodiode output current"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 636
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 79
+        NAME            = "UV_E"
+        UNIT            = "NANOAMPERE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Band E ultraviolet photodiode output current"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 644
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 80
+        NAME            = "UV_TEMP"
+        UNIT            = "KELVIN"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Ultraviolet sensor temperature"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 652
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 81
+        NAME            = "H_CHANNEL1_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Humidity channel 1 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 660
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 82
+        NAME            = "H_CHANNEL2_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Humidity channel 2 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 670
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 83
+        NAME            = "H_CHANNEL3_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Humidity channel 3 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 680
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 84
+        NAME            = "H_CHANNEL4_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Humidity channel 4 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 690
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 85
+        NAME            = "H_CHANNEL5_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Humidity channel 5 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 700
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 86
+        NAME            = "H_CHANNEL6_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Humidity channel 6 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 710
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 87
+        NAME            = "H_CHANNEL7_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Humidity channel 7 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 720
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 88
+        NAME            = "H_CHANNEL8_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Humidity channel 8 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 730
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 89
+        NAME            = "P_CHANNEL1_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Pressure sensor channel 1 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 740
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 90
+        NAME            = "P_CHANNEL2_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Pressure sensor channel 2 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 750
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 91
+        NAME            = "P_CHANNEL3_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Pressure sensor channel 3 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 760
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 92
+        NAME            = "P_CHANNEL4_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Pressure sensor channel 4 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 770
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 93
+        NAME            = "P_CHANNEL5_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Pressure sensor channel 5 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 780
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 94
+        NAME            = "P_CHANNEL6_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Pressure sensor channel 6 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 790
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 95
+        NAME            = "P_CHANNEL7_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Pressure sensor channel 7 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 800
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 96
+        NAME            = "P_CHANNEL8_CAPACITANCE"
+        UNIT            = "PICOFARAD"
+        FORMAT          = "F9.4"
+        DESCRIPTION     = "Pressure sensor channel 8 capacitance"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 810
+        BYTES           = 9
+END_OBJECT      = COLUMN
+

@@ -1,0 +1,101 @@
+PDS_VERSION_ID                    = PDS3                             
+LABEL_REVISION_NOTE               = "2024-11-11 RS: Paetzold         
+                                    Original"                        
+RECORD_TYPE                       = STREAM                           
+                                                                     
+OBJECT                            = DATA_SET                         
+ DATA_SET_ID                      = "MEX-M-MRS-5-OCC-9124-V1.0"      
+                                                                     
+                                                                     
+ OBJECT                           = DATA_SET_INFORMATION             
+  DATA_SET_NAME                   = "MARS EXPRESS MARS MRS 5         
+                                     OCCULTATION 9124 V1.0"          
+  DATA_SET_COLLECTION_MEMBER_FLG  = "N"                              
+  DATA_OBJECT_TYPE                = TABLE                            
+  START_TIME                      = 2022-05-06T11:18:45.255          
+  STOP_TIME                       = 2022-06-21T19:14:49.596          
+  DATA_SET_RELEASE_DATE           = 2019-01-10                       
+  PRODUCER_FULL_NAME              = "MARTIN PAETZOLD, PI"            
+  DETAILED_CATALOG_FLAG           = "N"                              
+  ARCHIVE_STATUS                  = "ARCHIVED"                       
+  ABSTRACT_DESC                   = "This data set contains          
+                                     ionospheric electron density    
+                                     profiles as well as neutral     
+                                     atmospheric temperature,        
+                                     pressure and number density     
+                                     profiles derived from the MEX   
+                                     Radio Science experiment MaRS.  
+                                     The data set covers measurements
+                                     from the occultation season 24."
+                                                                     
+  CITATION_DESC                   = "M. Paetzold, Mars Express       
+                                     MRS Level 5 data. Experimental  
+                                     Data acquired from              
+                                     Occultation 24, Version V1.0,   
+                                     MEXMRS_9124_V1.0,               
+                                     ESA Planetary Science Archive,  
+                                     2005."                          
+                                                                     
+  DATA_SET_TERSE_DESC             = "This is a Mars Express Radio   
+                                     Science data set, collected     
+                                     during the occultation season 24
+                                     2022-05-06 to 2022-06-21."      
+                                                                     
+  DATA_SET_DESC                   = "                                
+                                                                     
+Data Set Overview                                                    
+=================                                                    
+                                                                     
+        This data set contains occultation measurements from the     
+        occultation season 24. In this catalog file the START_TIME   
+        specifies the start time of the first available profile and  
+        the STOP_TIME specifies the stop time of the last available  
+        profile from the occultation season 24.                      
+                                                                     
+        More information on the included occultation profiles in this
+        data set can be found in the summary file in the DOCUMENT    
+        folder."                                                     
+                                                                     
+                                                                     
+  CONFIDENCE_LEVEL_NOTE           = "                                
+                                                                     
+Review                                                               
+======                                                               
+      This archival data set was reviewed by the MEX Radio Science   
+      Team prior to submission to the Planetary Science Archive      
+      (PSA).                                                         
+                                                                     
+      Prior to creation of the final version of the archival data    
+      set, key elements of the archive were distributed for          
+      preliminary review.  These included electronic versions of     
+      example PDS labels, CATALOG files, and Software Interface      
+      Specifications. These materials were distributed to PDS        
+      personnel, the experiment investigator, and others,            
+      as appropriate.                                                
+                                                                     
+      ODR files were checked using Stanford parsing and reduction    
+      software to ensure that they were complete and accurate        
+      replicas of the data contained in the original files."         
+                                                                     
+ END_OBJECT                       = DATA_SET_INFORMATION             
+                                                                     
+ OBJECT                           = DATA_SET_TARGET                  
+  TARGET_NAME                     = MARS                             
+ END_OBJECT                       = DATA_SET_TARGET                  
+                                                                     
+ OBJECT                           = DATA_SET_HOST                    
+  INSTRUMENT_HOST_ID              = MEX                              
+  INSTRUMENT_ID                   = MRS                              
+ END_OBJECT                       = DATA_SET_HOST                    
+                                                                     
+ OBJECT                           = DATA_SET_MISSION                 
+  MISSION_NAME                    = "MARS EXPRESS"                   
+ END_OBJECT                       = DATA_SET_MISSION                 
+                                                                     
+ OBJECT                           = DATA_SET_REFERENCE_INFORMATION   
+  REFERENCE_KEY_ID                = "MEX_MRS_RIU_IS_3050"            
+ END_OBJECT                       = DATA_SET_REFERENCE_INFORMATION   
+                                                                     
+END_OBJECT                        = DATA_SET                         
+                                                                     
+END                                                                  

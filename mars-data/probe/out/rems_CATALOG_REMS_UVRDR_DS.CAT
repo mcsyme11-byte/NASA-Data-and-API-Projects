@@ -1,0 +1,244 @@
+PDS_VERSION_ID = PDS3     
+
+LABEL_REVISION_NOTE  = "2019-09-27 GMartinez, initial;
+                        2022-11-21 lmora, updated descriptions"
+
+RECORD_TYPE          = STREAM
+
+OBJECT     = DATA_SET                                                         
+  DATA_SET_ID = "MSL-M-REMS-5-UVRDR-V1.0"
+
+  OBJECT     = DATA_SET_INFORMATION                                           
+    DATA_SET_NAME                  = "MSL MARS ROVER ENV MONITORING STATION
+                                      5 UVRDR V1.0"
+    DATA_SET_TERSE_DESC            = "MSL Rover Environmental Monitoring 
+                                      Station UV fluxes corrected for dust 
+                                      deposition and inaccuracies in the 
+                                      original angular response calibration 
+                                      functions during the first 3423 sols."
+    DATA_SET_COLLECTION_MEMBER_FLG = N
+    DATA_OBJECT_TYPE               = TABLE
+    START_TIME                     = 2012-08-07T04:04:38.536
+    STOP_TIME                      = 2022-03-24T16:01:41.976
+    DATA_SET_RELEASE_DATE          = 2022-12-05
+    PRODUCER_FULL_NAME             = "GERMAN MARTINEZ AND ALVARO DE 
+                                      VICENTE-RETORTILLO"
+    DETAILED_CATALOG_FLAG          = N
+    CITATION_DESC                  = "Martinez, G. and Vicente-Retortillo, A.,
+                                      Mars Science Laboratory Rover 
+                                      Environmental Monitoring Station RDR 
+                                      Data V1.0, MSL-M-REMS-5-UVRDR-V1.0,
+                                      NASA Planetary Data System, 2022."
+    ABSTRACT_DESC                  = "UV fluxes measured by the UV sensor 
+                                      of the Rover Environmental Monitoring 
+                                      Station (REMS) aboard the Mars Science
+                                      Laboratory in physical units, with
+                                      corrections and modeling."
+    DATA_SET_DESC                  = "       
+                                                           
+      Data Set Overview                                                       
+      =================
+        The REMS instrument has a UV sensor (UVS) that is measuring
+        the UV radiation flux at the surface of Mars in six bands
+        between 200 and 380 nm. Due to its location on the rover deck,
+        the UVS has been exposed to dust deposition. In addition,
+        inaccuracies in the original calibration function of the
+        angular response of the UVS have led to discrepancies between
+        measured and physically-consistent UV fluxes when the solar
+        zenith angle (theta) relative to the rover frame is between 20
+        degrees and 55 degrees.
+
+        The REMS UVRDR dataset contains UV fluxes corrected for both
+        effects when theta < 55 degrees during the first 3423 sols of
+        the mission. The corrections at this level have been applied
+        either by models, by removing invalid data, or by selecting
+        the most representative data (e.g. minimum of several
+        sensors).  All the original data can be found in the previous
+        processing levels.
+
+        Each data product contains 100 sols worth of activity, from
+        sol 1 to 3423.
+
+        This UV dataset is the highest processing level of UV data
+        produced by the REMS team.
+                                                                              
+
+      Parameters                                                              
+      ========== 
+        This data set includes the following information:
+        - UV flux in units of W/m2 measured by each of the six UVS
+          channels and the associated uncertainties, also in units of
+          W/m2.
+
+        Sampling is at 1Hz maximum, with a baseline operation of 5
+        minutes every hour. Additional measurements can be taken on an
+        on-demand basis beyond those hourly observations. For these
+        additional measurements, and besides tactical day to day
+        conditions and resources, there is a general pattern that
+        covers selected hours of the day built by the scientific team
+        during operations. That pattern is shifted from sol to sol to
+        cover the whole 24 hours after a few sols.
+
+        Additionally, extended measurements can also be triggered
+        automatically if event mode is activated, in which case the
+        REMS computer will decide or not to continue measuring after
+        the regular cadence, by comparing the previous measurements
+        with the expected trend. The objective is to capture any
+        ongoing transitory atmospheric event.
+                                                                              
+
+      Processing                                                              
+      ========== 
+      Processing starts with the generation of the REMS EDRs. The REMS
+      EDR data products are generated by the MIPL (Multimission Image
+      Processing Laboratory) at JPL, under the OPGS, using the
+      telemetry processing software called MSLEdrGen. This software
+      will convert the binary data received from telemetry to
+      ASCII. EDRs will then be retrieved at Centro de Astrobiologia
+      (INTA-CSIC) using the File Exchange Interface (FEI).
+
+      EDR data products have a first automatic process using
+      calibration data. The result of this is the TELRDR dataset,
+      which contains, among others, photodiode output currents in
+      units of nA measured by each UVS channel. In parallel, using
+      ancillary data provided by JPL the ADRs (Ancillary Data Records)
+      are generated, which contain the rover location, pitch, yaw and
+      roll; Sun position relative to the rover frame; azimuth and
+      elevation angles of the masthead.
+
+      The REMS UVRDR dataset contains UV fluxes acquired when theta <
+      55 degrees for the first 3423 sols of the mission, corrected for
+      the effects dust deposition and inaccuracies in the original
+      calibration function of the angular response. To perform this
+      correction, calibration data, ADR and TELRDR products, Mastcam
+      opacities at 880 nm and UV radiances simulated with a Monte
+      Carlo radiative transfer model have been used.
+
+      The REMS UVRDR dataset will not replace UV fluxes contained in
+      the ENVRDR and MODRDR products, but will be posted in a separate
+      folder.
+      
+                                                                              
+      Data                                                                    
+      ====                                                                    
+      Each REMS UVRDR product in the dataset is an ASCII table
+      containing corrected UV fluxes, associated uncertainties, and
+      temporal and geometrical information stored in periods of 100
+      sols, from sol 1 to 3423.
+
+      Columns are delimited by commas and are of fixed length. Rows
+      are time ordered and are separated by a carriage return/line
+      feed. Each table contains 100 sols worth of activity.
+
+      Values of UV fluxes and associated uncertainties are set to -999
+      for theta > 55 degrees. Additionally, values of UV uncertainties
+      for theta < 55 degrees are set to -999 when the mast or masthead
+      of the rover cast a partial shadow on at least one of the UVS
+      channels and interpolation between calculated uncertainties is
+      not possible for that sol.
+
+                                                        
+      Ancillary Data                                                          
+      ==============
+      The ancillary data used in the generation of REMS UVRDR are
+      calibration data, ADRs and TELRDR products, and Mastcam
+      opacities at 880 nm.
+
+      Calibration data can be found in the CALIB
+      directory. Calibration files are in plain ASCII text
+      format. They are structured in a PDS label-like structure, with
+      the form DATA = VALUE, each value taking up one line. A file per
+      sensor is provided.
+                                                                        
+                                                                              
+      Coordinate System                                                       
+      =================                                                       
+      This data set depends on several coordinate systems used in the MSL
+      project. These are:
+
+      - MSL_TOPO frame, fixed to landing site, is used to define rover
+        position.
+      - MSL_LOCAL_LEVEL, fixed to the rover, is used to define rover
+        orientation (roll, pitch and yaw angles)
+      - MSL_RSM_ZERO_AZ frame, fixed to the rover, is used to define
+        rover remote sensor mast (RSM) azimuth.
+      - MSL_RSM_ZERO_EL, fixed to the rover, is used to define rover
+        remote sensor mast (RSM) elevation.
+      - MSL_ROVER_MECH, fixed to the rover, is used to define Sun
+        position angles (azimuth and elevation) 
+
+                                                                        
+      Software                                                                
+      ========                                                                
+       No software is provided in this data set. The REMS UVRDR tables are 
+       simple ASCII files that can be displayed on UNIX, Macintosh, and PC
+       platforms with common software.
+                                        
+"                                                                       
+
+    CONFIDENCE_LEVEL_NOTE          = "                                        
+                                                                              
+      Confidence Level Overview                                               
+      =========================                                     
+      Since REMS UVRDRs are the last step in the REMS UV data
+      processing pipeline, its reliability largely depends on that of
+      all the data from previous processing steps.
+
+      In addition, it also depends on the selection of parameters and
+      modeling used by the REMS team.
+                                                                   
+                                                                              
+      Review                                                                  
+      ======
+      The REMS UVRDRs were reviewed internally by the REMS team prior
+      to release to the PDS. REMS UVRDRs are also being reviewed
+      during the review process of the article Vicente-Retortillo, et
+      al. (2020), In situ UV measurements by MSL/REMS: Dust deposition
+      and angular response corrections, Space Science Reviews, 216(5), 1-19.
+      PDS also performed an external peer review of the REMS RDRs.
+            
+                                                                  
+      Data Coverage and Quality                                               
+      =========================
+      Each REMS UVRDRs table provides corrected UV values measured
+      during periods of 100 sols. Data is dependent on REMS EDRs data
+      products, pre-flight calibration data, SPICE data and ancillary
+      data.
+
+      Values of UV fluxes and associated uncertainties are set to -999
+      for theta > 55 degrees. Additionally, values of UV uncertainties
+      for theta < 55 degrees are set to -999 when the mast or masthead
+      of the rover cast a partial shadow on at least one of the UVS
+      channels and interpolation between calculated uncertainties is
+      not possible for that sol.
+
+
+      Limitations                                                             
+      ===========                                                             
+
+      These data has been subjected to estimations and corrections. To
+      check the original data, refer to ENVRDR and TELRDR records.
+                                
+        "        
+  END_OBJECT           = DATA_SET_INFORMATION
+
+  OBJECT               = DATA_SET_MISSION
+    MISSION_NAME       = "MARS SCIENCE LABORATORY"
+  END_OBJECT           = DATA_SET_MISSION
+
+  OBJECT               = DATA_SET_TARGET
+    TARGET_NAME        = MARS
+  END_OBJECT           = DATA_SET_TARGET
+
+  OBJECT               = DATA_SET_HOST
+    INSTRUMENT_HOST_ID = MSL
+    INSTRUMENT_ID      = REMS
+  END_OBJECT           = DATA_SET_HOST
+
+  OBJECT               = DATA_SET_REFERENCE_INFORMATION
+    REFERENCE_KEY_ID   = "VICENTEETAL2020"
+  END_OBJECT           = DATA_SET_REFERENCE_INFORMATION
+
+END_OBJECT             = DATA_SET
+
+END                                                              

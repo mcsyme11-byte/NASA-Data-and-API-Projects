@@ -1,0 +1,121 @@
+PDS_VERSION_ID = PDS3
+RECORD_TYPE   = FIXED_LENGTH
+RECORD_BYTES  = 279
+FILE_RECORDS  = 35
+^INDEX_TABLE  = "UV_INDEX.TAB"
+MISSION_NAME                  = "MARS SCIENCE LABORATORY"
+PRODUCER_INSTITUTION_NAME     = "CENTRO DE ASTROBIOLOGIA"
+DESCRIPTION                   = "This index file lists information
+                                 about each of the RDR data products 
+                                 contained on this archive volume."
+
+OBJECT                        = INDEX_TABLE
+  INTERCHANGE_FORMAT          = ASCII
+  ROW_BYTES                   = 279
+  ROWS                        = 35
+  COLUMNS                     = 10
+  INDEX_TYPE                  = SINGLE
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 1
+    NAME                      = VOLUME_ID
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 2
+    BYTES                     = 11
+    DESCRIPTION               = "The volume on which this product is 
+                                 stored."
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 2
+    NAME                      = DATA_SET_ID
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 16
+    BYTES                     = 40
+    DESCRIPTION               = "A unique identifier for the dataset."
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 3
+    NAME                      = INSTRUMENT_HOST_ID
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 59
+    BYTES                     = 4
+    DESCRIPTION               = "The identifier for the host on which the
+                                 instrument is based." 
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 4
+    NAME                      = INSTRUMENT_ID
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 66
+    BYTES                     = 18
+    DESCRIPTION               = "The instrument identifier."
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 5
+    NAME                      = PATH_NAME
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 87
+    BYTES                     = 65
+    DESCRIPTION               = "The full directory path to the file 
+                                 relative to the volume root 
+                                 directory."
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 6
+    NAME                      = FILE_NAME
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 155
+    BYTES                     = 40
+    DESCRIPTION               = "The name of the data product file 
+                                 and attached PDS label." 
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 7
+    NAME                      = RELEASE_ID
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 198
+    BYTES                     = 4
+    DESCRIPTION               = "Specifies the unique identifier 
+                                 associated with a specific release 
+                                 of a data set." 
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 8
+    NAME                      = PRODUCT_ID
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 205
+    BYTES                     = 40
+    DESCRIPTION               = "Unique identifier for this product."
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 9
+    NAME                      = PRODUCT_CREATION_TIME
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 248
+    BYTES                     = 20
+    DESCRIPTION               = "UTC date and time that this product 
+                                 was created, in the format 
+                                 yyyy-mm-ddThh:mm:ssZ."
+  END_OBJECT                  = COLUMN
+
+  OBJECT                      = COLUMN
+    COLUMN_NUMBER             = 10
+    NAME                      = TARGET_NAME
+    DATA_TYPE                 = CHARACTER
+    START_BYTE                = 271
+    BYTES                     = 6
+    DESCRIPTION               = "Planetary body that is the target of
+                                 the observation."
+  END_OBJECT                  = COLUMN
+
+END_OBJECT                    = INDEX_TABLE
+
+END

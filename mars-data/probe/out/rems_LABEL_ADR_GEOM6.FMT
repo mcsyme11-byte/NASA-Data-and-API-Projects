@@ -1,0 +1,258 @@
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 1
+        NAME            = "TIMESTAMP"
+        UNIT            = "SECOND"
+        DESCRIPTION     = "Number of seconds since noon 1-Jan-2000"
+        DATA_TYPE       = ASCII_INTEGER
+        START_BYTE      = 1
+        BYTES           = 10
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 2
+        NAME            = "LMST"
+        DESCRIPTION     = "Local Mean Solar Time. It is in the format
+                           SSSSSMHH:MM:SS.sss where:
+                           SS  - Sol number (00000-99999)
+                           M   - sol/time separator
+                           HH  - hour (0-23)
+                           MM  - minute (0-59)
+                           SS  - second (0-59)
+                           sss - fractions of second (000-999)"
+        DATA_TYPE       = CHARACTER
+        START_BYTE      = 13
+        BYTES           = 18
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 3
+        NAME            = "LTST"
+        DESCRIPTION     = "Local True Solar Time with respect to the 
+                           rover position. It is in the format 
+                           SSSSS HH:MM:SS.sss where:
+                           SS  - Sol number (00000-99999)
+                           HH  - hour (0-23)
+                           MM  - minute (0-59)
+                           SS  - second (0-59)"
+        DATA_TYPE       = CHARACTER
+        START_BYTE      = 34
+        BYTES           = 14
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 4
+        NAME            = "SOLAR_LONGITUDE_ANGLE"
+        UNIT            = "DEGREE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Solar azimuth angle relative to REMS rover
+                           frame (+X points to the front of the rover;
+                           +Z points up; +Y completes the right handed
+                           frame; the origin is on the rover deck,
+                           between the rover middle wheels) It is the
+                           angle between the positive X-axis and the
+                           orthogonal projection of the Sun onto the
+                           XY plane. It increases in the
+                           counterclockwise sense about the positive
+                           Z-axis. Range of -180 to 180 degrees."
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 50
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 5
+        NAME            = "SOLAR_ZENITHAL_ANGLE"
+        UNIT            = "DEGREE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Solar elevation angle relative to REMS rover
+                           frame (+X points to the front of the rover;
+                           +Z points up; +Y completes the right handed
+                           frame; the origin is on the rover deck,
+                           between the rover middle wheels) It is the
+                           angle between the direction of the Sun and
+                           the positive Z-axis. A value of 0 degrees
+                           represents Sun at frame's zenith, while a
+                           value of 180 degrees represents Sun at
+                           frame's nadir. Range of 0 to 180 degrees."
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 58
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 6
+        NAME            = "ROVER_POSITION_X"
+        UNIT            = "METER"
+        FORMAT          = "F9.2"
+        DESCRIPTION     = "Rover position relative to landing site. It is
+                           the x-component of the rover's position
+                           relative to landing site, expressed with
+                           respect to MSL_TOPO frame (+X is along the
+                           local north direction; +Z is along the
+                           outward normal at the landing site; +Y
+                           completes the right hand frame; the origin
+                           of this frame is located at the landing
+                           site)"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 66
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 7
+        NAME            = "ROVER_POSITION_Y"
+        UNIT            = "METER"
+        FORMAT          = "F9.2"
+        DESCRIPTION     = "Rover position relative to landing site. It is
+                           the y-component of the rover's position
+                           relative to landing site, expressed with
+                           respect to MSL_TOPO frame (+X is along the
+                           local north direction; +Z is along the
+                           outward normal at the landing site; +Y
+                           completes the right hand frame; the origin
+                           of this frame is located at the landing
+                           site)"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 76
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 8
+        NAME            = "ROVER_POSITION_Z"
+        UNIT            = "METER"
+        FORMAT          = "F9.2"
+        DESCRIPTION     = "Rover position relative to landing site. It is
+                           the z-component of the rover's position
+                           relative to landing site, expressed with
+                           respect to MSL_TOPO frame (+X is along the
+                           local north direction; +Z is along the
+                           outward normal at the landing site; +Y
+                           completes the right hand frame; the origin
+                           of this frame is located at the landing
+                           site)"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 86
+        BYTES           = 9
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 9
+        NAME            = "ROVER_VELOCITY"
+        UNIT            = "METERS/HOUR"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Rover velocity"
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 96
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 10
+        NAME            = "ROVER_PITCH"
+        UNIT            = "DEGREE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Rover pitch, or counterclockwise rotation
+                           angle about the +Y-axis of the MSL_LOCAL_LEVEL
+                           frame. MSL_LOCAL_LEVEL frame is defined as
+                           follows: +X is along the local north direction;
+                           +Z is along the downward normal at the landing
+                           site; +Y completes the right hand frame; the
+                           origin of this frame is located between the
+                           rover's middle wheels and moves with the rover."
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 104
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 11
+        NAME            = "ROVER_YAW"
+        UNIT            = "DEGREE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Rover yaw, or counterclockwise rotation angle
+                           about the +Z-axis of the MSL_LOCAL_LEVEL frame.
+                           MSL_LOCAL_LEVEL frame is defined as follows:
+                           +X is along the local north direction; +Z is 
+                           along the downward normal at the landing site;
+                           +Y completes the right hand frame; the origin
+                           of this frame is located between the rover's 
+                           middle wheels and moves with the rover."
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 112
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 12
+        NAME            = "ROVER_ROLL"
+        UNIT            = "DEGREE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Rover roll, or counterclockwise rotation
+                           angle about the +X-axis of the MSL_LOCAL_LEVEL
+                           frame. MSL_LOCAL_LEVEL frame is defined as
+                           follows: +X is along the local north direction;
+                           +Z is along the downward normal at the landing
+                           site; +Y completes the right hand frame; the 
+                           origin of this frame is located between the 
+                           rover's middle wheels and moves with the rover."
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 120
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 13
+        NAME            = "MASTHEAD_AZIMUTH"
+        UNIT            = "DEGREE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Masthead azimuth angle. Range of -180 to 180
+                           degrees.  An azimuth angle of 1 degree
+                           represents rover looking backward, an
+                           azimuth angle of 91 degrees represents
+                           rover looking to the left, an azimuth angle
+                           of -179 degrees represents rover looking
+                           forward, and an azimuth angle of -89
+                           degrees represents rover looking to the
+                           right."
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 128
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 14
+        NAME            = "MASTHEAD_ELEVATION"
+        UNIT            = "DEGREE"
+        FORMAT          = "F7.2"
+        DESCRIPTION     = "Masthead elevation angle. Range of 0 to 360
+                           degrees.  An elevation angle of 1 degree
+                           represents rover looking down, an elevation
+                           angle of 91 degrees represents rover
+                           looking forward and an elevation angle of
+                           181 degrees represents rover looking at the
+                           zenith."
+        DATA_TYPE       = ASCII_REAL
+        START_BYTE      = 136
+        BYTES           = 7
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 15
+        NAME            = "ARM_STILL"
+        DESCRIPTION     = "Flag to indicate whether the arm is still;
+                           1 = still; 0 = in motion."
+        DATA_TYPE       = CHARACTER
+        START_BYTE      = 145
+        BYTES           = 1
+END_OBJECT      = COLUMN
+
+OBJECT          = COLUMN
+        COLUMN_NUMBER   = 16
+        NAME            = "ARM_STOWED"
+        DESCRIPTION     = "Flag to indicate whether the arm is stowed; 
+                          1 = stowed; 0 = unstowed."
+        DATA_TYPE       = CHARACTER
+        START_BYTE      = 149
+        BYTES           = 1
+END_OBJECT      = COLUMN

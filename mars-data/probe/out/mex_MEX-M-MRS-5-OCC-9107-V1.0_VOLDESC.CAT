@@ -1,0 +1,51 @@
+PDS_VERSION_ID       = PDS3                                          
+LABEL_REVISION_NOTE  = "2019-01-10 RS: Paetzold Original"            
+RECORD_TYPE          = STREAM                                        
+                                                                     
+OBJECT               = VOLUME                                        
+  VOLUME_SERIES_NAME   = "MISSION TO VENUS"                          
+  VOLUME_SET_NAME      = "MEX: RADIO SCIENCE OCCULTATION"            
+  VOLUME_SET_ID        = "GER_UNIK_RIU_MEXMRS_91xx"                  
+  VOLUMES              = 1                                           
+  MEDIUM_TYPE          = "ONLINE"                                    
+  VOLUME_FORMAT        = "ISO-9660"                                  
+  VOLUME_ID            = MEXMRS_9107                                 
+  VOLUME_VERSION_ID    = "VERSION 1"                                 
+  VOLUME_NAME          = "MEXMRS_9107_V1.0"                          
+  PUBLICATION_DATE     = 2019-01-10                                  
+  DATA_SET_ID          = "MEX-M-MRS-5-OCC-9107-V1.0"                 
+                                                                     
+  DESCRIPTION          = "This data set contains ionospheric electron
+                          density profiles as well as neutral        
+                          atmospheric temperature, pressure and      
+                          number density profiles derived from the   
+                          MEX Radio Science experiment MaRS. The     
+                          volume covers the occultation season 07    
+                          from 2007 day of year (DOY) 115 to 2007 day
+                          of year (DOY) 154."                        
+                                                                     
+  OBJECT               = DATA_PRODUCER                               
+    INSTITUTION_NAME     = "UNIVERSITAET ZU KOELN"                   
+    FACILITY_NAME        = "RHEINISCHES INSTITUT FUER                
+                            UMWELTFORSCHUNG, PLANETENFORSCHUNG"      
+    FULL_NAME            = "MARS EXPRESS RADIO SCIENCE TEAM"         
+    ADDRESS_TEXT         = "RHEINISCHES INSTITUT FUER UMWELTFORSCHUNG
+                            ABTEILUNG PLANETENFORSCHUNG              
+                            AN DER UNIVERSITAET ZU KOELN             
+                            AACHENER STRASSE 209                     
+                            50931 COLOGNE                            
+                            GERMANY"                                 
+  END_OBJECT          = DATA_PRODUCER                                
+                                                                     
+  OBJECT              = CATALOG                                      
+    ^MISSION_CATALOG         = "MISSION.CAT"                         
+    ^INSTRUMENT_HOST_CATALOG = "INSTHOST.CAT"                        
+    ^INSTRUMENT_CATALOG      = "INST.CAT"                            
+    ^REFERENCE_CATALOG       = "REF.CAT"                             
+    ^PERSONNEL_CATALOG       = "PERSON.CAT"                          
+    ^DATA_SET_CATALOG        = "DATASET.CAT"                         
+    ^SOFTWARE_CATALOG        = "SOFT.CAT"                            
+  END_OBJECT          = CATALOG                                      
+END_OBJECT          = VOLUME                                         
+END                                                                  
+                                                                     

@@ -1,0 +1,288 @@
+PDS_VERSION_ID        = PDS3                                                
+RECORD_TYPE           = STREAM                                              
+                                                                            
+                                                                            
+OBJECT                = TEXT                                                
+  INTERCHANGE_FORMAT    = ASCII                                             
+  PUBLICATION_DATE      =  2019-01-10                                       
+																			
+                                                                            
+  NOTE                  = "Introduction to this archive volume."            
+                                                                            
+END_OBJECT            = TEXT                                                
+                                                                            
+                    Mars Express Radio-Science Data Archive                 
+                                                                            
+                              Volume ID: MEXMRS_9107                        
+                       Data from Occultation Season 07 in 2007              
+                        MEX Extended Mission                                
+                                     V1.0                                   
+                            "MEXMRS_9107_V1.0"                              
+                                                                            
+                               AAREADME.TXT                                 
+                                                                            
+                                2019-01-10                                  
+                              Martin Paetzold                               
+                    Rheinisches Institut für Umweltforschung                
+                           University of Cologne                            
+                                                                            
+                                                                            
+============================================================================
+INTRODUCTION                                                                
+============================================================================
+        MaRS radio occultation observations are carried out during the      
+        occultation ingress, when the MEX spacecraft moves behind the       
+        planetary disk as seen from the Earth.                              
+                                                                            
+        MaRS occultation data usually cover two recording phases:           
+        the occultation ingress (1), the time when the spacecraft is        
+        occulted by the planet (2).                                         
+                                                                            
+        The different observation phases can be distinguished               
+        regarding the signal strength of the received signal. In phase      
+        (1) the signal level is high compared to phase (2). In              
+        Phase (2) a drop of the signal strengtht is visible.                
+                                                                            
+        For the derivation of Level 4 data profiles the ingress part of the 
+        occultation measurement was processed.                              
+                                                                            
+============================================================================
+DATA SET INFORMATION                                                        
+============================================================================
+                                                                            
+The diagram below shows the organization of the data set, starting from     
+the root directory.                                                         
+                                                                            
+   root                                                                     
+     |                                                                      
+     |- AAREADME.TXT                                                        
+     |- VOLDESC.CAT                                                         
+     |                                                                      
+     |- CATALOG                                                             
+     |     |- CATINFO.TXT       Streamlined PDS catalog files               
+     |     |- MISSION.CAT       for mission, host, instrument,              
+     |     |- INSTHOST.CAT      references, personnel, and                  
+     |     |- INST.CAT          data set (files evolve as                   
+     |     |- REF.CAT           mission progresses).                        
+     |     |- PERSON.CAT                                                    
+     |     |- DATASET.CAT                                                   
+     |     |- SOFT.CAT                                                      
+     |                                                                      
+     |                                                                      
+     |- DATA                                                                
+     |     |                                                                
+     |     |- YYYY_DDD_XXXX                                                 
+     |     |           |- LEVEL04                                           
+     |     |                 |- rggttttlll_sss_yydddhhmm_qq.eee             
+     |     |                    (The description of the file name format can
+     |     |                     be found in section 2.3 and table 2.1 in   
+     |     |                     DOCUMENT/MEX_MRS_RIU_IS_3050.PDF).         
+     |                                                                      
+     |- DOCUMENT                                                            
+     |     |                                                                
+     |     |- DOCINFO.TXT                                                   
+     |     |                                                                
+     |     |- MEX_MRS_RIU_IS_3050.PDF           File naming convention for  
+     |     |                                    Higher Science Products.    
+     |     |                                                                
+     |     |- MARS_DESC.TXT                     Description of the Mars     
+     |     |                                    Express Radio Science       
+     |     |                                    Experiment MaRS.            
+     |     |                                                                
+     |     |- MEX-MRS-RIU-MA-3008.PDF           Flight operations manual    
+     |     |                                    Experiment user manual.     
+     |     |                                                                
+     |     |- MEX_POINTING_MODE_DESC.TXT        MEX pointing mode           
+     |     |                                    description.                
+     |     |                                                                
+     |     |- MEX_MRS_RIU_MP_001.TAB            Mars Express Mission        
+     |     |                                    phases.                     
+     |     |                                                           
+     |     |- M00SUMMNNO_O07_071150000_01.TAB   Summary of NNO measurements.
+     |     |                                                           
+     |     |- M00SUMMDSN_O07_071150000_01.TAB   Summary of DSN measurements.
+                                                  
+Data files                                                                  
+----------                                                                  
+        All included files in this data set are in ASCII.                   
+                                                                            
+Descriptive files                                                           
+-----------------                                                           
+        Descriptive files contain information in order to support the       
+        processing and analysis of data files. The following file types are 
+        defined as descriptive files with extension                         
+        eee =                                                               
+                                                                            
+        .LBL  PDS label files                                               
+        .LOG  Additional processing information                             
+        .TXT  Information (text) files                                      
+                                                                            
+        The files are named named after the file naming convention format,  
+        which can be found in section 2.3 and table 2.1 in                  
+        DOCUMENT/MEX_MRS_RIU_IS_3050.PDF.                                   
+                                                                            
+Structure of DATA Directory                                                 
+===========================                                                 
+    The DATA folder contains one or more subfolder, which contains one      
+    measurement. The subfolder are named after the format YYYY_DDD_XXXX,    
+    where                                                                   
+                                                                            
+     YYYY: Year                                                             
+     DDD : Day of year                                                      
+     XXXX: Volume-ID (The Vol-ID is the Radio Science Volume-Id and         
+                      is not identical with the ESA PSA Volume-Id. It       
+                      is incremented measurement by measurement,            
+                      independent what kind of measurement was              
+                      conducted. The Radio Science Volume-Id                
+                      corresponds to the Volume-ID which is used in         
+                      the Level 2 (PSA data level) DATA_SET_ID. It          
+                      can also be found in the summary table file in        
+                      the DOCUMENT directory.)                              
+                                                                            
+     |- DATA                                                                
+     |     |                                                                
+     |     |- YYYY_DDD_XXXX                                                 
+     |     |           |                                                    
+     |     |           |- rggttttlll_sss_yydddhhmm_qq.eee                   
+     |     |              (The description of the file name format can be   
+     |     |              found in section 2.3 and table 2.1 in             
+     |     |               DOCUMENT/MEX_MRS_RIU_IS_3050.PDF)                
+     |     |                                                                
+                                                                            
+                                                                            
+    Files in the DATA Directory                                             
+    ---------------------------                                             
+    Please note that the following description lists all possible files. If 
+    however there is no data to fill some of these subfolders they will not 
+    be generated. Files in the DATA directory are:                          
+                                                                            
+      Ionospheric profiles:                                                 
+      ---------------------                                                 
+      IIX: Ionosphere electron density profile from X-band (Ingress)        
+      IID: Ionosphere electron density profile from diff. doppler data      
+           (Ingress)                                                        
+                                                                            
+      Neutral atmospheric profiles:                                         
+      -----------------------------                                         
+      AIX: Neutral atmospheric profile from X-band (Ingress)                
+                                                                            
+                                                                            
+Structure of DOCUMENT Directory                                             
+===============================                                             
+                                                                            
+     |- DOCUMENT                                                            
+     |     |                                                                
+     |     |- DOCINFO.TXT                                                   
+     |     |                                                                
+     |     |- V00SUMML03_OC6_083040000_01.TAB   Information on included data
+     |     |                                    products.                   
+     |     |                                                                
+     |     |- MEX_MRS_RIU_IS_3050.PDF           File naming convention for  
+     |     |                                    Higher Science Products.    
+     |     |                                                                
+     |     |- MARS_DESC.TXT                     Description of the Mars     
+     |     |                                    Express Radio Science       
+     |     |                                    Experiment MaRS.            
+     |     |                                                                
+     |     |- MEX-MRS-RIU-MA-3008.PDF           Flight operations manual    
+     |     |                                    Experiment user manual.     
+     |     |                                                                
+     |     |- MEX_POINTING_MODE_DESC.TXT        MEX pointing mode           
+     |     |                                    description.                
+     |     |                                                                
+     |     |- MEX_MRS_RIU_MP_001.TAB            Mars Express Mission        
+     |     |                                    phases.                     
+                                                                            
+                                                                            
+    Files in the DOCUMENT Directory                                         
+    -------------------------------                                         
+    The DOCUMENT directory contains the files that provide documentation and
+    supplementary information to assist in understanding and using the data 
+    products of the data set.                                               
+                                                                            
+    The files evolved as the mission progressed; users should refer to the  
+    files on the most recent (highest numbered) archive volume for the most 
+    up-to-date information. Files on early volumes may be only              
+    'place-holders'.                                                        
+                                                                            
+    The documents are either in PDF-Format or are text files in ASCII with  
+    variable length of characters per line. Each line is delimited with a   
+    carriage-return (ASCII 13) line-feed (ASCII 10) pair.                   
+                                                                            
+                                                                            
+Software                                                                    
+========                                                                    
+                                                                            
+    Software for parsing, reducing, and analyzing data has been developed at
+    the department Planetenforschung at Rheinisches Institut fuer           
+    Umweltforschung University of Cologne and at the Stanford University.   
+    Because such software must usually operate at the bit-level and is      
+    written for a narrow range of platforms, it is not suitable for general 
+    distribution. No software is included with this archival data set.      
+                                                                            
+                                                                            
+More general description of radio science data                              
+==============================================                              
+                                                                            
+ Closed-loop and Open-loop data:                                            
+================================                                            
+      There are in principle two different ways to record radio science     
+      data: Open-loop and closed-loop data.                                 
+                                                                            
+      The CLOSED-LOOP system used a phase-locked loop in the receiver to    
+      track the downlink signal, reporting both amplitude and frequency at  
+      rates typically of 0.1-10 times per second.                           
+                                                                            
+      In the OPEN-LOOP system, the signal was simply converted to a         
+      baseband frequency range; the entire passband was sampled and         
+      recorded for later processing. Typical open-loop sampling rates for   
+      VEX were 100000 complex samples per second.                           
+                                                                            
+      CLOSED-LOOP data are efficient for characterizing slowly changing     
+      signals; OPEN-LOOP data (because of their much higher sample rate) are
+      usually used when the signal is very dynamic - such as during an      
+      occultation or bistatic radar measurement.                            
+                                                                            
+                                                                            
+ACRONYMS                                                                    
+========                                                                    
+AAS             Atmosphere Analysis Software                                
+AGC             Automatic Gain Control                                      
+AMMOS           Advanced Multi-Mission Operations System                    
+ATDF            Archival Tracking Data Files                                
+ADC             Analog to Digital Converter                                 
+BWG             Beam Wave Guide ground station (DSN)                        
+CALI            calibration file                                            
+CHDO            Compressed Header Data Object                               
+CVP             Commissioning                                               
+DDS             Data Distribution System                                    
+DSMS            Deep Space Mission System                                   
+                                                                            
+DSN             Deep Space Network                                          
+ESA             European Space Agency                                       
+ENT/EXT         Extended Mission                                            
+EMP             Extended Mission Phase                                      
+ESOC            European Space Operations Centre                            
+G/S             Ground Station                                              
+HEF             High Efficiency ground station (DSN)                        
+IFMS            Intermediate Frequency Modulation System                    
+JPL             Jet Propulsion Laboratory                                   
+MEX             Mars Express                                                
+MGS             Mars Global Surveyor                                        
+NEA             NEAR                                                        
+NNO             New Norcia Station (Perth)                                  
+ODF             Orbit Data File                                             
+                                                                            
+ODR             Original Data Record                                        
+PDS             Planetary Data System                                       
+PRM             Prime Mission                                               
+RO              Rosetta Orbiter                                             
+RSI             Radio Science Investigation                                 
+RSR             Radio Science Receiver                                      
+S/C             Spacecraft                                                  
+SFDU            Standard Formatted Data Unit                                
+TNF             Tracking and Navigation File                                
+ULS             Ulysses                                                     
+UniBw           Universitaet der Bundeswehr in Muenchen                     
+MaRS            Mars Express Radio Science Experiment                       
+                                                                            

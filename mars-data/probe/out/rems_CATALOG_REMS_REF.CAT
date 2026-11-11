@@ -1,0 +1,52 @@
+PDS_VERSION_ID        = PDS3 
+LABEL_REVISION_NOTE   = "2011-04-05 REMS team, initial;
+                         2013-01-26, lmora, added references"
+RECORD_TYPE           = STREAM
+
+OBJECT                = REFERENCE
+  REFERENCE_KEY_ID    = "GOMEZELVIRAETAL2012"
+  REFERENCE_DESC      = "Gomez-Elvira J, Armiens C, Castaner L, Dominguez M,
+                         Genzer M, Gomez F, Haberle R, Harri A-, Jimenez V,
+                         Kahanpaa H, Kowalski L, Lepinette A, Martin J,
+                         Martinez-Frias J, McEwan I, Mora L, Moreno J,
+                         Navarro S, de Pablo MA, Peinado V, Pena A, Polkko J,
+                         Ramos M, Renno NO, Ricart J, Richardson M, 
+                         Rodriguez-Manfredi J, Romeral J, Sebastian E,
+                         Serrano J, de la Torre Juarez M, Torres J, 
+                         Torrero F, Urqui R, Vazquez L, Velasco T, 
+                         Verdasca J, Zorzano M-, Martin-Torres J. 
+                         REMS: The environmental sensor suite for the mars 
+                         science laboratory rover. Space Science Reviews 
+                         2012:1-58, 2012."
+END_OBJECT          = REFERENCE
+                                                                              
+OBJECT                = REFERENCE
+  REFERENCE_KEY_ID    = "SEBASTIANETAL2010"
+  REFERENCE_DESC      = "Sebastian, E., C. Armiens, J. Gomez-Elvira,
+                         M.P. Zorzano, J. Martinez-Frias, B. Esteban,
+                         and M. Ramos, The Rover Environmental
+                         Monitoring Station Ground Temperature Sensor:
+                         A Pyrometer for Measuring Ground Temperature
+                         on Mars., Sensors 2010, 10, 9211-9231, 2010."
+END_OBJECT          = REFERENCE
+
+OBJECT                = REFERENCE
+  REFERENCE_KEY_ID    = "DOMINGUEZETAL2009"
+  REFERENCE_DESC      = "Dominguez, M., Jimenez, V., Ricart, J., 
+                         Kowalski, L., Torres, J., Navarro, S., Romeral, J.
+                         and Castaner, L.. A hot film anemometer for the 
+                         Martian atmosphere. Planetary and Space Science; 
+                         56:1169-1179, 2008."
+END_OBJECT          = REFERENCE
+
+OBJECT                = REFERENCE
+  REFERENCE_KEY_ID    = "VICENTEETAL2020"
+  REFERENCE_DESC      = "Vicente-Retortillo, A., Martinez, G. M., 
+                         Renno, N. O., Lemmon, M. T., 
+                         de la Torre-Juarez, M., 
+                         & Gomez-Elvira, J. (2020). In Situ UV Measurements 
+                         by MSL/REMS: Dust Deposition and Angular Response 
+                         Corrections. Space Science Reviews, 216(5), 1-19."
+END_OBJECT          = REFERENCE
+                                             
+END                                                                           
