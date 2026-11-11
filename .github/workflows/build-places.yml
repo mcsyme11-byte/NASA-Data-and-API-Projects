@@ -1,0 +1,25 @@
+# NASA and ESA Data Projects · builds the Image Explorer's list of smaller natural features from GeoNames.
+# Run by hand (Actions › Build smaller places › Run workflow); the result is a downloadable artifact,
+# image-explorer/data/features-more.json, checked and committed by hand.
+name: Build smaller places
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Most places to keep
+        default: '60000'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download GeoNames (allCountries.zip)
+        run: curl -sSfL -o allCountries.zip https://download.geonames.org/export/dump/allCountries.zip && ls -l allCountries.zip
+      - name: Build features-more.json
+        run: python3 image-explorer/tools/build_geonames_features.py allCountries.zip "${{ inputs.limit }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: features-more
+          path: image-explorer/data/features-more.json
