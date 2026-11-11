@@ -252,6 +252,11 @@ Checked Nov 9, 2026 (live requests from the published site):
 - **Size of the layer list:** the `epsg3857` GetCapabilities document is about 5.8 MB, too large to load on every
   visit; each layer's dates are also available on their own (the `…/all/--{TimeEnd}.xml` and `{TimeStart}--{TimeEnd}`
   templates under each layer's `ResourceURL`).
+- **A layer's days (used since Nov 10, 2026):** `https://gibs.earthdata.nasa.gov/wmts/{projection}/best/1.0.0/{Layer}/default/{TileMatrixSet}/all/--{YYYY-MM-DD}.xml`
+  returns, in about 0.1 s and well under 1 kB, the runs of days the layer has up to that date, in `<Domain>`, for
+  example `2002-06-01/2021-02-19/P1D,2021-02-22/2022-11-08/P1D,…`; an unknown layer returns 404. Checked Nov 10, 2026:
+  MUR sea temperature misses six short runs of days (newest day two days back), true colour misses nine runs in
+  2000–2022; MODIS layers end on the current, still incomplete UTC day. Browsers may read it.
 - **Colour keys:** each coloured layer lists an SVG legend (`https://gibs.earthdata.nasa.gov/legends/{name}_H.svg`,
   dark text on a light background) and a colour map (`https://gibs.earthdata.nasa.gov/colormaps/v1.3/{name}.xml`).
 

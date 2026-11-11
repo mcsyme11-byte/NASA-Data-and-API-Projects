@@ -1,5 +1,13 @@
 # Change log
 
+## November 10, 2026 — Image Explorer: each Earth map layer's days read from GIBS
+
+- Each layer's days are read from GIBS (its time domain) instead of a fixed lag: a layer shows the chosen day, or its
+  nearest earlier day when it has none (MUR sea temperature and sea ice miss a few days), and the note under the map
+  says which ("newest day …" or "no picture that day; nearest earlier day …"). The fixed lag stays only as a fallback
+  while the days load or if GIBS cannot be reached.
+- The old test branches `image-explorer-probe` and `map-data-test` were deleted.
+
 ## November 10, 2026 — Image Explorer: code libraries served from the site
 
 - OpenLayers 10.11.0, proj4js 2.22.0 and three.js 0.187.0 are kept in `image-explorer/vendor/` (unchanged, each with

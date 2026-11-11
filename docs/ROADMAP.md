@@ -6,8 +6,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 ## 0. Repository (set up Nov 8, 2026)
 
 
-- [ ] Delete the branch `map-data-test` on GitHub (Branches page): it held a one-off test run of the map's data job
-  on Nov 9, 2026, and branches cannot be deleted from the build session.
 - [ ] Optional: a **Project Record** PDF rebuilt automatically after every push, as in the Flight Deck Suite and Hot Mic.
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
@@ -59,13 +57,9 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] Polar views: a sea ice layer that works through the polar night. GIBS's microwave sea-ice records ended
   (SSMIS Aug 2021, AMSR2 Sep 2025); the current one is MODIS (a camera, daylight only). Ice surface temperature
   (`MODIS_Terra_Ice_Surface_Temp_Night`, thermal) is an option to consider.
-- [ ] Delete the branch `image-explorer-probe` on GitHub (Branches page): it held one-off probes of NASA, SIMBAD and
-  the astronaut photo site on Nov 9, 2026.
 - [ ] Further rounds of changes to the globe, as the developer reviews it.
 - [ ] Globe: sharper Earth close up (finer Blue Marble tiles for the part in view); day and night shading if wanted;
   more objects (fainter galaxies) if wanted.
-- [ ] Earth map: each layer's dates read from GIBS rather than fixed one-day lags (MUR layers; clouds in the polar
-  views), without downloading the 5.8 MB layer list on every visit.
 - [ ] Earth map: colour keys drawn in the project's look from GIBS's colour maps, in place of GIBS's light legend images.
 - [ ] Place search: smaller natural features (Natural Earth 1:10m leaves out, for example, Lake Louise and the Bow
   River).

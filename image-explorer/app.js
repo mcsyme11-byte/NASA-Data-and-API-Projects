@@ -27,9 +27,36 @@ const iso = t => new Date(t).toISOString().slice(0, 10);
 const LATEST = iso(Date.now() - DAY);                     // the last full UTC day
 const nice = s => new Date(s + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 let date = LATEST;
-/* each layer's own newest day: the combined (MUR) layers arrive a day after the others.
-   To do: read every layer's dates from GIBS instead of a fixed lag (see docs/ROADMAP.md). */
-const dayFor = L => { const last = iso(Date.parse(LATEST) - (L.lag || 0) * DAY); return date > last ? last : date; };
+/* each layer's days, read from GIBS (decided Nov 10, 2026): the layer's time domain lists the runs of days it has, for
+   example "2002-06-01/2021-02-19/P1D,2021-02-22/…" (the MUR layers miss a few days). A layer shows the chosen day, or
+   its nearest earlier day when it has no picture for that day. While the domain is loading, or if it cannot be read,
+   the fixed lag below is used (the combined MUR layers arrive a day after the others). */
+const DOMAINS = new Map();                                 /* "projection layer" → [[from, to], …], null while loading, false if unreadable */
+const domKey = S => `${V().gibs} ${S.layer}`;
+function loadDomain(S) {
+  const k = domKey(S);
+  if (DOMAINS.has(k)) return;
+  DOMAINS.set(k, null);
+  fetch(`${GIBS}${V().gibs}/best/1.0.0/${S.layer}/default/${S.set}/all/--${LATEST}.xml`)
+    .then(r => r.ok ? r.text() : Promise.reject(new Error(r.status)))
+    .then(t => {
+      const d = (t.match(/<Domain>([^<]*)<\/Domain>/) || [])[1] || '';
+      const runs = d.split(',').map(x => x.trim().split('/')).filter(r => /^\d{4}-\d\d-\d\d/.test(r[0]))
+        .map(r => [r[0].slice(0, 10), (/^\d{4}-/.test(r[1] || '') ? r[1] : r[0]).slice(0, 10)]);
+      DOMAINS.set(k, runs.length ? runs : false);
+      refreshSources(); update();
+    })
+    .catch(() => DOMAINS.set(k, false));
+}
+function dayFor(S) {
+  const want = date > LATEST ? LATEST : date, runs = DOMAINS.get(domKey(S));
+  if (!runs) { const last = iso(Date.parse(LATEST) - (S.lag || 0) * DAY); return want > last ? last : want; }
+  let best = null;
+  for (const [a, b] of runs) if (a <= want) best = b < want ? b : want;
+  return best || want;                                     /* before the layer's first day: no picture, as before */
+}
+/* why a layer shows another day: past its newest day, or a day it lacks */
+const lastOf = S => { const runs = DOMAINS.get(domKey(S)); return runs ? runs[runs.length - 1][1] : null; };
 
 /* ---------- map: three views ---------- */
 proj4.defs('EPSG:3413', '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
@@ -111,7 +138,7 @@ map.once('change:size', fillFrame); if (map.getSize()) fillFrame();
 
 function refreshSources() {
   /* a new key makes OpenLayers fetch every tile again with the new date (refresh() alone kept the old tiles) */
-  for (const L of [...BASES, ...OVERS]) { const s = layers[L.id].getSource(); if (s) s.setTileUrlFunction(s.getTileUrlFunction(), view + ' ' + date); }
+  for (const L of [...BASES, ...OVERS]) { const s = layers[L.id].getSource(), S = spec(L); if (s && S) s.setTileUrlFunction(s.getTileUrlFunction(), view + ' ' + dayFor(S)); }
 }
 
 /* ---------- layer pickers ---------- */
@@ -165,8 +192,10 @@ function update() {
     ? `<div class="row"><span>${L.name}</span><span class="firekey"><i${L.key ? ` style="background:${L.key[0]};box-shadow:none;border-radius:2px"` : ''}></i>${L.key ? L.key[1] : 'A fire or other hot spot seen that day'}</span></div>`
     : `<div class="row"><span>${L.name}</span><img src="https://gibs.earthdata.nasa.gov/legends/${L.legend}_H.svg" alt="Colour key for ${L.name}"></div>`);
   $('legend').innerHTML = rows.join('');
+  [B, ...O].forEach(loadDomain);
   const behind = [B, ...O].filter(L => dayFor(L) !== date);
-  $('mapSrc').textContent = (behind.length ? `${behind.map(L => L.name).join(' and ')}: newest day ${nice(dayFor(behind[0]))}, shown instead. ` : '') +
+  $('mapSrc').textContent = behind.map(L => { const d = dayFor(L), last = lastOf(L);
+    return `${L.name}: ${last && date > last || !last ? 'newest day' : 'no picture that day; nearest earlier day'} ${nice(d)}, shown instead. `; }).join('') +
     `Imagery: NASA GIBS · ${[B, ...O].map(L => L.layer).join(', ')}`;
   $('dPick').value = date; $('dLatest').setAttribute('aria-pressed', date === LATEST);
   $('dNext').disabled = date >= LATEST;
