@@ -34,11 +34,15 @@ CODES = {   # (the number is no longer used as a filter; the Wikipedia link deci
 }
 LIMIT = int(sys.argv[3]) if len(sys.argv) > 3 else 60000        # at most this many places, the most-named first
 
-wiki = set()                                                     # places with an English Wikipedia article
+wiki, english = set(), {}                                        # places with an English Wikipedia article; English names
 with zipfile.ZipFile(sys.argv[2]) as z, z.open('alternateNamesV2.txt') as f:
     for line in io.TextIOWrapper(f, encoding='utf-8'):
-        c = line.split('\t', 4)
-        if len(c) > 3 and c[2] == 'link' and 'en.wikipedia.org/' in c[3]: wiki.add(c[1])
+        # id, place, language, name, preferred, short, colloquial, historic, from, to
+        c = line.rstrip('\n').split('\t')
+        if len(c) < 4: continue
+        if c[2] == 'link' and 'en.wikipedia.org/' in c[3]: wiki.add(c[1])
+        elif c[2] == 'en' and not (len(c) > 7 and (c[6] == '1' or c[7] == '1')):
+            if c[1] not in english or (len(c) > 4 and c[4] == '1'): english[c[1]] = c[3]   # the preferred English name wins
 
 def near(a, b, km):
     dlat = math.radians(b[0] - a[0]); dlon = math.radians(b[1] - a[1]) * math.cos(math.radians((a[0] + b[0]) / 2))
@@ -57,7 +61,7 @@ with zipfile.ZipFile(sys.argv[1]) as z, z.open('allCountries.txt') as f:
         kind, need = CODES[code]
         names = len({n for n in row[3].split(',') if n})        # alternate names
         if row[0] not in wiki: continue
-        name = row[2] if row[2].isascii() and row[2] else row[1] # the ASCII name reads in English
+        name = english.get(row[0]) or (row[2] if row[2].isascii() and row[2] else row[1])   # "Lake Como" over "Lago di Como"
         name = ' '.join(name.split())
         if not name: continue
         lat, lon = round(float(row[4]), 3), round(float(row[5]), 3)
@@ -75,7 +79,7 @@ out = [[n, k, la, lo, max(5, 9 - min(4, (c - 2) // 3)), cc] for c, n, k, la, lo,
 OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
 print(f'{len(out):,} places, {OUT.stat().st_size / 1e6:.2f} MB → {OUT}')
 print('kinds kept:', Counter(k.split(' ·')[0] for _, _, k, *_ in kept).most_common())
-for probe in ('Lake Louise', 'Bow Lake', 'Johnston Canyon', 'Takakkaw Falls', 'Banff National Park', 'Bow River', 'Moraine Lake', 'Athabasca Glacier', 'Mount Rundle', 'Peyto Lake', 'Lake Como', 'Matterhorn', 'Half Dome', 'Loch Ness'):
+for probe in ('Lake Geneva', 'Lake Louise', 'Bow Lake', 'Johnston Canyon', 'Takakkaw Falls', 'Banff National Park', 'Bow River', 'Moraine Lake', 'Athabasca Glacier', 'Mount Rundle', 'Peyto Lake', 'Lake Como', 'Matterhorn', 'Half Dome', 'Loch Ness'):
     hit = [r for r in out if r[0] == probe]
     print(f'  {probe}: {hit[:2] if hit else "not kept"}')
 print('GeoNames rows by code:', stats.most_common(12), '| places with an English Wikipedia link:', len(wiki))
