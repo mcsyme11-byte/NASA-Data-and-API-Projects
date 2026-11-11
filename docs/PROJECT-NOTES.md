@@ -4,6 +4,13 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## Decisions
 
+- **Decided Nov 11, 2026 (Mars Data):** the whole Curiosity record (sol 1 to the newest released sol) is used from
+  the start, not a single Mars year. It is downloaded and cleaned in chunks (a range of sols at a time), each chunk
+  checked and its cleaning results recorded before the next is processed: rows kept and removed, the reason for each
+  removal, and the gaps found. Cleaning is done slowly and carefully; correctness comes before speed.
+- **Decided Nov 11, 2026 (whole site):** the projects are numbered in build order: Project 1 Asteroid Tracker,
+  Project 2 Image Explorer, Project 3 Mars Data (Mars was previously labelled Project 2). The home page lists them in
+  that order.
 - **Decided Nov 11, 2026 (Mars Data):** the project follows a fixed set of three missions and updates itself as new
   data is published: NASA's Curiosity (REMS, Gale Crater) and Perseverance (MEDA, Jezero Crater), and ESA's Mars
   Express (MaRS temperature and pressure profiles, CC BY-NC 3.0 IGO). InSight is not followed (the mission ended in

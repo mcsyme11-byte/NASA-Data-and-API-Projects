@@ -1,6 +1,6 @@
 # Mars Data
 
-**Project 2 of NASA and ESA Data Projects.** Status: **planned** (built in its own chat).
+**Project 3 of NASA and ESA Data Projects.** Status: **planned** (built in its own chat).
 
 NASA missions gather an incredible amount of information about Mars, and much of it is publicly available. This
 project digs into patterns in measurements from Mars missions: cleaning the data, organising the measurements by

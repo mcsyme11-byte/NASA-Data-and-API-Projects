@@ -1,5 +1,12 @@
 # Change log
 
+## November 11, 2026 — Projects numbered in build order; Mars Data uses the whole Curiosity record
+
+- Image Explorer is now Project 2 and Mars Data Project 3, on the home page (in that order), the project pages and
+  the READMEs.
+- Mars Data plan: the whole Curiosity record is used from the start, downloaded and cleaned in chunks, with a
+  cleaning report for each chunk.
+
 ## November 11, 2026 — Mars Data: plan for automatic updates
 
 - The plan for Mars Data is set in `docs/ROADMAP.md` and `docs/PROJECT-NOTES.md`: three missions (Curiosity REMS,

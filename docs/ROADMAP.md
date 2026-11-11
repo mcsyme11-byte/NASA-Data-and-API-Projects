@@ -75,9 +75,11 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
   exact credit line: Curiosity REMS (MODRDR), Perseverance MEDA, Mars Express MaRS profiles (ESA, CC BY-NC 3.0 IGO).
 - [ ] Test that GitHub's servers can reach the NASA PDS Atmospheres Node and ESA's Planetary Science Archive (the
   project's cloud workspace cannot).
-- [ ] Download a first batch of REMS sols; look at the files' columns. Confirm the newest sol in the archive (the REMS
+- [ ] Download the REMS record in chunks (the whole mission, sol 1 to the newest released sol); look at the files'
+  columns on the first chunk. Confirm the newest sol in the archive (the REMS
   page gives sol 4488, its volume list sols 1–3778).
-- [ ] Cleaning: missing and impossible values, confidence flags, units, gaps marked.
+- [ ] Cleaning, chunk by chunk: missing and impossible values, confidence flags, units, gaps marked; a cleaning
+  report per chunk (rows kept and removed, reasons, gaps) checked before the next chunk.
 - [ ] Organise by sol, Ls (season), time of day and site.
 - [ ] Statistics: daily highs and lows, seasonal averages, relationships between measurements.
 - [ ] Add MEDA (Jezero Crater) and the MaRS profiles (ESA) to the same pipeline.

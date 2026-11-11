@@ -1,6 +1,6 @@
 # Image Explorer
 
-**Project 3 of NASA and ESA Data Projects.** Status: **live** (version 1, Nov 9, 2026).
+**Project 2 of NASA and ESA Data Projects.** Status: **live** (version 1, Nov 9, 2026).
 
 NASA shares huge collections of scientific and satellite imagery. This project is a website that lets people
 search, filter and explore those images by details like date, location and mission.

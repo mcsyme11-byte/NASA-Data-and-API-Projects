@@ -24,8 +24,8 @@ NASA-ESA-Data-and-API-Projects/
 ├── about/ privacy/ terms/ credits/ contact/   the site's information pages
 ├── shared/             the look (theme.css, emblem), the NASA API helper (nasa.js) and the footer links (footer.js)
 ├── asteroid-tracker/   Project 1
-├── mars-data/          Project 2 (Python analysis + a charts page)
-├── image-explorer/     Project 3
+├── image-explorer/     Project 2
+├── mars-data/          Project 3 (Python analysis + a charts page)
 ├── docs/               design guide, data sources, notes, roadmap, history
 └── .github/workflows/  checks after every push, and the daily data updates
 ```
