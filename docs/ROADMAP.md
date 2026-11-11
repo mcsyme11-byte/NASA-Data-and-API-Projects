@@ -58,8 +58,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   (SSMIS Aug 2021, AMSR2 Sep 2025); the current one is MODIS (a camera, daylight only). Ice surface temperature
   (`MODIS_Terra_Ice_Surface_Temp_Night`, thermal) is an option to consider.
 - [ ] Further rounds of changes to the globe, as the developer reviews it.
-- [ ] Globe: sharper Earth close up (finer Blue Marble tiles for the part in view); day and night shading if wanted;
-  more objects (fainter galaxies) if wanted.
 - [ ] Place search: smaller natural features (Natural Earth 1:10m leaves out, for example, Lake Louise and the Bow
   River).
 - [ ] Picture library: subtitles for videos (NASA's files cannot be attached from another site; would need a copy).

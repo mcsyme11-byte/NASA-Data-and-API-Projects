@@ -1,5 +1,13 @@
 # Change log
 
+## November 10, 2026 — Image Explorer: sharper globe close up; day and night
+
+- Zooming in on the globe lays finer Blue Marble pictures over the part of the Earth in view: about 4 km a pixel
+  when close, 2 km closer, 1 km closest (from about 8 km before).
+- **Day and night:** the half of the Earth facing away from the Sun is shaded, with a soft edge for twilight, from the
+  Sun's position at the current time; the Earth keeps turning with the time while the page is open. A "Day and night"
+  button turns the shading off.
+
 ## November 10, 2026 — Image Explorer: colour keys in the project's look
 
 - The Earth map's colour keys are drawn on the page from GIBS's colour maps: the colour bar, up to seven labelled

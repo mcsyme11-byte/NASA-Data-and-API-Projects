@@ -21,8 +21,8 @@ const vec = (lat, lon, r) => new THREE.Vector3(r * Math.cos(lat * D2R) * Math.co
 /* Greenwich mean sidereal time: how far the Earth has turned against the stars (IAU 1982 formula, enough here). */
 const gmst = (t = Date.now()) => ((((280.46061837 + 360.98564736629 * (t / 864e5 + 2440587.5 - 2451545)) % 360) + 360) % 360) * D2R;
 
-const vis = { events: true, photos: true, galaxy: true, nebula: true, cluster: true, lines: true, labels: true, spin: !reduce };
-let renderer, scene, camera, controls, earth, earthMat, started = false, running = false;
+const vis = { events: true, photos: true, galaxy: true, nebula: true, cluster: true, lines: true, labels: true, spin: !reduce, night: true };
+let renderer, scene, camera, controls, earth, earthMat, night, started = false, running = false;
 let events = [], photos = [], sky = [], cons = [], lines = null, hits = [], selected = null, fly = null, hover = null;
 
 /* ---------- sky objects: data/sky.json rows are
@@ -52,6 +52,7 @@ function init() {
   earth = new THREE.Group(); earth.rotation.y = gmst(); scene.add(earth);
   earthMat = new THREE.MeshBasicMaterial({ color: 0x1a2333 });
   earth.add(new THREE.Mesh(new THREE.SphereGeometry(1, 128, 64), earthMat));
+  night = nightShade(); scene.add(night);
   scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.012, 64, 32),
     new THREE.MeshBasicMaterial({ color: 0x8aa9c9, transparent: true, opacity: 0.18, side: THREE.BackSide })));
   home(false);
@@ -88,6 +89,78 @@ async function loadEarth() {
   const first = await level(2, 5, 3, 2560, 1280);        // 0.14° a pixel, about 16 km
   if (!first) { tag('The Earth picture could not be loaded from NASA right now.'); return; }
   if (renderer.capabilities.maxTextureSize >= 5120) await level(3, 10, 5, 5120, 2560);   // about 8 km
+}
+
+/* ---------- sharper close up (decided Nov 10, 2026): once the view comes close, a patch of finer Blue Marble tiles
+   (about 4, 2 or 1 km a pixel) is laid over the part of the Earth in view, a little above the surface ---------- */
+let patch = null, patchKey = '', patchBusy = false, lastLook = 0;
+const BM = 'https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/BlueMarble_NextGeneration/default/default/500m/';
+function detail() {
+  const now = performance.now();
+  if (now - lastLook < 400 || patchBusy || fly) return;       /* looked at a few times a second, once the view is still */
+  lastLook = now;
+  const alt = camera.position.length() - 1;
+  const z = alt < 0.12 ? 6 : alt < 0.3 ? 5 : alt < 0.7 ? 4 : 0;
+  if (patch) patch.visible = !!z;
+  if (!z) return;
+  const local = camera.position.clone().applyMatrix4(earth.matrixWorld.clone().invert()).normalize();
+  const lat = Math.asin(local.y) / D2R, lon = Math.atan2(-local.z, local.x) / D2R;
+  const span = 288 / 2 ** z, cols = Math.ceil(360 / span), rows = Math.ceil(180 / span);   /* degrees a 512 px tile */
+  const c0 = Math.floor((lon + 180) / span) - 1, r0 = Math.max(0, Math.min(rows - 4, Math.floor((90 - lat) / span) - 1));
+  const key = `${z} ${c0} ${r0}`;
+  if (key === patchKey) return;
+  patchKey = key; patchBusy = true;
+  const cv = document.createElement('canvas'); cv.width = cv.height = 2048; const g = cv.getContext('2d');
+  let ok = 0;
+  Promise.all(Array.from({ length: 16 }, (_, i) => new Promise(done => {
+    const x = i % 4, y = Math.floor(i / 4), col = ((c0 + x) % cols + cols) % cols, row = r0 + y, img = new Image();
+    if (row >= rows) return done();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { g.drawImage(img, x * 512, y * 512); ok++; done(); };
+    img.onerror = done;
+    img.src = `${BM}${z}/${row}/${col}.jpeg`;
+  }))).then(() => {
+    patchBusy = false;
+    if (!ok || key !== patchKey) return;
+    const west = -180 + c0 * span, north = 90 - r0 * span, south = Math.max(-90, north - 4 * span);
+    const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    /* the canvas runs past the south pole on the last rows: show only the part with picture */
+    const vFrac = (north - south) / (4 * span); tex.repeat.set(1, vFrac); tex.offset.set(0, 1 - vFrac);
+    /* three.js spheres start at longitude -180 (phi = longitude + 180°) and measure theta from the north pole */
+    const geo = new THREE.SphereGeometry(1.0006, 64, 64, (west + 180) * D2R, 4 * span * D2R, (90 - north) * D2R, (north - south) * D2R);
+    if (patch) { patch.geometry.dispose(); patch.material.map.dispose(); patch.material.dispose(); earth.remove(patch); }
+    patch = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, polygonOffset: true, polygonOffsetFactor: -1 }));
+    patch.visible = camera.position.length() - 1 < 0.7;
+    earth.add(patch);
+  });
+}
+
+/* ---------- day and night (decided Nov 10, 2026): the Earth turned to the current time, and the half facing away from
+   the Sun shaded, with a soft edge about 6° wide (twilight) ---------- */
+function sunDir(t = Date.now()) {
+  /* the Sun's right ascension and declination, low-precision formulas from the Astronomical Almanac (about 0.01°) */
+  const n = t / 864e5 + 2440587.5 - 2451545, L = (280.46 + 0.9856474 * n) % 360, g = (357.528 + 0.9856003 * n) % 360 * D2R;
+  const lam = (L + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * D2R, eps = (23.439 - 4e-7 * n) * D2R;
+  const ra = Math.atan2(Math.cos(eps) * Math.sin(lam), Math.cos(lam)) / D2R, dec = Math.asin(Math.sin(eps) * Math.sin(lam)) / D2R;
+  return vec(dec, ra, 1);                                     /* the sky's directions are the scene's */
+}
+function nightShade() {
+  const m = new THREE.ShaderMaterial({
+    uniforms: { uSun: { value: sunDir() } }, transparent: true, depthWrite: false,
+    vertexShader: 'varying vec3 vN; void main() { vN = normalize((modelMatrix * vec4(position, 0.0)).xyz); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: 'uniform vec3 uSun; varying vec3 vN; void main() { float d = dot(normalize(vN), uSun); gl_FragColor = vec4(0.016, 0.027, 0.05, (1.0 - smoothstep(-0.05, 0.05, d)) * 0.66); }',
+  });
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(1.002, 96, 48), m);
+  mesh.visible = vis.night;
+  return mesh;
+}
+let lastTick = 0;
+function keepTime() {                                         /* once a second: the Earth's turn and the Sun move on */
+  const now = performance.now();
+  if (now - lastTick < 1000) return;
+  lastTick = now;
+  earth.rotation.y = gmst(); earth.updateMatrixWorld();
+  night.material.uniforms.uSun.value.copy(sunDir());
 }
 
 /* ---------- stars ---------- */
@@ -190,6 +263,8 @@ function run() {
     if (fly) stepFly();
     controls.rotateSpeed = Math.min(0.5, Math.max(0.04, (camera.position.length() - 1) * 0.25));
     controls.update();
+    keepTime();
+    detail();
     renderer.render(scene, camera);
     draw();
     requestAnimationFrame(loop);
@@ -434,5 +509,6 @@ for (const c of document.querySelectorAll('[data-show]')) {
     if (k === 'spin') return setSpin(!vis.spin);
     vis[k] = !vis[k]; c.setAttribute('aria-pressed', vis[k]);
     if (k === 'lines' && lines) lines.visible = vis.lines;
+    if (k === 'night' && night) night.visible = vis.night;
   });
 }
