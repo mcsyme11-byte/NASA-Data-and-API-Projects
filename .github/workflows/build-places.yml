@@ -1,6 +1,6 @@
 # NASA and ESA Data Projects · builds the Image Explorer's list of smaller natural features from GeoNames.
-# Run by hand (Actions › Build smaller places › Run workflow); the result is a downloadable artifact,
-# image-explorer/data/features-more.json, checked and committed by hand.
+# Run by hand (Actions › Build smaller places › Run workflow); the result, image-explorer/data/features-more.json,
+# is checked (valid places only) and committed to main.
 name: Build smaller places
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         description: Most places to keep
         default: '60000'
 permissions:
-  contents: read
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,7 +22,26 @@ jobs:
           ls -l *.zip
       - name: Build features-more.json
         run: python3 image-explorer/tools/build_geonames_features.py allCountries.zip alternateNamesV2.zip "${{ inputs.limit }}"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: features-more
-          path: image-explorer/data/features-more.json
+      - name: Check the list
+        run: |
+          python3 - <<'PY'
+          import json, re
+          d = json.load(open('image-explorer/data/features-more.json', encoding='utf-8'))
+          assert len(d) > 10000, 'too few places'
+          for r in d:
+              assert len(r) == 6 and isinstance(r[0], str) and r[0] and -90 <= r[2] <= 90 and -180 <= r[3] <= 180, r
+              assert not re.search(r'[<>]', r[0] + r[1]), r
+          print(len(d), 'places checked')
+          PY
+      - name: Commit if changed
+        run: |
+          git add image-explorer/data/features-more.json
+          if git diff --cached --quiet; then
+            echo "No change in the list."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Image Explorer: smaller natural features rebuilt from GeoNames"
+          git pull --rebase
+          git push

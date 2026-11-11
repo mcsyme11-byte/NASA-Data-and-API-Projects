@@ -293,8 +293,18 @@ $('play').addEventListener('click', () => {
 });
 
 /* ---------- places: GeoNames towns of 10,000 people or more, every capital and countries (data/places.json), and
-   Natural Earth's mountains, ranges, lakes, rivers, deserts, islands and seas (data/features.json) ---------- */
-let PLACES = null, COUNTRIES = [], FEATURES = [], placesLoading = null;
+   Natural Earth's mountains, ranges, lakes, rivers, deserts, islands and seas (data/features.json), and, loaded once
+   the first list is in, about 85,000 smaller natural features from GeoNames with an English Wikipedia article
+   (data/features-more.json, built by tools/build_geonames_features.py; decided Nov 10, 2026) ---------- */
+let PLACES = null, COUNTRIES = [], FEATURES = [], MORE = null, placesLoading = null, moreLoading = null;
+function loadMore() {
+  /* [name, kind, lat, lon, importance (5 best known … 10), country] */
+  moreLoading ??= fetch('data/features-more.json').then(r => r.ok ? r.json() : []).catch(() => []).then(rows => {
+    MORE = rows.map(([name, kind, lat, lon, rank, cc]) => ({ name, kind: cc ? `${kind} · ${regionName(cc)}` : kind, lat, lon, rank, f: fold(name) }))
+      .sort((a, b) => a.rank - b.rank);
+  });
+  return moreLoading;
+}
 const regionName = (() => {
   try { const d = new Intl.DisplayNames(['en'], { type: 'region' }); return c => { try { return d.of(c) || c; } catch { return c; } }; }
   catch { return c => c; }
@@ -331,9 +341,11 @@ function suggest() {
   const ll = parseLL(s);
   if (ll) hits.push({ name: fmtLL(ll[0], ll[1]), kind: 'Coordinates', lat: ll[0], lon: ll[1] });
   const f = fold(s), match = p => { const i = p.f.indexOf(f); return i === 0 || (i > 0 && p.f[i - 1] === ' ') ? i : -1; };
+  if (PLACES && !MORE) loadMore().then(() => { if (document.activeElement === q) suggest(); });
   if (PLACES && f.length >= 2) {
-    /* order: countries, then the best-known natural features, then towns (largest first), then other features */
-    const towns = [], major = [], minor = [];
+    /* order: a name typed in full first; then countries, the best-known natural features, towns (largest first),
+       smaller natural features, and the rest */
+    const towns = [], major = [], minor = [], more = [];
     for (const c of COUNTRIES) { const i = match(c); if (i >= 0) hits.push({ ...c, i, len: s.length }); if (hits.length >= 3) break; }
     for (const p of FEATURES) {                   /* most important first */
       const i = match(p); if (i < 0) continue;
@@ -345,14 +357,19 @@ function suggest() {
       towns.push({ name: p.name, kind: regionName(p.cc) + (p.cap ? ' · capital' : ''), lat: p.lat, lon: p.lon, i, len: s.length });
       if (towns.length >= 8) break;
     }
-    hits.push(...major.slice(0, 3), ...towns, ...major.slice(3), ...minor);
-    hits = hits.slice(0, 8);
+    for (const p of MORE || []) {                 /* best known first */
+      const i = match(p); if (i < 0) continue;
+      more.push({ name: p.name, kind: p.kind, lat: p.lat, lon: p.lon, zoom: 9, i, len: s.length });
+      if (more.length >= 8) break;
+    }
+    hits.push(...major.slice(0, 3), ...towns.slice(0, 4), ...more.slice(0, 3), ...major.slice(3), ...minor, ...towns.slice(4), ...more.slice(3));
+    hits = [...hits.filter(h => fold(h.name) === f), ...hits.filter(h => fold(h.name) !== f)].slice(0, 8);
   }
   if (!PLACES && !ll) return;
   list.innerHTML = hits.length ? hits.map((h, j) => `<li role="option" id="pl${j}" aria-selected="false" data-j="${j}"><span>${
     h.i != null ? esc(h.name.slice(0, h.i)) + '<mark>' + esc(h.name.slice(h.i, h.i + h.len)) + '</mark>' + esc(h.name.slice(h.i + h.len)) : esc(h.name)
   }</span><span class="k">${esc(h.kind)}</span></li>`).join('')
-    : `<li aria-disabled="true"><span class="note">${f.length < 2 ? 'Keep typing…' : 'No town, country or coordinates match'}</span></li>`;
+    : `<li aria-disabled="true"><span class="note">${f.length < 2 ? 'Keep typing…' : 'No place, natural feature or coordinates match'}</span></li>`;
   list.hidden = false; q.setAttribute('aria-expanded', 'true');
 }
 function go(h) {
