@@ -15,8 +15,8 @@
     toTracker();
     addEventListener('hashchange', toTracker);
   </script>
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111207">
-  <script type="module" src="../shared/footer.js?v=2026111207"></script>
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111208">
+  <script type="module" src="../shared/footer.js?v=2026111208"></script>
   <style>
     .mission { display: grid; grid-template-columns: 3fr 2fr; gap: 28px; align-items: start; }
     .mission p { margin: 0 0 12px; color: var(--ink2); font-size: 16px; }
@@ -46,7 +46,6 @@
     @media (max-width: 1024px) { .mission { grid-template-columns: 1fr; } .steps { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 560px) {
       .steps { grid-template-columns: 1fr; } .can { columns: 1; }
-      table.credits { table-layout: auto; min-width: 560px; }
       .words { grid-template-columns: 1fr; gap: 2px; } .words dd { margin-bottom: 10px; }
     }
   </style>
@@ -68,6 +67,7 @@
   </header>
 
   <main class="wrap">
+    <a class="backlink" id="back" href="../">‹ Home</a>
     <div class="phead">
       <div class="eyebrow">Project 1</div>
       <h1>Asteroid Tracker</h1>

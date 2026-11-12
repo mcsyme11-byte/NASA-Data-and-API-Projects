@@ -1,5 +1,30 @@
 # Change log
 
+## November 12, 2026 — whole-site check
+
+Every page and view checked at 320, 375, 390, 768, 1024 and 1440 px, with its data missing and with NASA out of
+reach, element by element (cut-off text, overlaps, tap targets, labels, links, script errors), and every screenshot
+looked at. Fixed:
+
+- **Phones:** every chip, dropdown, date box, "How to read this" and map button is at least 40 px tall; the site
+  home page no longer runs wider than a 320 px screen; the Image Explorer's date shows in full on its own row.
+- **Cut-off text:** the Asteroid Tracker's summary tiles wrap their asteroid names instead of cutting them off; the
+  week's biggest chart labels each asteroid by its name or code so none is cut off at the edge; the "The data" lists
+  on the Asteroid Tracker and Mars Data home pages no longer run off the right edge on phones.
+- **Tablets:** five summary tiles sit in one row; table numbers keep their units on the same line; the
+  "Potentially hazardous" tag stays in one box.
+- **Spacecraft map:** its "could not be loaded" message no longer covers the view buttons; the speed row fades at
+  the edge like the site's other rows.
+- **Image Explorer map:** the date label and zoom buttons sit above the map's names.
+- **Back buttons** on every page except the site home page (the tracker, the Solar System Map, and the three project
+  home pages gained one), named for the Mars and Image Explorer pages that moved today.
+- **Sky Finder** has a page heading for screen readers.
+- **Mars Data charts:** "How to read this" matches the rest of the site.
+- **Accuracy:** About lists Mars Data as live (Curiosity and Perseverance) with Sky Finder and the spacecraft map; the
+  home page's Mars card names Perseverance's MEDA; the Mars home page no longer says new data is picked up
+  automatically (that job is still on the roadmap); the Privacy page names NASA's astronaut-photo server, which the
+  globe loads pictures from; the README and the Project Record's front page show Mars Data as live.
+
 ## November 12, 2026 — Spacecraft map: missing craft and links
 
 - SPHEREx and WSF-M1 are found by their CelesTrak catalogue numbers (63182 and 59481) and now appear on the map.

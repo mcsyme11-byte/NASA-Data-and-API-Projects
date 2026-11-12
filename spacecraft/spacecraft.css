@@ -33,13 +33,13 @@
 .sc-frame { position: relative; height: min(76vh, 760px); min-height: 420px; background: var(--deep); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; scroll-margin-top: 72px; }
 #scMap { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; outline: none; }
 #scMap.dragging { cursor: grabbing; } #scMap.panning { cursor: move; }
-.sc-state { position: absolute; left: 12px; right: 12px; top: 12px; margin: 0 auto; max-width: 520px; padding: 12px 14px; border-radius: var(--r-card);
+.sc-state { position: absolute; z-index: 2; left: 12px; right: 64px; top: 12px; margin: 0 auto; max-width: 520px; padding: 12px 14px; border-radius: var(--r-card);
   background: rgba(15,21,32,.92); border: 1px solid var(--brass-dim); color: var(--ink); font-size: 14px; text-align: center; }
 .sc-zoom { position: absolute; right: 12px; top: 12px; display: grid; gap: 6px; }
 .sc-zoom button { width: 40px; height: 40px; border-radius: var(--r-btn); border: 1px solid var(--line2); background: rgba(15,21,32,.85); color: var(--ink); font: 20px var(--font); cursor: pointer; }
 .sc-zoom button:hover, .sc-zoom button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass-bright); }
 .sc-angle { position: absolute; left: 12px; bottom: 12px; }
-@media (max-width: 900px) { .sc-angle { top: 12px; bottom: auto; } }
+@media (max-width: 900px) { .sc-angle { top: 12px; bottom: auto; } .sc-state { top: 64px; } }
 .sc-angle button { background: rgba(15,21,32,.85); }
 
 .sc-card { position: absolute; right: 12px; top: 12px; bottom: 12px; width: min(380px, calc(100% - 80px)); overflow-y: auto; padding: 16px 18px;

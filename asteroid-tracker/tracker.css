@@ -8,7 +8,7 @@
 .linkbtn { background: none; border: 0; padding: 6px 0; color: var(--brass); font: 14px var(--font); cursor: pointer;
   text-decoration: underline; text-decoration-color: var(--brass-dim); text-underline-offset: 3px; }
 .linkbtn:hover { color: var(--brass-bright); }
-@media (max-width: 760px) { .linkbtn { min-height: 40px; } input[type=range] { height: 36px !important; } }
+@media (max-width: 760px) { .linkbtn { min-height: 40px; } input[type=range] { height: 40px !important; } }
 
 
 .weeknav { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; }
@@ -19,7 +19,7 @@
 .weeknav .sharemsg { flex-basis: 100%; text-align: right; }
 
 .tile .value small { font-size: 15px; color: var(--ink2); }
-.tile .sub { font-size: 13px; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile .sub { font-size: 13px; color: var(--ink2); overflow-wrap: anywhere; }
 .tile.hazard .value { color: var(--red); }
 
 .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
@@ -63,6 +63,10 @@ table.neo tbody tr:hover, table.neo tbody tr[aria-selected="true"] { background:
 table.neo tbody tr[aria-selected="true"] td:first-child { box-shadow: inset 2px 0 0 var(--brass); }
 table.neo tbody tr:last-child td { border-bottom: 0; }
 table.neo .num { text-align: right; }
+@media (min-width: 761px) { table.neo td.num { white-space: nowrap; } table.neo td:first-child { min-width: 8em; } table.neo .tag { display: inline-block; line-height: 1.3; padding-top: 3px; padding-bottom: 3px; } }
+@media (min-width: 761px) and (max-width: 1100px) { table.neo td, table.neo th { padding-left: 10px; padding-right: 10px; } }
+/* five summary tiles: one row of five on tablets, rather than four and one left alone */
+@media (min-width: 600px) { .tiles:has(> .tile:nth-child(5):last-child) { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 table.neo .s { display: block; font-size: 12.5px; color: var(--muted); font-style: italic; }
 .tag.haz { color: var(--red); }
 
@@ -102,6 +106,8 @@ table.neo tr.drow > td { padding: 4px 16px 18px; }
   table.neo .s { display: inline; margin-left: 6px; }
   table.neo td.num > span { text-align: right; }
   table.neo td.empty { display: none; }
+  /* names that open a page: a 40 px tap area without changing the row's height */
+  table.neo td:first-child a { display: inline-block; padding: 8px 0; margin: -8px 0; }
   table.neo tr.drow > td { display: block; padding: 4px 0 6px; }
   table.neo tr.drow > td::before { content: none; }
   .card { padding: 16px; }
@@ -115,6 +121,7 @@ table.neo tr.drow > td { padding: 4px 16px 18px; }
 .state.small { min-height: 120px; }
 .notice { margin-bottom: 18px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
 .notice .btn { min-height: 36px; }
+@media (max-width: 760px) { .notice .btn { min-height: 40px; } }
 .loading .value { color: var(--faint); }
 .updated { margin-top: 10px; }
 th[tabindex]:focus-visible, tr[tabindex]:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
@@ -463,4 +470,15 @@ body.noscroll { overflow: hidden; }
   .vistable td.go { display: block; padding-top: 8px; }
   .vistable td.go .btn { width: 100%; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
   .needrules { grid-template-columns: 1fr; gap: 2px; } .needrules > span:nth-child(even) { margin-bottom: 8px; }
+}
+
+/* phones: the map's buttons, search box and Clear at least 40 px (the Feel rule) */
+@media (max-width: 760px) and (min-width: 361px) {
+  .ovl-pad { grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); right: 60px; }
+}
+@media (max-width: 760px) {
+  .mbtn { width: 40px; height: 40px; }
+  .findbox input { height: 40px; }
+  .selcard .btn { min-height: 40px; }
+  .qclear { min-height: 40px; }
 }

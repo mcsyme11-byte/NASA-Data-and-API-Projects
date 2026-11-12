@@ -9,8 +9,8 @@
   <meta name="theme-color" content="#141B26">
   <meta name="description" content="The weather on Mars measured by NASA's Curiosity rover since 2012, with Perseverance at Jezero Crater: pressure, temperature, humidity and ultraviolet by season and time of day.">
   <link rel="icon" href="../../shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../shared/theme.css?v=2026111207">
-  <script type="module" src="../../shared/footer.js?v=2026111207"></script>
+  <link rel="stylesheet" href="../../shared/theme.css?v=2026111208">
+  <script type="module" src="../../shared/footer.js?v=2026111208"></script>
   <style>
     .charts { display: grid; gap: 22px; grid-template-columns: 1fr 1fr; margin-top: 14px; }
     .chartcard { margin: 0; }
@@ -29,7 +29,9 @@
     .legend i.box { height: 10px; width: 14px; }
     .legend i.dash { background: none !important; border-top: 2px dashed; height: 0; }
     .howto { margin-top: 12px; border-left: 2px solid var(--brass-dim); background: rgba(192, 160, 98, .04); }
-    .howto summary { list-style: none; cursor: pointer; padding: 10px 14px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
+    .howto summary { list-style: none; cursor: pointer; padding: 10px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass);
+      user-select: none; display: flex; align-items: center; gap: 8px; min-height: 40px; }
+    .howto summary:hover { color: var(--brass-bright); }
     .howto summary::-webkit-details-marker { display: none; }
     .howto summary::before { content: "›"; display: inline-block; width: 10px; font-size: 16px; line-height: 1; letter-spacing: 0; transition: transform .15s; }
     .howto[open] summary::before { transform: rotate(90deg); }

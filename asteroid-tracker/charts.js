@@ -136,7 +136,9 @@ export function biggest(svg, list, emptyMsg = 'No objects match these filters.')
     const y = m.t + i * rh + rh / 2, c = o.haz ? RED : BRASS, grp = el('g', {}, svg);
     el('rect', { x: 0, y: y - rh / 2, width: W, height: rh, fill: 'transparent' }, grp);
     el('rect', { x: X(o.dmin), y: y - 7, width: Math.max(4, X(o.dmax) - X(o.dmin)), height: 14, rx: 7, fill: c, opacity: 0.85 }, grp);
-    const label = o.name.replace(/[()]/g, '');
+    // a short label that fits the margin: the asteroid's own name ("Bennu"), else its code ("2008 FU6")
+    const named = /^\d+\s+([^()\d][^()]*?)\s*(\(|$)/.exec(o.name), code = /\(([^)]+)\)/.exec(o.name);
+    const label = named && code ? named[1] : code ? code[1] : o.name;
     text(grp, { x: m.l - 10, y: y + 4, 'text-anchor': 'end', fill: INK }, (label.length > 15 ? label.slice(0, 14) + '…' : label) + (o.haz ? ' ◆' : ''));
     hoverTip(grp, tipFor(o));
   });

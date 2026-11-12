@@ -7,8 +7,8 @@
   <title>Mars Data · NASA and ESA Data Projects</title>
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111207">
-  <script type="module" src="../shared/footer.js?v=2026111207"></script>
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111208">
+  <script type="module" src="../shared/footer.js?v=2026111208"></script>
   <style>
     .mission { display: grid; grid-template-columns: 3fr 2fr; gap: 28px; align-items: start; }
     .mission p { margin: 0 0 12px; color: var(--ink2); font-size: 16px; }
@@ -43,7 +43,7 @@
     @media (max-width: 760px) { .explore { grid-template-columns: 1fr; } #tiles { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 560px) { .gloss { grid-template-columns: 1fr; } }
     @media (max-width: 1024px) { .mission { grid-template-columns: 1fr; } .steps { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } .can { columns: 1; } table.credits { table-layout: auto; min-width: 560px; } }
+    @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } .can { columns: 1; } }
   </style>
 </head>
 <body>
@@ -63,6 +63,7 @@
   </header>
 
   <main class="wrap">
+    <a class="backlink" id="back" href="../">‹ Home</a>
     <div class="phead">
       <div class="eyebrow">Project 3</div>
       <h1>Mars Data</h1>
@@ -74,7 +75,7 @@
       <div class="tile"><div class="label">Curiosity</div><div class="value" id="tCur">–</div><div class="note" id="tCurN">Gale Crater, since August 2012</div></div>
       <div class="tile"><div class="label">Perseverance</div><div class="value" id="tPer">–</div><div class="note" id="tPerN">Jezero Crater, since February 2021</div></div>
       <div class="tile"><div class="label">Mars Years</div><div class="value" id="tYears">–</div><div class="note">one Mars Year is 687 Earth days</div></div>
-      <div class="tile"><div class="label">Updated</div><div class="value" id="tUpd">–</div><div class="note">checked against NASA's archive twice a week</div></div>
+      <div class="tile"><div class="label">Updated</div><div class="value" id="tUpd">–</div><div class="note">when this page's data was last updated</div></div>
       <div class="tile"><div class="label">Pressure</div><div class="value" id="tP">–</div><div class="note" id="tPN">Gale Crater, daily average</div></div>
       <div class="tile"><div class="label">Coldest night</div><div class="value" id="tCold">–</div><div class="note" id="tColdN">air, Gale Crater</div></div>
       <div class="tile"><div class="label">Warmest afternoon</div><div class="value" id="tWarm">–</div><div class="note" id="tWarmN">air, Gale Crater</div></div>
@@ -92,7 +93,7 @@
       <ul class="why">
         <li><b>Real measurements</b>Every number comes from NASA's archive; nothing is simulated or smoothed into a model.</li>
         <li><b>Open about every step</b>The cleaning rules are written down, and every batch of data has a report of what was kept and removed.</li>
-        <li><b>Kept up to date</b>New releases from NASA are picked up automatically, checked, and added.</li>
+        <li><b>Kept up to date</b>New releases from NASA are checked with the same rules and added.</li>
       </ul>
     </section>
 

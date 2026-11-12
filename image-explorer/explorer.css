@@ -42,13 +42,15 @@
 .mapframe { position: relative; height: 560px; }
 #map { position: absolute; inset: 0; }
 .ol-zoom { top: 10px; left: auto; right: 10px; }
-.ol-control button { background: rgba(15, 21, 32, .9); color: var(--brass); border: 1px solid var(--brass-dim); border-radius: var(--r-btn);
+/* the map's buttons above its drawn names */
+.ol-overlaycontainer-stopevent { z-index: 3 !important; }
+.ol-control button { background: rgba(15, 21, 32, .97); color: var(--brass); border: 1px solid var(--brass-dim); border-radius: var(--r-btn);
   font-family: var(--font); width: 32px; height: 32px; margin: 2px; }
 .ol-control button:hover, .ol-control button:focus { background: var(--bg2); color: var(--brass-bright); outline: none; }
 .ol-control { background: none; padding: 0; }
 .ol-scale-line { left: 10px; bottom: 10px; background: rgba(15, 21, 32, .85); border-radius: var(--r-btn); padding: 3px 6px; }
 .ol-scale-line-inner { border-color: var(--brass-dim); color: var(--ink2); font: 11px var(--font); }
-.maptag { position: absolute; left: 10px; top: 10px; z-index: 2; background: rgba(15, 21, 32, .88); border: 1px solid var(--brass-dim);
+.maptag { position: absolute; left: 10px; top: 10px; z-index: 2; background: rgba(15, 21, 32, .97); border: 1px solid var(--brass-dim);
   border-radius: var(--r-btn); padding: 6px 10px; font-size: 13px; color: var(--ink2); pointer-events: none; }
 .maptag strong { font-weight: 400; color: var(--brass-bright); }
 .cursor { position: absolute; right: 10px; bottom: 10px; z-index: 2; background: rgba(15, 21, 32, .85); border-radius: var(--r-btn);
@@ -220,7 +222,10 @@ dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
   .mapframe { height: 420px; }
   .datebar input[type=date] { flex: 1; min-width: 0; }
   .datebar .grow { display: none; }
-  .datebar .play { flex: 1; width: auto; }
+  .datebar .play { flex: 1; width: auto; min-height: 40px; }
+  .ol-control button { width: 40px; height: 40px; }
+  .gzoom .chip { width: 40px; }
+  .pop .btn { min-height: 40px; }
   .legend .row { grid-template-columns: 1fr; gap: 4px; }
   .libfilters label { width: 100%; justify-content: space-between; }
   .libfilters select { flex: 1; max-width: 240px; }
@@ -235,3 +240,6 @@ dialog.viewer::backdrop { background: rgba(8, 11, 17, .82); }
 #vDesc { white-space: pre-line; }
 /* the search box's Clear button appears once there is something to clear */
 .bigsearch:has(input:placeholder-shown) .qclear { display: none; }
+
+/* small phones: the date gets its own full-width row, so the whole date shows */
+@media (max-width: 480px) { .datebar input[type=date] { min-width: 0; flex: 1 1 100%; order: -1; } }

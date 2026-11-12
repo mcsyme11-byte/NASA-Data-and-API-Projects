@@ -10,7 +10,7 @@ Designed by **Malcolm Syme** and built with Claude.
 | Project | What it is | Data | Status |
 |---|---|---|---|
 | [**Asteroid Tracker**](asteroid-tracker/) | The near-Earth objects passing Earth this week and every year since 2000, a page and orbit diagram for each, a search, and a turnable map of all 43,000 with the planets and spacecraft | NASA NeoWs; NASA/JPL close-approach data, Small-Body Database, Horizons and Sentry; ESA NEO Coordination Centre (risk lists, close approaches) | **Live** |
-| [**Mars Data**](mars-data/) | Weather measured on Mars, cleaned and organised by time and place, with statistics and charts that show its patterns | NASA Planetary Data System (Curiosity's REMS) | Planned |
+| [**Mars Data**](mars-data/) | Weather measured on Mars by Curiosity (since 2012) and Perseverance (since 2021), cleaned by written rules and organised by Mars day, season and hour, with charts and a page on how the data is made | NASA Planetary Data System (Curiosity's REMS, Perseverance's MEDA) | **Live** |
 | [**Image Explorer**](image-explorer/) | The Earth from orbit on any day since 2000, a globe inside the real sky with natural events and astronaut photos, and the picture libraries of NASA and ESA, searchable by subject, mission and date | NASA GIBS, EONET and Image and Video Library; ESA/Webb and ESA/Hubble picture archives | **Live** |
 
 Alongside them (since November 12, 2026):
@@ -20,8 +20,8 @@ Alongside them (since November 12, 2026):
 | [**Sky Finder**](sky-finder/) | An installable phone web app: hold the phone up to the sky to find tonight's passing asteroid, with the Moon, planets, bright stars and the space stations to guide you | NASA/JPL close approaches and Horizons; CelesTrak; d3-celestial; GeoNames |
 | [**Spacecraft map**](spacecraft/) | The active spacecraft of NASA, ESA and others, from low Earth orbit to the Voyagers, with what each does and links to its mission pages; previewed on the home page | NASA/JPL Horizons; CelesTrak |
 
-Order of work: Asteroid Tracker (live), then Image Explorer (live), then Mars Data (next); each builds skills the next
-one uses.
+Order of work: Asteroid Tracker, then Image Explorer, then Mars Data; all three are live, and each built skills the
+next one used.
 
 ## How it fits together
 

@@ -72,7 +72,7 @@ The classes in `shared/theme.css`:
 | Fields | `input`, `select` | 44px, deep navy, brass border on focus |
 | Status pill | `.pill.good/.bad/.warn/.info` | Caps, coloured outline |
 | Tag | `.tag` | Italic, outlined (for example "Potentially hazardous") |
-| Tabs | `.tabs` (Asteroid Tracker) | Caps, brass underline on the open tab; scroll sideways on narrow screens |
+| Tabs | `.tabs` | Caps, brass underline on the open tab. The Asteroid Tracker's tabs wrap to a second line at every width (decided Nov 12, 2026); other tab rows scroll sideways on narrow screens |
 | How to read this | `details.howto` | Closed by default; brass caps summary with a › that turns |
 | Notice | `.notice`, `.notice.warn` | A bordered box for messages |
 | Chart / map / image frame | `.frame` | Deep navy with a hairline |
@@ -81,7 +81,7 @@ The classes in `shared/theme.css`:
 | Data credits | `.srcline` | A page's detailed credits and acknowledgements (sources, ©ESA lines, the GIBS acknowledgement), in small grey italic lines just above the footer, next to the content they cover |
 | Legal page | `.legalgrid`, `.legalcard` | `legal/`: one card each for Privacy, Terms of use, Credits and the MIT licence, with a one-line summary |
 | Reading page | `.prose`, `.summary`, `.updated`, `table.credits` | About, Privacy, Terms and Credits (Privacy, Terms and Credits go back to Legal when opened directly): the full content width (decided Nov 9, 2026), a brass-ruled summary, the date of the last update |
-| Back button | `.backlink#back` | "‹ Back to …" above the heading, named for the previous page and using the browser's Back; "‹ Home" when the page was opened directly (wired by `shared/footer.js`) |
+| Back button | `.backlink#back` | "‹ Back to …" above the heading, named for the previous page and using the browser's Back; "‹ Home" when the page was opened directly (wired by `shared/footer.js`). Every page except the site's home page has one (checked Nov 12, 2026) |
 
 ## 6. Charts
 
@@ -116,7 +116,7 @@ Everything must look right at 375, 390, 430 (phones; 320 must not break), 768, 1
   over 0.15 s on hover, and buttons and chips move down 1 px while pressed. The rules are in `shared/theme.css`;
   "reduce motion" turns them off.
 - **Tap targets:** at least 40 px tall on phones (44 px for the main buttons and fields).
-- **Rows that don't fit:** tabs and chip rows scroll sideways on phones, with a soft fade on the side where there is
+- **Rows that don't fit:** tabs and chip rows scroll sideways on phones (except the Asteroid Tracker's tabs, which wrap), with a soft fade on the side where there is
   more, and the selected tab scrolled into view (`shared/footer.js`: `.tabs`, `.popular`, `.gbar .seg`,
   `[data-hscroll]`). Rows never run off the screen with nothing to show they continue.
 - **Labels on maps and diagrams:** a dark outline (canvas `strokeText`, SVG `paint-order: stroke`) so they stay

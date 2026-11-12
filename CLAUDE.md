@@ -49,8 +49,9 @@ inside its own folder.
   browsers fetch the new copy instead of an old saved one.
 - **Feel (since Nov 12, 2026):** everything pressable gives quick feedback (the shared hover and press transitions in
   `shared/theme.css`); tap targets are at least 40 px tall on phones; rows of tabs or chips that don't fit a phone
-  scroll sideways with a soft edge fade (`shared/footer.js` adds it to `.tabs`, `.popular`, `.gbar .seg` and anything
-  marked `data-hscroll`); labels drawn over maps and diagrams get a dark outline; placeholders fit a 375 px phone.
+  scroll sideways with a soft edge fade (the Asteroid Tracker's tabs wrap instead, decided Nov 12, 2026) (`shared/footer.js` adds it to `.tabs`, `.popular`, `.gbar .seg` and anything
+  marked `data-hscroll`); labels drawn over maps and diagrams get a dark outline; placeholders fit a 375 px phone; every page except the
+  site's home page has a Back button (`.backlink#back`).
 - **ESA data (decided Nov 9, 2026):** ESA's data is added alongside NASA's where it helps; NASA stays the main source,
   and pages say which agency each number or picture comes from. For every ESA source:
   - check it against ESA's current documentation before building on it (address, format, limits, terms, credit), and

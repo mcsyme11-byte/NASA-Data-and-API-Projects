@@ -160,6 +160,17 @@ input:hover, select:hover { border-color: var(--line2); }
 input:focus, select:focus { border-color: var(--brass); outline: none; box-shadow: 0 0 0 3px rgba(192, 160, 98, .14); }
 select { cursor: pointer; }
 
+/* text for screen readers only */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+
+/* phones: everything pressable at least 40 px tall (the Feel rule, Nov 12, 2026) */
+@media (max-width: 760px) {
+  .chip { height: 40px; }
+  .btn { min-height: 44px; }
+  input[type="text"], input[type="search"], input[type="date"], input[type="number"], input[type="password"], select { min-height: 40px; }
+  summary { min-height: 40px; display: flex; align-items: center; }
+}
+
 .pill {
   display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .22em;
   padding: 2px 10px; border: 1px solid currentColor; border-radius: 999px;
