@@ -1,2 +1,13 @@
 sol,measurement,reason,date_set_aside
+2803,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
 2844,air_temp,"One hour (about 20:00 local) averages -119.6 °C between hours of -38 and -49 °C: a sensor glitch, not weather. Set aside until reviewed.",2026-11-12
+4087,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4089,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4092,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4094,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4174,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4179,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4186,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4208,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4221,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12
+4222,air_temp,"One hour at about 19:00-20:00 local reads about -120 °C between hours of about -35 to -50 °C: the same evening sensor glitch as sol 2844, not weather. Set aside until reviewed.",2026-11-12

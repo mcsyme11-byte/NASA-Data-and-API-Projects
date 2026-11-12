@@ -1,7 +1,7 @@
 # Chunks to process (one per line). Rules 1.1. Saved after each chunk.
-# 2026-11-12: sols 3645-4257 (corrected UV ends at sol 3423).
-SOL_03645_03778
-SOL_03779_03902
-SOL_03903_03999
-SOL_04000_04133
-SOL_04134_04257
+# 2026-11-12: the last batch, sols 4258-4843.
+SOL_04258_04354
+SOL_04355_04488
+SOL_04489_04612
+SOL_04613_04709
+SOL_04710_04843
