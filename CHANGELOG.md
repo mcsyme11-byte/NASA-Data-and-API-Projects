@@ -1,5 +1,12 @@
 # Change log
 
+## November 12, 2026 — Mars Data: a project home page
+
+- `mars-data/` opens on a project home page (approved mock-up): the mission, the data used and from which agency
+  (NASA or ESA), what can be done with it, how to use it, and a card linking to each part.
+- The charts moved to their own page, `mars-data/charts/`, with a Back button to Mars Data; each section has an
+  address of its own (`#year`, `#craters`, `#sol`, `#mission`). The mock-up file is removed.
+
 ## November 12, 2026 — Mars Data: Two craters
 
 - The approved "Two craters" chart is on the Mars Data page: air pressure at Gale Crater (Curiosity) and Jezero Crater

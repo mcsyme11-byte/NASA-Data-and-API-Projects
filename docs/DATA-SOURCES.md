@@ -157,7 +157,7 @@ each archive's own documentation. Decided Nov 11, 2026: three missions are follo
 ### Curiosity's weather station (REMS), NASA PDS Atmospheres Node — in use
 
 - **Address:** `https://atmos.nmsu.edu/PDS/data/mslrem_1001/` (volume `MSLREM_1001`, PDS3). No key, no account, free.
-  Plain directory pages; folders `DATA/SOL_<first>_<last>/SOL<nnnnn>/`, one folder per sol, 44 chunk folders on
+  Plain directory pages; folders `DATA/SOL_<first>_<last>/SOL<nnnnn>/`, one folder per sol, 42 chunk folders on
   Nov 11, 2026, the newest `SOL_04710_04843` (sol 4843, March 22, 2026). The REMS web page still gives sol 4488 as the
   newest; the folders are newer.
 - **Files per sol:** `RME_<clock>RMD<sol>…TAB` (MODRDR: environmental values, corrected; the set used), `…RNV…` (ENVRDR),
