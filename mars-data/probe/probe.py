@@ -36,12 +36,28 @@ def save(name, data):
     if data is not None: (OUT / name).write_bytes(data)
 
 report = {}
-# Round 3: one ADR (ancillary) table and its label, sol 1 and sol 4843
-for sd in ["SOL_00001_00089/SOL00001/", "SOL_04710_04843/SOL04843/"]:
-    u = "https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA/" + sd
-    for f in listing(u):
-        if "ADR" in f and f.upper().endswith((".LBL", ".TAB")):
-            d = get(u + f)
-            if d is not None:
-                save("adr_" + f, d if f.upper().endswith(".LBL") else b"\n".join(d.splitlines()[:5]))
+# Round 4: corrected UV data (UVRDR)
+base = "https://atmos.nmsu.edu/PDS/data/mslrem_1001/"
+save("uv_REMS_UVRDR_DS.CAT", get(base + "CATALOG/REMS_UVRDR_DS.CAT"))
+lvl1 = listing(base + "DATA_UV_CORRECTED/"); report["uv_lvl1"] = lvl1
+dirs = [d for d in lvl1 if d.endswith("/")]
+for which, d in ([("first", dirs[0]), ("last", dirs[-1])] if dirs else []):
+    lvl2 = listing(base + "DATA_UV_CORRECTED/" + d); report["uv_" + which + "_lvl2"] = lvl2[:5] + ["..."] + lvl2[-5:]
+    sub = [x for x in lvl2 if x.endswith("/")]
+    files, path = lvl2, base + "DATA_UV_CORRECTED/" + d
+    if sub:
+        pick = sub[0] if which == "first" else sub[-1]
+        path = path + pick; files = listing(path); report["uv_" + which + "_files"] = files
+    for f in files:
+        if f.upper().endswith(".LBL"):
+            save("uv_" + which + "_" + f, get(path + f))
+        if f.upper().endswith(".TAB"):
+            dd = get(path + f)
+            if dd is not None:
+                save("uv_" + which + "_" + f, b"\n".join(dd.splitlines()[:40]))
+                report["uv_" + which + "_rows"] = dd.count(b"\n")
+            break
+for f in listing(base + "LABEL/"):
+    if "UV" in f.upper(): save("uv_LABEL_" + f, get(base + "LABEL/" + f))
+(OUT / "report.json").write_text(json.dumps(report, indent=2))
 (OUT / "requests.txt").write_text("\n".join(log) + "\n")
