@@ -22,7 +22,7 @@ concurrency:
 jobs:
   chunks:
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,18 +30,14 @@ jobs:
           python-version: "3.12"
       - name: Install pandas
         run: pip install pandas==2.2.3
-      - name: Process the listed chunks
-        working-directory: mars-data/analysis
-        run: |
-          REMS=$(grep '^SOL_' chunks.txt || true)
-          UV=$(grep '^REMS_UVS_' chunks.txt || true)
-          if [ -n "$REMS" ]; then python3 run_rems.py $REMS; fi
-          if [ -n "$UV" ]; then python3 run_uv.py $UV; fi
-      - name: Commit the summaries and reports to the branch
+      - name: Process the listed chunks, saving after each one
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898309+github-actions[bot]@users.noreply.github.com"
-          git add mars-data/data/rems
-          git commit -m "Mars data: REMS chunks $(grep -v '^#' mars-data/analysis/chunks.txt | tr '\n' ' ')processed" || echo "Nothing new"
-          git pull --rebase origin mars-probe
-          git push origin HEAD:mars-probe
+          for c in $(grep -E '^(SOL_|REMS_UVS_)' mars-data/analysis/chunks.txt); do
+            if [[ "$c" == SOL_* ]]; then (cd mars-data/analysis && python3 run_rems.py "$c"); else (cd mars-data/analysis && python3 run_uv.py "$c"); fi
+            git add mars-data/data/rems
+            git commit -q -m "Mars data: $c processed" || echo "Nothing new for $c"
+            git pull -q --rebase origin mars-probe
+            git push -q origin HEAD:mars-probe
+          done
