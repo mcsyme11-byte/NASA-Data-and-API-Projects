@@ -8,7 +8,7 @@ import { planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM } from './orbit.
 import { fmt, sizeText, sizePicture, diameterM, LD_KM } from './format.js';
 import { loadMapData } from './mapdata.js';
 import { searchNames, neowsId, decodeName } from './search.js';
-import { backLink, placeKeeper, scrollBack } from './back.js';
+import { placeKeeper, scrollBack } from './back.js';
 import { riskDesignations } from './esa.js';
 import { takeShared, linkWith, shareButton } from './share.js';
 
@@ -132,7 +132,7 @@ function restorePlace(p) {
   $('#hint').classList.add('gone');
   scrollBack(p.scrollY);
 }
-backLink($('#back'));
+
 
 // ---------------------------------------------------------------- after each frame: date, scale bar
 function afterFrame(m) {

@@ -45,7 +45,8 @@
   are now full height; the craft card keeps its title and close button in view while it scrolls; a "group" of one
   craft is drawn as the craft itself; Sky Finder's place panel has a close button (and Escape); the Asteroid Tracker's
   tabs wrap to a second line on desktop instead of running off the edge, and the map and asteroid pages list the
-  "Visible from here" tab too.
+  "Visible from here" tab too. The map page no longer has a "Back" button above its title: the tracker's tabs are
+  right below it.
 - **Asteroid Tracker, "Visible from here" tab** (`#visible`): choose a place ("Use my location" or a town from the
   GeoNames list); the close passes of the next 30 days that rise at least 10° above that horizon in full darkness
   (the Sun 12° down), each with its best moment, highest point, brightness and what is needed to see it (naked eye up
