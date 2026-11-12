@@ -9,6 +9,19 @@
 - The explorer itself moved to `image-explorer/explore.html`; `#earth`, `#globe` and `#library` open that tab, and
   switching tabs updates the address. Its back button leads to the project's home page.
 
+## November 12, 2026 — Mars Data: layout reworked
+
+- **Charts page:** a section menu (The year, Two craters, One sol, The whole mission, How it's made) stays at the top
+  of the screen and marks the section in view; links to a section (`charts/#sol`) land on it once the charts are
+  drawn. The header names both rovers. The number boxes and the glossary moved to the home page.
+- **Home page:** eight number boxes (sols per rover, Mars Years, last check, pressure range, coldest night, warmest
+  afternoon, height climbed), "Four words first" (sol, Ls, Mars Year, pascal) before Explore, and the Explore cards in
+  rows of three.
+- **How the data is made** (`mars-data/method/`): a new page with the five steps and every cleaning rule for Curiosity
+  and Perseverance in a "which rule for which situation" table, each with an example.
+- **Phones:** larger chart labels; a tap or a sideways drag on a chart shows the exact value above the finger, and it
+  stays until the page scrolls or another place is tapped.
+
 ## November 12, 2026 — Mars Data: a project home page
 
 - `mars-data/` opens on a project home page (approved mock-up): the mission, the data used and from which agency

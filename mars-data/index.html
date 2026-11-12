@@ -34,6 +34,14 @@
     .steps b { display: block; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
     .can { margin: 0; padding-left: 20px; color: var(--ink2); columns: 2; column-gap: 32px; }
     .can li { margin: 0 0 8px; break-inside: avoid; }
+    .explore { grid-template-columns: repeat(3, 1fr); }
+    #tiles { grid-template-columns: repeat(4, 1fr); }
+    .gloss { margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    .gloss dt { color: var(--brass); font-size: 11px; text-transform: uppercase; letter-spacing: .22em; margin-bottom: 6px; }
+    .gloss dd { margin: 0; color: var(--ink2); font-size: 14.5px; }
+    @media (max-width: 1024px) { .explore { grid-template-columns: 1fr 1fr; } .gloss { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 760px) { .explore { grid-template-columns: 1fr; } #tiles { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .gloss { grid-template-columns: 1fr; } }
     @media (max-width: 1024px) { .mission { grid-template-columns: 1fr; } .steps { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } .can { columns: 1; } table.credits { table-layout: auto; min-width: 560px; } }
   </style>
@@ -67,6 +75,10 @@
       <div class="tile"><div class="label">Perseverance</div><div class="value" id="tPer">–</div><div class="note" id="tPerN">Jezero Crater, since February 2021</div></div>
       <div class="tile"><div class="label">Mars Years</div><div class="value" id="tYears">–</div><div class="note">one Mars Year is 687 Earth days</div></div>
       <div class="tile"><div class="label">Updated</div><div class="value" id="tUpd">–</div><div class="note">checked against NASA's archive twice a week</div></div>
+      <div class="tile"><div class="label">Pressure</div><div class="value" id="tP">–</div><div class="note" id="tPN">Gale Crater, daily average</div></div>
+      <div class="tile"><div class="label">Coldest night</div><div class="value" id="tCold">–</div><div class="note" id="tColdN">air, Gale Crater</div></div>
+      <div class="tile"><div class="label">Warmest afternoon</div><div class="value" id="tWarm">–</div><div class="note" id="tWarmN">air, Gale Crater</div></div>
+      <div class="tile"><div class="label">Climbed</div><div class="value" id="tClimb">–</div><div class="note" id="tClimbN">Curiosity, up Mount Sharp</div></div>
     </div>
 
     <!-- ============ MISSION ============ -->
@@ -85,8 +97,18 @@
     </section>
 
     <!-- ============ EXPLORE ============ -->
+    <div class="shead" id="words"><h2>Four words first</h2><span class="aside">used on every chart</span></div>
+    <section class="card">
+      <dl class="gloss">
+        <div><dt>Sol</dt><dd>A Mars day: 24 h 39 min. Each rover counts sols from its landing, so Curiosity's sol 1 was August 7, 2012.</dd></div>
+        <div><dt>Ls (season)</dt><dd>Where Mars is on its orbit, 0–360°. Ls 0° starts northern spring; Ls 90° northern summer; Ls 180° autumn; Ls 270° winter (summer in the south).</dd></div>
+        <div><dt>Mars Year</dt><dd>One trip around the Sun: 687 Earth days. Numbered from 1955; Curiosity landed in Mars Year 31.</dd></div>
+        <div><dt>Pascal (Pa)</dt><dd>The unit of air pressure. Earth's air at sea level: about 101,000 Pa. Gale Crater: about 700–950 Pa, under 1 %.</dd></div>
+      </dl>
+    </section>
+
     <div class="shead"><h2>Explore</h2><span class="aside">the parts of the project</span></div>
-    <div class="grid">
+    <div class="grid explore">
       <article class="card project">
         <div class="num">Charts</div>
         <h3>The Martian year</h3>
@@ -115,7 +137,7 @@
         <div class="num">Method</div>
         <h3>How the data is made</h3>
         <p>The cleaning rules, step by step and in plain words, and the cleaning report for every batch of sols: what was kept, what was removed, and why.</p>
-        <div class="foot"><span class="pill info">Rules · reports</span><a class="btn ghost" href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/blob/main/mars-data/analysis/CLEANING.md" target="_blank" rel="noopener">Open ↗</a></div>
+        <div class="foot"><span class="pill info">Rules · reports</span><a class="btn ghost" href="method/">Open</a></div>
       </article>
       <article class="card project">
         <div class="num">Coming</div>
@@ -159,10 +181,10 @@
     <div class="shead"><h2>How to use it</h2></div>
     <section class="card">
       <ol class="steps">
-        <li><b>Pick a part</b>Choose one of the cards above: the year, two craters, one sol or the whole mission.</li>
+        <li><b>Pick a part</b>Choose one of the cards in Explore: the year, two craters, one sol or the whole mission.</li>
         <li><b>Point at a chart</b>Move the mouse over a chart, or tap it, to see the sol, the date, the season and the exact value.</li>
         <li><b>Read the key</b>Open "How to read this" under any chart for what it shows and why, with an example.</li>
-        <li><b>Learn four words</b>Sol (a Mars day), Ls (the season, 0–360°), Mars Year and pascal (the unit of pressure), explained at the top of the charts.</li>
+        <li><b>Learn four words</b>Sol (a Mars day), Ls (the season, 0–360°), Mars Year and pascal (the unit of pressure), explained in "Four words first" above.</li>
       </ol>
     </section>
 
@@ -192,6 +214,22 @@
       }
       document.getElementById("tYears").textContent = `${yrs.size} (${Math.min(...yrs)}–${Math.max(...yrs)})`;
       document.getElementById("tUpd").textContent = m.checked || m.built;
+      const K = 273.15;
+      const R = rems.rows.map(r => Object.fromEntries(rems.cols.map((c, i) => [c, r[i]])));
+      const pick = (a, f, better) => a.reduce((x, r) => better(f(r), f(x)) ? r : x);
+      const fP = R.filter(r => r.pressure_full), fT = R.filter(r => r.air_temp_full);
+      const lo = pick(fP, r => r.pressure_mean, (a, b) => a < b), hi = pick(fP, r => r.pressure_mean, (a, b) => a > b);
+      const cold = pick(fT, r => r.air_temp_min, (a, b) => a < b), warm = pick(fT, r => r.air_temp_max, (a, b) => a > b);
+      const z = R.filter(r => r.rover_z_m != null).at(-1);
+      const n0 = v => Math.round(v).toLocaleString("en-CA");
+      document.getElementById("tP").textContent = `${n0(lo.pressure_mean)}–${n0(hi.pressure_mean)} Pa`;
+      document.getElementById("tPN").textContent = `thinnest at Ls ${n0(lo.ls)}°, thickest at Ls ${n0(hi.ls)}°`;
+      document.getElementById("tCold").textContent = `${n0(cold.air_temp_min - K)} °C`;
+      document.getElementById("tColdN").textContent = `sol ${cold.sol}, Ls ${n0(cold.ls)}°`;
+      document.getElementById("tWarm").textContent = `${n0(warm.air_temp_max - K)} °C`;
+      document.getElementById("tWarmN").textContent = `sol ${warm.sol}, Ls ${n0(warm.ls)}°`;
+      document.getElementById("tClimb").textContent = `${n0(z.rover_z_m)} m`;
+      document.getElementById("tClimbN").textContent = `above the landing site by sol ${fmt(z.sol)}`;
     } catch (e) { /* the tiles keep their placeholders */ }
   })();
   </script>

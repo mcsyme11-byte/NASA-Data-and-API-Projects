@@ -12,7 +12,8 @@ organised by season, time of day and the rover's height, summarised, and charted
   agency, what can be done with it and how, and a card linking to each part.
 - **`charts/index.html`, the charts,** in the project's look (`docs/DESIGN.md`), drawn as hand-made SVG from
   `data/summary.json`, `data/meda.json` and, for one sol at a time, `data/hourly/MY<n>.json`. Each section has an
-  address of its own (`charts/#year`, `#craters`, `#sol`, `#mission`):
+  address of its own (`charts/#year`, `#craters`, `#sol`, `#mission`), reached from a section menu that stays at the
+  top of the screen:
 
 - **The Martian year:** air pressure through the year, one line per Mars Year, with a correction for the rover's
   climb; how much the pressure swings in a day; humidity at night (preliminary, as NASA marks it); midday
@@ -22,6 +23,9 @@ organised by season, time of day and the rover's height, summarised, and charted
 - **The whole mission:** daily highs and lows of air temperature; the rover's height above its landing site.
 
 ## How the data is made
+
+The page `method/` sets out the same steps and every cleaning rule in plain words, with an example for each; it
+follows `analysis/CLEANING.md` and `analysis/CLEANING-MEDA.md` and is updated with them.
 
 | Step | What happens | Where |
 |---|---|---|
@@ -40,6 +44,7 @@ Raw downloads are never committed; `data/rems/manifest.csv` lists every file use
 mars-data/
 ├── index.html            the project home page
 ├── charts/index.html     the charts
+├── method/index.html     how the data is made: the cleaning rules in plain words, with examples
 ├── analysis/             Python: download, clean, organise, summarise (CLEANING.md: the rules)
 ├── data/summary.json     one row per sol and the season-by-hour grid, read by the page
 ├── data/hourly/          hourly means per sol, one file per Mars Year

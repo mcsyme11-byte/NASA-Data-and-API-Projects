@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!-- NASA and ESA Data Projects · Mars Data · how the data is made (the cleaning rules, with examples) · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+<!-- The full rules are in mars-data/analysis/CLEANING.md (Curiosity) and CLEANING-MEDA.md (Perseverance); this page
+     follows them and changes with them. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>How the data is made · Mars Data · NASA and ESA Data Projects</title>
+  <meta name="theme-color" content="#141B26">
+  <link rel="icon" href="../../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../shared/theme.css?v=2026111206">
+  <script type="module" src="../../shared/footer.js?v=2026111206"></script>
+  <style>
+    .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; }
+    .steps li { counter-increment: s; color: var(--ink2); font-size: 14.5px; }
+    .steps li::before { content: counter(s); display: block; font-size: 28px; color: var(--brass); margin-bottom: 6px; }
+    .steps b { display: block; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
+    .intro { margin: 0 0 14px; color: var(--ink2); max-width: 90ch; }
+    .card > .intro:last-child { margin-bottom: 0; }
+    table.rules { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+    table.rules th { text-align: left; font-weight: 400; font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em;
+      color: var(--brass); padding: 0 14px 10px 0; border-bottom: 1px solid var(--line); }
+    table.rules td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink2); }
+    table.rules tr:last-child td { border-bottom: 0; }
+    table.rules td:first-child { color: var(--ink); }
+    table.rules td.n { color: var(--brass); white-space: nowrap; }
+    table.rules td.ex { font-style: italic; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .two .card h3 { margin: 0 0 10px; font-size: 20px; font-weight: 400; }
+    .two .card p, .two .card li { color: var(--ink2); font-size: 14.5px; }
+    .two .card ul { margin: 0; padding-left: 20px; }
+    .two .card li { margin: 0 0 8px; }
+    .two .card p { margin: 0 0 10px; }
+    .example { border-left: 2px solid var(--brass-dim); background: rgba(192, 160, 98, .04); padding: 10px 14px; margin: 12px 0 0;
+      font-size: 14px; color: var(--ink2); }
+    .example b { font-weight: 400; color: var(--brass); font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em; display: block; margin-bottom: 4px; }
+    .links { margin: 0; padding-left: 20px; color: var(--ink2); }
+    .links li { margin: 0 0 8px; }
+    @media (max-width: 1024px) { .steps { grid-template-columns: repeat(3, 1fr); } .two { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) {
+      .steps { grid-template-columns: 1fr 1fr; }
+      table.rules thead { display: none; }
+      table.rules, table.rules tbody, table.rules tr, table.rules td { display: block; width: 100%; }
+      table.rules tr { padding: 12px 0; border-bottom: 1px solid var(--line); }
+      table.rules tr:last-child { border-bottom: 0; }
+      table.rules td { border: 0; padding: 3px 0; }
+      table.rules td[data-label]::before { content: attr(data-label); display: block; font-style: normal; font-size: 10px;
+        text-transform: uppercase; letter-spacing: .22em; color: var(--brass); margin-top: 6px; }
+      table.rules td.n { white-space: normal; }
+    }
+    @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../../">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../../shared/emblem.svg#e"/></svg>
+        NASA and ESA Data Projects
+      </a>
+      <nav class="nav" aria-label="Projects">
+        <a href="../../">Home</a>
+        <a href="../../asteroid-tracker/">Asteroids</a>
+        <a href="../../mars-data/" aria-current="page">Mars</a>
+        <a href="../../image-explorer/">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <a class="backlink" id="back" href="../">‹ Mars Data</a>
+    <div class="phead">
+      <div class="eyebrow">Project 3 · Mars Data</div>
+      <h1>How the data is made</h1>
+      <p class="lede">From NASA's raw tables to the charts: the five steps, and every cleaning rule with an example. Nothing is removed silently: every batch of sols has a report that counts each removal and its reason.</p>
+    </div>
+
+    <!-- ============ STEPS ============ -->
+    <div class="shead" style="margin-top:0"><h2>Five steps</h2><span class="aside">the same for every sol</span></div>
+    <section class="card">
+      <ol class="steps">
+        <li><b>Download</b>One file per sol from NASA's Planetary Data System, one row per second of measurement. Each file's size and fingerprint (SHA-256) are recorded.</li>
+        <li><b>Clean</b>The written rules below: NASA's quality flags read one character at a time, impossible values removed, missing-value codes recognised.</li>
+        <li><b>Organise</b>Each reading gets its sol, season (Ls), Mars Year, local hour and the rover's height.</li>
+        <li><b>Summarise</b>Hourly averages, then daily averages, highs and lows; each sol is marked full or partial.</li>
+        <li><b>Check and publish</b>A cleaning report for every batch, read before the next batch; then the small files the charts read.</li>
+      </ol>
+    </section>
+
+    <!-- ============ REMS ============ -->
+    <div class="shead"><h2>Curiosity: which rule for which situation</h2><span class="aside">REMS, cleaning rules version 1.1</span></div>
+    <section class="card">
+      <p class="intro">Curiosity's weather station (REMS) at Gale Crater. The data is NASA's highest processing level, already corrected for the rover's own heat, shadows and dust. The rules are applied in this order; the rule number is the one used in the cleaning reports.</p>
+      <table class="rules">
+        <thead><tr><th>Situation</th><th>Rule</th><th>What happens</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>A value is <code>-999</code>, <code>UNK</code>, <code>NULL</code> or blank</td><td class="n" data-label="Rule">0 · Missing</td><td data-label="What happens">Treated as missing</td><td class="ex" data-label="Example">A pressure of −999.00 is NASA's code for "cannot be determined", not a reading.</td></tr>
+          <tr><td>Two rows have the same time</td><td class="n" data-label="Rule">1 · One row per second</td><td data-label="What happens">The first is kept, the other removed</td><td class="ex" data-label="Example">Two rows for the same second: the second row goes.</td></tr>
+          <tr><td>A row's local time cannot be read, or falls on another sol</td><td class="n" data-label="Rule">2 · Local time</td><td data-label="What happens">Unreadable: removed. Another sol: not used for this sol</td><td class="ex" data-label="Example">A row timed on sol 1001 inside sol 1000's file is left out of sol 1000's figures.</td></tr>
+          <tr><td>NASA's quality flag says a reading is bad</td><td class="n" data-label="Rule">3 · Quality flags</td><td data-label="What happens">That value is removed; the rest of the row stays</td><td class="ex" data-label="Example">The pressure flag shows a shadow on the sensor: the pressure goes, the air temperature in the same row stays.</td></tr>
+          <tr><td>A value is outside physical limits</td><td class="n" data-label="Rule">4 · Limits</td><td data-label="What happens">The value is removed</td><td class="ex" data-label="Example">An air temperature of 320 K (47 °C): no air on Mars has been measured that warm.</td></tr>
+          <tr><td>A flag gives information, not quality</td><td class="n" data-label="Rule">5 · Information</td><td data-label="What happens">Kept, and counted in the report</td><td class="ex" data-label="Example">Which of the pressure sensor's two oscillators was used.</td></tr>
+          <tr><td>A sol has good data in fewer than 22 of its 24 hours</td><td class="n" data-label="Rule">6 · Coverage</td><td data-label="What happens">Figures given, but the sol is marked partial</td><td class="ex" data-label="Example">21 good hours: partial, left out of the daily-average charts.</td></tr>
+          <tr><td>A change from one sol to the next looks too large</td><td class="n" data-label="Rule">8 · Review</td><td data-label="What happens">Listed in the report for a person to check; not removed</td><td class="ex" data-label="Example">Daily mean pressure changes by more than 15 Pa between two full sols.</td></tr>
+          <tr><td>No corrected ultraviolet (the Sun more than 55° from overhead)</td><td class="n" data-label="Rule">9 · Ultraviolet</td><td data-label="What happens">No UV value for that minute</td><td class="ex" data-label="Example">Early morning and evening have no UV.</td></tr>
+          <tr><td>A value passes every rule but is plainly not weather</td><td class="n" data-label="Rule">10 · Set aside</td><td data-label="What happens">Kept in the data files, left off the charts until reviewed</td><td class="ex" data-label="Example">One hour 80 °C colder than the hours on either side.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="two" style="margin-top:22px">
+      <section class="card">
+        <h3>Quality flags (rule 3)</h3>
+        <p>Each flag is a row of characters, one per check, counted from the left: <code>1</code> good, <code>0</code> bad, <code>X</code> unknown. Not every character is a quality check, so each is read for its own meaning.</p>
+        <table class="rules">
+          <thead><tr><th>Measurement</th><th>Kept when</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Pressure</td><td data-label="Kept when">character 2 is 1</td><td data-label="Meaning">no shadow effect</td></tr>
+            <tr><td>Air temperature</td><td data-label="Kept when">characters 8 and 9 are 1</td><td data-label="Meaning">error under 5 K; observation reliable</td></tr>
+            <tr><td>Ground temperature</td><td data-label="Kept when">characters 2, 3 and 4 are 1</td><td data-label="Meaning">recalibrated; rover still; no shadow in view</td></tr>
+            <tr><td>Humidity</td><td data-label="Kept when">character 2 is not 0</td><td data-label="Meaning">quality not marked bad</td></tr>
+          </tbody>
+        </table>
+        <p class="example"><b>Example</b>An air temperature whose flag has <code>X</code> (unknown) as character 8 is removed: an unknown counts as not passing. Humidity is the exception: NASA marks its quality character unknown throughout, so only readings marked bad are removed, and humidity is labelled "preliminary" wherever it appears.</p>
+      </section>
+
+      <section class="card">
+        <h3>Physical limits (rule 4)</h3>
+        <p>Wide on purpose: they catch values that cannot be real, not unusual ones. Unusual values are listed for review instead (rule 8).</p>
+        <table class="rules">
+          <thead><tr><th>Measurement</th><th>Kept between</th></tr></thead>
+          <tbody>
+            <tr><td>Pressure</td><td data-label="Kept between">400–1,200 Pa (Gale Crater: about 700–950)</td></tr>
+            <tr><td>Air temperature</td><td data-label="Kept between">130–310 K (−143 to 37 °C)</td></tr>
+            <tr><td>Ground temperature</td><td data-label="Kept between">130–330 K (−143 to 57 °C)</td></tr>
+            <tr><td>Relative humidity</td><td data-label="Kept between">0–100 %</td></tr>
+            <tr><td>Water vapour</td><td data-label="Kept between">0–400 ppm (the sensor's range)</td></tr>
+            <tr><td>Ultraviolet</td><td data-label="Kept between">0–30 W/m²</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h3>A full sol, and the day's figures (rules 6 and 7)</h3>
+        <ul>
+          <li><b>An hour counts</b> with at least 60 good one-second readings. REMS measures for 5 minutes at the start of every hour, plus some full hours.</li>
+          <li><b>A sol is full</b> with at least 22 counting hours of 24; otherwise partial.</li>
+          <li><b>Daily mean</b> = the mean of the hourly means, so every hour counts once.</li>
+          <li><b>Daily high and low</b> come from one-minute medians (each minute with at least 30 readings).</li>
+          <li><b>Humidity</b> is the day's highest value, reached at night, when the sensor is accurate.</li>
+          <li><b>Rover height</b> is kept with every sol: higher up there is less air above the rover, so the pressure is lower.</li>
+        </ul>
+        <p class="example"><b>Example</b>On a sol with 5 minutes in most hours and a full hour at 14:00, the 14:00 hour still counts once in the daily mean, so the warm afternoon does not outweigh the night. And a single one-second spike in a cold minute does not set the day's high: that minute's median stays cold.</p>
+      </section>
+
+      <section class="card">
+        <h3>Season and ultraviolet (rules 7 and 9)</h3>
+        <ul>
+          <li><b>Season (Ls) and Mars Year</b> are calculated from the date (method of Allison and McEwen, 2000) and checked against NASA's own values: sol 1 is Ls 151.0° in Mars Year 31; sol 4488 is Ls 60.1° in Mars Year 38.</li>
+          <li><b>Ultraviolet</b> comes from NASA's corrected UV data, adjusted for dust on the sensor. It covers sols 1–3423; there is no corrected UV after that.</li>
+          <li><b>The midday peak</b> is the highest one-minute median, and counts only between 10:30 and 13:30 local time on a sol with at least 30 good minutes.</li>
+        </ul>
+        <p class="example"><b>Example</b>A sol whose highest UV is at 15:00 had no measurements near noon, so it is left out of the midday chart instead of showing a falsely low peak.</p>
+      </section>
+    </div>
+
+    <!-- ============ MEDA ============ -->
+    <div class="shead"><h2>Perseverance: which rule for which situation</h2><span class="aside">MEDA, cleaning rules version 1.0</span></div>
+    <section class="card">
+      <p class="intro">Perseverance's weather station (MEDA) at Jezero Crater, from NASA's derived level, which NASA recommends for most uses. MEDA measures about 12 hours a sol (the even hours on even sols, the odd hours on odd sols), so a full sol needs fewer hours than at Gale.</p>
+      <table class="rules">
+        <thead><tr><th>Situation</th><th>Rule</th><th>What happens</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>A value is empty or <code>9999999999</code></td><td class="n" data-label="Rule">M1 · Missing</td><td data-label="What happens">Treated as missing</td><td class="ex" data-label="Example">NASA leaves a derived value empty where it is not reliable.</td></tr>
+          <tr><td>A column the rules need is missing</td><td class="n" data-label="Rule">M1 · Columns</td><td data-label="What happens">The sol is not processed, and is named in the report</td><td class="ex" data-label="Example">A pressure table without its <code>PRESSURE</code> column.</td></tr>
+          <tr><td>Two rows share a time, or a row is on another sol</td><td class="n" data-label="Rule">M2 · Time</td><td data-label="What happens">First row kept; another sol's row not used</td><td class="ex" data-label="Example">As for Curiosity (rules 1 and 2).</td></tr>
+          <tr><td>Pressure outside 400–1,200 Pa</td><td class="n" data-label="Rule">M3 · Pressure</td><td data-label="What happens">Removed; large day-to-day jumps listed for review</td><td class="ex" data-label="Example">A change of more than 15 Pa between two full sols is checked by a person.</td></tr>
+          <tr><td>Humidity before sol 63</td><td class="n" data-label="Rule">M4 · Humidity</td><td data-label="What happens">Not used</td><td class="ex" data-label="Example">NASA: not reliable before the sensor's first maintenance.</td></tr>
+          <tr><td>A sol has pressure in fewer than 10 local hours</td><td class="n" data-label="Rule">M5 · Coverage</td><td data-label="What happens">Figures given, but the sol is marked partial</td><td class="ex" data-label="Example">11 hours: full. 9 hours: partial, left out of the daily-average charts.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============ MORE ============ -->
+    <div class="shead"><h2>Read more</h2><span class="aside">in the project's source code</span></div>
+    <section class="card">
+      <ul class="links">
+        <li>The full rules: <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/blob/main/mars-data/analysis/CLEANING.md" target="_blank" rel="noopener">Curiosity ↗</a> and <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/blob/main/mars-data/analysis/CLEANING-MEDA.md" target="_blank" rel="noopener">Perseverance ↗</a>.</li>
+        <li>The cleaning reports, one per batch of sols: <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/tree/main/mars-data/data/rems/reports" target="_blank" rel="noopener">Curiosity ↗</a> and <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/tree/main/mars-data/data/meda/reports" target="_blank" rel="noopener">Perseverance ↗</a>.</li>
+        <li>The code that applies them: <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/tree/main/mars-data/analysis" target="_blank" rel="noopener">mars-data/analysis ↗</a>.</li>
+        <li>The charts made from the result: <a href="../charts/">Charts</a>.</li>
+      </ul>
+    </section>
+
+    <p class="srcline">Data courtesy of NASA/JPL-Caltech and the REMS team (Centro de Astrobiología), and NASA/JPL-Caltech and the MEDA team (Centro de Astrobiología), NASA Planetary Data System, Atmospheres Node.</p>
+    <footer class="footer">
+      <div class="ftop"><p class="copy">© 2026 <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a></p></div>
+      <p class="fnote">Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA.</p>
+    </footer>
+  </main>
+</body>
+</html>
