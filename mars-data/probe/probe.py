@@ -36,11 +36,18 @@ def save(name, data):
     if data is not None: (OUT / name).write_bytes(data)
 
 report = {}
-# Round 7: the page format of ESA's documented FTP view (psaftp.esac.esa.int)
-for name, u in [("root", "https://psaftp.esac.esa.int/"), ("mex", "https://psaftp.esac.esa.int/MARS-EXPRESS/"),
-                ("mrs", "https://psaftp.esac.esa.int/MARS-EXPRESS/MRS/")]:
-    d = get(u)
-    if d is not None:
-        save("psaftp_" + name + ".html", d[:20000])
+# Round 8: ESA's documented anonymous SFTP access (cosmos.esa.int/web/psa/ftp-browser), listing only
+import subprocess
+cmd = ["sftp", "-oStrictHostKeyChecking=accept-new", "-oBatchMode=no", "-oPasswordAuthentication=no",
+       "-oKbdInteractiveAuthentication=no", "-b", "-", "anonymous@psaftp.esac.esa.int"]
+try:
+    r = subprocess.run(cmd, input="ls -1 MARS-EXPRESS/MRS\n", capture_output=True, text=True, timeout=120)
+    report["sftp_returncode"] = r.returncode
+    report["sftp_stdout"] = r.stdout.splitlines()[:80]
+    report["sftp_stderr"] = r.stderr.splitlines()[:20]
+except Exception as e:
+    report["sftp_error"] = f"{type(e).__name__}: {e}"
+d = get("https://archives.esac.esa.int/psa/ftp/MARS-EXPRESS/MRS/", 2000)
+report["simplified_site_now"] = "OK" if d is not None else log[-1]
 (OUT / "report.json").write_text(json.dumps(report, indent=2))
 (OUT / "requests.txt").write_text("\n".join(log) + "\n")
