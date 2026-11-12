@@ -1,5 +1,11 @@
 # Change log
 
+## November 12, 2026 — Mars Data: sols 1870–2482 added
+
+- Curiosity REMS sols 1870–2482 (Mars Years 34–35) and corrected UV for sols 1901–2500; every cleaning report checked,
+  nothing flagged. Gaps with no data released: sols 2172–2199 and 2321–2346. The 2018 global dust storm (around sols
+  2085–2120) shows as very low midday UV and daily pressure swings of up to 140 Pa. The page now covers sols 1–2482.
+
 ## November 12, 2026 — Mars Data: sols 1294–1869 added
 
 - Curiosity REMS sols 1294–1869 (Mars Years 33–34) and corrected UV for sols 1301–1900, cleaned with rules 1.1;
