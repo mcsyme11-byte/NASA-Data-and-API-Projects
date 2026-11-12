@@ -1,4 +1,4 @@
-# Cleaning rules: Curiosity REMS (version 1.0)
+# Cleaning rules: Curiosity REMS (version 1.1)
 
 Rules applied by `rems.py` to NASA's REMS MODRDR tables (Curiosity's weather station, Gale Crater). Each rule says
 what is done and why. A change to any rule raises the version number in `rems.py` (`RULES_VERSION`), and every row of
@@ -22,6 +22,7 @@ every run, and processing stops if it has changed.
 | A value is outside physical limits | 4 | The value is removed |
 | A flag gives information, not quality | 5 | Kept, and counted in the report |
 | A sol has good data in fewer than 22 of its 24 hours | 6 | Statistics are given but marked "partial" |
+| Corrected UV is missing (Sun more than 55° from overhead) | 9 | No UV value for that minute |
 
 ## Rule 0 — Missing values
 
@@ -48,8 +49,11 @@ every character is a quality check, so each is read for its own meaning (MODRDR6
 | Pressure | `PS_CONFIDENCE_LEVEL` | 2 | No shadow effect |
 | Air temperature | `AMBIENT_TEMP_CONFIDENCE_LEVEL` | 8 and 9 | Error under 5 K; observation reliable |
 | Ground temperature | `GTS_CONFIDENCE_LEVEL` | 2, 3 and 4 | High-quality recalibration; rover still; no shadow in the sensor's view |
+| Relative humidity | `HS_CONFIDENCE_LEVEL` | 2 must not be `0` | Relative humidity quality not "bad" (it is `X`, unknown, in the files examined) |
+| Water vapour | `HS_CONFIDENCE_LEVEL` | 2 not `0`, and 3 | As above, and the amount of water vapour within the sensor's range (under 400 ppm) |
 
-An `X` in a required character counts as not passing.
+An `X` in a character required to be `1` counts as not passing. For humidity, NASA marks the quality character `X`
+(unknown) throughout, so only readings marked `0` (bad) are removed.
 
 ## Rule 4 — Physical limits
 
@@ -60,6 +64,9 @@ Values outside these limits cannot be real at Gale Crater and are removed:
 | Pressure | 400–1,200 Pa | Gale Crater's readings stay roughly within 700–950 Pa through the year |
 | Air temperature | 130–310 K (−143 to 37 °C) | Well below the frost point of carbon dioxide at this pressure (about 148 K) / well above any air temperature measured on Mars |
 | Ground temperature | 130–330 K (−143 to 57 °C) | As above, with room for warm sunlit ground |
+| Relative humidity | 0–100 % | Relative humidity cannot be outside this range |
+| Water vapour | 0–400 ppm | The sensor's stated range (character 3 of the flag) |
+| Corrected UV, band ABC | 0–30 W/m² | Well above the largest flux possible at Mars's distance from the Sun |
 
 The limits are deliberately wide: they catch impossible values, not unusual ones. Unusual values are listed for
 review instead (rule 8).
@@ -73,8 +80,8 @@ review instead (rule 8).
   supply is outside 4.87–4.97 V. Late in the mission this is true of almost every reading, while NASA continues to
   release the values. They are kept and counted; ground temperature is shown as lower confidence than pressure and air
   temperature.
-- **Not used in version 1:** humidity (every reading in the files examined is marked "preliminary") and ultraviolet
-  (a separately corrected UV data set exists, `DATA_UV_CORRECTED`).
+- **Humidity is preliminary:** the first character of `HS_CONFIDENCE_LEVEL` is `0` ("preliminary") on every reading
+  in the files examined. Humidity is used (decided Nov 11, 2026) and labelled "preliminary" wherever it appears.
 
 ## Rule 6 — Coverage of a sol
 
@@ -91,6 +98,9 @@ when at least 22 of its 24 hours count, otherwise **partial**. Charts of daily a
   by the method of Allison and McEwen (2000) in `mars_time.py`, checked against the archive's stated values (sol 1:
   Ls 151.0, Mars Year 31; sol 4488: Ls 60.1, Mars Year 38). The REMS column `SOLAR_LONGITUDE_ANGLE` is not used:
   despite its name it is the Sun's direction relative to the rover.
+- **Humidity:** the humidity sensor is accurate only when it is cold, so relative humidity is summarised as the day's
+  highest value (from one-minute medians; it is reached at night) and its local hour, and water vapour as the median
+  over local hours 2–6.
 - **Rover height:** the median of `ROVER_POSITION_Z` from the ADR file (metres above the landing site). Curiosity has
   been climbing Mount Sharp; pressure falls with height, so height is kept beside every sol's pressure.
 
@@ -99,6 +109,20 @@ when at least 22 of its 24 hours count, otherwise **partial**. Charts of daily a
 Each report lists, for a person to check: a change of more than 15 Pa in daily mean pressure between consecutive full
 sols; daily air temperatures outside 150–300 K or ground temperatures outside 150–320 K; and a change of more than 50 m
 in rover height between sols with data.
+
+## Rule 9 — Ultraviolet (UV)
+
+UV comes from NASA's corrected UV data set (MSL-M-REMS-5-UVRDR-V1.0, folder `DATA_UV_CORRECTED`), the REMS team's
+highest UV processing level: fluxes corrected for dust settling on the sensor and for errors in the original
+calibration. It covers sols 1–3423, and only times when the Sun is less than 55° from overhead (other times are
+`-999`). The uncorrected UV in the MODRDR files is not used: dust on the sensor makes it misleading, and after sol
+3423 there is no corrected UV, so UV charts end there.
+
+- Band used: UV_ABC (the broad band, 220–370 nm), in W/m².
+- Per sol: the midday peak (the highest one-minute median, each minute with at least 30 readings), its local hour, and
+  the Sun's angle from overhead at that time (the peak depends on the season and on dust in the air).
+- Each file holds 100 sols (about 1.2 GB); it is read as it downloads and not stored. Its row count is checked against
+  its label.
 
 ---
 

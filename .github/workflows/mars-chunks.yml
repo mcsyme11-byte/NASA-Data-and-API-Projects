@@ -1,7 +1,7 @@
 # NASA and ESA Data Projects · Mars Data: process chunks of Curiosity REMS data · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # Runs on the mars-probe branch while the cleaning is being checked chunk by chunk: processes the chunks listed in
-# mars-data/analysis/chunks.txt with run_rems.py and commits the summaries and cleaning reports to the branch.
+# mars-data/analysis/chunks.txt with run_rems.py (SOL_… folders) and run_uv.py (REMS_UVS_… corrected UV files) and commits the summaries and cleaning reports to the branch.
 # Replaced by the scheduled "Mars data" job on main once every chunk has been checked.
 
 name: Mars data chunks (checking)
@@ -32,7 +32,11 @@ jobs:
         run: pip install pandas==2.2.3
       - name: Process the listed chunks
         working-directory: mars-data/analysis
-        run: python3 run_rems.py $(grep -v '^#' chunks.txt)
+        run: |
+          REMS=$(grep '^SOL_' chunks.txt || true)
+          UV=$(grep '^REMS_UVS_' chunks.txt || true)
+          if [ -n "$REMS" ]; then python3 run_rems.py $REMS; fi
+          if [ -n "$UV" ]; then python3 run_uv.py $UV; fi
       - name: Commit the summaries and reports to the branch
         run: |
           git config user.name "github-actions[bot]"

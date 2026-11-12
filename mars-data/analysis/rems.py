@@ -14,7 +14,7 @@ import pandas as pd
 
 from mars_time import from_j2000_seconds, ls_and_year
 
-RULES_VERSION = "1.0"  # raise when a rule in CLEANING.md changes; the summaries record it
+RULES_VERSION = "1.1"  # raise when a rule in CLEANING.md changes; the summaries record it
 
 MODRDR_COLUMNS = [
     "TIMESTAMP", "LMST", "LTST", "HORIZONTAL_WIND_SPEED", "VERTICAL_WIND_SPEED", "WIND_DIRECTION",
@@ -31,7 +31,9 @@ FLAG_COLUMNS = {c for c in MODRDR_COLUMNS if c.endswith("CONFIDENCE_LEVEL")} | {
 MISSING_TEXT = {"", "UNK", "NULL", "N/A"}
 
 # Physical limits (CLEANING.md, rule 4): values outside them cannot be real at Gale Crater.
-LIMITS = {"pressure": (400.0, 1200.0), "air_temp": (130.0, 310.0), "ground_temp": (130.0, 330.0)}
+LIMITS = {"pressure": (400.0, 1200.0), "air_temp": (130.0, 310.0), "ground_temp": (130.0, 330.0),
+          "humidity": (0.0, 100.0), "water_vapour": (0.0, 400.0)}
+NIGHT_HOURS = (2.0, 6.0)  # rule 7: local hours used for the night-time water vapour value
 FULL_SOL_HOURS = 22      # rule 6: a sol is "full" with good data in at least 22 of its 24 local hours
 MIN_SECONDS_PER_HOUR = 60  # rule 6: an hour counts with at least 60 good one-second readings
 
@@ -120,8 +122,12 @@ def clean(df: pd.DataFrame, sol: int) -> tuple[pd.DataFrame, dict]:
         & char_is(df["AMBIENT_TEMP_CONFIDENCE_LEVEL"], 8)                           # characters 8 and 9
     g_ok = df["BRIGHTNESS_TEMP"].notna() & char_is(df["GTS_CONFIDENCE_LEVEL"], 1) \
         & char_is(df["GTS_CONFIDENCE_LEVEL"], 2) & char_is(df["GTS_CONFIDENCE_LEVEL"], 3)  # characters 2, 3, 4
+    hs = df["HS_CONFIDENCE_LEVEL"]
+    h_ok = df["LOCAL_RELATIVE_HUMIDITY"].notna() & ~char_is(hs, 1, "0")             # character 2 not "bad"
+    v_ok = df["VOLUME_MIXING_RATIO"].notna() & ~char_is(hs, 1, "0") & char_is(hs, 2)  # and character 3: in range
     for name, col, ok in [("pressure", "PRESSURE", p_ok), ("air_temp", "AMBIENT_TEMP", t_ok),
-                          ("ground_temp", "BRIGHTNESS_TEMP", g_ok)]:
+                          ("ground_temp", "BRIGHTNESS_TEMP", g_ok), ("humidity", "LOCAL_RELATIVE_HUMIDITY", h_ok),
+                          ("water_vapour", "VOLUME_MIXING_RATIO", v_ok)]:
         present = df[col].notna()
         report[f"{name}_missing"] = int((~present).sum())
         report[f"{name}_failed_flags"] = int((present & ~ok).sum())
@@ -137,6 +143,7 @@ def clean(df: pd.DataFrame, sol: int) -> tuple[pd.DataFrame, dict]:
     report["pressure_oscillator_1"] = int((p_ok & char_is(df["PS_CONFIDENCE_LEVEL"], 0, "0")).sum())
     report["ground_temp_power_out_of_range"] = int((df["ground_temp"].notna()
                                                     & char_is(df["GTS_CONFIDENCE_LEVEL"], 0, "0")).sum())
+    report["humidity_preliminary"] = int((df["humidity"].notna() & char_is(hs, 0, "0")).sum())
     return df, dict(report)
 
 
@@ -177,6 +184,17 @@ def summarise(df: pd.DataFrame, sol: int, adr: pd.DataFrame | None) -> dict:
                 out[f"{name}_max"] = round(float(mm.max()), 2)
                 out[f"{name}_min_hour"] = round(float(mm.idxmin() / 60), 2)
                 out[f"{name}_max_hour"] = round(float(mm.idxmax() / 60), 2)
+    # Humidity (rule 7): the sensor is accurate only when cold, so the day's highest relative humidity (reached at
+    # night) is reported, with water vapour as the median over the night hours.
+    mm = minute_medians(d, "humidity")
+    good_h = d["humidity"].notna()
+    out["humidity_hours"] = int((d[good_h].groupby(d.loc[good_h, "hour"].astype(int)).size() >= MIN_SECONDS_PER_HOUR).sum())
+    if len(mm):
+        out["humidity_max"] = round(float(mm.max()), 2)
+        out["humidity_max_hour"] = round(float(mm.idxmax() / 60), 2)
+    night = d[d["hour"].between(*NIGHT_HOURS)]["water_vapour"].dropna()
+    if len(night) >= MIN_SECONDS_PER_HOUR:
+        out["water_vapour_night"] = round(float(night.median()), 1)
     if adr is not None and len(adr):
         z = adr["ROVER_POSITION_Z"].dropna()
         if len(z):
@@ -189,7 +207,7 @@ def hourly_profile(df: pd.DataFrame, sol: int) -> dict:
     """Hourly means for one sol (used for the "one sol, hour by hour" and "season by time of day" charts)."""
     d = df[df["sol"] == sol]
     res = {}
-    for name in ["pressure", "air_temp", "ground_temp"]:
+    for name in ["pressure", "air_temp", "ground_temp", "humidity"]:
         good = d[["hour", name]].dropna()
         g = good.groupby(good["hour"].astype(int))[name]
         n = g.count()

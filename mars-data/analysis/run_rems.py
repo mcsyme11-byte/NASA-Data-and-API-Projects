@@ -149,7 +149,8 @@ def write_report(chunk: str, results: list[dict], expected: range) -> str:
               f"- Rows whose local time falls on a neighbouring sol (counted, not used): {tot['rows_other_sol']:,}", "",
               "| Measurement | Missing in the file | Failed NASA's quality flags | Outside physical limits | Kept |",
               "|---|---:|---:|---:|---:|"]
-    for name, label in [("pressure", "Pressure"), ("air_temp", "Air temperature"), ("ground_temp", "Ground temperature")]:
+    for name, label in [("pressure", "Pressure"), ("air_temp", "Air temperature"), ("ground_temp", "Ground temperature"),
+                        ("humidity", "Relative humidity"), ("water_vapour", "Water vapour")]:
         n = tot["rows_read"] - tot["rows_duplicate_timestamp"] - tot["rows_bad_local_time"]
         lines.append(f"| {label} | {tot[f'{name}_missing']:,} | {tot[f'{name}_failed_flags']:,} | "
                      f"{tot[f'{name}_outside_limits']:,} | {tot[f'{name}_kept']:,} ({pct(tot[f'{name}_kept'], n)}) |")
@@ -157,7 +158,9 @@ def write_report(chunk: str, results: list[dict], expected: range) -> str:
               f"- Pressure readings from oscillator 1 (the sensor has two; oscillator 2 is used most of the time): "
               f"{tot['pressure_oscillator_1']:,}",
               f"- Ground temperature readings with the sensor's power supply flagged out of range: "
-              f"{tot['ground_temp_power_out_of_range']:,} ({pct(tot['ground_temp_power_out_of_range'], tot['ground_temp_kept'])} of kept)"]
+              f"{tot['ground_temp_power_out_of_range']:,} ({pct(tot['ground_temp_power_out_of_range'], tot['ground_temp_kept'])} of kept)",
+              f"- Relative humidity readings marked \"preliminary\" by NASA: {tot['humidity_preliminary']:,} "
+              f"({pct(tot['humidity_preliminary'], tot['humidity_kept'])} of kept)"]
 
     review = []
     if len(summ):
