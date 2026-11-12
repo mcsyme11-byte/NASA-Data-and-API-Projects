@@ -59,6 +59,20 @@ def main() -> int:
         elif "with a problem (not processed): 0" not in rep.read_text():
             errors.append(f"{c}: some sols could not be processed (see its cleaning report)")
 
+    meda = OUT.parent / "meda" / "sols.csv"
+    if meda.exists():
+        m = pd.read_csv(meda)
+        if m["sol"].duplicated().any() or not m["sol"].is_monotonic_increasing:
+            errors.append("meda/sols.csv repeats sols or is out of order")
+        bad = m[(m["pressure_mean"] < 400) | (m["pressure_mean"] > 1200)]
+        if len(bad):
+            errors.append(f"MEDA pressure outside 400-1200 Pa on sols {bad['sol'].tolist()[:10]}")
+        if not (m["mars_year"] * 360 + m["ls"]).is_monotonic_increasing:
+            errors.append("MEDA: the season goes backwards")
+        prev_m = int(os.environ.get("PREV_MEDA_SOLS", "0") or 0)
+        if len(m) < prev_m:
+            errors.append(f"meda/sols.csv has {len(m)} sols, fewer than the {prev_m} saved before")
+
     if errors:
         print("Checks failed; nothing is saved:\n- " + "\n- ".join(errors))
         return 1

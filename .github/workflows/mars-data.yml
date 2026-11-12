@@ -1,6 +1,7 @@
 # NASA and ESA Data Projects · Mars Data: automatic update · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
-# Twice a week, checks NASA's Planetary Data System for new or replaced Curiosity REMS files, processes only those
+# Twice a week, checks NASA's Planetary Data System for new or replaced Curiosity REMS and Perseverance MEDA files,
+# and ESA's archive for Mars Express profiles, processes only those
 # (mars-data/analysis/update.py, cleaning rules in CLEANING.md), checks the results (validate.py), rebuilds the page
 # files and commits them. Nothing is saved if a check fails. A GitHub issue is opened when new data is added, when
 # NASA's list of re-released files changes, or when the run fails; GitHub emails issues to the repository's owner.
@@ -33,7 +34,9 @@ jobs:
       - name: Install pandas
         run: pip install pandas==2.2.3
       - name: Count the sols saved so far
-        run: echo "PREV_SOLS=$(( $(wc -l < mars-data/data/rems/sols.csv) - 1 ))" >> "$GITHUB_ENV"
+        run: |
+          echo "PREV_SOLS=$(( $(wc -l < mars-data/data/rems/sols.csv) - 1 ))" >> "$GITHUB_ENV"
+          if [ -f mars-data/data/meda/sols.csv ]; then echo "PREV_MEDA_SOLS=$(( $(wc -l < mars-data/data/meda/sols.csv) - 1 ))" >> "$GITHUB_ENV"; fi
       - name: Look for new data in NASA's archive and process it
         working-directory: mars-data/analysis
         run: python3 update.py

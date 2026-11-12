@@ -4,7 +4,9 @@
 # replaced since the last run and processes only that:
 #   - chunk folders not processed yet;
 #   - in the newest processed chunk, sols added since, or files replaced by a new version (a new file name);
-#   - corrected UV files not processed yet.
+#   - corrected UV files not processed yet;
+#   - Perseverance MEDA: new chunk folders and new sols (run_meda.py);
+#   - ESA Mars Express profiles (run_mex.py): read once ESA's archive answers, and again when a new season appears.
 # Also records whether NASA's ERRATA.TXT (the list of re-released files) has changed; a change is reported for a
 # person to review, not acted on automatically.
 #
@@ -20,6 +22,8 @@ from pathlib import Path
 
 import pandas as pd
 
+import run_meda
+import run_mex
 import run_rems
 import run_uv
 from run_rems import BASE, OUT, get, listing
@@ -60,6 +64,40 @@ def main() -> None:
     for u in uv_todo:
         run_uv.run_file(u)
 
+    # Perseverance MEDA: new chunk folders, and new sols in the newest processed one.
+    meda_out = run_meda.OUT
+    m_manifest = pd.read_csv(meda_out / "manifest.csv") if (meda_out / "manifest.csv").exists() else pd.DataFrame(columns=["sol", "file"])
+    m_before = set(pd.read_csv(meda_out / "sols.csv")["sol"]) if (meda_out / "sols.csv").exists() else set()
+    m_done_chunks = {f.split("/")[0] for f in m_manifest["file"]}
+    m_chunks = run_meda.archive_chunks()
+    m_todo = [c for c in m_chunks if c not in m_done_chunks]
+    m_processed = [c for c in m_chunks if c in m_done_chunks]
+    if m_processed:
+        last = m_processed[-1]
+        sol_dirs = [d for d in listing(run_meda.BASE + last + "/") if re.match(r"sol_\d{4}/$", d)]
+        if any(int(d.strip("/").split("_")[1]) not in set(m_manifest["sol"]) for d in sol_dirs):
+            m_todo.insert(0, last)
+    for c in m_todo:
+        run_meda.run_chunk(c)
+    m_after = set(pd.read_csv(meda_out / "sols.csv")["sol"]) if (meda_out / "sols.csv").exists() else set()
+    m_new = sorted(m_after - m_before)
+
+    # ESA Mars Express: read once ESA's archive answers, then again when a new occultation season appears.
+    mex_note = ""
+    mex_out = run_mex.OUT
+    try:
+        sets = run_mex.season_sets()
+        done = []
+        if (mex_out / "report.md").exists():
+            done = re.findall(r"MEX-M-MRS-5-OCC-\d{4}-V\d+\.\d+", (mex_out / "report.md").read_text())
+        if not (mex_out / "profiles.csv").exists() or sorted(set(done)) != sorted(sets):
+            run_mex.main()
+            mex_note = (f"ESA's Mars Express profiles were read ({len(pd.read_csv(mex_out / 'profiles.csv'))} profiles). "
+                        "A chart for them needs a mock-up before it goes on the page.")
+    except Exception as e:  # ESA's archive not reachable: not a failure, tried again next run
+        mex_note = ""
+        print(f"Mars Express: ESA's archive not reachable ({e}); tried again next run.")
+
     sols_after = pd.read_csv(OUT / "sols.csv")["sol"] if (OUT / "sols.csv").exists() else pd.Series(dtype=int)
     new_sols = sorted(set(sols_after) - sols_before)
     check = {"checked": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
@@ -67,7 +105,10 @@ def main() -> None:
              "last_sol": int(sols_after.max()) if len(sols_after) else None,
              "processed_chunks": todo, "processed_uv_files": uv_todo,
              "new_sols": [new_sols[0], new_sols[-1], len(new_sols)] if new_sols else [],
-             "errata_sha256": errata_sha, "errata_changed": errata_changed}
+             "errata_sha256": errata_sha, "errata_changed": errata_changed,
+             "meda_processed_chunks": m_todo, "meda_new_sols": [m_new[0], m_new[-1], len(m_new)] if m_new else [],
+             "meda_last_sol": max(m_after) if m_after else None,
+             "mex_profiles": int(len(pd.read_csv(mex_out / "profiles.csv"))) if (mex_out / "profiles.csv").exists() else 0}
     (OUT / "last_check.json").write_text(json.dumps(check, indent=2) + "\n")
 
     notice = NOTICE
@@ -80,6 +121,10 @@ def main() -> None:
     if todo or uv_todo:
         lines += ["Processed: " + ", ".join(todo + uv_todo) + ".", "",
                   "The cleaning report for each chunk is in `mars-data/data/rems/reports/`."]
+    if m_new:
+        lines += ["", f"New Perseverance weather data (MEDA) was added: sols {m_new[0]}–{m_new[-1]} ({len(m_new)} sols)."]
+    if mex_note:
+        lines += ["", mex_note]
     if errata_changed:
         lines += ["", "NASA's list of re-released files (ERRATA.TXT) has changed since the last check. Files released "
                   "again under the same name are not detected automatically; the list needs a review."]
