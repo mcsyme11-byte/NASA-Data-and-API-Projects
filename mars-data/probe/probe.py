@@ -36,28 +36,12 @@ def save(name, data):
     if data is not None: (OUT / name).write_bytes(data)
 
 report = {}
-# Round 4: corrected UV data (UVRDR)
-base = "https://atmos.nmsu.edu/PDS/data/mslrem_1001/"
-save("uv_REMS_UVRDR_DS.CAT", get(base + "CATALOG/REMS_UVRDR_DS.CAT"))
-lvl1 = listing(base + "DATA_UV_CORRECTED/"); report["uv_lvl1"] = lvl1
-dirs = [d for d in lvl1 if d.endswith("/")]
-for which, d in ([("first", dirs[0]), ("last", dirs[-1])] if dirs else []):
-    lvl2 = listing(base + "DATA_UV_CORRECTED/" + d); report["uv_" + which + "_lvl2"] = lvl2[:5] + ["..."] + lvl2[-5:]
-    sub = [x for x in lvl2 if x.endswith("/")]
-    files, path = lvl2, base + "DATA_UV_CORRECTED/" + d
-    if sub:
-        pick = sub[0] if which == "first" else sub[-1]
-        path = path + pick; files = listing(path); report["uv_" + which + "_files"] = files
-    for f in files:
-        if f.upper().endswith(".LBL"):
-            save("uv_" + which + "_" + f, get(path + f))
-        if f.upper().endswith(".TAB"):
-            dd = get(path + f)
-            if dd is not None:
-                save("uv_" + which + "_" + f, b"\n".join(dd.splitlines()[:40]))
-                report["uv_" + which + "_rows"] = dd.count(b"\n")
-            break
-for f in listing(base + "LABEL/"):
-    if "UV" in f.upper(): save("uv_LABEL_" + f, get(base + "LABEL/" + f))
+# Round 5: one corrected UV table (sols 1-100): label and the first 40 rows
+u = "https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA_UV_CORRECTED/"
+save("uvc_REMS_UVS_0001_0100.LBL", get(u + "REMS_UVS_0001_0100.LBL"))
+d = get(u + "REMS_UVS_0001_0100.TAB")
+if d is not None:
+    save("uvc_REMS_UVS_0001_0100_head.TAB", b"\n".join(d.splitlines()[:40]))
+    report["uvc_rows"] = d.count(b"\n"); report["uvc_bytes"] = len(d)
 (OUT / "report.json").write_text(json.dumps(report, indent=2))
 (OUT / "requests.txt").write_text("\n".join(log) + "\n")
