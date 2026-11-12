@@ -1,5 +1,11 @@
 # Change log
 
+## November 12, 2026 — Mars Data: sols 1294–1869 added
+
+- Curiosity REMS sols 1294–1869 (Mars Years 33–34) and corrected UV for sols 1301–1900, cleaned with rules 1.1;
+  every cleaning report checked (no problems, nothing flagged for review; UV row counts match NASA's labels). The page
+  now covers sols 1–1869.
+
 ## November 12, 2026 — Sky Finder, "Visible from here" and the spacecraft map
 
 - **Asteroid Tracker, "Visible from here" tab** (`#visible`): choose a place ("Use my location" or a town from the

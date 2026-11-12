@@ -70,12 +70,12 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 
 **Data and analysis**
 - [ ] REMS, the whole record in chunks (44 chunk folders, sols 1–4843 on Nov 11, 2026) with cleaning rules 1.1
-  (`mars-data/analysis/CLEANING.md`): sols 1–1293 done and checked; sols 1294–4843 in batches of about five chunks,
+  (`mars-data/analysis/CLEANING.md`): sols 1–1869 done and checked; sols 1870–4843 in batches of about five chunks,
   each report checked before the next batch.
-- [ ] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): sols 1–1300 done and checked (row counts match NASA's
+- [ ] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): sols 1–1900 done and checked (row counts match NASA's
   labels); the rest with the REMS batches.
 - [ ] The cleaned summaries are built on the `mars-probe` branch and copied to main after each checked batch (sols
-  1–1293 on main). When the whole record is in: the scheduled "Mars data" job on main replaces the branch job; delete
+  1–1869 on main). When the whole record is in: the scheduled "Mars data" job on main replaces the branch job; delete
   the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the branch.
 - [ ] Optional: ask ESA (data.licences@esa.int) to confirm the spelling of the Mars Express MaRS credit line
   ("M. Plätzold, K. Pieter" on ESA's terms page; the archive names Martin Pätzold).
@@ -94,7 +94,7 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 - [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
 
 **Page**
-- [ ] Page live (Nov 12, 2026) with sols 1–1293; add each new batch's summaries (`analysis/make_page_data.py`)
+- [ ] Page live (Nov 12, 2026), now with sols 1–1869; add each new batch's summaries (`analysis/make_page_data.py`)
   until the whole record is in.
 - [ ] A short write-up on the page of what the patterns show, once the whole record is in.
 - [ ] `CREDITS.md`, the Credits page and the Privacy page updated for the new sources in the same change.
