@@ -26,7 +26,10 @@ import pandas as pd
 from mars_time import ls_and_year
 from run_rems import get, listing
 
-PSA = "https://archives.esac.esa.int/psa/ftp/MARS-EXPRESS/MRS/"
+# ESA's documented public FTP view (cosmos.esa.int/web/psa/ftp-browser); archives.esac.esa.int/psa/ftp/ is the
+# simplified mirror of the same tree, used if the first is unavailable.
+PSA_BASES = ["https://psaftp.esac.esa.int/MARS-EXPRESS/MRS/", "https://archives.esac.esa.int/psa/ftp/MARS-EXPRESS/MRS/"]
+PSA = PSA_BASES[0]
 OUT = Path(__file__).resolve().parent.parent / "data" / "mex"
 RULES_VERSION = "1.0"
 N_COLUMNS = 26
@@ -37,8 +40,19 @@ LEVELS_KM = [5, 10, 20, 30, 40]
 
 
 def season_sets() -> list[str]:
-    """The newest version of each level-5 occultation data set."""
-    sets = [d.strip("/") for d in listing(PSA) if re.match(r"MEX-M-MRS-5-OCC-\d{4}-V\d+\.\d+/$", d)]
+    """The newest version of each level-5 occultation data set (from the first ESA address that answers)."""
+    global PSA
+    last = None
+    for base in PSA_BASES:
+        try:
+            entries = listing(base)
+            PSA = base
+            break
+        except Exception as e:
+            last = e
+    else:
+        raise RuntimeError(f"ESA's archive could not be reached at {PSA_BASES}: {last}")
+    sets = [d.strip("/") for d in entries if re.match(r"MEX-M-MRS-5-OCC-\d{4}-V\d+\.\d+/$", d)]
     newest: dict[str, str] = {}
     for s in sorted(sets, key=lambda x: (x.split("-V")[0], float(x.split("-V")[1]))):
         newest[s.split("-V")[0]] = s
@@ -95,6 +109,7 @@ def main() -> None:
         sets = season_sets()
     except Exception as e:
         (OUT / "report.md").write_text(f"# Mars Express\n\nThe archive's list of data sets could not be read: {e}\n")
+        print(e)
         raise
     print("data sets:", sets, flush=True)
     files = []
@@ -140,7 +155,7 @@ def main() -> None:
     (OUT / "profiles.json").write_text(json.dumps({p["id"]: p["_profile"] for p in profiles}, separators=(",", ":")))
     if manifest:
         pd.DataFrame(manifest).sort_values("file").to_csv(OUT / "manifest.csv", index=False)
-    lines = ["# Cleaning report: Mars Express radio occultation profiles (ESA)", "",
+    lines = ["# Cleaning report: Mars Express radio occultation profiles (ESA)", "", f"Read from {PSA}", "",
              f"Processed {datetime.now(timezone.utc):%Y-%m-%d %H:%M} UTC with rules version {RULES_VERSION} "
              "(mars-data/analysis/CLEANING-MEX.md).", "",
              f"- Data sets (newest version of each season): {', '.join(sets)}",
