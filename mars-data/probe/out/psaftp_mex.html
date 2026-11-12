@@ -1,0 +1,298 @@
+<!doctype html>
+<html data-theme="light" lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
+    <meta name="description" content="CrushFTP - WebInterface">
+    <meta name="theme-color" content="#F5B451">
+
+    <title>CrushFTP - WebInterface</title>
+
+    <script type="text/javascript" src="/WebInterface/custom.js?v=bx7u-jg15"></script>
+    
+
+    <script type="text/javascript" src="/WebInterface/new-ui/init-js/advanced-download-sw-init.js?v=bx7u-jg15"></script>
+    <script type="text/javascript" src="/WebInterface/new-ui/init-js/password-rules.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/loader2.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/SCEditor/sceditor.min.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/SCEditor/formats/bbcode.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/dom.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/localizations.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/te.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/template.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/webcomponents.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/hash-listener.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/constants.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/store.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/templates/resizable.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/common.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/toast.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/alert.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/menubar.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/contextmenu.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/virtualscroll.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/tooltip.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/loader.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/modal.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/ajax.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/api/apis.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/custom-form.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/validate.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/sceditor-email-converter.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/templates/filter-section.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/tabs.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/log.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/apis.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/preload-helper.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/native-file-system-adapter-3.0.0/showSaveFilePicker.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/native-file-system-adapter-3.0.0/getOriginPrivateDirectory.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/native-file-system-adapter-3.0.0/FileSystemHandle.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/native-file-system-adapter-3.0.0/FileSystemDirectoryHandle.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/native-file-system-adapter-3.0.0/config.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/native-file-system-adapter-3.0.0/FileSystemWritableFileStream.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/thirdparty/native-file-system-adapter-3.0.0/FileSystemFileHandle.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/commonAdvancedDownload.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/user-actions.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/dropdown.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/utils/skeleton-styles.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/components/breadcrumbs.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/templates/listing.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/templates/basket.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/templates/loggedInInfo.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/templates/custom-theme.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/templates/upload-bar.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/file-listing/file-listing.common.js?v=bx7u-jg15"></script>
+    <script type="module" crossorigin src="/WebInterface/new-ui/assets/app/file-listing/file-listing.js?v=bx7u-jg15"></script>
+    <link rel="stylesheet" crossorigin href="/WebInterface/new-ui/assets/app/components/style.css?v=bx7u-jg15">
+  <link rel="stylesheet" type="text/css" href="/WebInterface/custom.css?v=bx7u-jg15"></head>
+
+  <body>
+    <div id="dragTopInfo-notification" class="is-hidden bg-primaryMain is-absolute py-2 px-4 gap-3">
+      <span class="has-text-info">
+        <i class="icon-info-sign is-size-3"></i>
+      </span>
+      <div class="is-flex is-flex-direction-column">
+        <p class="text-sm text-primaryMain" data-i18n-key="toMoveItemsDragThemOnFolder">
+          To move items, drag them on a folder.
+        </p>
+        <p class="text-sm text-primaryMain" data-i18n-key="toDownloadHoldDownCtrlCmdKeyAndDragToYourDesktop">
+          To download, hold down CTRL/CMD(Mac) key and drag to your desktop.
+        </p>
+        <p class="text-sm text-primaryMain" data-i18n-key="pressEscToCancel">
+          Press Esc to cancel
+        </p>
+      </div>
+    </div>
+    <section class="is-flex is-flex-direction-column h-screen dashboard-section">
+      <!-- Header Section -->
+      <header id="dashboard-header" class="w-full header bg-secondaryMain">
+        <div class="header-container">
+          <div class="is-flex is-align-items-center is-justify-content-space-between">
+            <div id="header-content" class="is-flex is-flex-grow-1 is-align-items-center is-justify-content-space-between is-relative">
+              <div class="is-flex is-align-items-center">
+                <!-- Mobile Menu -->
+                <div class="is-cursor-pointer hamburger-menu-container">
+                  <button type="button" id="show-mobile-menu" class="is-flex is-align-items-center is-justify-content-center is-relative is-cursor-pointer hamburger-menu-btn" aria-label="hamburger-icon-btn">
+                    <i class="icon-reorder text-primaryMain"></i>
+                  </button>
+                </div>
+
+                <div class="logo-section-wrapper">
+                  <div class="is-flex is-align-items-center is-justify-content-flex-start logo-section">
+                    <a id="left-logo" class="is-flex" href="#/">
+                      <div id="logo-container" class="logo">
+                        <w-image theme-specific="true" alt="crush-logo" class="logo is-hidden" src="WebInterface/images/logo.png">
+                        <div class="skeleton skeleton-rect" data-rect-h="100%" data-c-w="100%" data-c-p="0%" data-lines="0" data-bg="var(--bg-skeleton)"></div>
+                      </div>
+                    </a>
+                    <w-theme tabindex="0"></w-theme>
+                    <p id="header-text-section2" class="text-primaryMain text-xs is-hidden"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="is-flex gap-2 dropdown-section">
+                <!-- New added for add to basket -->
+                <div id="basket_icon" role="button">
+                  <div class="hamburger-menu-btn" aria-label="basket-icon-btn" tabindex="-1">
+                    <i class="icon-shopping-cart text-primaryMain"></i>
+                  </div>
+                </div>
+
+                <!-- Dropdown for activities -->
+                <div tabindex="0" id="activity-dropdown" class="dropdown" data-close-on-click-inside="false">
+                  <button type="button" id="operations-badge-button" class="hamburger-menu-btn dropdown-trigger" aria-label="activity-count-btn" tabindex="-1">
+                    <span id="activity-count" class="operations-badge is-hidden">
+                      0
+                    </span>
+                    <i class="icon-bell text-primaryMain"></i>
+                  </button>
+                  <div id="activityDropdownMenu" class="dropdown-menu">
+                    <div id="activitiesContent" class="dropdown-content"></div>
+                  </div>
+                </div>
+
+                <nav class="is-flex is-align-items-center navbar-container">
+                  <w-language id="localization-languages" class="is-hidden" tabindex="0"></w-language>
+                  <div tabindex="0" id="logged-in-details-dropdown" class="dropdown">
+                    <div id="logged-in-dropdown-trigger" class="dropdown-trigger"></div>
+                    <div class="dropdown-menu" id="profileHeaderDropdown"></div>
+                  </div>
+                </nav>
+              </div>
+              <p id="header-text-section3" class="ml-2 text-primaryMain text-xs is-hidden"></p>
+            </div>
+
+            <a id="right-logo" class="is-hidden" href="#/">
+              <div id="logo-container" class="logo">
+                <w-image theme-specific="true" alt="crush-logo" class="logo is-hidden" src="WebInterface/images/logo.png">
+                <div class="skeleton skeleton-rect" data-rect-h="100%" data-c-w="100%" data-c-p="0%" data-lines="0" data-bg="var(--bg-skeleton)"></div>
+              </div>
+            </a>
+          </div>
+          <p id="header-text-section" class="text-primaryMain text-xs is-hidden"></p>
+        </div>
+      </header>
+
+      <!-- Buttons Section -->
+      <nav class="w-full user-buttons-section">
+        <div class="is-relative w-full">
+          <div class="bg-primaryMain p-2">
+            <div class="is-flex is-align-items-center is-flex-wrap-wrap w-full gap-1 user-buttons-item" id="user-buttons">
+              <!-- Show only one line of skeletons (6 skeletons) - equal width, no wrap -->
+              <div class="is-flex is-flex-wrap-nowrap w-full gap-1 skeleton-container">
+                <div class="skeleton skeleton-line flex-grow-1" data-lines="1" data-l-h="24px" data-c-w="100%" data-c-p="0px" data-bg="var(--bg-skeleton)"></div>
+                <div class="skeleton skeleton-line flex-grow-1" data-lines="1" data-l-h="24px" data-c-w="100%" data-c-p="0px" data-bg="var(--bg-skeleton)"></div>
+                <div class="skeleton skeleton-line flex-grow-1" data-lines="1" data-l-h="24px" data-c-w="100%" data-c-p="0px" data-bg="var(--bg-skeleton)"></div>
+                <div class="skeleton skeleton-line flex-grow-1" data-lines="1" data-l-h="24px" data-c-w="100%" data-c-p="0px" data-bg="var(--bg-skeleton)"></div>
+                <div class="skeleton skeleton-line flex-grow-1" data-lines="1" data-l-h="24px" data-c-w="100%" data-c-p="0px" data-bg="var(--bg-skeleton)"></div>
+                <div class="skeleton skeleton-line flex-grow-1" data-lines="1" data-l-h="24px" data-c-w="100%" data-c-p="0px" data-bg="var(--bg-skeleton)"></div>
+              </div>
+            </div>
+            <w-language id="localization-languages-menubar" class="my-2 is-hidden" tabindex="0"></w-language>
+          </div>
+          <div class="user-buttons-backdrop"></div>
+        </div>
+      </nav>
+
+      <!-- Main Section -->
+      <main class="is-flex-grow-1 is-flex is-flex-direction-column main bg-primaryMain">
+        <div id="uploadBarSectionWrapper"></div>
+
+        <div class="is-flex is-align-items-center breadcrumb-container">
+          <nav class="breadcrumb has-arrow-separator" aria-label="dashboard-breadcrumb" id="dashboard-breadcrumb">
+            <ul></ul>
+          </nav>
+        </div>
+        <div id="vfs-comments" class="pl-5px"></div>
+        <div id="dashboard-filter-container"></div>
+
+        <div id="dashboard-files-section" class="is-relative dashboard-files-section h-full">
+          <div class="skeleton skeleton-list" data-lines="11" data-c-w="100%" data-l-h="24px" data-bg="var(--bg-skeleton)"></div>
+        </div>
+
+        <div id="listing-pagination-wrapper" class="is-hidden is-flex is-justify-content-space-between listing-pagination-wrapper is-align-items-center py-2 px-3">
+          <div>
+            <div id="listing-pagination" class="pagination is-small is-hidden" role="navigation" aria-label="pagination">
+              <div data-i18n-key="prev" class="pagination-previous">Prev</div>
+              <div data-i18n-key="next" class="pagination-next">Next</div>
+              <ul class="pagination-list">
+                <li>
+                  <div class="pagination-link">1</div>
+                </li>
+                <li><span class="pagination-ellipsis left">&hellip;</span></li>
+                <li>
+                  <div class="pagination-link">45</div>
+                </li>
+                <li>
+                  <div class="pagination-link is-current" aria-current="page">
+                    46
+                  </div>
+                </li>
+                <li>
+                  <div class="pagination-link">47</div>
+                </li>
+                <li><span class="pagination-ellipsis right">&hellip;</span></li>
+                <li>
+                  <div class="pagination-link">86</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="is-flex gap-3 is-align-items-center">
+            <div class="text-sm">
+              <span id="pagination-file-selected-info" class="pagination-selected-file-enable is-hidden" data-i18n-key="footerSelectedFileInfo" data-i18n-opt='{"totalSelectedFilesFolder": "0", "selectedFolder": "0", "selectedFiles": "0"}'></span>
+
+              <span id="pagination-file-selection-info" data-i18n-key="footerFileSelectionInfo" data-i18n-opt='{"totalFilesFolder": "0", "totalFolder": "0", "totalFiles": "0"}'></span>
+
+              <span class="pagination-selected-file-enable is-hidden" data-i18n-key="selected">
+                selected
+              </span>
+            </div>
+            <div class="select is-small items-per-page-dropdown-wrapper">
+              <select class="primary-select items-per-page-dropdown" name="items-per-page">
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+                <option value="2000">2000</option>
+                <option value="-1">All</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer Section -->
+      <footer id="dashboard-footer" class="is-flex is-align-items-center w-full footer is-flex-direction-column gap-2 bg-secondaryMain">
+        <div class="footerContent w-full is-hidden" id="footerContent"></div>
+        <div class="is-flex is-justify-content-space-between is-flex-wrap-wrap footer-container w-full">
+          <div id="currentDirectoryInfo">
+            <span id="footer-file-selected-info" class="footer-selected-file-enable is-hidden" data-i18n-key="footerSelectedFileInfo" data-i18n-opt='{"totalSelectedFilesFolder": "0", "selectedFolder": "0", "selectedFiles": "0"}'></span>
+
+            <span id="footer-file-selection-info" data-i18n-key="footerFileSelectionInfo" data-i18n-opt='{"totalFilesFolder": "0", "totalFolder": "0", "totalFiles": "0"}'></span>
+
+            <span class="footer-selected-file-enable is-hidden" data-i18n-key="selected">
+              selected
+            </span>
+
+            <span id="quota-available-for-directory" class="ml-2 is-hidden text-sm">
+              (
+              <span class="quota"></span>
+              <span data-i18n-key="available">Available</span>
+              )
+            </span>
+          </div>
+          <div>
+            <span id="session-info"></span>
+            <span>
+              <span id="copyright">
+                &copy; 2026
+                <span data-i18n-key="copyright" data-i18n-allow-html="true">
+                  Copyright
+                </span>
+                :
+              </span>
+              <span id="poweredBy">
+                <a class="brand-name" href="#" data-i18n-allow-html="true" data-i18n-key="poweredBy">
+                  CrushFTP
+                </a>
+              </span>
+            </span>
+          </div>
+        </div>
+      </footer>
+    </section>
+
+    <!-- JavaScript Files -->
+    <script type="text/javascript" src="/WebInterface/new-ui/assets/js/thirdparty/Reqwest/reqwest.js?v=bx7u-jg15"></script>
+    <script type="text/javascript" src="/WebInterface/new-ui/assets/js/thirdparty/wavesurfer/wavesurfer.js?v=bx7u-jg15"></script>
+    <script type="text/javascript" src="/WebInterface/new-ui/assets/js/thirdparty/purify/purify.min.js?v=bx7u-jg15"></script>
+    <script type="text/javascript" src="/WebInterface/new-ui/assets/js/thirdparty/DateTimePicker/flatpickr.js?v=bx7u-jg15"></script>
+    <script type="text/javascript" src="/WebInterface/new-ui/assets/js/thirdparty/video-js/video-csp-patch.js?v=bx7u-jg15"></script>
+    <script type="text/javascript" src="/WebInterface/new-ui/assets/js/thirdparty/video-js/video.min.js?v=bx7u-jg15"></script>
+
+    <script type="text/javascript" src="/WebInterface/new-ui/init-js/service-worker-init.js?v=bx7u-jg15"></script>
+  </body>
+</html>

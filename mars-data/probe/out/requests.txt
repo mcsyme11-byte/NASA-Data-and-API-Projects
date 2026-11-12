@@ -1,16 +1,3 @@
-FAIL HTTPError: HTTP Error 404: Not Found https://pds.nasa.gov/data/pds4/releases/atmos/mars2020_meda-20260811/collection_data_derived_env_inventory.csv
-FAIL HTTPError: HTTP Error 404: Not Found https://pds.nasa.gov/data/pds4/releases/atmos/mars2020_meda-20260811/collection_meda_data_derived_env_inventory.csv
-OK   200     20654 B   0.6s https://atmos.nmsu.edu/PDS/data/PDS4/
-OK   200      2507 B   0.2s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/
-OK   200      2507 B   0.4s https://pds-atmospheres.nmsu.edu/PDS/data/PDS4/Mars2020/
-OK   200      3078 B   0.4s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/
-OK   200      4692 B   0.3s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/
-OK   200      4692 B   0.2s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/
-OK   200     23065 B   1.4s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/sol_1740_1859/
-OK   200      3145 B   0.2s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/sol_1740_1859/sol_1859/
-OK   200   5176253 B   2.0s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/sol_1740_1859/sol_1859/WE__1859___________DER_ANCILLARY___________P01.CSV
-OK   200     15718 B   0.3s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/sol_1740_1859/sol_1859/WE__1859___________DER_ANCILLARY___________P01.xml
-OK   200   2596701 B   1.3s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/sol_1740_1859/sol_1859/WE__1859___________DER_PS__________________P01.CSV
-OK   200      9099 B   0.2s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/sol_1740_1859/sol_1859/WE__1859___________DER_PS__________________P01.xml
-OK   200   1983914 B   1.1s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/sol_1740_1859/sol_1859/WE__1859___________DER_RHS_________________P01.CSV
-OK   200     10308 B   0.7s https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/sol_1740_1859/sol_1859/WE__1859___________DER_RHS_________________P01.xml
+OK   200     19704 B   0.9s https://psaftp.esac.esa.int/
+OK   200     19704 B   2.2s https://psaftp.esac.esa.int/MARS-EXPRESS/
+OK   200     19704 B   1.4s https://psaftp.esac.esa.int/MARS-EXPRESS/MRS/
