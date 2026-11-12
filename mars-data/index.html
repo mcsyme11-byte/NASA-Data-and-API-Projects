@@ -243,7 +243,8 @@
     const C = Object.fromEntries(M.cols.map((c, i) => [c, i]));
     const rows = M.rows.map(r => Object.fromEntries(M.cols.map((c, i) => [c, r[i]])));
     const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-    const S = ["--s1", "--s2", "--s3", "--s4", "--s5", "--s6"].map(css);
+    // Six series colours from the theme, plus two more so each of the eight Mars Years has its own colour.
+    const S = ["--s1", "--s2", "--s3", "--s4", "--s5", "--s6"].map(css).concat(["#6FB7B0", "#E8E3D6"]);
     const NS = "http://www.w3.org/2000/svg";
     const K = 273.15, R_CO2 = 188.92, G_MARS = 3.711;
     const fmt = (v, d = 0) => v == null ? "–" : v.toLocaleString("en-CA", { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -323,11 +324,11 @@
       const pts = [];
       years.forEach((y, i) => {
         const ys = fullP.filter(r => r.mars_year === y).map(r => [r.ls, val(r)]);
-        el("path", { d: path(ys, f.X, f.Y, 6), fill: "none", stroke: S[i % 6], "stroke-width": 1.8 }, svg);
+        el("path", { d: path(ys, f.X, f.Y, 6), fill: "none", stroke: S[i % S.length], "stroke-width": 1.8 }, svg);
         fullP.filter(r => r.mars_year === y).forEach(r => pts.push({ x: r.ls, yy: val(r), r, y }));
       });
       hover(svg, f, pts, p => `<b>Sol ${p.r.sol}</b> · Mars Year ${p.y}<br>Ls ${fmt(p.r.ls, 1)}° · ${p.r.utc_date}<br>${fmt(p.yy, 1)} Pa${corrected ? " (at landing-site height)" : ""}<br>Rover ${fmt(p.r.rover_z_m)} m above landing site`);
-      document.getElementById("pLegend").innerHTML = years.map((y, i) => `<span><i style="background:${S[i % 6]}"></i>Mars Year ${y}</span>`).join("");
+      document.getElementById("pLegend").innerHTML = years.map((y, i) => `<span><i style="background:${S[i % S.length]}"></i>Mars Year ${y}</span>`).join("");
       document.getElementById("corrNote").textContent = corrected ? "Each sol adjusted to the landing site's height: p₀ = p × e^(h/H), with H = R·T/g." : "As measured, at the rover's height that sol.";
     }
     document.getElementById("corrBtn").addEventListener("click", e => { corrected = !corrected; e.currentTarget.setAttribute("aria-pressed", corrected); drawPressure(); });
@@ -337,7 +338,7 @@
       const svg = document.getElementById("cRange");
       const d = fullP.filter(r => r.pressure_max != null).map(r => ({ x: r.ls, yy: r.pressure_max - r.pressure_min, r }));
       const f = frame(svg, { w: 520, h: 300, x0: 0, x1: 360, y0: 0, y1: Math.ceil(Math.max(...d.map(p => p.yy)) / 20) * 20, xt: [0, 90, 180, 270, 360], xlab: "Season (Ls)", ylab: "Daily range (Pa)", xfmt: v => v + "°" });
-      d.forEach(p => el("circle", { cx: f.X(p.x), cy: f.Y(p.yy), r: 2.2, fill: S[years.indexOf(p.r.mars_year) % 6], opacity: .8 }, svg));
+      d.forEach(p => el("circle", { cx: f.X(p.x), cy: f.Y(p.yy), r: 2.2, fill: S[years.indexOf(p.r.mars_year) % S.length], opacity: .8 }, svg));
       hover(svg, f, d, p => `<b>Sol ${p.r.sol}</b> · Ls ${fmt(p.r.ls, 1)}°<br>Range ${fmt(p.yy, 1)} Pa<br>${fmt(p.r.pressure_min, 1)} to ${fmt(p.r.pressure_max, 1)} Pa`);
     }
 
@@ -347,7 +348,7 @@
       const pts = rows.filter(r => r[key] != null).map(r => ({ x: r.ls, yy: r[key], r }));
       if (!pts.length) { document.getElementById(frameId).innerHTML = `<div class="empty">${label}</div>`; return; }
       const f = frame(svg, { w: 520, h: 300, x0: 0, x1: 360, y0: 0, y1: Math.max(...pts.map(p => p.yy)) * 1.08, xt: [0, 90, 180, 270, 360], xlab: "Season (Ls)", ylab, xfmt: v => v + "°", yfmt: v => fmt(v, d) });
-      pts.forEach(p => el("circle", { cx: f.X(p.x), cy: f.Y(p.yy), r: 2.2, fill: S[years.indexOf(p.r.mars_year) % 6], opacity: .8 }, svg));
+      pts.forEach(p => el("circle", { cx: f.X(p.x), cy: f.Y(p.yy), r: 2.2, fill: S[years.indexOf(p.r.mars_year) % S.length], opacity: .8 }, svg));
       hover(svg, f, pts, p => `<b>Sol ${p.r.sol}</b> · Ls ${fmt(p.r.ls, 1)}°<br>${fmt(p.yy, d + 1)} ${unit}`);
     }
 

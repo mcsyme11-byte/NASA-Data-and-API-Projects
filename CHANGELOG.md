@@ -6,6 +6,7 @@
   1–4843 (August 7, 2012 to March 22, 2026), 4,703 sols with data, Mars Years 31–38. Every cleaning report checked.
 - The recurring evening air-temperature glitch was found on 26 sols in all; their air temperature is set aside for
   review (`mars-data/analysis/exclusions.csv`).
+- The charts use eight colours, one for each Mars Year (two added to the theme's six for this page).
 
 ## November 12, 2026 — Mars Data: sols 3645–4257 added; evening glitch set aside
 
