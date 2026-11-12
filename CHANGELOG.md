@@ -1,5 +1,11 @@
 # Change log
 
+## November 12, 2026 — Mars Data: sols 3645–4257 added; evening glitch set aside
+
+- Curiosity REMS sols 3645–4257 (Mars Year 37); every cleaning report checked. The page now covers sols 1–4257.
+- A recurring air-temperature glitch (one hour at about 19:00–20:00 local reading about −120 °C) was found on 12 sols
+  across the record; their air temperature is set aside for review (`mars-data/analysis/exclusions.csv`).
+
 ## November 12, 2026 — Mars Data: sols 3069–3644 added; corrected UV complete
 
 - Curiosity REMS sols 3069–3644 (Mars Year 36) and the last corrected UV files (to sol 3423, the end of NASA's corrected

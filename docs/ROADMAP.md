@@ -70,15 +70,16 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 
 **Data and analysis**
 - [ ] REMS, the whole record in chunks (44 chunk folders, sols 1–4843 on Nov 11, 2026) with cleaning rules 1.1
-  (`mars-data/analysis/CLEANING.md`): sols 1–3644 done and checked; sols 3645–4843 in batches of about five chunks,
+  (`mars-data/analysis/CLEANING.md`): sols 1–4257 done and checked; sols 4258–4843 (the last batch) running of about five chunks,
   each report checked before the next batch.
 - [x] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): all done and checked (row counts match NASA's labels).
 - [ ] The cleaned summaries are built on the `mars-probe` branch and copied to main after each checked batch (sols
-  1–3644 on main). When the whole record is in: the scheduled "Mars data" job on main replaces the branch job; delete
+  1–4257 on main). When the whole record is in: the scheduled "Mars data" job on main replaces the branch job; delete
   the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the branch.
-- [ ] Review the values set aside (`mars-data/analysis/exclusions.csv`, CLEANING.md rule 10): sol 2844 air
-  temperature (one hour at about 20:00 reads −119.6 °C between −38 and −49 °C). Consider an automatic rule for a single
-  hour far out of line with the hours either side.
+- [ ] Review the values set aside (`mars-data/analysis/exclusions.csv`, CLEANING.md rule 10): air temperature on 12
+  sols (2803, 2844, 4087, 4089, 4092, 4094, 4174, 4179, 4186, 4208, 4221, 4222). Each has one hour at about
+  19:00–20:00 local reading about −120 °C between hours of −35 to −50 °C: a recurring evening sensor glitch. Consider
+  an automatic rule for a single hour far out of line with the hours on both sides.
 - [ ] Optional: ask ESA (data.licences@esa.int) to confirm the spelling of the Mars Express MaRS credit line
   ("M. Plätzold, K. Pieter" on ESA's terms page; the archive names Martin Pätzold).
 - [ ] Add MEDA (Jezero Crater) and the MaRS profiles (ESA) to the same pipeline.
@@ -96,7 +97,7 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 - [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
 
 **Page**
-- [ ] Page live (Nov 12, 2026), now with sols 1–3644; add each new batch's summaries (`analysis/make_page_data.py`)
+- [ ] Page live (Nov 12, 2026), now with sols 1–4257; add each new batch's summaries (`analysis/make_page_data.py`)
   until the whole record is in.
 - [ ] A short write-up on the page of what the patterns show, once the whole record is in.
 - [ ] `CREDITS.md`, the Credits page and the Privacy page updated for the new sources in the same change.
