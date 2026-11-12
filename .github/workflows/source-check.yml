@@ -1,0 +1,27 @@
+# One-off check of data sources (run by hand; removed after use).
+name: Source check (one-off)
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Astronaut photos without a key
+        run: |
+          A="Mozilla/5.0 (compatible; data-check)"
+          curl -sSL -A "$A" -c j.txt -b j.txt "https://eol.jsc.nasa.gov/SearchPhotos/PhotoIdSets/PhotoIdSets.pl?set=Latest_ISS_Imagery&view=1" -o f.html -w "forwarder %{http_code} %{url_effective}\n"
+          head -c 3000 f.html; echo; echo ======
+          U=$(grep -oE "(https?://eol.jsc.nasa.gov)?/[A-Za-z/]*(ShowQueryResults|Results)[^\"' ]*" f.html | head -1); echo "next: $U"
+          [ -n "$U" ] && { case "$U" in http*) ;; *) U="https://eol.jsc.nasa.gov$U";; esac; curl -sSL -A "$A" -b j.txt "$U" -o r.html -w "results %{http_code} %{size_download}\n"; python3 - <<'PY'
+          import re
+          s=open('r.html',errors='replace').read()
+          print(re.sub(r'\s+',' ',s)[:4000])
+          print('links:', sorted(set(re.findall(r'(?:href|src)="([^"]+)"', s)))[:60])
+          PY
+          }
+      - name: Other sources (CORS headers)
+        run: |
+          for u in "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson" "https://gibs.earthdata.nasa.gov/wmts/epsg3413/best/BlueMarble_NextGeneration/default/default/500m/0/0/0.jpeg" "https://gibs.earthdata.nasa.gov/wmts/epsg3031/best/BlueMarble_NextGeneration/default/default/500m/0/0/0.jpeg" "https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/BlueMarble_NextGeneration/default/default/500m/0/0/0.jpeg"; do
+            echo "=== $u"; curl -sS -o /dev/null -D - -H "Origin: https://example.org" "$u" | grep -iE "^HTTP|access-control-allow-origin|content-type|content-length"; done
+          curl -sS https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson | head -c 900; echo
