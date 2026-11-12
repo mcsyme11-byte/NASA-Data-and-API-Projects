@@ -234,6 +234,8 @@ table.neo tr.out td { color: var(--muted); }
 /* ---- tabs across the Asteroid Tracker's pages ---- */
 .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: -8px 0 22px; overflow-x: auto; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
+/* wide enough screens: the tabs wrap to a second line rather than hide off the edge; phones scroll them sideways */
+@media (min-width: 761px) { .tabs { flex-wrap: wrap; overflow-x: visible; } }
 .tabs a, .tabs button { flex: none; background: none; border: 0; border-bottom: 2px solid transparent; padding: 12px 16px 11px;
   font: 12px var(--font); text-transform: uppercase; letter-spacing: .22em; color: var(--ink2); cursor: pointer; white-space: nowrap; }
 .tabs a:hover, .tabs button:hover { color: var(--brass); }

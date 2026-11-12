@@ -34,6 +34,9 @@ html.viewing, html.viewing body { overflow: hidden; height: 100%; overscroll-beh
 .sfplace-t #darkFrom { color: var(--muted); font-style: italic; font-size: 14px; }
 .sfplace .linkbtn { min-height: 44px; flex: none; }
 .sfsheet { display: grid; gap: 10px; margin: 8px 0 4px; padding: 16px; background: var(--card); border: 1px solid var(--line); border-top-color: var(--brass-dim); border-radius: var(--r-card); position: relative; }
+.sfsheet-h { display: flex; align-items: center; justify-content: space-between; margin: -6px -6px 0 0; }
+.sfx { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line2); background: none; color: var(--ink2); font-size: 22px; line-height: 1; cursor: pointer; }
+.sfx:hover { color: var(--brass-bright); border-color: var(--brass); }
 .sfsheet input { width: 100%; min-height: 46px; font: 16px var(--font); color: var(--ink); background: var(--deep); border: 1px solid var(--line2); border-radius: var(--r-btn); padding: 10px 12px; }
 .sfhits { display: grid; background: var(--deep); border: 1px solid var(--line2); border-radius: var(--r-btn); max-height: 300px; overflow-y: auto; }
 .sfhits button { text-align: left; min-height: 46px; padding: 10px 12px; border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--ink2); font: 15px var(--font); cursor: pointer; }

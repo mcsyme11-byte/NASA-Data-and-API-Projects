@@ -182,8 +182,8 @@ export class SpaceMap extends SolarMap {
         const pq = parentQ[c.parent] || parentQ.Earth, group = c.parent === 'Moon' ? 'Earth' : c.parent;
         const gq = parentQ[group];
         if (Math.hypot(q[0] - gq[0], q[1] - gq[1]) < 9 * dpr && Math.hypot(pq[0] - gq[0], pq[1] - gq[1]) < 9 * dpr) {
-          clusters[group] = clusters[group] || { q: gq, n: 0 };
-          clusters[group].n++;
+          clusters[group] = clusters[group] || { q: gq, n: 0, list: [] };
+          clusters[group].n++; clusters[group].list.push([c, q]);
           continue;
         }
       }
@@ -193,6 +193,14 @@ export class SpaceMap extends SolarMap {
       craftIcon(ctx, c.info.kind, q[0], q[1], isSel ? s * 1.25 : s, isSel ? '#E2C88E' : '#EDE6D3', (c.info.tags || []).includes('military'));
       this.bodies.push({ kind: 'craft', key: c.key, name: c.info.name, x: q[0], y: q[1], r: s * 1.9, col: isSel ? '#E2C88E' : '#EDE6D3' });
       this.craftScreen.push(c.key);
+    }
+    // a "group" of one is just drawn as itself
+    for (const [g, cl] of Object.entries(clusters)) {
+      if (cl.n > 1) continue;
+      const [c, q] = cl.list[0];
+      craftIcon(ctx, c.info.kind, q[0], q[1], s, '#EDE6D3', (c.info.tags || []).includes('military'));
+      this.bodies.push({ kind: 'craft', key: c.key, name: c.info.name, x: q[0], y: q[1], r: s * 1.9, col: '#EDE6D3' });
+      delete clusters[g];
     }
     // groups of craft too close together to draw apart: a ring with the count
     for (const [g, cl] of Object.entries(clusters)) {

@@ -14,10 +14,10 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111203">
-  <link rel="stylesheet" href="sky-finder.css?v=2026111201">
-  <script type="module" src="../shared/footer.js?v=2026111203"></script>
-  <script type="module" src="app.js?v=2026111201"></script>
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111204">
+  <link rel="stylesheet" href="sky-finder.css?v=2026111202">
+  <script type="module" src="../shared/footer.js?v=2026111204"></script>
+  <script type="module" src="app.js?v=2026111202"></script>
 </head>
 <body class="sf">
   <header class="sfbar">
@@ -38,6 +38,7 @@
     </section>
 
     <section class="sfsheet" id="placeSheet" hidden aria-label="Choose where you are">
+      <div class="sfsheet-h"><span class="lbl">Where are you?</span><button class="sfx" type="button" id="closePlace" aria-label="Close">×</button></div>
       <button class="sfbtn" type="button" id="useHere">Use my location</button>
       <label class="lbl" for="placeQ">or a town</label>
       <input id="placeQ" type="search" placeholder="Town or city" autocomplete="off" spellcheck="false" aria-controls="placeHits">

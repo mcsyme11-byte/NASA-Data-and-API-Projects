@@ -32,6 +32,8 @@ $('#red').addEventListener('click', () => setRed(!document.documentElement.class
 const sheet = $('#placeSheet');
 function openPlace(open) { sheet.hidden = !open; $('#changePlace').setAttribute('aria-expanded', open); if (open) setTimeout(() => $('#placeQ').focus(), 30); }
 $('#changePlace').addEventListener('click', () => openPlace(sheet.hidden));
+$('#closePlace').addEventListener('click', () => { openPlace(false); $('#changePlace').focus(); });
+sheet.addEventListener('keydown', (e) => { if (e.key === 'Escape') { openPlace(false); $('#changePlace').focus(); } });
 const say = (m) => { $('#placeMsg').textContent = m || ''; $('#placeMsg').hidden = !m; };
 $('#useHere').addEventListener('click', async () => {
   const b = $('#useHere'); b.disabled = true; b.textContent = 'Finding you…'; say('');
