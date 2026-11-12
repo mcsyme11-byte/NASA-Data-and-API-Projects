@@ -1,0 +1,19 @@
+{
+  "name": "Sky Finder",
+  "short_name": "Sky Finder",
+  "description": "Hold your phone up to the sky to find tonight's passing asteroids, with the Moon, planets, bright stars and the space stations to guide you. Part of NASA and ESA Data Projects by Malcolm Syme; not endorsed by NASA or ESA.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0F1520",
+  "theme_color": "#0F1520",
+  "categories": ["education", "science"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -19,6 +19,7 @@ import { placeKeeper, scrollBack } from './back.js';
 import { takeShared, linkWith, shareButton } from './share.js';
 import { weekCopy } from './neows.js';
 import { mountRisk, chanceText } from './risk.js';
+import { mountVisible } from './visible.js';
 import { esaApproach, riskOf } from './esa.js';
 
 const $ = (s) => document.querySelector(s);
@@ -428,8 +429,8 @@ $('#thisYear').addEventListener('click', () => goYear(thisYearNow()));
 
 // ---------------------------------------------------------------- views (#year, #year-2019, #search)
 const hashYear = () => { const m = /^#year(?:-(\d{4}))?$/.exec(location.hash); return m ? Number(m[1] || thisYearNow()) : null; };
-const hashView = () => (location.hash === '#search' ? 'search' : location.hash === '#risk' ? 'risk' : hashYear() ? 'year' : 'week');
-let search = null, risk = null;
+const hashView = () => (location.hash === '#search' ? 'search' : location.hash === '#risk' ? 'risk' : location.hash === '#visible' ? 'visible' : hashYear() ? 'year' : 'week');
+let search = null, risk = null, visible = null;
 function setView(v, year) {
   state.view = v;
   $$('[data-view]').forEach((x) => { x.setAttribute('aria-pressed', x.dataset.view === v); x.setAttribute('aria-selected', x.dataset.view === v); });
@@ -437,15 +438,17 @@ function setView(v, year) {
   $('#view-year').hidden = v !== 'year';
   $('#view-search').hidden = v !== 'search';
   $('#view-risk').hidden = v !== 'risk';
+  $('#view-visible').hidden = v !== 'visible';
   hideTip();
   if (v === 'risk' && !risk) risk = mountRisk($('#view-risk'), 'data/risk.json');
+  if (v === 'visible') { if (!visible) visible = mountVisible($('#view-visible'), 'data/sky.json'); else visible.refresh(); }
   if (v === 'year') { loadIds(); if (year || !state.year) loadYear(year || state.yearShown); else renderYear(); }
   else if (v === 'search') { if (!search) search = mountSearch($('#view-search'), () => loadNeos().then((d) => d.rows)); setTimeout(() => search.focus(), 0); }
   else if (state.week) renderFiltered();
 }
 $$('[data-view]').forEach((b) => b.addEventListener('click', () => {
   const v = b.dataset.view;
-  history.replaceState(null, '', v === 'year' ? (state.yearShown && state.yearShown !== thisYearNow() ? `#year-${state.yearShown}` : '#year') : v === 'search' ? '#search' : v === 'risk' ? '#risk' : location.pathname);
+  history.replaceState(null, '', v === 'year' ? (state.yearShown && state.yearShown !== thisYearNow() ? `#year-${state.yearShown}` : '#year') : v === 'search' ? '#search' : v === 'risk' ? '#risk' : v === 'visible' ? '#visible' : location.pathname);
   setView(v);
 }));
 addEventListener('hashchange', () => setView(hashView(), hashYear()));

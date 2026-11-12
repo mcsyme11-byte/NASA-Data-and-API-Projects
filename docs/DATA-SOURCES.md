@@ -281,6 +281,23 @@ each archive's own documentation. Decided Nov 11, 2026: three missions are follo
   id is 2,000,000 + number for numbered asteroids, otherwise the SBDB `spkid`; comets get none. The home page shows
   the closest pass between the moment it is opened and 7 days later, in the visitor's time zone.
 
+### sky.json ("Visible from here" and Sky Finder), added Nov 12, 2026
+
+- Written daily by `asteroid-tracker/fetch_sky.py` (a step of the Asteroid data workflow). Close-Approach Data
+  (`cad.api`, `date-min` yesterday, `date-max` 30 days ahead, `dist-max=0.2`, `fullname=true`, `diameter=true`)
+  gives the passes; each is kept when its estimated magnitude at closest approach, V ≈ H + 5·log10(Δ) + 2.5 (Δ in
+  au, r taken as 1 au, +2.5 for a typical phase angle), is 16 or brighter; at most 40, brightest first.
+- For each, Horizons vectors as seen from Earth's centre: `COMMAND='DES=<des>;'` (or `'<number>;'`), `CENTER='500@399'`,
+  `REF_PLANE=FRAME`, `REF_SYSTEM=ICRF` (the J2000 equator), `OUT_UNITS=KM-S`, `VEC_TABLE=1`, from 6 days before to 6
+  days after closest approach (within yesterday to 31 days ahead), every hour when the pass is within 0.02 au and
+  every 3 hours otherwise. Stored as whole kilometres.
+- The pages (`shared/sky.js`, `shared/passes.js`) turn these into altitude and azimuth for the visitor's own place:
+  precession to the date (IAU 1976), the observer's position on the WGS84 ellipsoid subtracted (parallax matters for
+  close passes), refraction (Bennett), and the magnitude from the IAU H, G system (G = 0.15). Checked against Astropy
+  at 40 random places and times on Nov 12, 2026: worst errors Sun 0.01°, Moon 0.018°, Jupiter 0.09°, bright stars
+  0.008°.
+- The visitor's place never leaves the browser: the file is the same for everyone.
+
 ### Asteroid names (Minor Planet Center rules)
 
 Used by `decodeCode()` in `asteroid-tracker/search.js`:
@@ -601,6 +618,57 @@ archives to the Picture library. Checked with requests from GitHub's servers and
 
 - `BlueMarble_NextGeneration` (`default` time, `500m`, JPEG) exists in EPSG:4326, EPSG:3413 and EPSG:3031 and loads from a
   browser. It is drawn under the day's pictures so the gaps between a satellite's passes show the land.
+
+## Spacecraft map (`spacecraft/`), added Nov 12, 2026
+
+### The catalogue (`spacecraft/catalogue.json`)
+
+- Written by hand: each craft's name, agencies, kind, launch date and rocket, a short description, a timeline and
+  links to the agencies' own pages, with where its position comes from. Facts checked Nov 12, 2026 against the
+  agencies' pages and news. Missions that ended before then are not included (for example MAVEN, lost in 2026;
+  Swift, which re-entered on Nov 4, 2026; Gaia, retired in 2025; INTEGRAL, whose science ended in 2025).
+- Military satellites are included only where the orbit is published by CelesTrak (for example WSF-M1);
+  communication and navigation constellations (Starlink, GPS and similar) are left out, decided Nov 11, 2026.
+
+### Horizons API (spacecraft map), checked Nov 12, 2026
+
+- `spacecraft/fetch_spacecraft.py`, twice a day (workflow `spacecraft-data.yml`). Same query as above, but
+  `OUT_UNITS=KM-S`, whole kilometres, and the centre chosen by where the craft is:
+  `500@10` (the Sun; every 2–30 days, Parker Solar Probe every 6 hours; from launch or a few years back to a year
+  ahead), `500@399` (Earth; craft near L1 and L2 every 6 hours, 60 days back to 120 ahead), `500@301` (the Moon) and
+  `500@499` (Mars; orbiters every 5 minutes, rovers every 30, half a day back to a day and a half ahead).
+- Ids: as listed in the catalogue (`src.horizons`); craft whose id is not fixed there are looked up by name
+  (`src.horizons_name`): the script asks Horizons for the name and takes the id from "Target body name … (−nnn)" or,
+  when several match, the line naming the craft. The run log lists every id found and every craft not found.
+- The page adds each craft's position to its parent's: the Sun at the origin, Earth and the planets from JPL's
+  approximate elements, the Moon from Meeus (chapter 47) moved to the J2000 ecliptic.
+
+### CelesTrak orbital elements, checked Nov 12, 2026
+
+- `https://celestrak.org/NORAD/elements/gp.php?GROUP=<group>&FORMAT=tle` (no key), the groups `stations`, `science`,
+  `weather`, `resource`, `noaa`, `goes`, `military`, `geodetic`, `active`, read in turn until every craft is found by
+  its exact CelesTrak name (`src.tle`, several spellings allowed); otherwise `?NAME=<name>&FORMAT=tle`.
+- Usage policy (celestrak.org/usage-policy.php): data are updated about every 2 hours, and the same request repeated
+  within that time is refused (HTTP 403). The job asks twice a day. Credit: "CelesTrak".
+- Written to `spacecraft/data/tle.json`: name, the two lines, NORAD catalogue number and the elements' epoch.
+  Positions are worked out in the browser with SGP4 (satellite.js 7.2.0); low-orbit positions drift by kilometres a
+  day as the elements age.
+
+### Link check
+
+- On the morning run, every catalogue link is requested (HEAD, then GET); links answering 404 or 410 are written to
+  `spacecraft/data/links.json` and left off the page. Other answers (403, 429, timeouts) keep the link.
+
+## Sky Finder (`sky-finder/`), added Nov 12, 2026
+
+- Asteroids: `asteroid-tracker/data/sky.json` (above). Space stations: `spacecraft/data/tle.json`, the ISS and
+  Tiangong; a pass is shown when the station is at least 10° up, in sunlight (outside Earth's shadow, taken as a
+  cylinder) and the Sun at least 6° below the observer's horizon.
+- Bright stars: `sky-finder/data/stars.json`, the 921 stars of magnitude 4.5 or brighter from d3-celestial's
+  Hipparcos star file (`stars.6.json`), with the proper names of those of magnitude 2.6 or brighter (d3-celestial's
+  `starnames.json`); BSD 3-Clause, © 2015 Olaf Frohn.
+- Moon, planets and Sun: computed in the browser (`shared/sky.js`).
+- Nothing is requested from any other service; the camera, location and motion readings stay on the device.
 
 ## Using NASA material
 

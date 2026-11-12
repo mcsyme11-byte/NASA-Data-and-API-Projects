@@ -1,0 +1,60 @@
+# NASA and ESA Data Projects · Spacecraft map data · © 2026 Malcolm Syme · mcsyme11@gmail.com
+#
+# Twice a day, refreshes the spacecraft map's data (spacecraft/fetch_spacecraft.py) and commits it when it has
+# changed; GitHub Pages then republishes the site:
+#   positions.json  positions from NASA/JPL Horizons, each relative to the Sun, Earth, the Moon or Mars
+#   tle.json        orbital elements of the craft in Earth orbit from CelesTrak (also used by Sky Finder for the
+#                   space stations' passes)
+#   links.json      catalogue links that no longer answer (checked on the morning run)
+# Twice a day because orbital elements of low satellites age quickly and the Mars and Moon orbiters' positions cover
+# about a day and a half; the browser works out every position in between.
+# Run by hand: Actions › Spacecraft data › Run workflow.
+
+name: Spacecraft data
+
+on:
+  schedule:
+    - cron: '23 5 * * *'    # 05:23 UTC daily
+    - cron: '53 17 * * *'   # 17:53 UTC daily
+  push:
+    branches: [main]
+    paths:
+      - 'spacecraft/fetch_spacecraft.py'
+      - 'spacecraft/catalogue.json'
+      - '.github/workflows/spacecraft-data.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: spacecraft-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      # If one source cannot be read, the run is marked with a warning but what was read is still saved (the
+      # previous file is kept for the other).
+      - name: Fetch spacecraft positions and orbital elements
+        continue-on-error: true
+        run: python3 spacecraft/fetch_spacecraft.py
+      - name: Commit if changed
+        run: |
+          git add -A spacecraft/data/
+          if git diff --cached --quiet; then
+            echo "No change in the data."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Spacecraft data: positions and orbital elements update"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase --quiet && git push && exit 0
+            echo "Push attempt $attempt did not succeed; retrying."
+            sleep $((attempt * 10))
+          done
+          exit 1

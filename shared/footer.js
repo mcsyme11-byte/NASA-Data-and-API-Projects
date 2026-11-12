@@ -53,7 +53,7 @@ const NAMES = [
   [/\/asteroid-tracker\/map\.html$/, 'the map'], [/\/asteroid-tracker\/object\.html$/, 'the asteroid'],
   [/\/asteroid-tracker\/(index\.html)?$/, 'the Asteroid Tracker'], [/\/image-explorer\//, 'the Image Explorer'],
   [/\/mars-data\//, 'Mars Data'], [/\/about\//, 'About'], [/\/privacy\//, 'Privacy'], [/\/terms\//, 'Terms'],
-  [/\/credits\//, 'Credits'], [/\/contact\//, 'Contact'],
+  [/\/credits\//, 'Credits'], [/\/contact\//, 'Contact'], [/\/sky-finder\//, 'Sky Finder'], [/\/spacecraft\//, 'the spacecraft map'],
 ];
 function wireBack() {
   const el = document.getElementById('back');

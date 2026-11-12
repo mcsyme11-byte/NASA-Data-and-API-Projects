@@ -9,6 +9,10 @@ and APIs of NASA and ESA (the European Space Agency), one folder each:
 | **Mars Data** | `mars-data/` | Mars mission measurements cleaned, organised, analysed and charted |
 | **Image Explorer** | `image-explorer/` | Imagery searchable by date, location and mission (NASA GIBS + Image Library, ESA/Webb + ESA/Hubble) |
 
+Utilities alongside them (since Nov 12, 2026): **Sky Finder** (`sky-finder/`, an installable phone web app that points
+to passing asteroids) and the **spacecraft map** (`spacecraft/`, previewed on the home page; data job
+`spacecraft-data.yml`; facts in `spacecraft/catalogue.json`, checked by hand).
+
 Shared code and the look are in `shared/`; documents in `docs/`. It is separate from the Flight Deck Suite and Hot Mic
 (their own repositories), but shares their look.
 

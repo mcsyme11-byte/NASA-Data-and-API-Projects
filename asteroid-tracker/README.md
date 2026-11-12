@@ -22,6 +22,9 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
   filters. A live preview runs on the home page.
 - **Search:** results with every letter, a "Found in" filter, and a guide to how asteroids are named, with each code
   decoded (2024 YR4: found December 16–31, 2024, the 117th new small body given a code in that half-month).
+- **Visible from here** (since Nov 12, 2026): from the visitor's place (device location or a town), the passes of
+  the next 30 days that rise at least 10° in full darkness, with brightness, what is needed to see each (naked eye,
+  binoculars, small or large telescope), a night chart and "Find it ›" into [Sky Finder](../sky-finder/).
 - **No key needed:** the weeks around today and their asteroids come from the daily copy of NeoWs; anything else uses NASA's shared demo key.
 
 ## The numbers: which rule to use when
@@ -81,10 +84,12 @@ asteroid-tracker/
 ├── risk.js                      the Impact risk tab: ESA's and NASA's lists side by side, filters, sorting, details
 ├── neows.js                     reads the daily copy of NeoWs (data/neows/) for the week view and the asteroid page
 ├── esa.js                       reads ESA's close approaches and both risk lists for the week's details, the asteroid page and the map
+├── visible.js                   the "Visible from here" tab: place, passes, night chart, the rules
 ├── share.js                     "Share this view" and "Share this week": the view as a link, opened by the share sheet or copied
 ├── fetch_close_approaches.py    writes data/YYYY.json and data/years.json (daily, GitHub Actions)
 ├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json, data/soon.json (daily), data/famous.json (monthly)
 ├── fetch_neows.py               writes data/neows/: NeoWs weeks around today and their asteroids' pages (secret NASA_API_KEY)
+├── fetch_sky.py                 writes data/sky.json: positions seen from Earth around the coming passes (daily)
 ├── fetch_risk.py                writes data/risk.json (ESA NEOCC and NASA/JPL Sentry) and data/esa_close.json (daily)
 ├── data/                        the files above
 └── README.md                    this file

@@ -8,8 +8,8 @@
   <meta name="description" content="Every data source and code library NASA and ESA Data Projects uses, with its terms.">
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111202">
-  <script type="module" src="../shared/footer.js?v=2026111202"></script>
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111203">
+  <script type="module" src="../shared/footer.js?v=2026111203"></script>
 </head>
 <body>
   <header class="topbar">
@@ -45,13 +45,14 @@
         <thead><tr><th>Source</th><th>Used for</th><th>Terms</th></tr></thead>
         <tbody>
           <tr><td><strong>NASA NeoWs</strong> (api.nasa.gov)</td><td>Asteroid Tracker: close approaches, sizes, the hazard flag</td><td>NASA data</td></tr>
-          <tr><td><strong>NASA/JPL Solar System Dynamics</strong>: Close-Approach Data, Small-Body Database, Horizons, approximate planetary elements, Sentry</td><td>Asteroid Tracker: approaches, orbits, spacecraft and planet positions, NASA's impact-risk list</td><td>NASA/JPL data</td></tr>
+          <tr><td><strong>NASA/JPL Solar System Dynamics</strong>: Close-Approach Data, Small-Body Database, Horizons, approximate planetary elements, Sentry</td><td>Asteroid Tracker: approaches, orbits, spacecraft and planet positions, NASA's impact-risk list, the positions behind "Visible from here"; the spacecraft map's deep-space, Lagrange-point, Moon and Mars positions; Sky Finder's asteroid positions</td><td>NASA/JPL data</td></tr>
+          <tr><td><strong>CelesTrak</strong> (<a href="https://celestrak.org/" target="_blank" rel="noopener">celestrak.org</a>), general perturbations orbital elements</td><td>Spacecraft map: satellites in Earth orbit; Sky Finder: the space stations' passes</td><td>Published orbital data, credited "CelesTrak"</td></tr>
           <tr><td><strong>NASA GIBS</strong> (Global Imagery Browse Services), including Blue Marble</td><td>Image Explorer: the Earth map, polar views, the globe's surface</td><td>NASA imagery; acknowledgement below</td></tr>
           <tr><td><strong>NASA Image and Video Library</strong></td><td>Image Explorer: pictures and videos</td><td>NASA material; some items carry their own credit, shown with each item</td></tr>
           <tr><td><strong>NASA EONET</strong> (Earth Observatory Natural Event Tracker)</td><td>Image Explorer: natural events on the globe</td><td>NASA data</td></tr>
           <tr><td><strong>Gateway to Astronaut Photography of Earth</strong>, Earth Science and Remote Sensing Unit, NASA Johnson Space Center (<a href="https://eol.jsc.nasa.gov/" target="_blank" rel="noopener">eol.jsc.nasa.gov</a>)</td><td>Image Explorer: astronaut photos</td><td>NASA material</td></tr>
-          <tr><td><strong>d3-celestial</strong>, © 2015 Olaf Frohn</td><td>Image Explorer: stars, galaxies, nebulae, clusters, constellations</td><td>BSD 3-Clause (<a href="../image-explorer/data/LICENSE-d3-celestial.txt">licence</a>)</td></tr>
-          <tr><td><strong>GeoNames</strong> (<a href="https://www.geonames.org/" target="_blank" rel="noopener">geonames.org</a>), through the all-the-cities package (MIT) and GeoNames' own downloads</td><td>Image Explorer: place search (towns, cities, capitals; smaller natural features with an English Wikipedia article; the globe's volcanoes and natural wonders)</td><td><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></td></tr>
+          <tr><td><strong>d3-celestial</strong>, © 2015 Olaf Frohn</td><td>Image Explorer: stars, galaxies, nebulae, clusters, constellations; Sky Finder: bright stars and their names (from the Hipparcos catalogue)</td><td>BSD 3-Clause (<a href="../image-explorer/data/LICENSE-d3-celestial.txt">licence</a>)</td></tr>
+          <tr><td><strong>GeoNames</strong> (<a href="https://www.geonames.org/" target="_blank" rel="noopener">geonames.org</a>), through the all-the-cities package (MIT) and GeoNames' own downloads</td><td>Image Explorer, the Asteroid Tracker's "Visible from here" and Sky Finder: place search (towns, cities, capitals; smaller natural features with an English Wikipedia article; the globe's volcanoes and natural wonders)</td><td><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></td></tr>
           <tr><td><strong>NASA Planetary Data System</strong>, Atmospheres Node: Curiosity's Rover Environmental Monitoring Station (REMS)</td><td>Mars Data: pressure, air and ground temperature, humidity, ultraviolet and the rover's height</td><td>NASA data; credit "NASA/JPL-Caltech and the REMS team (Centro de Astrobiología), NASA Planetary Data System"</td></tr>
           <tr><td><strong>Natural Earth</strong> (<a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">naturalearthdata.com</a>)</td><td>Image Explorer: mountains, lakes and rivers; the Earth map's coastlines, borders, rivers and names; the country of a tapped spot</td><td>Public domain</td></tr>
           <tr><td><strong>US Geological Survey</strong> earthquake feed (<a href="https://earthquake.usgs.gov/earthquakes/feed/" target="_blank" rel="noopener">earthquake.usgs.gov</a>)</td><td>Image Explorer: the globe's earthquakes of the past week</td><td>Public domain (US Government)</td></tr>
@@ -78,13 +79,14 @@
       </table></div>
 
       <h2>Code libraries</h2>
-      <p>Copies are kept in this repository (<code>image-explorer/vendor/</code>), each with its licence file, so the pages load them from this site.</p>
+      <p>Copies are kept in this repository (<code>image-explorer/vendor/</code> and <code>shared/vendor/</code>), each with its licence file, so the pages load them from this site.</p>
       <div class="tablewrap"><table class="credits">
         <thead><tr><th>Source</th><th>Used for</th><th>Terms</th></tr></thead>
         <tbody>
           <tr><td><strong>OpenLayers</strong> 10.11.0</td><td>Image Explorer: the Earth map</td><td>BSD 2-Clause</td></tr>
           <tr><td><strong>proj4js</strong> 2.22.0</td><td>Image Explorer: polar map projections</td><td>MIT</td></tr>
           <tr><td><strong>three.js</strong> 0.187.0</td><td>Image Explorer: the globe</td><td>MIT</td></tr>
+          <tr><td><strong>satellite.js</strong> 7.2.0, © 2013 Shashwat Kandadai (<a href="https://github.com/shashwatak/satellite-js" target="_blank" rel="noopener">github.com/shashwatak/satellite-js</a>)</td><td>Spacecraft map and Sky Finder: satellite positions from orbital elements (SGP4)</td><td>MIT (<a href="../shared/vendor/LICENSE-satellite.js.md">licence</a>)</td></tr>
           <tr><td><strong>pandas</strong> (analysis tool, run on GitHub's servers; not sent to visitors)</td><td>Mars Data: cleaning and statistics</td><td>BSD 3-Clause</td></tr>
         </tbody>
       </table></div>
@@ -96,7 +98,9 @@
 
       <h2>NASA and ESA</h2>
       <p>Data courtesy of NASA and ESA. This is an independent project and isn't endorsed by NASA or ESA. NASA's insignia,
-        logotype and seal and ESA's logo are not used.</p>
+        logotype and seal and ESA's logo are not used. The spacecraft map names missions of other agencies (JAXA, ISRO, CNSA,
+        CMSA, CSA, KASA, the UAE Space Agency and others) and links to their pages; no agency's logo is used and none
+        endorses the project.</p>
     </article>
 
     <footer class="footer">

@@ -112,3 +112,12 @@ How NASA and ESA Data Projects came about, in order.
   not the season; NASA's index stopping at sol 4133 while the data reaches sol 4843; two tables in one ancillary file;
   quality flags whose first character is not a quality check at all.
 - The developer approved the mock-up the same night, and the page went live with Mars Years 31–33 (sols 1–1293).
+
+## November 12, 2026 — Sky Finder and the spacecraft map
+
+- The developer proposed a phone app that points the camera at a passing asteroid and a page of the passes visible
+  from the visitor's place, then a map of everything humans have sent into space that is still working. Mock-ups were
+  approved with changes (more realistic icons, a plainer banner, facts checked line by line, the phone experience
+  first) and both were built and published together: the "Visible from here" tab, **Sky Finder** and the
+  **spacecraft map**, which took over the home page's large panel.
+

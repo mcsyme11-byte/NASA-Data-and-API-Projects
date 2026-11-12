@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Sky Finder icon · NASA and ESA Data Projects · © 2026 Malcolm Syme -->
+  <defs>
+    <radialGradient id="g" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#22304A"/><stop offset="1" stop-color="#0F1520"/></radialGradient>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2C88E"/><stop offset="1" stop-color="#C0A062"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <path d="M96 352 Q 196 300 256 248 T 416 128" fill="none" stroke="#E2C88E" stroke-width="10" stroke-linecap="round" stroke-dasharray="4 26"/>
+  <circle cx="256" cy="248" r="92" fill="none" stroke="url(#b)" stroke-width="14"/>
+  <path d="M256 168 V196 M256 300 V328 M176 248 H204 M308 248 H336" stroke="url(#b)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M256 214 L290 248 L256 282 L222 248 Z" fill="url(#b)"/>
+  <circle cx="132" cy="140" r="7" fill="#EDE6D3"/><circle cx="388" cy="372" r="6" fill="#EDE6D3"/><circle cx="410" cy="216" r="4" fill="#EDE6D3"/><circle cx="104" cy="250" r="4" fill="#EDE6D3"/>
+  <path d="M60 430 H452" stroke="#7E6A45" stroke-width="6" stroke-linecap="round"/>
+</svg>

@@ -8,8 +8,8 @@
   <meta name="description" content="What NASA and ESA Data Projects stores and shares: no accounts, no cookies, no tracking.">
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111202">
-  <script type="module" src="../shared/footer.js?v=2026111202"></script>
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111203">
+  <script type="module" src="../shared/footer.js?v=2026111203"></script>
 </head>
 <body>
   <header class="topbar">
@@ -50,7 +50,31 @@
         <li><strong>Where you were,</strong> such as the open tab, your filters and your scroll position, so the
           "Back" buttons return you to the same place. This is kept in your browser's session storage and is deleted
           when you close the tab.</li>
+        <li><strong>The place you choose</strong> in the Asteroid Tracker's "Visible from here" tab or in Sky Finder
+          (a town's name and its latitude and longitude, or your device's location rounded to about 1 km), so it is there
+          next time. It is kept in your browser's local storage and used only on your device to work out what is in your
+          sky; "Forget this place" deletes it.</li>
+        <li><strong>Sky Finder's settings:</strong> that you have read its safety notice, whether red light is on, the
+          camera view width, and its compass calibration (two angles, kept for 12 hours). Local storage, on your device
+          only.</li>
+        <li><strong>Sky Finder's offline copy:</strong> Sky Finder saves its own pages and data files in your browser's
+          cache (a service worker) so it still works with a weak connection outdoors. Nothing about you is in it; your
+          browser's "clear site data" removes it.</li>
       </ul>
+
+      <h2 id="sky-finder">Sky Finder: camera, location and motion sensors</h2>
+      <p>Sky Finder asks for three permissions, each only when you use the feature that needs it, and you can refuse any
+        of them:</p>
+      <ul>
+        <li><strong>Camera:</strong> the picture is shown on your screen behind the markers and nothing else. It is
+          never recorded, saved, analysed or sent anywhere. The camera is turned off when you leave the camera view.</li>
+        <li><strong>Location:</strong> used on your device to work out which way to look. It is never sent anywhere;
+          the data files Sky Finder reads are the same for every visitor. You can type a town instead.</li>
+        <li><strong>Motion and orientation:</strong> used on your device, while the camera view is open, to know where
+          the phone points. Readings are not kept or sent.</li>
+      </ul>
+      <p>Browsers show their own prompt for each permission, and you can withdraw it at any time in the browser's site
+        settings.</p>
 
       <h2>Services your browser contacts</h2>
       <p>The pages load data and code straight from the services below. Like any website, each one receives the basic
@@ -60,6 +84,9 @@
         <li><strong>GitHub Pages,</strong> which hosts the site. GitHub logs each visitor's IP address for security
           (<a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener">GitHub Pages data collection</a>,
           <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a>).</li>
+        <li><strong>Pages that read only this site's own files:</strong> the spacecraft map, the "Visible from here" tab
+          and Sky Finder contact no other service; their data (from NASA/JPL Horizons and CelesTrak) is copied to the site
+          twice a day.</li>
         <li><strong>NASA and NASA/JPL services</strong> that supply the data and imagery: api.nasa.gov, GIBS, the NASA
           Image and Video Library, EONET and JPL's Solar System Dynamics
           (<a href="https://www.nasa.gov/privacy/" target="_blank" rel="noopener">NASA Web Privacy Policy</a>).</li>
@@ -72,7 +99,7 @@
       </ul>
 
       <h2>Links to other sites</h2>
-      <p>Some pages link to NASA, ESA (including its NEO Coordination Centre), the Minor Planet Center and other sites. Those sites have their own privacy policies.</p>
+      <p>Some pages link to NASA, ESA (including its NEO Coordination Centre), the Minor Planet Center, other space agencies' mission pages, CelesTrak and other sites. Those sites have their own privacy policies.</p>
 
       <h2>Changes</h2>
       <p>If the site ever starts storing or sharing anything new, this page is updated first, with a new date at the top.</p>

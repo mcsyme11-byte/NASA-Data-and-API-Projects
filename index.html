@@ -8,8 +8,8 @@
   <meta name="description" content="Three ways to learn and explore with real NASA data: an asteroid tracker, a Mars data study and a NASA image explorer.">
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="shared/theme.css?v=2026111202">
-  <script type="module" src="shared/footer.js?v=2026111202"></script>
+  <link rel="stylesheet" href="shared/theme.css?v=2026111203">
+  <script type="module" src="shared/footer.js?v=2026111203"></script>
   <style>
     .hero { padding: 72px 0 40px; text-align: center; border-bottom: 1px solid var(--brass-dim); }
     .hero .medal { width: 88px; height: 88px; color: var(--brass); margin: 0 auto 18px; display: block; }
@@ -54,7 +54,16 @@
     .soon .name { display: inline-block; padding: 4px 0; }
     .soon .linkbtn:hover { color: var(--brass-bright); }
     .soon a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .livenote a { white-space: nowrap; }
+    .sfbanner { display: flex; align-items: center; gap: 16px 20px; margin: 28px 0 8px; padding: 18px 20px; border: 1px solid var(--brass-dim);
+      border-radius: var(--r-card); background: linear-gradient(100deg, rgba(192,160,98,.10), rgba(26,35,51,.6) 60%); color: var(--ink); transition: border-color .15s, background .15s; }
+    .sfbanner:hover { border-color: var(--brass); color: var(--ink); }
+    .sfbanner img { flex: none; border-radius: 12px; }
+    .sfbanner .sft { flex: 1; display: grid; gap: 2px; }
+    .sfbanner strong { font-weight: 400; font-size: 19px; }
+    .sfbanner .btn { flex: none; }
     @media (max-width: 760px) {
+      .sfbanner { flex-wrap: wrap; } .sfbanner .btn { width: 100%; } .sfbanner img { width: 44px; height: 44px; }
       .liveframe { height: 340px; }
       .liveinfo { max-width: 85%; }
       .liveinfo strong { font-size: 18px; }
@@ -94,18 +103,19 @@
     </section>
 
     <section class="livemap" aria-labelledby="liveTitle">
-      <div class="shead"><h2 id="liveTitle">The solar system, right now</h2><span class="aside">live from NASA data</span></div>
-      <a class="liveframe" href="asteroid-tracker/map.html" aria-label="Open the solar system map">
+      <div class="shead"><h2 id="liveTitle">Everything we have out there, right now</h2><span class="aside">positions from NASA/JPL Horizons and CelesTrak, updated daily</span></div>
+      <a class="liveframe" id="liveFrame" href="spacecraft/" aria-label="Open the spacecraft map">
         <canvas id="preview" aria-hidden="true"></canvas>
         <span class="liveinfo">
           <span class="eyebrow">Today</span>
-          <strong id="liveCount">The potentially hazardous asteroids</strong>
-          <span class="note">and the inner planets, moving round the Sun</span>
+          <strong id="liveCount">Active spacecraft and stations</strong>
+          <span class="note" id="liveNote">from NASA, ESA, JAXA, ISRO, CNSA and others, from the space station to the Voyagers</span>
         </span>
-        <span class="btn liveBtn"><span class="long">Explore the solar system ›</span><span class="short">Explore the map ›</span></span>
+        <span class="btn liveBtn"><span class="long" id="liveBtnL">Explore the spacecraft ›</span><span class="short" id="liveBtnS">Explore the map ›</span></span>
       </a>
+      <p class="note livenote" id="liveAbout">Every active spacecraft with a public position: what it is, who sent it, where it is now, and links to its mission pages.
+        <a href="asteroid-tracker/map.html">The asteroid map: all 43,000 near-Earth asteroids ›</a></p>
       <div class="soon" id="soon" hidden></div>
-      <p class="note livenote">The full map shows all 43,000 known near-Earth asteroids and comets, the planets, and spacecraft from Parker Solar Probe to the Voyagers, at any date and from any angle.</p>
     </section>
 
     <div class="shead"><h2>The projects</h2><span class="aside">three streams, one repository</span></div>
@@ -117,7 +127,7 @@
         </svg>
         <div class="num">Project 1</div>
         <h3>Asteroid Tracker</h3>
-        <p>Every near-Earth object passing us this week, sorted by size and distance, with graphs to explore; every close pass since 2000; a page and an orbit diagram for each asteroid; a search and a map of the whole solar system.</p>
+        <p>Every near-Earth object passing us this week, sorted by size and distance, with graphs to explore; every close pass since 2000; a page and an orbit diagram for each asteroid; impact-risk lists from NASA and ESA; which ones you can see from where you are; a search and a map of the whole solar system.</p>
         <div class="src">NASA NeoWs · NASA/JPL close-approach data, Small-Body Database, Horizons and Sentry · ESA NEO Coordination Centre</div>
         <div class="foot"><span class="pill good">Live</span><a class="btn ghost" href="asteroid-tracker/">Open</a></div>
       </article>
@@ -145,17 +155,35 @@
       </article>
     </div>
 
+    <a class="sfbanner" href="sky-finder/">
+      <img src="sky-finder/icons/icon.svg" width="56" height="56" alt="">
+      <span class="sft"><span class="eyebrow">Sky Finder</span><strong>Point your phone at the sky to find the asteroid passing tonight.</strong>
+        <span class="note">With the Moon, planets and space stations to guide you. Pin it to your home screen.</span></span>
+      <span class="btn ghost">Open Sky Finder ›</span>
+    </a>
+
     <footer class="footer">
-      <p>Data courtesy of NASA and ESA (the European Space Agency). Satellite imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data and Information System (ESDIS). This is an independent project and isn't endorsed by NASA or ESA.</p>
+      <p>Positions courtesy of NASA/JPL and CelesTrak. Data courtesy of NASA and ESA (the European Space Agency). Satellite imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data and Information System (ESDIS). This is an independent project and isn't endorsed by NASA or ESA.</p>
       <p class="credit"><strong>NASA and ESA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
     </footer>
   </main>
 
   <script type="module">
-    // the live preview of the solar system map (asteroid-tracker/preview.js); the page works without it
-    import { mountPreview } from './asteroid-tracker/preview.js';
-    mountPreview(document.getElementById('preview'), 'asteroid-tracker/data/preview.json', {
-      onCount: (n) => { document.getElementById('liveCount').textContent = n.toLocaleString('en-CA') + ' potentially hazardous asteroids'; },
+    // the live preview of the spacecraft map (spacecraft/preview.js); if its data cannot be loaded, the asteroid map's
+    // preview (asteroid-tracker/preview.js) takes its place; the page works without either
+    import { mountCraftPreview } from './spacecraft/preview.js';
+    const $ = (id) => document.getElementById(id);
+    mountCraftPreview($('preview'), 'spacecraft/', {
+      onCount: (n) => { $('liveCount').textContent = n + ' spacecraft and stations'; },
+    }).catch(async () => {
+      const { mountPreview } = await import('./asteroid-tracker/preview.js');
+      $('liveFrame').href = 'asteroid-tracker/map.html'; $('liveFrame').setAttribute('aria-label', 'Open the solar system map');
+      $('liveTitle').textContent = 'The solar system, right now';
+      $('liveNote').textContent = 'and the inner planets, moving round the Sun';
+      $('liveBtnL').textContent = 'Explore the solar system ›';
+      return mountPreview($('preview'), 'asteroid-tracker/data/preview.json', {
+        onCount: (n) => { $('liveCount').textContent = n.toLocaleString('en-CA') + ' potentially hazardous asteroids'; },
+      });
     }).catch(() => { document.querySelector('.livemap').hidden = true; });
   </script>
   <script type="module">

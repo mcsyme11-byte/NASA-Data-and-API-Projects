@@ -1,0 +1,2377 @@
+{
+ "note": "Facts checked Nov 12, 2026. Statuses change: missions that end are removed.",
+ "craft": [
+  {
+   "key": "iss",
+   "name": "ISS",
+   "full": "International Space Station",
+   "agencies": [
+    "NASA",
+    "Roscosmos",
+    "ESA",
+    "JAXA",
+    "CSA"
+   ],
+   "kind": "station",
+   "launch": "1998-11-20",
+   "vehicle": "Proton (first module, Zarya), Baikonur",
+   "about": "The largest structure humans have built in space, about 400 km up, with people living aboard without a break since November 2000. It circles Earth about every 92 minutes.",
+   "timeline": [
+    [
+     "1998-11",
+     "First module, Zarya, launched"
+    ],
+    [
+     "2000-11",
+     "First long-stay crew arrives"
+    ],
+    [
+     "2011-07",
+     "Space Shuttle's last visit; assembly largely complete"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: the space station",
+     "url": "https://www.nasa.gov/international-space-station/"
+    },
+    {
+     "label": "ESA: International Space Station",
+     "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/International_Space_Station"
+    }
+   ],
+   "src": {
+    "tle": [
+     "ISS (ZARYA)"
+    ]
+   }
+  },
+  {
+   "key": "tiangong",
+   "name": "Tiangong",
+   "full": "Tiangong space station",
+   "agencies": [
+    "CMSA"
+   ],
+   "kind": "station",
+   "launch": "2021-04-29",
+   "vehicle": "Long March 5B (core module, Tianhe), Wenchang",
+   "about": "China's space station, about 390 km up, crewed by taikonauts in rotations of about six months. Its three modules were joined in 2022.",
+   "timeline": [
+    [
+     "2021-04",
+     "Core module, Tianhe, launched"
+    ],
+    [
+     "2022-11",
+     "Third module, Mengtian, joined: the T shape complete"
+    ]
+   ],
+   "links": [
+    {
+     "label": "China Manned Space Agency",
+     "url": "https://en.cmse.gov.cn/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "CSS (TIANHE)"
+    ]
+   }
+  },
+  {
+   "key": "hubble",
+   "name": "Hubble",
+   "full": "Hubble Space Telescope",
+   "agencies": [
+    "NASA",
+    "ESA"
+   ],
+   "kind": "telescope",
+   "launch": "1990-04-24",
+   "vehicle": "Space Shuttle Discovery (STS-31)",
+   "about": "The Hubble Space Telescope, about 510 km up, has photographed the universe in visible, ultraviolet and near-infrared light since 1990. Astronauts serviced it five times.",
+   "timeline": [
+    [
+     "1990-04",
+     "Launched"
+    ],
+    [
+     "1993-12",
+     "First servicing mission corrects its mirror"
+    ],
+    [
+     "2009-05",
+     "Fifth and last servicing mission"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: Hubble",
+     "url": "https://science.nasa.gov/mission/hubble/"
+    },
+    {
+     "label": "ESA/Hubble",
+     "url": "https://esahubble.org/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "HST"
+    ]
+   }
+  },
+  {
+   "key": "chandra",
+   "name": "Chandra",
+   "full": "Chandra X-ray Observatory",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "telescope",
+   "launch": "1999-07-23",
+   "vehicle": "Space Shuttle Columbia (STS-93)",
+   "about": "NASA's X-ray observatory, on a long, stretched orbit reaching about a third of the way to the Moon. It sees the hottest places in the universe: exploded stars, black holes and galaxy clusters.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Chandra",
+     "url": "https://science.nasa.gov/mission/chandra-x-ray-observatory/"
+    },
+    {
+     "label": "Chandra X-ray Center",
+     "url": "https://chandra.si.edu/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "CXO"
+    ]
+   }
+  },
+  {
+   "key": "xmm",
+   "name": "XMM-Newton",
+   "full": "X-ray Multi-Mirror Mission",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "telescope",
+   "launch": "1999-12-10",
+   "vehicle": "Ariane 5, Kourou",
+   "about": "ESA's X-ray observatory, on a stretched two-day orbit up to about 115,000 km from Earth. Its three telescopes collect more X-rays than any before it.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: XMM-Newton",
+     "url": "https://www.cosmos.esa.int/web/xmm-newton"
+    }
+   ],
+   "src": {
+    "tle": [
+     "XMM-NEWTON",
+     "XMM"
+    ]
+   }
+  },
+  {
+   "key": "fermi",
+   "name": "Fermi",
+   "full": "Fermi Gamma-ray Space Telescope",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "telescope",
+   "launch": "2008-06-11",
+   "vehicle": "Delta II, Cape Canaveral",
+   "about": "NASA's gamma-ray telescope, about 530 km up, which maps the whole sky every three hours in the highest-energy light.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Fermi",
+     "url": "https://science.nasa.gov/mission/fermi/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "FGRST (GLAST)",
+     "FERMI",
+     "GLAST"
+    ]
+   }
+  },
+  {
+   "key": "nustar",
+   "name": "NuSTAR",
+   "full": "Nuclear Spectroscopic Telescope Array",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "telescope",
+   "launch": "2012-06-13",
+   "vehicle": "Pegasus XL, from an aircraft over the Pacific",
+   "about": "A NASA telescope that focuses high-energy X-rays, using a 10-metre mast unfolded in space, to study black holes and the remains of exploded stars.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: NuSTAR",
+     "url": "https://science.nasa.gov/mission/nustar/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "NUSTAR"
+    ]
+   }
+  },
+  {
+   "key": "tess",
+   "name": "TESS",
+   "full": "Transiting Exoplanet Survey Satellite",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "telescope",
+   "launch": "2018-04-18",
+   "vehicle": "Falcon 9, Cape Canaveral",
+   "about": "NASA's planet hunter, on an orbit that swings out close to the Moon's distance every 13.7 days. It watches nearby stars for the tiny dips in light made by planets passing in front of them.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: TESS",
+     "url": "https://science.nasa.gov/mission/tess/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "TESS"
+    ]
+   }
+  },
+  {
+   "key": "cheops",
+   "name": "CHEOPS",
+   "full": "CHaracterising ExOPlanet Satellite",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "telescope",
+   "launch": "2019-12-18",
+   "vehicle": "Soyuz-Fregat, Kourou",
+   "about": "ESA's small telescope that measures the sizes of planets already found around nearby stars, about 700 km up.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: CHEOPS",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/Cheops"
+    }
+   ],
+   "src": {
+    "tle": [
+     "CHEOPS"
+    ]
+   }
+  },
+  {
+   "key": "ixpe",
+   "name": "IXPE",
+   "full": "Imaging X-ray Polarimetry Explorer",
+   "agencies": [
+    "NASA",
+    "ASI"
+   ],
+   "kind": "telescope",
+   "launch": "2021-12-09",
+   "vehicle": "Falcon 9, Kennedy Space Center",
+   "about": "Measures the polarisation of X-rays from black holes and neutron stars, about 600 km up; built by NASA with the Italian Space Agency.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: IXPE",
+     "url": "https://science.nasa.gov/mission/ixpe/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "IXPE"
+    ]
+   }
+  },
+  {
+   "key": "xrism",
+   "name": "XRISM",
+   "full": "X-Ray Imaging and Spectroscopy Mission",
+   "agencies": [
+    "JAXA",
+    "NASA",
+    "ESA"
+   ],
+   "kind": "telescope",
+   "launch": "2023-09-06",
+   "vehicle": "H-IIA, Tanegashima",
+   "about": "A Japanese-led X-ray telescope, about 550 km up, that splits X-rays into very fine colours to measure the gas between galaxies.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "JAXA: XRISM",
+     "url": "https://global.jaxa.jp/projects/sas/xrism/"
+    },
+    {
+     "label": "NASA: XRISM",
+     "url": "https://science.nasa.gov/mission/xrism/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "XRISM"
+    ]
+   }
+  },
+  {
+   "key": "einstein",
+   "name": "Einstein Probe",
+   "agencies": [
+    "CAS",
+    "ESA"
+   ],
+   "kind": "telescope",
+   "launch": "2024-01-09",
+   "vehicle": "Long March 2C, Xichang",
+   "about": "A Chinese Academy of Sciences X-ray telescope, with ESA and Germany's Max Planck Institute as partners, that watches wide areas of sky for sudden X-ray flashes.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Einstein Probe",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/Einstein_Probe"
+    }
+   ],
+   "src": {
+    "tle": [
+     "EP",
+     "EINSTEIN PROBE"
+    ]
+   }
+  },
+  {
+   "key": "svom",
+   "name": "SVOM",
+   "full": "Space Variable Objects Monitor",
+   "agencies": [
+    "CNSA",
+    "CNES"
+   ],
+   "kind": "telescope",
+   "launch": "2024-06-22",
+   "vehicle": "Long March 2C, Xichang",
+   "about": "A French–Chinese satellite that catches gamma-ray bursts, the brightest explosions in the universe, and points its telescopes at them within minutes.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "CNES: SVOM",
+     "url": "https://www.svom.eu/en/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SVOM"
+    ]
+   }
+  },
+  {
+   "key": "spherex",
+   "name": "SPHEREx",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "telescope",
+   "launch": "2025-03-12",
+   "vehicle": "Falcon 9, Vandenberg",
+   "about": "Maps the whole sky in 102 infrared colours, every six months, to study how the universe began and where the ingredients of life are found.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: SPHEREx",
+     "url": "https://science.nasa.gov/mission/spherex/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SPHEREX"
+    ]
+   }
+  },
+  {
+   "key": "smile",
+   "name": "SMILE",
+   "full": "Solar wind Magnetosphere Ionosphere Link Explorer",
+   "agencies": [
+    "ESA",
+    "CAS"
+   ],
+   "kind": "telescope",
+   "launch": "2026-05-19",
+   "vehicle": "Vega-C, Kourou",
+   "about": "An ESA–Chinese Academy of Sciences mission that images how the solar wind strikes Earth's magnetic field, from a stretched orbit reaching far above the North Pole.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: SMILE",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/Smile"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SMILE"
+    ]
+   }
+  },
+  {
+   "key": "jwst",
+   "name": "James Webb",
+   "full": "James Webb Space Telescope",
+   "agencies": [
+    "NASA",
+    "ESA",
+    "CSA"
+   ],
+   "kind": "telescope",
+   "launch": "2021-12-25",
+   "vehicle": "Ariane 5, Kourou",
+   "where": "L2",
+   "about": "The largest space telescope, seeing in infrared light, in a loop around the point L2, about 1.5 million km from Earth on the side away from the Sun.",
+   "timeline": [
+    [
+     "2021-12",
+     "Launched"
+    ],
+    [
+     "2022-01",
+     "Arrives at L2"
+    ],
+    [
+     "2022-07",
+     "First full-colour images"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: Webb",
+     "url": "https://science.nasa.gov/mission/webb/"
+    },
+    {
+     "label": "ESA/Webb",
+     "url": "https://esawebb.org/"
+    }
+   ],
+   "src": {
+    "horizons": "-170",
+    "center": "Earth"
+   }
+  },
+  {
+   "key": "euclid",
+   "name": "Euclid",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "telescope",
+   "launch": "2023-07-01",
+   "vehicle": "Falcon 9, Cape Canaveral",
+   "where": "L2",
+   "about": "ESA's telescope mapping billions of galaxies across a third of the sky, to study dark matter and dark energy, near L2.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Euclid",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/Euclid"
+    }
+   ],
+   "src": {
+    "horizons": "-680",
+    "center": "Earth"
+   }
+  },
+  {
+   "key": "roman",
+   "name": "Roman",
+   "full": "Nancy Grace Roman Space Telescope",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "telescope",
+   "launch": "2026-08-30",
+   "vehicle": "Falcon Heavy, Kennedy Space Center",
+   "where": "L2",
+   "about": "NASA's wide-field infrared telescope, with a view a hundred times wider than Hubble's at the same sharpness, working near L2.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Roman",
+     "url": "https://science.nasa.gov/mission/roman-space-telescope/"
+    }
+   ],
+   "src": {
+    "horizons_name": [
+     "Nancy Grace Roman",
+     "Roman Space Telescope",
+     "Roman"
+    ],
+    "center": "Earth"
+   }
+  },
+  {
+   "key": "soho",
+   "name": "SOHO",
+   "full": "Solar and Heliospheric Observatory",
+   "agencies": [
+    "ESA",
+    "NASA"
+   ],
+   "kind": "sun",
+   "launch": "1995-12-02",
+   "vehicle": "Atlas IIAS, Cape Canaveral",
+   "where": "L1",
+   "about": "Has watched the Sun without a break from the point L1, 1.5 million km towards the Sun, since 1996, and has found more than 5,000 comets in its pictures.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: SOHO",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/SOHO_overview2"
+    },
+    {
+     "label": "NASA: SOHO",
+     "url": "https://science.nasa.gov/mission/soho/"
+    }
+   ],
+   "src": {
+    "horizons": "-21",
+    "center": "Earth"
+   }
+  },
+  {
+   "key": "ace",
+   "name": "ACE",
+   "full": "Advanced Composition Explorer",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "sun",
+   "launch": "1997-08-25",
+   "vehicle": "Delta II, Cape Canaveral",
+   "where": "L1",
+   "about": "Samples the solar wind at L1 about an hour before it reaches Earth, giving warning of space weather.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: ACE",
+     "url": "https://science.nasa.gov/mission/ace/"
+    }
+   ],
+   "src": {
+    "horizons": "-92",
+    "center": "Earth"
+   }
+  },
+  {
+   "key": "wind",
+   "name": "Wind",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "sun",
+   "launch": "1994-11-01",
+   "vehicle": "Delta II, Cape Canaveral",
+   "where": "L1",
+   "about": "One of NASA's oldest working spacecraft, measuring the solar wind near L1 since 2004.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Wind",
+     "url": "https://science.nasa.gov/mission/wind/"
+    }
+   ],
+   "src": {
+    "horizons": "-8",
+    "center": "Earth"
+   }
+  },
+  {
+   "key": "aditya",
+   "name": "Aditya-L1",
+   "agencies": [
+    "ISRO"
+   ],
+   "kind": "sun",
+   "launch": "2023-09-02",
+   "vehicle": "PSLV, Sriharikota",
+   "where": "L1",
+   "about": "India's first solar observatory, in a loop around L1 since January 2024, watching the Sun's outer layers and the solar wind.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ISRO: Aditya-L1",
+     "url": "https://www.isro.gov.in/Aditya_L1.html"
+    }
+   ],
+   "src": {
+    "horizons_name": [
+     "Aditya-L1",
+     "Aditya"
+    ],
+    "center": "Earth"
+   }
+  },
+  {
+   "key": "imap",
+   "name": "IMAP",
+   "full": "Interstellar Mapping and Acceleration Probe",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "sun",
+   "launch": "2025-09-24",
+   "vehicle": "Falcon 9, Kennedy Space Center",
+   "where": "L1",
+   "about": "Studies the solar wind and the edge of the heliosphere, the bubble the Sun blows around the solar system, from L1.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: IMAP",
+     "url": "https://science.nasa.gov/mission/imap/"
+    }
+   ],
+   "src": {
+    "horizons_name": [
+     "IMAP",
+     "Interstellar Mapping"
+    ],
+    "center": "Earth"
+   }
+  },
+  {
+   "key": "parker",
+   "name": "Parker Solar Probe",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "sun",
+   "launch": "2018-08-12",
+   "vehicle": "Delta IV Heavy, Cape Canaveral",
+   "about": "Flies through the Sun's outer atmosphere, closer to the Sun than any spacecraft before it: 6.1 million km from its surface at its closest, at about 690,000 km/h.",
+   "timeline": [
+    [
+     "2018-08",
+     "Launched"
+    ],
+    [
+     "2021-04",
+     "First spacecraft to fly through the Sun's corona"
+    ],
+    [
+     "2024-12",
+     "First closest pass: 6.1 million km from the surface"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: Parker Solar Probe",
+     "url": "https://science.nasa.gov/mission/parker-solar-probe/"
+    }
+   ],
+   "src": {
+    "horizons": "-96",
+    "center": "Sun",
+    "step": 0.25,
+    "years_back": 1
+   }
+  },
+  {
+   "key": "solo",
+   "name": "Solar Orbiter",
+   "agencies": [
+    "ESA",
+    "NASA"
+   ],
+   "kind": "sun",
+   "launch": "2020-02-10",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "about": "ESA's mission taking the closest pictures of the Sun and, as its orbit tilts, the first views of the Sun's poles.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Solar Orbiter",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/Solar_Orbiter"
+    },
+    {
+     "label": "NASA: Solar Orbiter",
+     "url": "https://science.nasa.gov/mission/solar-orbiter/"
+    }
+   ],
+   "src": {
+    "horizons": "-144",
+    "center": "Sun",
+    "step": 2
+   }
+  },
+  {
+   "key": "stereoa",
+   "name": "STEREO-A",
+   "full": "Solar Terrestrial Relations Observatory, Ahead",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "sun",
+   "launch": "2006-10-26",
+   "vehicle": "Delta II, Cape Canaveral",
+   "about": "Orbits the Sun slightly inside Earth's orbit, so it sees the Sun from a different angle and drifts slowly ahead of Earth.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: STEREO",
+     "url": "https://science.nasa.gov/mission/stereo/"
+    }
+   ],
+   "src": {
+    "horizons": "-234",
+    "center": "Sun",
+    "step": 4
+   }
+  },
+  {
+   "key": "voyager1",
+   "name": "Voyager 1",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "1977-09-05",
+   "vehicle": "Titan IIIE, Cape Canaveral",
+   "where": "Interstellar space",
+   "about": "The farthest human-made object, more than 25 billion km away, in interstellar space since 2012. It flew past Jupiter in 1979 and Saturn in 1980.",
+   "timeline": [
+    [
+     "1977-09",
+     "Launched"
+    ],
+    [
+     "1979-03",
+     "Jupiter"
+    ],
+    [
+     "1980-11",
+     "Saturn and its moon Titan"
+    ],
+    [
+     "2012-08",
+     "Enters interstellar space"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA/JPL: Voyager",
+     "url": "https://science.nasa.gov/mission/voyager/"
+    }
+   ],
+   "src": {
+    "horizons": "-31",
+    "center": "Sun",
+    "step": 30,
+    "years_back": 50
+   }
+  },
+  {
+   "key": "voyager2",
+   "name": "Voyager 2",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "1977-08-20",
+   "vehicle": "Titan IIIE, Cape Canaveral",
+   "where": "Interstellar space",
+   "about": "The only spacecraft to visit Uranus and Neptune, in interstellar space since 2018.",
+   "timeline": [
+    [
+     "1977-08",
+     "Launched"
+    ],
+    [
+     "1979-07",
+     "Jupiter"
+    ],
+    [
+     "1981-08",
+     "Saturn"
+    ],
+    [
+     "1986-01",
+     "Uranus"
+    ],
+    [
+     "1989-08",
+     "Neptune"
+    ],
+    [
+     "2018-11",
+     "Enters interstellar space"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA/JPL: Voyager",
+     "url": "https://science.nasa.gov/mission/voyager/"
+    }
+   ],
+   "src": {
+    "horizons": "-32",
+    "center": "Sun",
+    "step": 30,
+    "years_back": 50
+   }
+  },
+  {
+   "key": "newhorizons",
+   "name": "New Horizons",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2006-01-19",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "about": "Flew past Pluto in 2015 and the small, far world Arrokoth on 1 January 2019; now crossing the Kuiper belt.",
+   "timeline": [
+    [
+     "2006-01",
+     "Launched"
+    ],
+    [
+     "2007-02",
+     "Jupiter flyby"
+    ],
+    [
+     "2015-07",
+     "Pluto flyby"
+    ],
+    [
+     "2019-01",
+     "Arrokoth flyby"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: New Horizons",
+     "url": "https://science.nasa.gov/mission/new-horizons/"
+    },
+    {
+     "label": "Johns Hopkins APL: New Horizons",
+     "url": "https://pluto.jhuapl.edu/"
+    }
+   ],
+   "src": {
+    "horizons": "-98",
+    "center": "Sun",
+    "step": 10,
+    "years_back": 21
+   }
+  },
+  {
+   "key": "juno",
+   "name": "Juno",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2011-08-05",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "where": "Jupiter",
+   "about": "Orbiting Jupiter since 2016 on long loops over its poles, studying its clouds, deep interior and magnetic field, and flying past its moons.",
+   "timeline": [
+    [
+     "2011-08",
+     "Launched"
+    ],
+    [
+     "2016-07",
+     "Enters orbit around Jupiter"
+    ],
+    [
+     "2021-06",
+     "Ganymede flyby"
+    ],
+    [
+     "2022-09",
+     "Europa flyby"
+    ],
+    [
+     "2023-12",
+     "Io flybys begin"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: Juno",
+     "url": "https://science.nasa.gov/mission/juno/"
+    }
+   ],
+   "src": {
+    "horizons": "-61",
+    "center": "Sun",
+    "step": 4,
+    "years_back": 1
+   }
+  },
+  {
+   "key": "clipper",
+   "name": "Europa Clipper",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2024-10-14",
+   "vehicle": "Falcon Heavy, Kennedy Space Center",
+   "about": "On its way to Jupiter's icy moon Europa, to find out whether the ocean under its ice could support life. It arrives in 2030.",
+   "timeline": [
+    [
+     "2024-10",
+     "Launched"
+    ],
+    [
+     "2025-03",
+     "Mars flyby"
+    ],
+    [
+     "2026-12",
+     "Earth flyby, next"
+    ],
+    [
+     "2030-04",
+     "Arrives at Jupiter"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: Europa Clipper",
+     "url": "https://science.nasa.gov/mission/europa-clipper/"
+    }
+   ],
+   "src": {
+    "horizons": "-159",
+    "center": "Sun",
+    "step": 4
+   }
+  },
+  {
+   "key": "juice",
+   "name": "JUICE",
+   "full": "JUpiter ICy moons Explorer",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "planetary",
+   "launch": "2023-04-14",
+   "vehicle": "Ariane 5, Kourou",
+   "about": "ESA's mission to Jupiter and three of its large moons, Ganymede, Callisto and Europa, to learn whether their buried oceans could support life. It uses flybys of the Moon, Earth and Venus to gain speed on the way.",
+   "timeline": [
+    [
+     "2023-04",
+     "Launched"
+    ],
+    [
+     "2024-08",
+     "Moon and Earth flyby"
+    ],
+    [
+     "2025-08",
+     "Venus flyby"
+    ],
+    [
+     "2026-09",
+     "Earth flyby"
+    ],
+    [
+     "2029-01",
+     "Earth flyby, next"
+    ],
+    [
+     "2031-07",
+     "Arrives at Jupiter"
+    ]
+   ],
+   "links": [
+    {
+     "label": "ESA: JUICE",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice"
+    }
+   ],
+   "src": {
+    "horizons": "-28",
+    "center": "Sun",
+    "step": 4
+   }
+  },
+  {
+   "key": "lucy",
+   "name": "Lucy",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2021-10-16",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "about": "On a twelve-year tour of the Trojan asteroids that share Jupiter's orbit, the first mission to visit them.",
+   "timeline": [
+    [
+     "2021-10",
+     "Launched"
+    ],
+    [
+     "2023-11",
+     "Flies past the asteroid Dinkinesh and finds its moon"
+    ],
+    [
+     "2025-04",
+     "Flies past the asteroid Donaldjohanson"
+    ],
+    [
+     "2027-08",
+     "First Trojan asteroid, Eurybates, next"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: Lucy",
+     "url": "https://science.nasa.gov/mission/lucy/"
+    }
+   ],
+   "src": {
+    "horizons": "-49",
+    "center": "Sun",
+    "step": 4
+   }
+  },
+  {
+   "key": "psyche",
+   "name": "Psyche",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2023-10-13",
+   "vehicle": "Falcon Heavy, Kennedy Space Center",
+   "about": "On its way to the metal-rich asteroid 16 Psyche, pushed by electric (ion) thrusters; it arrives in 2029.",
+   "timeline": [
+    [
+     "2023-10",
+     "Launched"
+    ],
+    [
+     "2026-05",
+     "Mars flyby"
+    ],
+    [
+     "2029",
+     "Arrives at Psyche"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: Psyche",
+     "url": "https://science.nasa.gov/mission/psyche/"
+    }
+   ],
+   "src": {
+    "horizons": "-255",
+    "center": "Sun",
+    "step": 4
+   }
+  },
+  {
+   "key": "apex",
+   "name": "OSIRIS-APEX",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2016-09-08",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "about": "As OSIRIS-REx it brought samples of the asteroid Bennu to Earth in 2023; renamed, it is on its way to the asteroid Apophis, which passes close to Earth in April 2029.",
+   "timeline": [
+    [
+     "2016-09",
+     "Launched as OSIRIS-REx"
+    ],
+    [
+     "2020-10",
+     "Collects a sample from Bennu"
+    ],
+    [
+     "2023-09",
+     "Sample capsule lands in Utah"
+    ],
+    [
+     "2029-04",
+     "Arrives at Apophis"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: OSIRIS-APEX",
+     "url": "https://science.nasa.gov/mission/osiris-apex/"
+    }
+   ],
+   "src": {
+    "horizons": "-64",
+    "center": "Sun",
+    "step": 4
+   }
+  },
+  {
+   "key": "hera",
+   "name": "Hera",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "planetary",
+   "launch": "2024-10-07",
+   "vehicle": "Falcon 9, Cape Canaveral",
+   "about": "ESA's mission to the asteroid pair Didymos and Dimorphos, to measure what NASA's DART probe did when it struck Dimorphos in 2022: a test of moving an asteroid.",
+   "timeline": [
+    [
+     "2024-10",
+     "Launched"
+    ],
+    [
+     "2025-03",
+     "Mars flyby, past its moon Deimos"
+    ],
+    [
+     "2026",
+     "Arrives at Didymos, at the end of 2026"
+    ]
+   ],
+   "links": [
+    {
+     "label": "ESA: Hera",
+     "url": "https://www.esa.int/Space_Safety/Hera"
+    }
+   ],
+   "src": {
+    "horizons": "-91",
+    "center": "Sun",
+    "step": 2
+   }
+  },
+  {
+   "key": "bepi",
+   "name": "BepiColombo",
+   "agencies": [
+    "ESA",
+    "JAXA"
+   ],
+   "kind": "planetary",
+   "launch": "2018-10-20",
+   "vehicle": "Ariane 5, Kourou",
+   "where": "Mercury",
+   "about": "Two orbiters, ESA's and JAXA's, travelling together to Mercury; they separate once in orbit around it.",
+   "timeline": [
+    [
+     "2018-10",
+     "Launched"
+    ],
+    [
+     "2021-10",
+     "First of six Mercury flybys"
+    ],
+    [
+     "2026-11",
+     "Enters orbit around Mercury"
+    ]
+   ],
+   "links": [
+    {
+     "label": "ESA: BepiColombo",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/BepiColombo"
+    },
+    {
+     "label": "JAXA: BepiColombo / Mio",
+     "url": "https://global.jaxa.jp/projects/sas/bepi/"
+    }
+   ],
+   "src": {
+    "horizons": "-121",
+    "center": "Sun",
+    "step": 2
+   }
+  },
+  {
+   "key": "hayabusa2",
+   "name": "Hayabusa2",
+   "agencies": [
+    "JAXA"
+   ],
+   "kind": "planetary",
+   "launch": "2014-12-03",
+   "vehicle": "H-IIA, Tanegashima",
+   "about": "Brought samples of the asteroid Ryugu to Earth in 2020, then set off on an extended mission; it meets the small, fast-spinning asteroid 1998 KY26 in 2031.",
+   "timeline": [
+    [
+     "2014-12",
+     "Launched"
+    ],
+    [
+     "2018-06",
+     "Arrives at Ryugu"
+    ],
+    [
+     "2020-12",
+     "Sample capsule lands in Australia"
+    ],
+    [
+     "2026-07",
+     "Flies past the asteroid Torifune"
+    ],
+    [
+     "2031-07",
+     "Arrives at 1998 KY26"
+    ]
+   ],
+   "links": [
+    {
+     "label": "JAXA: Hayabusa2",
+     "url": "https://www.hayabusa2.jaxa.jp/en/"
+    }
+   ],
+   "src": {
+    "horizons": "-37",
+    "center": "Sun",
+    "step": 4
+   }
+  },
+  {
+   "key": "tianwen2",
+   "name": "Tianwen-2",
+   "agencies": [
+    "CNSA"
+   ],
+   "kind": "planetary",
+   "launch": "2025-05-28",
+   "vehicle": "Long March 3B, Xichang",
+   "about": "China's mission to collect samples from the small near-Earth asteroid Kamoʻoalewa, a possible piece of the Moon, and bring them to Earth, then go on to a comet.",
+   "timeline": [
+    [
+     "2025-05",
+     "Launched"
+    ],
+    [
+     "2026-07",
+     "Arrives at Kamoʻoalewa"
+    ],
+    [
+     "2027-11",
+     "Sample capsule due back at Earth"
+    ]
+   ],
+   "links": [
+    {
+     "label": "CNSA (China National Space Administration)",
+     "url": "https://www.cnsa.gov.cn/english/"
+    }
+   ],
+   "src": {
+    "horizons_name": [
+     "Tianwen-2",
+     "Tianwen 2"
+    ],
+    "center": "Sun",
+    "step": 2
+   }
+  },
+  {
+   "key": "escapade",
+   "name": "ESCAPADE",
+   "full": "Escape and Plasma Acceleration and Dynamics Explorers",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2025-11-13",
+   "vehicle": "New Glenn, Cape Canaveral",
+   "about": "Two small identical spacecraft, Blue and Gold, built to study how the solar wind strips Mars's atmosphere, from two orbits at once. They reach Mars in 2027.",
+   "timeline": [
+    [
+     "2025-11",
+     "Launched"
+    ],
+    [
+     "2026-11",
+     "Earth flyby, then the burns towards Mars"
+    ],
+    [
+     "2027-09",
+     "Arrives at Mars"
+    ]
+   ],
+   "links": [
+    {
+     "label": "NASA: ESCAPADE",
+     "url": "https://science.nasa.gov/mission/escapade/"
+    }
+   ],
+   "src": {
+    "horizons_name": [
+     "ESCAPADE",
+     "ESCAPADE Blue",
+     "ESCAPADE-Blue"
+    ],
+    "center": "Sun",
+    "step": 2
+   }
+  },
+  {
+   "key": "mex",
+   "name": "Mars Express",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "planetary",
+   "launch": "2003-06-02",
+   "vehicle": "Soyuz-Fregat, Baikonur",
+   "where": "Mars",
+   "about": "ESA's first mission to another planet, orbiting Mars since December 2003; its radar found signs of buried water ice.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Mars Express",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express"
+    }
+   ],
+   "src": {
+    "horizons": "-41",
+    "center": "Mars",
+    "local": true
+   }
+  },
+  {
+   "key": "odyssey",
+   "name": "Mars Odyssey",
+   "full": "2001 Mars Odyssey",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2001-04-07",
+   "vehicle": "Delta II, Cape Canaveral",
+   "where": "Mars",
+   "about": "The longest-working spacecraft at Mars, in orbit since October 2001; it mapped ice under the surface and relays messages from the rovers.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Mars Odyssey",
+     "url": "https://science.nasa.gov/mission/mars-odyssey/"
+    }
+   ],
+   "src": {
+    "horizons": "-53",
+    "center": "Mars",
+    "local": true
+   }
+  },
+  {
+   "key": "mro",
+   "name": "Mars Reconnaissance Orbiter",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2005-08-12",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "where": "Mars",
+   "about": "Orbiting Mars since 2006; its HiRISE camera can see objects the size of a kitchen table, and it relays data from the rovers.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: MRO",
+     "url": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/"
+    }
+   ],
+   "src": {
+    "horizons": "-74",
+    "center": "Mars",
+    "local": true
+   }
+  },
+  {
+   "key": "tgo",
+   "name": "ExoMars Trace Gas Orbiter",
+   "agencies": [
+    "ESA",
+    "Roscosmos"
+   ],
+   "kind": "planetary",
+   "launch": "2016-03-14",
+   "vehicle": "Proton-M, Baikonur",
+   "where": "Mars",
+   "about": "Sniffs the thin Martian air for gases that could come from geology or life, and relays data from NASA's rovers.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: ExoMars",
+     "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars"
+    }
+   ],
+   "src": {
+    "horizons": "-143",
+    "center": "Mars",
+    "local": true
+   }
+  },
+  {
+   "key": "hope",
+   "name": "Hope",
+   "full": "Emirates Mars Mission",
+   "agencies": [
+    "UAE Space Agency",
+    "MBRSC"
+   ],
+   "kind": "planetary",
+   "launch": "2020-07-19",
+   "vehicle": "H-IIA, Tanegashima",
+   "where": "Mars",
+   "about": "The United Arab Emirates' first planetary mission, on a high orbit that shows the weather on the whole of Mars at once.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "Emirates Mars Mission",
+     "url": "https://www.emiratesmarsmission.ae/"
+    }
+   ],
+   "src": {
+    "horizons": "-62",
+    "center": "Mars",
+    "local": true
+   }
+  },
+  {
+   "key": "tianwen1",
+   "name": "Tianwen-1",
+   "agencies": [
+    "CNSA"
+   ],
+   "kind": "planetary",
+   "launch": "2020-07-23",
+   "vehicle": "Long March 5, Wenchang",
+   "where": "Mars",
+   "about": "China's first Mars mission: its orbiter, still working, carried the Zhurong rover, which landed in May 2021.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "CNSA (China National Space Administration)",
+     "url": "https://www.cnsa.gov.cn/english/"
+    }
+   ],
+   "src": {
+    "horizons_name": [
+     "Tianwen-1",
+     "Tianwen 1"
+    ],
+    "center": "Mars",
+    "local": true
+   }
+  },
+  {
+   "key": "curiosity",
+   "name": "Curiosity",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "surface",
+   "launch": "2011-11-26",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "where": "Mars, Gale crater",
+   "about": "A car-sized rover in Gale crater since August 2012, climbing Mount Sharp and reading its layers of rock like pages of Mars's history.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Curiosity",
+     "url": "https://science.nasa.gov/mission/msl/"
+    }
+   ],
+   "src": {
+    "horizons": "-76",
+    "center": "Mars",
+    "local": true,
+    "step_min": 30
+   }
+  },
+  {
+   "key": "perseverance",
+   "name": "Perseverance",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "surface",
+   "launch": "2020-07-30",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "where": "Mars, Jezero crater",
+   "about": "A rover in Jezero crater since February 2021, collecting rock samples in sealed tubes from an ancient river delta.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Perseverance",
+     "url": "https://science.nasa.gov/mission/mars-2020-perseverance/"
+    }
+   ],
+   "src": {
+    "horizons": "-168",
+    "center": "Mars",
+    "local": true,
+    "step_min": 30
+   }
+  },
+  {
+   "key": "lro",
+   "name": "Lunar Reconnaissance Orbiter",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "planetary",
+   "launch": "2009-06-18",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "where": "Moon",
+   "about": "Mapping the Moon since 2009 in great detail, including the Apollo landing sites and the cold, dark craters near the poles.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: LRO",
+     "url": "https://science.nasa.gov/mission/lunar-reconnaissance-orbiter/"
+    }
+   ],
+   "src": {
+    "horizons": "-85",
+    "center": "Moon",
+    "local": true
+   }
+  },
+  {
+   "key": "chandrayaan2",
+   "name": "Chandrayaan-2",
+   "agencies": [
+    "ISRO"
+   ],
+   "kind": "planetary",
+   "launch": "2019-07-22",
+   "vehicle": "GSLV Mk III, Sriharikota",
+   "where": "Moon",
+   "about": "India's lunar orbiter, mapping the Moon since 2019; it also relayed for Chandrayaan-3's lander, which touched down near the south pole in 2023.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ISRO: Chandrayaan-2",
+     "url": "https://www.isro.gov.in/Chandrayaan2_science.html"
+    }
+   ],
+   "src": {
+    "horizons": "-152",
+    "center": "Moon",
+    "local": true
+   }
+  },
+  {
+   "key": "danuri",
+   "name": "Danuri",
+   "full": "Korea Pathfinder Lunar Orbiter",
+   "agencies": [
+    "KASA"
+   ],
+   "kind": "planetary",
+   "launch": "2022-08-04",
+   "vehicle": "Falcon 9, Cape Canaveral",
+   "where": "Moon",
+   "about": "Korea's first lunar mission, in orbit around the Moon since December 2022, carrying a NASA camera that looks into permanently shadowed craters.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "Korea AeroSpace Administration",
+     "url": "https://www.kasa.go.kr/eng/"
+    }
+   ],
+   "src": {
+    "horizons": "-155",
+    "center": "Moon",
+    "local": true
+   }
+  },
+  {
+   "key": "terra",
+   "name": "Terra",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "1999-12-18",
+   "vehicle": "Atlas IIAS, Vandenberg",
+   "about": "NASA's first big Earth-watching satellite, measuring land, ocean, clouds and air since 2000.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Terra",
+     "url": "https://science.nasa.gov/mission/terra/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "TERRA"
+    ]
+   }
+  },
+  {
+   "key": "aqua",
+   "name": "Aqua",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2002-05-04",
+   "vehicle": "Delta II, Vandenberg",
+   "about": "Follows Earth's water: evaporation, clouds, rain, ice and snow.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Aqua",
+     "url": "https://science.nasa.gov/mission/aqua/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "AQUA"
+    ]
+   }
+  },
+  {
+   "key": "aura",
+   "name": "Aura",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2004-07-15",
+   "vehicle": "Delta II, Vandenberg",
+   "about": "Measures the ozone layer and air quality.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Aura",
+     "url": "https://science.nasa.gov/mission/aura/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "AURA"
+    ]
+   }
+  },
+  {
+   "key": "landsat8",
+   "name": "Landsat 8",
+   "agencies": [
+    "NASA",
+    "USGS"
+   ],
+   "kind": "earth",
+   "launch": "2013-02-11",
+   "vehicle": "Atlas V, Vandenberg",
+   "about": "Part of the longest-running record of Earth's land from space, begun in 1972.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Landsat",
+     "url": "https://landsat.gsfc.nasa.gov/"
+    },
+    {
+     "label": "USGS: Landsat",
+     "url": "https://www.usgs.gov/landsat-missions"
+    }
+   ],
+   "src": {
+    "tle": [
+     "LANDSAT 8"
+    ]
+   }
+  },
+  {
+   "key": "landsat9",
+   "name": "Landsat 9",
+   "agencies": [
+    "NASA",
+    "USGS"
+   ],
+   "kind": "earth",
+   "launch": "2021-09-27",
+   "vehicle": "Atlas V, Vandenberg",
+   "about": "Works with Landsat 8 so that every place on land is pictured every eight days.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Landsat",
+     "url": "https://landsat.gsfc.nasa.gov/"
+    },
+    {
+     "label": "USGS: Landsat",
+     "url": "https://www.usgs.gov/landsat-missions"
+    }
+   ],
+   "src": {
+    "tle": [
+     "LANDSAT 9"
+    ]
+   }
+  },
+  {
+   "key": "s1c",
+   "name": "Sentinel-1C",
+   "agencies": [
+    "ESA",
+    "EU"
+   ],
+   "kind": "earth",
+   "launch": "2024-12-05",
+   "vehicle": "Vega-C, Kourou",
+   "about": "A radar satellite of the EU's Copernicus programme: it sees the ground through cloud and darkness.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Copernicus",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SENTINEL-1C"
+    ]
+   }
+  },
+  {
+   "key": "s2b",
+   "name": "Sentinel-2B",
+   "agencies": [
+    "ESA",
+    "EU"
+   ],
+   "kind": "earth",
+   "launch": "2017-03-07",
+   "vehicle": "Vega, Kourou",
+   "about": "Takes colour pictures of land and coasts for Copernicus, in 13 colours from blue to infrared.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Copernicus",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SENTINEL-2B"
+    ]
+   }
+  },
+  {
+   "key": "s2c",
+   "name": "Sentinel-2C",
+   "agencies": [
+    "ESA",
+    "EU"
+   ],
+   "kind": "earth",
+   "launch": "2024-09-05",
+   "vehicle": "Vega, Kourou",
+   "about": "Takes colour pictures of land and coasts for Copernicus; it went up on the last flight of the original Vega rocket.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Copernicus",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SENTINEL-2C"
+    ]
+   }
+  },
+  {
+   "key": "s3a",
+   "name": "Sentinel-3A",
+   "agencies": [
+    "ESA",
+    "EU",
+    "EUMETSAT"
+   ],
+   "kind": "earth",
+   "launch": "2016-02-16",
+   "vehicle": "Rockot, Plesetsk",
+   "about": "Measures the oceans' height, temperature and colour for Copernicus.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Copernicus",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SENTINEL-3A"
+    ]
+   }
+  },
+  {
+   "key": "s3b",
+   "name": "Sentinel-3B",
+   "agencies": [
+    "ESA",
+    "EU",
+    "EUMETSAT"
+   ],
+   "kind": "earth",
+   "launch": "2018-04-25",
+   "vehicle": "Rockot, Plesetsk",
+   "about": "Works with Sentinel-3A on the oceans' height, temperature and colour.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Copernicus",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SENTINEL-3B"
+    ]
+   }
+  },
+  {
+   "key": "s5p",
+   "name": "Sentinel-5P",
+   "agencies": [
+    "ESA",
+    "EU"
+   ],
+   "kind": "earth",
+   "launch": "2017-10-13",
+   "vehicle": "Rockot, Plesetsk",
+   "about": "Maps the gases polluting the air every day.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Copernicus",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SENTINEL-5P"
+    ]
+   }
+  },
+  {
+   "key": "s6",
+   "name": "Sentinel-6 Michael Freilich",
+   "agencies": [
+    "ESA",
+    "NASA",
+    "EUMETSAT",
+    "NOAA",
+    "CNES",
+    "EU"
+   ],
+   "kind": "earth",
+   "launch": "2020-11-21",
+   "vehicle": "Falcon 9, Vandenberg",
+   "about": "Measures sea level to within a few centimetres, continuing a record begun in 1992.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Sentinel-6",
+     "url": "https://science.nasa.gov/mission/sentinel-6/"
+    },
+    {
+     "label": "ESA: Copernicus",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SENTINEL-6",
+     "SENTINEL-6A",
+     "SENTINEL 6A"
+    ]
+   }
+  },
+  {
+   "key": "cryosat2",
+   "name": "CryoSat-2",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "earth",
+   "launch": "2010-04-08",
+   "vehicle": "Dnepr, Baikonur",
+   "about": "Measures the thickness of sea ice and the ice sheets.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: CryoSat",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/FutureEO/CryoSat"
+    }
+   ],
+   "src": {
+    "tle": [
+     "CRYOSAT 2",
+     "CRYOSAT-2"
+    ]
+   }
+  },
+  {
+   "key": "smos",
+   "name": "SMOS",
+   "full": "Soil Moisture and Ocean Salinity",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "earth",
+   "launch": "2009-11-02",
+   "vehicle": "Rockot, Plesetsk",
+   "about": "Measures the moisture in soil and the saltiness of the sea.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: SMOS",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/FutureEO/SMOS"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SMOS"
+    ]
+   }
+  },
+  {
+   "key": "earthcare",
+   "name": "EarthCARE",
+   "agencies": [
+    "ESA",
+    "JAXA"
+   ],
+   "kind": "earth",
+   "launch": "2024-05-28",
+   "vehicle": "Falcon 9, Vandenberg",
+   "about": "Studies how clouds and tiny particles in the air warm or cool the planet, with a radar and a laser.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: EarthCARE",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/FutureEO/EarthCARE"
+    }
+   ],
+   "src": {
+    "tle": [
+     "EARTHCARE"
+    ]
+   }
+  },
+  {
+   "key": "biomass",
+   "name": "Biomass",
+   "agencies": [
+    "ESA"
+   ],
+   "kind": "earth",
+   "launch": "2025-04-29",
+   "vehicle": "Vega-C, Kourou",
+   "about": "The first space radar long enough in wavelength to see through forest canopies and weigh the world's forests.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "ESA: Biomass",
+     "url": "https://www.esa.int/Applications/Observing_the_Earth/FutureEO/Biomass"
+    }
+   ],
+   "src": {
+    "tle": [
+     "BIOMASS"
+    ]
+   }
+  },
+  {
+   "key": "snpp",
+   "name": "Suomi NPP",
+   "agencies": [
+    "NASA",
+    "NOAA"
+   ],
+   "kind": "earth",
+   "launch": "2011-10-28",
+   "vehicle": "Delta II, Vandenberg",
+   "about": "A weather and climate satellite; its night-time camera shows city lights and fires.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: Suomi NPP",
+     "url": "https://science.nasa.gov/mission/suomi-npp/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SUOMI NPP"
+    ]
+   }
+  },
+  {
+   "key": "noaa20",
+   "name": "NOAA-20",
+   "agencies": [
+    "NOAA",
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2017-11-18",
+   "vehicle": "Delta II, Vandenberg",
+   "about": "One of the polar-orbiting satellites behind every weather forecast.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NOAA: JPSS",
+     "url": "https://www.nesdis.noaa.gov/our-satellites/currently-flying/joint-polar-satellite-system"
+    }
+   ],
+   "src": {
+    "tle": [
+     "NOAA 20",
+     "NOAA 20 (JPSS-1)"
+    ]
+   }
+  },
+  {
+   "key": "noaa21",
+   "name": "NOAA-21",
+   "agencies": [
+    "NOAA",
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2022-11-10",
+   "vehicle": "Atlas V, Vandenberg",
+   "about": "The newest of the polar-orbiting weather satellites.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NOAA: JPSS",
+     "url": "https://www.nesdis.noaa.gov/our-satellites/currently-flying/joint-polar-satellite-system"
+    }
+   ],
+   "src": {
+    "tle": [
+     "NOAA 21",
+     "NOAA 21 (JPSS-2)"
+    ]
+   }
+  },
+  {
+   "key": "goes18",
+   "name": "GOES-18",
+   "agencies": [
+    "NOAA",
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2022-03-01",
+   "vehicle": "Atlas V, Cape Canaveral",
+   "about": "The GOES-West weather satellite, 35,786 km up over the Pacific, where it keeps pace with Earth's turning.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NOAA: GOES",
+     "url": "https://www.goes-r.gov/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "GOES 18"
+    ]
+   }
+  },
+  {
+   "key": "goes19",
+   "name": "GOES-19",
+   "agencies": [
+    "NOAA",
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2024-06-25",
+   "vehicle": "Falcon Heavy, Kennedy Space Center",
+   "about": "The GOES-East weather satellite, 35,786 km up over the Americas; it also carries a coronagraph that watches the Sun.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NOAA: GOES",
+     "url": "https://www.goes-r.gov/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "GOES 19"
+    ]
+   }
+  },
+  {
+   "key": "himawari9",
+   "name": "Himawari-9",
+   "agencies": [
+    "JMA"
+   ],
+   "kind": "earth",
+   "launch": "2016-11-02",
+   "vehicle": "H-IIA, Tanegashima",
+   "about": "Japan's weather satellite, 35,786 km up over the western Pacific.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "Japan Meteorological Agency: Himawari",
+     "url": "https://www.data.jma.go.jp/mscweb/en/himawari89/index.html"
+    }
+   ],
+   "src": {
+    "tle": [
+     "HIMAWARI-9",
+     "HIMAWARI 9"
+    ]
+   }
+  },
+  {
+   "key": "mtgi1",
+   "name": "Meteosat-12",
+   "agencies": [
+    "EUMETSAT",
+    "ESA"
+   ],
+   "kind": "earth",
+   "launch": "2022-12-13",
+   "vehicle": "Ariane 5, Kourou",
+   "about": "Europe's newest-generation weather satellite (MTG-I1), 35,786 km up over Africa; it also detects lightning.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "EUMETSAT: Meteosat Third Generation",
+     "url": "https://www.eumetsat.int/meteosat-third-generation"
+    }
+   ],
+   "src": {
+    "tle": [
+     "METEOSAT-12",
+     "METEOSAT-12 (MTG-I1)",
+     "MTG-I1"
+    ]
+   }
+  },
+  {
+   "key": "swot",
+   "name": "SWOT",
+   "full": "Surface Water and Ocean Topography",
+   "agencies": [
+    "NASA",
+    "CNES"
+   ],
+   "kind": "earth",
+   "launch": "2022-12-16",
+   "vehicle": "Falcon 9, Vandenberg",
+   "about": "Surveys the height of nearly all water on Earth: oceans, lakes and rivers.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: SWOT",
+     "url": "https://science.nasa.gov/mission/swot/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SWOT"
+    ]
+   }
+  },
+  {
+   "key": "pace",
+   "name": "PACE",
+   "full": "Plankton, Aerosol, Cloud, ocean Ecosystem",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2024-02-08",
+   "vehicle": "Falcon 9, Cape Canaveral",
+   "about": "Sees the colour of the ocean in fine detail to track plankton, and the haze and clouds above it.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: PACE",
+     "url": "https://science.nasa.gov/mission/pace/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "PACE"
+    ]
+   }
+  },
+  {
+   "key": "icesat2",
+   "name": "ICESat-2",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2018-09-15",
+   "vehicle": "Delta II, Vandenberg",
+   "about": "Measures the height of ice, sea, land and trees with a laser, 10,000 pulses a second.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: ICESat-2",
+     "url": "https://science.nasa.gov/mission/icesat-2/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "ICESAT-2"
+    ]
+   }
+  },
+  {
+   "key": "gracefo",
+   "name": "GRACE-FO",
+   "full": "Gravity Recovery and Climate Experiment Follow-On",
+   "agencies": [
+    "NASA",
+    "GFZ"
+   ],
+   "kind": "earth",
+   "launch": "2018-05-22",
+   "vehicle": "Falcon 9, Vandenberg",
+   "about": "Two satellites, one following the other about 220 km behind, that weigh moving water and ice by tiny changes in the distance between them.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: GRACE-FO",
+     "url": "https://science.nasa.gov/mission/grace-fo/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "GRACE-FO 1",
+     "GRACE-FO1"
+    ]
+   }
+  },
+  {
+   "key": "gpm",
+   "name": "GPM",
+   "full": "Global Precipitation Measurement",
+   "agencies": [
+    "NASA",
+    "JAXA"
+   ],
+   "kind": "earth",
+   "launch": "2014-02-27",
+   "vehicle": "H-IIA, Tanegashima",
+   "about": "The core of a fleet measuring rain and snow around the world every 30 minutes.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: GPM",
+     "url": "https://science.nasa.gov/mission/gpm/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "GPM-CORE",
+     "GPM CORE"
+    ]
+   }
+  },
+  {
+   "key": "smap",
+   "name": "SMAP",
+   "full": "Soil Moisture Active Passive",
+   "agencies": [
+    "NASA"
+   ],
+   "kind": "earth",
+   "launch": "2015-01-31",
+   "vehicle": "Delta II, Vandenberg",
+   "about": "Maps the water in the top few centimetres of soil every few days.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: SMAP",
+     "url": "https://science.nasa.gov/mission/smap/"
+    }
+   ],
+   "src": {
+    "tle": [
+     "SMAP"
+    ]
+   }
+  },
+  {
+   "key": "nisar",
+   "name": "NISAR",
+   "full": "NASA-ISRO Synthetic Aperture Radar",
+   "agencies": [
+    "NASA",
+    "ISRO"
+   ],
+   "kind": "earth",
+   "launch": "2025-07-30",
+   "vehicle": "GSLV, Sriharikota",
+   "about": "A radar built by NASA and ISRO together that measures movements of land and ice of a centimetre or less.",
+   "timeline": [],
+   "links": [
+    {
+     "label": "NASA: NISAR",
+     "url": "https://science.nasa.gov/mission/nisar/"
+    },
+    {
+     "label": "ISRO: NISAR",
+     "url": "https://www.isro.gov.in/NISAR.html"
+    }
+   ],
+   "src": {
+    "tle": [
+     "NISAR"
+    ]
+   }
+  },
+  {
+   "key": "wsfm1",
+   "name": "WSF-M1",
+   "full": "Weather System Follow-on Microwave",
+   "agencies": [
+    "US Space Force"
+   ],
+   "kind": "earth",
+   "launch": "2024-04-11",
+   "vehicle": "Falcon 9, Vandenberg",
+   "about": "The first of the US Space Force's new weather satellites, measuring winds over the ocean with a microwave imager; its orbit is published.",
+   "timeline": [],
+   "links": [],
+   "src": {
+    "tle": [
+     "WSF-M1",
+     "USA 355 (WSF-M1)"
+    ]
+   },
+   "tags": [
+    "military"
+   ]
+  }
+ ]
+}

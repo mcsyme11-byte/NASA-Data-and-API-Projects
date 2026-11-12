@@ -1,5 +1,30 @@
 # Change log
 
+## November 12, 2026 — Sky Finder, "Visible from here" and the spacecraft map
+
+- **Asteroid Tracker, "Visible from here" tab** (`#visible`): choose a place ("Use my location" or a town from the
+  GeoNames list); the close passes of the next 30 days that rise at least 10° above that horizon in full darkness
+  (the Sun 12° down), each with its best moment, highest point, brightness and what is needed to see it (naked eye up
+  to magnitude 6, binoculars 6–9, small telescope 9–12, large telescope 12–15, too faint above 15); a night chart of
+  its height hour by hour; "Find it ›" opens Sky Finder. Data: `data/sky.json`, written daily by `fetch_sky.py`
+  (NASA/JPL close approaches and Horizons). The place stays in the browser.
+- **Sky Finder** (`sky-finder/`): an installable phone web app. Tonight's list (asteroid passes, the Moon, the
+  planets and the ISS and Tiangong passes you can see); a camera view with a marker and the hour-by-hour path of the
+  chosen asteroid, the Moon, planets, bright stars, the stations, the horizon and the compass points, an arrow to
+  anything off the screen and a line telling which way to turn; calibration on the Moon, a planet or a bright star;
+  drag-to-look where there are no motion sensors; red light; a safety notice on first use; works offline once
+  visited; a how-to page. Linked from the tracker's new tab and the Image Explorer's globe notes. Sky maths in
+  `shared/sky.js`, checked against Astropy.
+- **Spacecraft map** (`spacecraft/`): 82 active spacecraft and stations of NASA, ESA, JAXA, ISRO, CNSA and others,
+  from low Earth orbit to the Voyagers, on the asteroid map's controls, with five views (Solar system, Near Earth,
+  Earth orbit, Moon, Mars), search, agency and kind filters, a card for each craft (figures, launch, description,
+  timeline, links to the agencies' pages), Follow, its path, Share and time controls. Small drawings show what each
+  kind of craft looks like. Data: NASA/JPL Horizons and CelesTrak, copied twice a day by the new "Spacecraft data"
+  workflow; satellites worked out in the browser with satellite.js (MIT).
+- **Home page:** the large panel now previews the spacecraft map (the asteroid map's preview takes its place if the
+  spacecraft data cannot be loaded); the asteroid map is a link under it; a Sky Finder banner.
+- **Privacy, Terms and Credits** updated first: the place, Sky Finder's settings and offline copy; camera, location
+  and motion use; safety at night and never looking at the Sun; CelesTrak and satellite.js credits.
 ## November 12, 2026 — Mars Data page live
 
 - **Mars Data page** (`mars-data/index.html`), built from the approved mock-up: pressure through the Martian year

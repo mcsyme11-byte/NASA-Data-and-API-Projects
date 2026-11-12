@@ -7,6 +7,8 @@
 #   fetch_risk.py              impact-risk lists (ESA NEOCC and NASA/JPL Sentry) and ESA's close approaches
 #   fetch_neows.py             a copy of NASA's NeoWs weeks and asteroid pages, so visitors need no key; it uses the
 #                              developer's key from the repository secret NASA_API_KEY (never in a file)
+#   fetch_sky.py               positions around the coming close passes (NASA/JPL CAD and Horizons), for the
+#                              "Visible from here" tab and Sky Finder
 # The JPL APIs block direct calls from web pages (no CORS), which is why the data is fetched here.
 # Run by hand: Actions › Asteroid data › Run workflow ("all" refreshes every year).
 # Two daily times: GitHub sometimes delays or skips a scheduled run when busy (Nov 9, 2026: the 06:17 run never
@@ -61,6 +63,11 @@ jobs:
         env:
           NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
         run: python3 asteroid-tracker/fetch_neows.py
+      # Positions as seen from Earth around the passes of the next 30 days. If Horizons cannot be read, the previous
+      # file is kept.
+      - name: Fetch sky positions for the coming passes
+        continue-on-error: true
+        run: python3 asteroid-tracker/fetch_sky.py
       - name: Commit if changed
         run: |
           git add -A asteroid-tracker/data/

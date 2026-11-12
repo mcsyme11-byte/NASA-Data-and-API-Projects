@@ -4,6 +4,21 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## Decisions
 
+- **Decided Nov 12, 2026 (Sky Finder):** an installable phone web app in its own folder, `sky-finder/`, on the same
+  site (not a separate repository). It marks where an asteroid is with a marker and its path: most passing asteroids
+  are far too faint for a phone camera, so the asteroid itself is not shown. The Moon, planets, bright stars and the
+  space stations are drawn to check the aim, and calibration on one of them removes compass error and magnetic
+  declination together. Camera, location and motion readings stay on the device; a safety notice (never the Sun, look
+  where you walk) is shown before first use and the Terms say the same.
+- **Decided Nov 12, 2026 (spacecraft map):** a utility, not a fourth project, at `spacecraft/`, replacing the
+  asteroid map on the home page's large panel (the asteroid map is a link under it). It shows every active craft with
+  a public position that the hand-checked catalogue lists; military craft only where CelesTrak publishes the orbit;
+  no communication or navigation constellations (Starlink, GPS). Each craft is drawn relative to its parent (the
+  Sun, Earth, the Moon or Mars), so orbiters stay on their planets at any zoom. Ended missions come off the list.
+- **Decided Nov 12, 2026 ("Visible from here"):** a pass counts as visible when the asteroid is at least 10° up while
+  the Sun is at least 12° below the horizon; what is needed follows magnitude (naked eye ≤ 6, binoculars 6–9, small
+  telescope 9–12, large telescope 12–15, too faint above 15). The place is kept in the browser and shared with Sky
+  Finder (same storage key).
 - **Decided Nov 11, 2026:** the project has a **Project Record**, `docs/NASA and ESA Data Projects - Project Record.pdf`:
   the whole project as one PDF (front matter, roadmap, history, change log, each project, data sources, design,
   decisions and working rules, the site's pages, licence and credits, repository history, glossary), built from the
@@ -171,6 +186,8 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 | Charts | Hand-drawn SVG, styled to DESIGN.md (Asteroid Tracker); chosen per project | No library to load; matches the look exactly |
 | Globe (Image Explorer) | three.js 0.187 (MIT licence, from a CDN), WebGL | A textured Earth, 5,000 stars and markers drawn smoothly; the markers and names are drawn on a 2D layer above |
 | Maps (Image Explorer) | OpenLayers 10 (BSD licence) and proj4js 2.22 (MIT) from a CDN; `epsg4326`, `epsg3413` (Arctic), `epsg3031` (Antarctic) | Handles GIBS's tile grids, vector fire tiles and polar views; Leaflet does not without add-ons |
+| Sky positions | `shared/sky.js`, `shared/passes.js`, `shared/sats.js` (satellite.js 7.2.0, MIT, in `shared/vendor/`) | Sun, Moon, planets, stars, asteroids and satellites for any place and time, in the browser; checked against Astropy |
+| Spacecraft map | `spacecraft/spacemap.js`, a subclass of the asteroid map's `SolarMap` | The same controls and projection; positions relative to each craft's parent |
 | Mars analysis | Python 3 (pandas, matplotlib) in `mars-data/analysis/` | Cleaning and statistics are easiest in Python; it writes small summary files the web page reads |
 
 ## API keys

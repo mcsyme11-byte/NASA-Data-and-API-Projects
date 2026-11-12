@@ -13,6 +13,13 @@ Designed by **Malcolm Syme** and built with Claude.
 | [**Mars Data**](mars-data/) | Weather measured on Mars, cleaned and organised by time and place, with statistics and charts that show its patterns | NASA Planetary Data System (Curiosity's REMS) | Planned |
 | [**Image Explorer**](image-explorer/) | The Earth from orbit on any day since 2000, a globe inside the real sky with natural events and astronaut photos, and the picture libraries of NASA and ESA, searchable by subject, mission and date | NASA GIBS, EONET and Image and Video Library; ESA/Webb and ESA/Hubble picture archives | **Live** |
 
+Alongside them (since November 12, 2026):
+
+| Utility | What it is | Data |
+|---|---|---|
+| [**Sky Finder**](sky-finder/) | An installable phone web app: hold the phone up to the sky to find tonight's passing asteroid, with the Moon, planets, bright stars and the space stations to guide you | NASA/JPL close approaches and Horizons; CelesTrak; d3-celestial; GeoNames |
+| [**Spacecraft map**](spacecraft/) | The active spacecraft of NASA, ESA and others, from low Earth orbit to the Voyagers, with what each does and links to its mission pages; previewed on the home page | NASA/JPL Horizons; CelesTrak |
+
 Order of work: Asteroid Tracker (live), then Image Explorer (live), then Mars Data (next); each builds skills the next
 one uses.
 
@@ -22,10 +29,13 @@ one uses.
 NASA-ESA-Data-and-API-Projects/
 ├── index.html          home page linking the three projects
 ├── about/ privacy/ terms/ credits/ contact/   the site's information pages
-├── shared/             the look (theme.css, emblem), the NASA API helper (nasa.js) and the footer links (footer.js)
+├── shared/             the look (theme.css, emblem), the NASA API helper (nasa.js), the footer links (footer.js),
+│                       the sky maths (sky.js, passes.js, sats.js, place.js) and satellite.js (vendor/)
 ├── asteroid-tracker/   Project 1
 ├── image-explorer/     Project 2
 ├── mars-data/          Project 3 (Python analysis + a charts page)
+├── sky-finder/         Sky Finder, the phone web app
+├── spacecraft/         the spacecraft map and its data job
 ├── docs/               design guide, data sources, notes, roadmap, history, and the Project Record (record/ builds it)
 └── .github/workflows/  checks after every push, the daily data updates, and the Project Record rebuild
 ```

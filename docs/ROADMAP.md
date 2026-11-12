@@ -9,16 +9,20 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
-- [ ] **Mock-ups awaiting the developer's approval (Nov 12, 2026), then build, in one push:**
-  - Update 1: a "Visible from here" tab (location button, which close passes rise at night from there, brightness
-    and what is needed to see each) and **Sky Finder**, an installable phone web app in its own folder of this
-    repository: camera view with a marker and path for the asteroid, the Moon and planets for reference,
-    calibration on the Moon or a planet, and a how-to page inside it, linked from the tracker and the Image
-    Explorer. Camera, location and motion stay on the device; the Privacy page is updated first.
-  - Update 2: a **Spacecraft map** on the home page's large panel (a utility, not a fourth project), the asteroid
-    map as a smaller link: every active spacecraft with a public position (NASA, ESA, JAXA, ISRO, CNSA and others;
-    deep space from JPL Horizons, notable craft near Earth from CelesTrak), with details and links for each, using
-    the asteroid map's controls. Secret military craft have no published orbits and are left out.
+- [ ] **Developer testing of the Nov 12, 2026 additions** (built and published Nov 12, 2026):
+  - Asteroid Tracker, "Visible from here" tab: "Use my location" and a typed town; the passes list, the night chart,
+    "Find it ›" opening Sky Finder; "Forget this place".
+  - Sky Finder (`sky-finder/`), on a phone outdoors at night: add to the home screen (iPhone and Android); the safety
+    notice; camera, location and motion prompts; calibration on the Moon or a planet; the markers lining up with the
+    real Moon, planets and bright stars; an asteroid's diamond and path; red light; the ISS or Tiangong passes; the
+    how-to page.
+  - Spacecraft map (`spacecraft/`) and the home page's new panel: the five views, search, agency and kind filters,
+    the card for several craft, Follow, the path, Share, time controls; the asteroid map link under the panel.
+- [ ] Read the first runs of the new "Spacecraft data" workflow and the "Fetch sky positions" step of "Asteroid data"
+  (Actions logs): every craft should be found; any "not found" line (Horizons name or CelesTrak name) needs its
+  `src` corrected in `spacecraft/catalogue.json`. Links reported broken in `spacecraft/data/links.json` need new
+  addresses.
+- [ ] Review `spacecraft/catalogue.json` every few months: take missions that have ended off the list, add new ones.
 - [ ] Watch the scheduled "Asteroid data" runs (06:17 and the 14:47 backup, added Nov 9, 2026): at least one should
   run each day.
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
