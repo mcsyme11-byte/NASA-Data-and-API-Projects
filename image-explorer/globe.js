@@ -21,9 +21,9 @@ const vec = (lat, lon, r) => new THREE.Vector3(r * Math.cos(lat * D2R) * Math.co
 /* Greenwich mean sidereal time: how far the Earth has turned against the stars (IAU 1982 formula, enough here). */
 const gmst = (t = Date.now()) => ((((280.46061837 + 360.98564736629 * (t / 864e5 + 2440587.5 - 2451545)) % 360) + 360) % 360) * D2R;
 
-const vis = { events: true, photos: true, galaxy: true, nebula: true, cluster: true, lines: true, labels: true, spin: !reduce, night: true };
+const vis = { events: true, photos: true, quake: true, volcano: true, launch: true, wonder: false, galaxy: true, nebula: true, cluster: true, lines: true, labels: true, spin: !reduce, night: true };
 let renderer, scene, camera, controls, earth, earthMat, night, started = false, running = false;
-let events = [], photos = [], sky = [], cons = [], lines = null, hits = [], selected = null, fly = null, hover = null;
+let events = [], photos = [], spots = [], quakes = null, sky = [], cons = [], lines = null, hits = [], selected = null, fly = null, hover = null;
 
 /* ---------- sky objects: data/sky.json rows are
    [id, name, kind, type, ra, dec, magnitude, size in arcminutes, famous, search term, other designation] ---------- */
@@ -61,7 +61,7 @@ function init() {
   loadStars();
   loadSky();
   loadEvents();
-  loadPhotos();
+  loadPhotos(); loadSpots(); loadQuakes();
   wirePointer();
   new ResizeObserver(resize).observe(frame);
 }
@@ -230,13 +230,34 @@ async function loadEvents() {
   status();
 }
 
+/* ---------- places on Earth (decided Nov 11, 2026): volcanoes, natural wonders and launch sites (data/globe-spots.json,
+   built by tools/build_globe_spots.py from GeoNames), and the earthquakes of magnitude 4.5 or more in the past week
+   (USGS, live) ---------- */
+const SPOT = { quake: ['#D98C8C', 'Earthquake'], volcano: ['#D1A956', 'Volcano'], launch: ['#F2E8D5', 'Launch site'], wonder: ['#8FB996', 'Natural wonder'] };
+async function loadSpots() {
+  try {
+    spots = (await (await fetch('data/globe-spots.json')).json()).map(([name, sub, lat, lon, detail]) =>
+      ({ kind: 'spot', sub, name, lat, lon, detail, catTitle: SPOT[sub][1], local: vec(lat, lon, 1.004) }));
+  } catch { spots = []; }
+  status();
+}
+async function loadQuakes() {
+  try {
+    const j = await (await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson')).json();
+    quakes = j.features.map(f => { const [lon, lat, depth] = f.geometry.coordinates, p = f.properties;
+      return { kind: 'spot', sub: 'quake', name: p.place || p.title, lat, lon, depth, mag: p.mag, time: p.time, url: p.url,
+        catTitle: `Earthquake · magnitude ${p.mag}`, local: vec(lat, lon, 1.004) }; }).filter(q => isFinite(q.lat) && isFinite(q.lon));
+  } catch { quakes = null; }
+  status();
+}
+
 /* ---------- astronaut photos of Earth (cataloged ones, with the position of the photo's centre) ---------- */
 const EOL = 'https://eol.jsc.nasa.gov/';
 async function loadPhotos() {
   try {
     const j = await (await fetch('data/astronaut.json')).json();
-    photos = (j.photos || []).map(([id, date, time, lat, lon, place, feat, cloud, small, large]) => ({
-      id, kind: 'photo', name: place || 'Astronaut photo', date, time, lat, lon, feat, cloud, small, large, local: vec(lat, lon, 1.004) }));
+    photos = (j.photos || []).map(([id, date, time, lat, lon, place, feat, cloud, small, large, pos = 'centre']) => ({
+      id, kind: 'photo', name: place || 'Astronaut photo', date, time, lat, lon, feat, cloud, small, large, pos, local: vec(lat, lon, 1.004) }));
   } catch { photos = []; }
   document.querySelector('[data-show="photos"]').hidden = !photos.length;
   status();
@@ -244,8 +265,9 @@ async function loadPhotos() {
 
 function status() {
   const ev = events === null ? 'events unavailable right now' : `${events.length} events on Earth in the last 30 days`;
-  tag(`${ev}${photos.length ? ` · ${photos.length} astronaut photos` : ''} · ${sky.length.toLocaleString('en-GB')} sky objects · as of ${new Date().toUTCString().slice(17, 22)} UTC`);
-  $('gSrc').textContent = 'Earth: NASA Blue Marble (GIBS). Events: NASA EONET, live. Stars to magnitude 6, galaxies, nebulae, clusters and constellations: d3-celestial.';
+  const q = quakes === null ? '' : ` · ${quakes.length} earthquake${quakes.length === 1 ? '' : 's'} this week`;
+  tag(`${ev}${q}${photos.length ? ` · ${photos.length} astronaut photos` : ''} · ${spots.length.toLocaleString('en-GB')} places · ${sky.length.toLocaleString('en-GB')} sky objects · as of ${new Date().toUTCString().slice(17, 22)} UTC`);
+  $('gSrc').textContent = 'Earth: NASA Blue Marble (GIBS). Events: NASA EONET, live. Earthquakes: USGS, live. Volcanoes, natural wonders and launch sites: GeoNames and public sources. Stars to magnitude 6, galaxies, nebulae, clusters and constellations: d3-celestial.';
 }
 const tag = t => { $('gTag').textContent = t; };
 
@@ -338,6 +360,23 @@ function draw() {
     if (sel || hover === e || (vis.labels && dist < 1.5)) label(x, y, e.name, sel || hover === e ? BRIGHT : INK2, sel ? r + 8 : 9);
   }
 
+  /* places: volcanoes (triangles), natural wonders (rings), launch sites (crosses), earthquakes (circles sized by magnitude) */
+  for (const s of quakes ? [...spots, ...quakes] : spots) {
+    if (!vis[s.sub]) continue;
+    const p = s.local.clone().applyMatrix4(m);
+    if (p.dot(cam.clone().sub(p)) <= 0) continue;
+    const at = place(p, s, 9); if (!at) continue;
+    const [x, y] = at, k = dist < 1.6 ? 1.35 : dist < 3 ? 1.1 : 0.85, sel = selected === s, col = SPOT[s.sub][0];
+    ctx.fillStyle = col; ctx.strokeStyle = 'rgba(5,8,13,.85)'; ctx.lineWidth = 1;
+    let r = 3.5 * k;
+    if (s.sub === 'volcano') { ctx.beginPath(); ctx.moveTo(x, y - r - 1); ctx.lineTo(x + r, y + r - 1); ctx.lineTo(x - r, y + r - 1); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+    else if (s.sub === 'wonder') { ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); }
+    else if (s.sub === 'launch') { ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x - r, y); ctx.lineTo(x + r, y); ctx.moveTo(x, y - r - 1); ctx.lineTo(x, y + r + 1); ctx.stroke(); }
+    else { r = (2 + Math.max(0, s.mag - 4.5) * 2.2) * k; ctx.globalAlpha = .75; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.globalAlpha = 1; ctx.stroke(); }
+    if (sel) { ctx.strokeStyle = BRIGHT; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, r + 6, 0, 7); ctx.stroke(); }
+    if (sel || hover === s || (vis.labels && dist < 1.4 && s.sub !== 'wonder')) label(x, y, s.name, sel || hover === s ? BRIGHT : INK2, sel ? r + 9 : 9);
+  }
+
   /* astronaut photos: small blue squares where each photo's centre is */
   if (vis.photos) for (const ph of photos) {
     const p = ph.local.clone().applyMatrix4(m);
@@ -371,7 +410,7 @@ function wirePointer() {
     if (e.pointerType !== 'mouse' || e.buttons) { tip.hidden = true; return; }
     hover = nearest(e); el.style.cursor = hover ? 'pointer' : '';
     if (!hover) { tip.hidden = true; return; }
-    tip.innerHTML = `<b>${esc(hover.name)}</b><br>${esc(hover.kind === 'event' ? hover.catTitle + ' · ' + nice(hover.date) : hover.kind === 'photo' ? 'Astronaut photo · ' + nice(hover.date) : hover.type)}`;
+    tip.innerHTML = `<b>${esc(hover.name)}</b><br>${esc(hover.kind === 'event' ? hover.catTitle + ' · ' + nice(hover.date) : hover.kind === 'photo' ? 'Astronaut photo · ' + nice(hover.date) : hover.kind === 'spot' ? hover.catTitle : hover.type)}`;
     tip.style.left = e.clientX + 14 + 'px'; tip.style.top = e.clientY + 14 + 'px'; tip.hidden = false;
   });
   el.addEventListener('pointerleave', () => { hover = null; tip.hidden = true; });
@@ -401,7 +440,7 @@ function stepFly() {
   if (k === 1) fly = null;
 }
 function goTo(it) {
-  if (it.kind === 'event' || it.kind === 'photo') {
+  if (it.kind === 'event' || it.kind === 'photo' || it.kind === 'spot') {
     flyTo(it.local.clone().applyMatrix4(earth.matrixWorld).normalize().multiplyScalar(Math.min(camera.position.length(), 2.2)));
   } else {
     flyTo(skyView(it.pos, Math.max(camera.position.length(), 6)));
@@ -427,13 +466,25 @@ function select(it) {
       <a class="gphoto" href="${EOL}DatabaseImages/${esc(it.large)}" target="_blank" rel="noopener"><img onerror="this.parentNode.hidden = true" src="${EOL}DatabaseImages/${esc(it.small)}" alt="Astronaut photo of ${esc(it.name)}, ${esc(it.id)}"></a>
       <dl class="facts"><dt>Taken</dt><dd>${nice(it.date)}, ${esc(it.time)} UTC</dd>
       ${it.feat ? `<dt>Shows</dt><dd>${esc(it.feat)}</dd>` : ''}
-      <dt>Cloud</dt><dd>${it.cloud}% of the picture</dd>
+      ${it.pos === 'centre' ? `<dt>Cloud</dt><dd>${it.cloud}% of the picture</dd>` : ''}
       <dt>Photo</dt><dd class="mono">${esc(it.id)}</dd>
-      <dt>Centre</dt><dd class="mono">${Math.abs(it.lat).toFixed(1)}° ${it.lat >= 0 ? 'N' : 'S'}, ${Math.abs(it.lon).toFixed(1)}° ${it.lon >= 0 ? 'E' : 'W'}</dd></dl>
+      <dt>${it.pos === 'centre' ? 'Centre' : 'Station above'}</dt><dd class="mono">${Math.abs(it.lat).toFixed(1)}° ${it.lat >= 0 ? 'N' : 'S'}, ${Math.abs(it.lon).toFixed(1)}° ${it.lon >= 0 ? 'E' : 'W'}</dd></dl>
       <a class="btn ghost" href="${EOL}SearchPhotos/photo.pl?mission=${encodeURIComponent(mission)}&roll=${encodeURIComponent(roll)}&frame=${encodeURIComponent(frame)}" target="_blank" rel="noopener">The photo on NASA's site</a>
       <button class="btn ghost" id="gEarth">See it on the Earth map</button>
-      <p class="note" style="margin:12px 0 0">${/^ISS/.test(it.id) ? 'Taken from the International Space Station. ' : ''}Image courtesy of the Earth Science and Remote Sensing Unit, NASA Johnson Space Center.</p>`;
+      <p class="note" style="margin:12px 0 0">${/^ISS/.test(it.id) ? 'Taken from the International Space Station. ' : ''}${it.pos === 'below' ? 'Not yet cataloged: the pin marks where the Station was, and the photo may show a place some way off. ' : ''}Image courtesy of the Earth Science and Remote Sensing Unit, NASA Johnson Space Center.</p>`;
     $('gEarth').addEventListener('click', () => focusEarth(it.lat, it.lon, it.date, null));
+  } else if (it.kind === 'spot') {
+    const pos = `${Math.abs(it.lat).toFixed(2)}° ${it.lat >= 0 ? 'N' : 'S'}, ${Math.abs(it.lon).toFixed(2)}° ${it.lon >= 0 ? 'E' : 'W'}`;
+    const facts = it.sub === 'quake'
+      ? `<dt>When</dt><dd>${new Date(it.time).toUTCString().slice(5, 22)} UTC</dd><dt>Magnitude</dt><dd>${it.mag}</dd><dt>Depth</dt><dd>${Math.round(it.depth)} km</dd>`
+      : it.detail ? `<dt>${it.sub === 'launch' ? 'Run by' : it.sub === 'volcano' ? 'Height' : 'Kind'}</dt><dd>${esc(it.detail)}</dd>` : '';
+    card.innerHTML = `<h2>Selected</h2><div class="eyebrow">${esc(SPOT[it.sub][1])}</div><h3>${esc(it.name)}</h3>
+      <dl class="facts">${facts}<dt>Position</dt><dd class="mono">${pos}</dd></dl>
+      <button class="btn" id="gEarth">See it on the Earth map</button>
+      ${it.sub === 'quake' ? `<p class="note" style="margin:12px 0 0">From the <a href="${esc(it.url)}" target="_blank" rel="noopener">US Geological Survey</a>.</p>`
+        : `<div class="shead" style="margin:14px 0 8px"><h2>Pictures</h2><span class="aside" id="gCount">searching…</span></div><div class="gpics" id="gPics"></div>`}`;
+    $('gEarth').addEventListener('click', () => focusEarth(it.lat, it.lon, null, null));
+    if (it.sub !== 'quake') { it.term = it.name; pictures(it); }
   } else if (it.kind === 'event') {
     card.innerHTML = `<h2>Selected</h2><div class="eyebrow">${esc(it.catTitle)} · on Earth now</div><h3>${esc(it.name)}</h3>
       <dl class="facts"><dt>Latest report</dt><dd>${nice(it.date)}</dd>
@@ -473,12 +524,12 @@ const gq = $('gQ'), gl = $('gList'); let found = [], gsel = -1;
 gq.addEventListener('input', () => {
   const f = fold(gq.value.trim()); found = []; gsel = -1;
   if (!f) { gl.hidden = true; return; }
-  for (const it of [...sky, ...(events || []), ...photos]) {
-    const keys = [it.name, it.id, it.desig || '', it.catTitle || ''].map(fold);
+  for (const it of [...sky, ...(events || []), ...spots, ...(quakes || []), ...photos]) {
+    const keys = [it.name, it.id || '', it.desig || '', it.catTitle || ''].map(fold);
     if (keys.some(k => k.startsWith(f) || k.includes(' ' + f))) found.push(it);
     if (found.length >= 8) break;
   }
-  gl.innerHTML = found.length ? found.map((it, j) => `<li role="option" id="gl${j}" aria-selected="false" data-j="${j}"><span>${esc(it.name)}</span><span class="k">${esc(it.kind === 'event' ? it.catTitle : it.kind === 'photo' ? 'Astronaut photo · ' + nice(it.date) : it.type)}</span></li>`).join('')
+  gl.innerHTML = found.length ? found.map((it, j) => `<li role="option" id="gl${j}" aria-selected="false" data-j="${j}"><span>${esc(it.name)}</span><span class="k">${esc(it.kind === 'event' || it.kind === 'spot' ? it.catTitle : it.kind === 'photo' ? 'Astronaut photo · ' + nice(it.date) : it.type)}</span></li>`).join('')
     : '<li aria-disabled="true"><span class="note">Nothing by that name on the globe</span></li>';
   gl.hidden = false; gq.setAttribute('aria-expanded', 'true');
 });

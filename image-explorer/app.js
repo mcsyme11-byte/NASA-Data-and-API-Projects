@@ -64,6 +64,7 @@ proj4.defs('EPSG:3031', '+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0
 ol.proj.proj4.register(proj4);
 const H = 4194304;                                        /* half the width of GIBS's polar grids, metres */
 for (const c of ['EPSG:3413', 'EPSG:3031']) ol.proj.get(c).setExtent([-H, -H, H, H]);
+ol.proj.get('EPSG:3413').setWorldExtent([-180, 30, 180, 90]); ol.proj.get('EPSG:3031').setWorldExtent([-180, -90, 180, -30]);   /* for the grid */
 const VIEWS = {
   world: { code: 'EPSG:4326', gibs: 'epsg4326', name: 'World' },
   arctic: { code: 'EPSG:3413', gibs: 'epsg3413', name: 'Arctic', pole: 90 },
@@ -120,10 +121,76 @@ function makeView() {
   if (view === 'world') return new ol.View({ projection: proj(), center: [0, 0], zoom: 2, maxZoom: 10, extent: [-180, -90, 180, 90], smoothExtentConstraint: false });   /* never shows past the poles or the date line */
   return new ol.View({ projection: proj(), center: [0, 0], maxZoom: 8, extent: [-H, -H, H, H], smoothExtentConstraint: false });
 }
-buildSources();
+/* a cloud-free picture (Blue Marble, about 500 m a pixel) under the day's pictures, so the gaps between a satellite's
+   passes show land and sea instead of black (decided Nov 11, 2026); not under night lights */
+const under = new ol.layer.Tile({ zIndex: -1 });
+function underSource() {
+  return new ol.source.XYZ({ projection: proj(), tileGrid: grid('500m'), crossOrigin: 'anonymous', transition: 0,
+    tileUrlFunction: c => `${GIBS}${V().gibs}/best/BlueMarble_NextGeneration/default/default/500m/${c[0]}/${c[2]}/${c[1]}.jpeg` });
+}
+
+/* ---------- map lines and names (decided Nov 11, 2026): Natural Earth 1:50m coastlines, land borders and rivers,
+   a latitude and longitude grid, and names of countries, cities and capitals (data/shapes.json, data/labels.json,
+   built by tools/build_shapes.py). The lines load the first time one is switched on. ---------- */
+const LINES = { borders: true, coast: true, rivers: false, names: true, grid: false };
+const lineStyles = {
+  coast: new ol.style.Style({ stroke: new ol.style.Stroke({ color: 'rgba(242,232,213,.55)', width: 1 }) }),
+  borders: new ol.style.Style({ stroke: new ol.style.Stroke({ color: 'rgba(212,184,122,.85)', width: 1.1, lineDash: [5, 3] }) }),
+  rivers: new ol.style.Style({ stroke: new ol.style.Stroke({ color: 'rgba(120,170,215,.8)', width: 1 }) }),
+};
+const lineLayers = {};
+for (const k of ['coast', 'borders', 'rivers']) lineLayers[k] = new ol.layer.Vector({ style: lineStyles[k], visible: false, updateWhileInteracting: false, zIndex: 10 });
+let shapes = null, shapesLoading = null, labelRows = null;
+function loadShapes() {
+  shapesLoading ??= Promise.all([fetch('data/shapes.json').then(r => r.json()), fetch('data/labels.json').then(r => r.json())])
+    .then(([s, l]) => { shapes = s; labelRows = l; fillLines(); })
+    .catch(() => { shapesLoading = null; });
+  return shapesLoading;
+}
+/* lines for the current view: in the polar views only those reaching past 40° towards that pole */
+function fillLines() {
+  if (!shapes) return;
+  const pole = V().pole, near = l => !pole || l.some(([, la]) => pole > 0 ? la > 40 : la < -40);
+  for (const k of Object.keys(lineLayers)) {
+    const feats = shapes[k].filter(near).map(l => new ol.Feature(new ol.geom.LineString(l).transform('EPSG:4326', proj())));
+    lineLayers[k].setSource(new ol.source.Vector({ features: feats }));
+  }
+  const pts = labelRows.filter(([, , , la]) => !pole || (pole > 0 ? la > 45 : la < -50)).map(([name, kind, lo, la, rank]) => {
+    const f = new ol.Feature(new ol.geom.Point(fromLL([lo, la]))); f.setProperties({ name, kind, rank }); return f;
+  });
+  nameLayer.setSource(new ol.source.Vector({ features: pts }));
+}
+/* names: countries first, then capitals and cities; a name shows once the map is close enough for its rank */
+const nameCache = {};
+function nameStyle(f, res) {
+  const deg = view === 'world' ? res : res / 111320, z = Math.log2(0.5625 / deg);     /* about the GIBS level shown */
+  const { name, kind, rank } = f.getProperties(), country = kind === 'country';
+  if ((country ? rank : rank + 1) > z + 2) return null;
+  const k = `${kind} ${name}`;
+  return nameCache[k] ??= new ol.style.Style({
+    image: country ? undefined : new ol.style.Circle({ radius: kind === 'capital' ? 3 : 2, fill: new ol.style.Fill({ color: '#F2E8D5' }), stroke: new ol.style.Stroke({ color: 'rgba(14,20,31,.8)', width: 1 }) }),
+    text: new ol.style.Text({ text: country ? name.toUpperCase() : name, font: country ? '600 11px Georgia, serif' : '12px Georgia, serif',
+      fill: new ol.style.Fill({ color: country ? '#D4B87A' : '#F2E8D5' }), stroke: new ol.style.Stroke({ color: 'rgba(14,20,31,.85)', width: 3 }),
+      offsetY: country ? 0 : -9, ...(country ? { letterSpacing: 2 } : {}) }),
+    zIndex: (country ? 200 : kind === 'capital' ? 100 : 0) - rank * 10,   /* where names crowd, bigger countries and cities win */
+  });
+}
+const nameLayer = new ol.layer.Vector({ style: nameStyle, declutter: true, visible: false, zIndex: 12, updateWhileInteracting: false });
+const gridLayer = new ol.layer.Graticule({ strokeStyle: new ol.style.Stroke({ color: 'rgba(212,184,122,.35)', width: 1, lineDash: [2, 4] }),
+  showLabels: true, wrapX: false, visible: false, zIndex: 11,
+  lonLabelStyle: new ol.style.Text({ font: '11px ui-monospace, monospace', textBaseline: 'bottom', fill: new ol.style.Fill({ color: '#D4B87A' }), stroke: new ol.style.Stroke({ color: 'rgba(14,20,31,.9)', width: 3 }) }),
+  latLabelStyle: new ol.style.Text({ font: '11px ui-monospace, monospace', textAlign: 'end', fill: new ol.style.Fill({ color: '#D4B87A' }), stroke: new ol.style.Stroke({ color: 'rgba(14,20,31,.9)', width: 3 }) }) });
+function showLines() {
+  const any = LINES.borders || LINES.coast || LINES.rivers || LINES.names;
+  if (any && !shapes) loadShapes();
+  for (const k of Object.keys(lineLayers)) lineLayers[k].setVisible(LINES[k]);
+  nameLayer.setVisible(LINES.names); gridLayer.setVisible(LINES.grid);
+}
+
+buildSources(); under.setSource(underSource());
 const map = new ol.Map({
   target: 'map',
-  layers: [...BASES.map(L => layers[L.id]), ...OVERS.map(L => layers[L.id])],
+  layers: [under, ...BASES.map(L => layers[L.id]), ...OVERS.map(L => layers[L.id]), lineLayers.rivers, lineLayers.coast, lineLayers.borders, gridLayer, nameLayer],
   overlays: [popup],
   controls: ol.control.defaults.defaults({ attribution: false, rotate: false }).extend([new ol.control.ScaleLine()]),
   view: makeView(),
@@ -135,6 +202,10 @@ function fillFrame() {          /* fills the frame with no empty bands; the edge
   else map.getView().fit([-H * 0.92, -H * 0.92, H * 0.92, H * 0.92], { size });     /* the pole to about 55° */
 }
 map.once('change:size', fillFrame); if (map.getSize()) fillFrame();
+document.querySelectorAll('.lines [data-line]').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.line; LINES[k] = !LINES[k]; b.setAttribute('aria-pressed', LINES[k]); showLines();
+}));
+showLines();
 
 function refreshSources() {
   /* a new key makes OpenLayers fetch every tile again with the new date (refresh() alone kept the old tiles) */
@@ -154,7 +225,7 @@ function renderPickers() {
   baseList.innerHTML = BASES.map(L => item(L, L.id === base, true)).join('');
   overList.innerHTML = OVERS.map(L => item(L, on.has(L.id), false)).join('');
 }
-function showLayers() { for (const L of [...BASES, ...OVERS]) layers[L.id].setVisible(!!spec(L) && (L.id === base || on.has(L.id))); }
+function showLayers() { for (const L of [...BASES, ...OVERS]) layers[L.id].setVisible(!!spec(L) && (L.id === base || on.has(L.id))); under.setVisible(base !== 'night'); }
 renderPickers(); showLayers();
 baseList.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
@@ -247,7 +318,7 @@ function setView(v) {
   view = v; stop(); popup.setPosition(undefined); $('cursor').hidden = true;
   if (!spec(BASES.find(L => L.id === base))) base = 'truecolor';
   for (const id of [...on]) if (!spec(OVERS.find(L => L.id === id))) on.delete(id);
-  buildSources(); map.setView(makeView()); fillFrame();
+  buildSources(); under.setSource(underSource()); fillLines(); map.setView(makeView()); fillFrame();
   renderPickers(); showLayers(); update();
   for (const b of document.querySelectorAll('[data-proj]')) b.setAttribute('aria-pressed', b.dataset.proj === view);
 }
@@ -376,7 +447,9 @@ function go(h) {
   list.hidden = true; q.setAttribute('aria-expanded', 'false'); q.value = h.kind === 'Coordinates' ? h.name : h.name;
   popup.setPosition(undefined);
   viewFor(h.lat);
-  const at = fromLL([h.lon, h.lat]), done = () => showPop(at, h.kind === 'Coordinates' ? nearest(h.lat, h.lon) : h.name);
+  const at = fromLL([h.lon, h.lat]), done = () => h.kind === 'Coordinates'
+    ? loadCountries().then(() => showPop(at, nearest(h.lat, h.lon)))
+    : showPop(at, { title: h.name, sub: h.kind, term: h.name });
   if (h.box) {                                    /* a lake, range, river or sea: show all of it */
     const [w, s, e, n] = h.box, pad = Math.max(e - w, n - s) * 0.08 + 0.05;
     const box = ol.proj.transformExtent([w - pad, Math.max(s - pad, -89.9), e + pad, Math.min(n + pad, 89.9)], 'EPSG:4326', proj(), 16);
@@ -395,19 +468,62 @@ q.addEventListener('keydown', e => {
 list.addEventListener('mousedown', e => { const li = e.target.closest('li[data-j]'); if (li) { e.preventDefault(); go(hits[+li.dataset.j]); } });
 q.addEventListener('blur', () => setTimeout(() => { list.hidden = true; q.setAttribute('aria-expanded', 'false'); }, 120));
 
-/* ---------- tap the map ---------- */
-/* the nearest town of 10,000 people or more within about 100 km (0.9°) */
-function nearest(lat, lon) {
-  if (!PLACES) return 'This spot';
-  let best = null, bd = Infinity; const k = Math.cos(lat * Math.PI / 180);
-  for (const p of PLACES) { const d = (p.lat - lat) ** 2 + ((p.lon - lon) * k) ** 2; if (d < bd) { bd = d; best = p; } }
-  return Math.sqrt(bd) < 0.9 ? 'Near ' + best.name : 'Open water or remote land';
+/* ---------- tap the map (decided Nov 11, 2026): what is at a spot, from the country it is in (data/countries.json,
+   Natural Earth), a natural feature on or near it, and the nearest town of 10,000 people or more with its distance and
+   direction; "open ocean" only where no country and no sea is found ---------- */
+let COUNTRY = null, countryLoading = null;
+const loadCountries = () => countryLoading ??= fetch('data/countries.json').then(r => r.json()).then(c => { COUNTRY = c; }).catch(() => { COUNTRY = []; });
+function inRing(r, x, y) {                        /* ray casting: is (x, y) inside the ring? */
+  let a = false;
+  for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+    const [xi, yi] = r[i], [xj, yj] = r[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) a = !a;
+  }
+  return a;
 }
-function showPop(c, label) {
-  const [lon, lat] = toLL(c), place = label.replace(/^Near /, '');
-  const term = /^(Open water|This spot)/.test(label) ? '' : place;
-  popEl.innerHTML = `<button class="x" aria-label="Close">×</button><div class="eyebrow">This spot</div><div class="where">${esc(label)}</div>
-    <div class="ll">${fmtLL(lat, lon)}</div>${term ? `<button class="btn" data-q="${esc(term)}">Pictures of ${esc(term)}</button>` : ''}`;
+const countryAt = (lat, lon) => (COUNTRY || []).find(([, , [w, s, e, n], rings]) => lon >= w && lon <= e && lat >= s && lat <= n && rings.some(r => inRing(r, lon, lat)))?.[1] || null;
+function kmTo(lat1, lon1, lat2, lon2) {            /* great-circle distance, km */
+  const r = Math.PI / 180, a = Math.sin((lat2 - lat1) * r / 2) ** 2 + Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin((lon2 - lon1) * r / 2) ** 2;
+  return 12742 * Math.asin(Math.min(1, Math.sqrt(a)));
+}
+function heading(lat1, lon1, lat2, lon2) {        /* the compass direction from 1 to 2, in words */
+  const r = Math.PI / 180, y = Math.sin((lon2 - lon1) * r) * Math.cos(lat2 * r);
+  const x = Math.cos(lat1 * r) * Math.sin(lat2 * r) - Math.sin(lat1 * r) * Math.cos(lat2 * r) * Math.cos((lon2 - lon1) * r);
+  return ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'][Math.round(((Math.atan2(y, x) / r + 360) % 360) / 45) % 8];
+}
+const WATER = /^(Sea|Ocean|Gulf|Bay|Strait|Sound|Channel|Fjord|Lagoon)$/;
+function nearest(lat, lon) {
+  if (!PLACES) return { title: 'This spot', sub: '', term: '' };
+  const k = Math.cos(lat * Math.PI / 180), d2 = p => (p.lat - lat) ** 2 + ((p.lon - lon) * k) ** 2;
+  let town = null, td = Infinity;
+  for (const p of PLACES) { const d = d2(p); if (d < td) { td = d; town = p; } }
+  const tkm = town ? kmTo(lat, lon, town.lat, town.lon) : Infinity;
+  /* the closest named point (a lake, peak, glacier…) within 60 km, and the smallest named area around the spot */
+  let pt = null, pd = Infinity, area = null, aSize = Infinity;
+  for (const p of [...FEATURES, ...(MORE || [])]) {
+    if (p.box) {
+      const [w, s, e, n] = p.box;
+      if (lon >= w && lon <= e && lat >= s && lat <= n && (e - w) * (n - s) < aSize && p.kind !== 'Continent' && p.kind !== 'Region') { aSize = (e - w) * (n - s); area = p; }
+    } else if (!/^Rivers?\b/.test(p.kind)) { const d = d2(p); if (d < pd) { pd = d; pt = p; } }   /* a river's point is its mouth: left out */
+  }
+  const pkm = pt ? kmTo(lat, lon, pt.lat, pt.lon) : Infinity, kind = p => p.kind.split(' · ')[0].toLowerCase();
+  const country = countryAt(lat, lon), far = town && tkm < 2000 ? `${Math.round(tkm).toLocaleString('en-GB')} km ${heading(town.lat, town.lon, lat, lon)} of ${town.name}` : '';
+  if (!country) {                                 /* at sea, or a spot the country outlines miss */
+    const sea = area && WATER.test(area.kind) ? area.name : null;
+    if (pt && pkm < 15) return { title: pt.name, sub: [kind(pt), far].filter(Boolean).join(' · '), term: pt.name };
+    return { title: sea || 'Open ocean', sub: far, term: sea || '' };
+  }
+  if (town && tkm < 15) return { title: 'Near ' + town.name, sub: country, term: town.name };
+  if (pt && pkm < 10) return { title: pt.name, sub: `${kind(pt)} · ${country}`, term: pt.name };
+  if (town && tkm < 25) return { title: 'Near ' + town.name, sub: country, term: town.name };
+  if (pt && pkm < 60) return { title: pt.name, sub: [`${kind(pt)}, ${Math.round(pkm)} km away`, country, far].join(' · '), term: pt.name };
+  if (area && !WATER.test(area.kind)) return { title: area.name, sub: [`${kind(area)} · ${country}`, far].filter(Boolean).join(' · '), term: area.name };
+  return { title: country, sub: far, term: country };
+}
+function showPop(c, info) {
+  const [lon, lat] = toLL(c), { title, sub, term } = typeof info === 'string' ? { title: info, sub: '', term: info } : info;
+  popEl.innerHTML = `<button class="x" aria-label="Close">×</button><div class="eyebrow">This spot</div><div class="where">${esc(title)}</div>
+    ${sub ? `<div class="sub">${esc(sub)}</div>` : ''}<div class="ll">${fmtLL(lat, lon)}</div>${term ? `<button class="btn" data-q="${esc(term)}">Pictures of ${esc(term)}</button>` : ''}`;
   const px = map.getPixelFromCoordinate(c);
   popEl.classList.toggle('below', !px || px[1] < 190);       /* opens below the spot near the top of the map */
   const w = map.getSize()[0], room = 150;                    /* and slides inward near the sides */
@@ -421,8 +537,9 @@ popEl.addEventListener('click', e => {
 });
 map.on('singleclick', e => {
   const c = e.coordinate, [lon, lat] = toLL(c);
-  if (PLACES) showPop(c, nearest(lat, lon));
-  else loadPlaces().then(() => showPop(c, nearest(lat, lon)), () => showPop(c, 'This spot'));
+  const ready = () => showPop(c, nearest(lat, lon));
+  if (PLACES && COUNTRY && MORE) ready();
+  else Promise.all([loadPlaces().then(loadMore), loadCountries()]).then(ready, () => showPop(c, { title: 'This spot', sub: '', term: '' }));
 });
 map.on('pointermove', e => { if (e.dragging) return; const [lon, lat] = toLL(e.coordinate); $('cursor').hidden = false; $('cursor').textContent = fmtLL(lat, lon); });
 map.getViewport().addEventListener('mouseleave', () => { $('cursor').hidden = true; });

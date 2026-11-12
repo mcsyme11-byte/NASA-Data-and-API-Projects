@@ -1,5 +1,23 @@
 # Change log
 
+## November 11, 2026 — Image Explorer: map tap card, map lines and names, gaps filled, more on the globe
+
+- **Tapping the Earth map** says where the spot is: the country (from Natural Earth outlines), a natural feature on or
+  near it (for example "Hamada de Tinrhert · desert · Algeria"), and the distance and direction from the nearest town
+  ("347 km south of Hassi Messaoud"); at sea, the sea or ocean. "Open water or remote land" is gone. Rivers' points
+  (their mouths) are left out of "near".
+- **Gaps between satellite passes** show a cloud-free Blue Marble picture instead of black (not under night lights).
+- **Map lines and names:** coastlines, land borders, rivers, a latitude and longitude grid, and names of countries,
+  capitals and cities (more as the map zooms in; bigger places win where names crowd), each with a button; in all three
+  views. Built from Natural Earth 1:50m by `tools/build_shapes.py`.
+- **Globe:** earthquakes of magnitude 4.5 or more in the past week (USGS, live; circles sized by magnitude), 276
+  volcanoes, 24 launch sites and 711 natural wonders (national parks, waterfalls, glaciers, gorges, caves, reefs; off at
+  first), each with its own button, card, "See it on the Earth map", pictures, and in Find
+  (`data/globe-spots.json`, `tools/build_globe_spots.py`).
+- **Astronaut photos without the key:** the daily job reads NASA's public Latest ISS Imagery set when there is no
+  `EOL_API_KEY`; photos not yet cataloged are pinned below the Station and say so.
+- Privacy and Credits list the US Geological Survey; Credits list the new Natural Earth and GeoNames uses.
+
 ## November 12, 2026 — Project Record builds again
 
 - **Fixed:** the Project Record's automatic rebuild stopped on its personal-details check from Nov 11, 2026 (commit

@@ -64,6 +64,7 @@
 .pop.below::after { bottom: auto; top: -7px; transform: rotate(225deg); }
 .pop .eyebrow { font-size: 10px; letter-spacing: .26em; }
 .pop .where { font-size: 17px; margin: 2px 0; }
+.pop .sub { color: var(--ink2); font-size: 13.5px; margin: 2px 0 4px; line-height: 1.35; }
 .pop .ll { font: 12px var(--mono); color: var(--muted); }
 .pop .btn { width: 100%; min-height: 36px; margin-top: 10px; font-size: 12px; letter-spacing: .16em; }
 .pop .x { position: absolute; top: 6px; right: 8px; background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer; }
@@ -98,6 +99,10 @@
 .key.ne { background: var(--brass); transform: rotate(45deg) scale(.8); }
 .key.cl { border-radius: 50%; background: var(--ink2); width: 6px; height: 6px; }
 .key.ph { background: #8AA9C9; width: 9px; height: 9px; }
+.key.qk { border-radius: 50%; background: #D98C8C; }
+.key.vo { width: 0; height: 0; background: none; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 9px solid #D1A956; }
+.key.la { background: linear-gradient(#F2E8D5, #F2E8D5) center/2px 100% no-repeat, linear-gradient(#F2E8D5, #F2E8D5) center/100% 2px no-repeat; }
+.key.wo { border-radius: 50%; border: 1.6px solid #8FB996; width: 10px; height: 10px; }
 .gphoto { display: block; margin: 0 0 12px; border: 1px solid var(--line); border-radius: var(--r-btn); overflow: hidden; background: var(--deep); }
 .gphoto img { display: block; width: 100%; height: auto; }
 .gphoto:hover { border-color: var(--brass); }

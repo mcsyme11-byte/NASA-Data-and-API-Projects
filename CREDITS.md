@@ -17,8 +17,9 @@ there in the same change.
 | NASA EONET (Earth Observatory Natural Event Tracker) | Image Explorer: events on the globe | NASA data |
 | Gateway to Astronaut Photography of Earth, Earth Science and Remote Sensing Unit, NASA Johnson Space Center | Image Explorer: astronaut photos on the globe | NASA material; credit the unit |
 | d3-celestial, © 2015 Olaf Frohn | Image Explorer: stars, galaxies, nebulae, clusters and constellations | BSD 3-Clause, kept as `image-explorer/data/LICENSE-d3-celestial.txt` |
-| GeoNames (geonames.org), through the `all-the-cities` package (MIT) and GeoNames' own downloads | Image Explorer: place search (towns, cities, capitals; smaller natural features with an English Wikipedia article) | GeoNames: Creative Commons Attribution 4.0 |
-| Natural Earth (naturalearthdata.com) | Image Explorer: mountains, lakes and rivers in place search | Public domain |
+| GeoNames (geonames.org), through the `all-the-cities` package (MIT) and GeoNames' own downloads | Image Explorer: place search (towns, cities, capitals; smaller natural features with an English Wikipedia article; the globe's volcanoes and natural wonders) | GeoNames: Creative Commons Attribution 4.0 |
+| Natural Earth (naturalearthdata.com) | Image Explorer: mountains, lakes and rivers in place search; the Earth map's coastlines, borders, rivers and names; the country of a tapped spot | Public domain |
+| US Geological Survey earthquake feed (earthquake.usgs.gov) | Image Explorer: the globe's earthquakes of the past week | Public domain (US Government) |
 | NASA Planetary Data System, Atmospheres Node: Curiosity's Rover Environmental Monitoring Station (REMS), data sets MSL-M-REMS-5-MODRDR-V1.0, MSL-M-REMS-6-ADR-V1.0 and MSL-M-REMS-5-UVRDR-V1.0 | Mars Data: pressure, air and ground temperature, humidity, ultraviolet and the rover's height, sol by sol | NASA data; credit "NASA/JPL-Caltech and the REMS team (Centro de Astrobiología), NASA Planetary Data System"; citations in `docs/DATA-SOURCES.md` |
 
 **GIBS acknowledgement** (NASA asks every user of GIBS to show it): We acknowledge the use of imagery provided by

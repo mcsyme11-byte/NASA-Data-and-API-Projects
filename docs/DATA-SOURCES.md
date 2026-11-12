@@ -448,6 +448,18 @@ Checked Nov 9, 2026 (live requests from the published site):
   cataloged photos of the last 90 days, or the last year if fewer than 60, with 50% cloud or less). Without the
   secret the job changes nothing and the globe hides the astronaut photos.
 
+### Astronaut photos without a key: the "Latest ISS Imagery" set, checked Nov 11, 2026
+
+- `https://eol.jsc.nasa.gov/SearchPhotos/PhotoIdSets/PhotoIdSets.pl?set=Latest_ISS_Imagery&view=1` sets a session
+  cookie and forwards to `ShowQueryResults-Lightcycle.pl?results=Latest_ISS_Imagery`. With that cookie,
+  `GetTSVFromQueryResults.pl?results=Latest_ISS_Imagery` returns the newest 1,000 Space Station photos as tab-separated
+  text (ISO-8859-1), no key needed: `mission, roll, frame, Photo Date (YYYYMMDD), Photo Time GMT (HHMMSS), Center
+  Point Lat/Lon, Nadir Lat/Lon, Spacecraft Altitude (nautical miles), Lens mm, geon, feat, Clouds Percentage, …,
+  camera, RecordType`. Most are "NotCataloged": no centre point, place or cloud cover yet, only the point below the
+  Station (nadir). `frame` has a leading space. `temp/Latest_ISS_Imagery.json` is the gallery's own listing.
+- Used since Nov 11, 2026 by `fetch_astronaut_photos.py` when the repository has no `EOL_API_KEY`. Photos without a
+  centre point are placed below the Station and say so on the globe.
+
 ### Image and Video Library: videos, checked Nov 9, 2026
 
 - A video's files are under `https://images-assets.nasa.gov/video/{nasa_id}/` (images are under `image/`):
@@ -550,6 +562,27 @@ archives to the Picture library. Checked with requests from GitHub's servers and
 
 - **OpenStreetMap's Nominatim service** forbids search-as-you-type and allows at most 1 request a second (usage
   policy, checked Nov 9, 2026), so the place list is a file in the repository instead.
+
+### Earth map lines, names and countries (Natural Earth 1:50m), added Nov 11, 2026
+
+- From the GeoJSON copies at `github.com/nvkelso/natural-earth-vector/tree/master/geojson`: `ne_50m_coastline`,
+  `ne_50m_admin_0_boundary_lines_land`, `ne_50m_rivers_lake_centerlines` (rivers only), `ne_50m_admin_0_countries`
+  (outlines and `LABEL_X`, `LABEL_Y`, `MIN_LABEL`; property names in capitals) and `ne_10m_populated_places_simple`
+  (`scalerank` up to 7). Built by `tools/build_shapes.py` into `data/shapes.json` (1.2 MB, 0.37 MB compressed),
+  `data/countries.json` (0.25 MB compressed) and `data/labels.json` (5,766 names). Public domain.
+- The tap card finds the country by point-in-outline; outlines are simplified to about 2 km, so a spot within a few
+  kilometres of a coast or border can be given the neighbouring country or the sea.
+
+### Earthquakes (US Geological Survey), checked Nov 11, 2026
+
+- `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson`: earthquakes of magnitude 4.5 or more in
+  the past 7 days (101 on Nov 11, 2026), GeoJSON; each with `mag`, `place`, `time` (ms), `url`, and coordinates
+  [lon, lat, depth km]. `access-control-allow-origin: *`; no key. Public domain (US Government).
+
+### Blue Marble under the Earth map, checked Nov 11, 2026
+
+- `BlueMarble_NextGeneration` (`default` time, `500m`, JPEG) exists in EPSG:4326, EPSG:3413 and EPSG:3031 and loads from a
+  browser. It is drawn under the day's pictures so the gaps between a satellite's passes show the land.
 
 ## Using NASA material
 

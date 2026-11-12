@@ -25,11 +25,14 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 2. Image Explorer (version 1 live Nov 9, 2026; additions Nov 9)
 
-- [ ] **Astronaut photos: request the free API key** by email from jsc-earthweb@mail.nasa.gov (Gateway to Astronaut
-  Photography of Earth), then store it on github.com as the repository secret `EOL_API_KEY` (Settings › Secrets and
-  variables › Actions › New repository secret) and run Actions › Astronaut photos › Run workflow once. Until then the
-  globe hides the astronaut photos. The first real run is the first test of `fetch_astronaut_photos.py` against the
-  API (it was tested on records shaped like the API documentation's examples).
+- [ ] Astronaut photos: the free API key (requested by email from jsc-earthweb@mail.nasa.gov; no answer by Nov 11,
+  2026) would add cataloged photos with their centre points. Without it the job uses the public Latest ISS Imagery set
+  (since Nov 11, 2026). If the key arrives: repository secret `EOL_API_KEY`, then Actions › Astronaut photos › Run
+  workflow.
+- [ ] **Developer testing of the Nov 11, 2026 additions:** tapping the Earth map in a desert, at sea and near a town
+  (country, feature, distance); the gaps between satellite passes filled; Map lines and names (borders, coastlines,
+  rivers, names, grid) in all three views; the globe's earthquakes, volcanoes, launch sites, natural wonders and
+  astronaut photos.
 - [ ] **Developer testing of the Nov 10, 2026 additions,** on a computer and a phone: the Earth map's colour keys and
   the note under the map when a layer shows another day; place search for smaller places (for example Moraine Lake,
   Mount Rundle); the globe zoomed in close (sharper Earth) and the Day and night button; ESA videos with "Pictures and

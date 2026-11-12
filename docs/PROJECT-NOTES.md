@@ -145,6 +145,11 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   terms, which allow educational and informational use with ESA's credit. The figures are shown with the credit
   "ESA NEO Coordination Centre (©ESA)" and no ESA logo; if a question arises, the NEOCC is asked by email
   (`neocc@esa.int`).
+- **Decided Nov 11, 2026 (Image Explorer):** the developer asked for fixes to the map's tap card ("Open water" in the
+  Sahara), more detail on the Earth map, more points on the globe, and astronaut photos without waiting for the key.
+  Done: country, feature and distance on the tap card; Blue Marble under the day's pictures; coastlines, borders,
+  rivers, names and a grid (Natural Earth); earthquakes (USGS), volcanoes, launch sites and natural wonders on the
+  globe; the public Latest ISS Imagery set for astronaut photos.
 - **Not possible (Nov 9, 2026):** seeing individual houses. NASA's sharpest free imagery is about 30 m a pixel
   (Landsat) and the daily layers 250 m; houses need commercial imagery, which is neither NASA's nor free.
 

@@ -3,7 +3,7 @@
 # Once a day, fetches the newest cataloged astronaut photos of Earth (with their positions) from the Gateway to
 # Astronaut Photography of Earth (eol.jsc.nasa.gov) and commits image-explorer/data/astronaut.json when it has changed;
 # GitHub Pages then republishes the site. The API needs a free key, kept as the repository secret EOL_API_KEY
-# (Settings › Secrets and variables › Actions); without it the job ends without changing anything.
+# (Settings › Secrets and variables › Actions); without it the job reads the site's public Latest ISS Imagery set.
 # Web pages cannot call this API (no CORS headers), which is why the data is fetched here.
 # Run by hand: Actions › Astronaut photos › Run workflow.
 

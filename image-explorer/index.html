@@ -100,6 +100,18 @@
           </div>
 
           <div class="card">
+            <h2>Map lines and names</h2>
+            <div class="views lines" role="group" aria-label="Map lines and names">
+              <button class="chip" aria-pressed="true" data-line="borders">Borders</button>
+              <button class="chip" aria-pressed="true" data-line="coast">Coastlines</button>
+              <button class="chip" aria-pressed="false" data-line="rivers">Rivers</button>
+              <button class="chip" aria-pressed="true" data-line="names">Names</button>
+              <button class="chip" aria-pressed="false" data-line="grid">Grid</button>
+            </div>
+            <p class="note" style="margin:10px 0 0">Drawn from Natural Earth. More names appear as you zoom in.</p>
+          </div>
+
+          <div class="card">
             <h2>View</h2>
             <div class="views">
               <button class="chip" aria-pressed="true" data-proj="world">World</button>
@@ -141,6 +153,10 @@
         <div class="seg" role="group" aria-label="Show on the globe">
           <button class="chip" aria-pressed="true" data-show="events"><i class="key ev"></i>Events on Earth</button>
           <button class="chip" aria-pressed="true" data-show="photos" hidden><i class="key ph"></i>Astronaut photos</button>
+          <button class="chip" aria-pressed="true" data-show="quake"><i class="key qk"></i>Earthquakes</button>
+          <button class="chip" aria-pressed="true" data-show="volcano"><i class="key vo"></i>Volcanoes</button>
+          <button class="chip" aria-pressed="true" data-show="launch"><i class="key la"></i>Launch sites</button>
+          <button class="chip" aria-pressed="false" data-show="wonder"><i class="key wo"></i>Natural wonders</button>
           <button class="chip" aria-pressed="true" data-show="galaxy"><i class="key ga"></i>Galaxies</button>
           <button class="chip" aria-pressed="true" data-show="nebula"><i class="key ne"></i>Nebulae</button>
           <button class="chip" aria-pressed="true" data-show="cluster"><i class="key cl"></i>Star clusters</button>
@@ -293,7 +309,7 @@
       <p>Data courtesy of NASA and ESA. This is an independent project and isn't endorsed by NASA or ESA.</p>
       <p>We acknowledge the use of imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of
         NASA's Earth Science Data and Information System (ESDIS).</p>
-      <p>Pictures: NASA Image and Video Library; ESA/Webb and ESA/Hubble (CC BY 4.0, each picture with its own credit line, shown with it). Events: NASA EONET. Astronaut photos: Earth Science and Remote Sensing Unit, NASA Johnson Space Center
+      <p>Pictures: NASA Image and Video Library; ESA/Webb and ESA/Hubble (CC BY 4.0, each picture with its own credit line, shown with it). Events: NASA EONET. Earthquakes: US Geological Survey. Astronaut photos: Earth Science and Remote Sensing Unit, NASA Johnson Space Center
         (<a href="https://eol.jsc.nasa.gov/" target="_blank" rel="noopener">eol.jsc.nasa.gov</a>). Place names: GeoNames (CC BY 4.0, towns and smaller natural features) and Natural Earth. Stars,
         galaxies, nebulae and constellations: d3-celestial, © 2015 Olaf Frohn (BSD licence,
         <a href="data/LICENSE-d3-celestial.txt">terms</a>). Map: OpenLayers and proj4js. Globe: three.js.</p>
