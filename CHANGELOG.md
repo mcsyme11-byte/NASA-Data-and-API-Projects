@@ -1,5 +1,15 @@
 # Change log
 
+## November 12, 2026 — Mars Data page live
+
+- **Mars Data page** (`mars-data/index.html`), built from the approved mock-up: pressure through the Martian year
+  (with a correction for the rover's climb), the daily pressure swing, humidity at night (preliminary), midday
+  ultraviolet, temperature by season and hour, any sol hour by hour, daily highs and lows, and the rover's climb.
+  Loading and error states; charts drawn at the width they are shown.
+- **Data:** Curiosity REMS sols 1–1293 (Mars Years 31–33), cleaned with rules 1.1, with the cleaning reports
+  (`mars-data/data/rems/reports/`); page files built by `mars-data/analysis/make_page_data.py`.
+- The mock-up files are removed; the home page lists Mars Data as live.
+
 ## November 12, 2026 — site-wide polish
 
 A full check of every page at phone, tablet and computer sizes, and these fixes:

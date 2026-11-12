@@ -66,8 +66,9 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
   each report checked before the next batch.
 - [ ] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): sols 1–1300 done and checked (row counts match NASA's
   labels); the rest with the REMS batches.
-- [ ] Merge the cleaned summaries (`mars-data/data/rems/`) into main once checked; they are built on the
-  `mars-probe` branch until then. Delete the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the branch.
+- [ ] The cleaned summaries are built on the `mars-probe` branch and copied to main after each checked batch (sols
+  1–1293 on main). When the whole record is in: the scheduled "Mars data" job on main replaces the branch job; delete
+  the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the branch.
 - [ ] Optional: ask ESA (data.licences@esa.int) to confirm the spelling of the Mars Express MaRS credit line
   ("M. Plätzold, K. Pieter" on ESA's terms page; the archive names Martin Pätzold).
 - [ ] Add MEDA (Jezero Crater) and the MaRS profiles (ESA) to the same pipeline.
@@ -85,9 +86,7 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 - [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
 
 **Page**
-- [ ] Build the page from the approved mock-up (approved Nov 11, 2026; `mars-data/mockup.html`, real cleaned data for sols 1–1293): pressure through the
-  year (with a correction for the rover's climb), daily pressure range, humidity at night (preliminary), midday UV,
-  season × time of day, one sol hour by hour, daily highs and lows, the rover's climb. Humidity and UV included
-  (sols 1–1293, rules 1.1).
-- [ ] Charts page in the project's look; a short write-up of what the patterns show.
+- [ ] Page live (Nov 12, 2026) with sols 1–1293; add each new batch's summaries (`analysis/make_page_data.py`)
+  until the whole record is in.
+- [ ] A short write-up on the page of what the patterns show, once the whole record is in.
 - [ ] `CREDITS.md`, the Credits page and the Privacy page updated for the new sources in the same change.

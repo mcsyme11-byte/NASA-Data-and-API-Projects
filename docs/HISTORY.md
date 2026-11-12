@@ -102,3 +102,13 @@ How NASA and ESA Data Projects came about, in order.
 - The Asteroid Tracker's "This week" list and asteroid pages had relied on each visitor's NASA key, or NASA's shared
   demo key (30 requests an hour and 50 a day per connection). The daily data job now copies that data with the
   developer's key, kept as a GitHub secret, so the site works for every visitor without a key.
+
+## November 11–12, 2026 — Mars Data, version 1
+
+- Mars Data was planned around Curiosity's weather station (REMS), with Perseverance (MEDA) and ESA's Mars Express
+  to follow, and the whole record from sol 1, cleaned slowly and in chunks. The archives turned out to be reachable
+  only from GitHub's servers, so the work ran there, on a separate branch, with a cleaning report for every chunk.
+- Careful checking caught several traps: a column named "solar longitude" that is the Sun's direction from the rover,
+  not the season; NASA's index stopping at sol 4133 while the data reaches sol 4843; two tables in one ancillary file;
+  quality flags whose first character is not a quality check at all.
+- The developer approved the mock-up the same night, and the page went live with Mars Years 31–33 (sols 1–1293).
