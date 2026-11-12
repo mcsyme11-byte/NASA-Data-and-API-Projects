@@ -222,12 +222,25 @@ def run_chunk(chunk: str, mod_names: list[str], adr_names: list[str]) -> None:
     print(f"{chunk}: {len(ok)} sols processed", flush=True)
 
 
+def load_formats() -> tuple[list[str], list[str]]:
+    """The MODRDR and ADR column lists from the archive's format files, checked against the expected lists."""
+    mod_names = rems.columns_from_fmt(get(BASE + "LABEL/MODRDR6.FMT").decode("ascii", "replace"))
+    rems.check_columns(mod_names, rems.MODRDR_COLUMNS, "MODRDR")
+    geom = rems.columns_from_fmt(get(BASE + "LABEL/ADR_GEOM6.FMT").decode("ascii", "replace"))
+    rems.check_columns(geom, rems.ADR_NEEDED, "ADR", exact=False)
+    return mod_names, geom
+
+
+def archive_chunks() -> list[str]:
+    return [d.strip("/") for d in listing(BASE + "DATA/") if re.match(r"SOL_\d{5}_\d{5}/$", d)]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("chunks", nargs="*")
     ap.add_argument("--list", action="store_true")
     a = ap.parse_args()
-    chunks = [d.strip("/") for d in listing(BASE + "DATA/") if re.match(r"SOL_\d{5}_\d{5}/$", d)]
+    chunks = archive_chunks()
     if a.list:
         done = set()
         if (OUT / "manifest.csv").exists():
@@ -235,11 +248,7 @@ def main() -> None:
         for c in chunks:
             print(c, "processed" if c in done else "")
         return
-    mod_names = rems.columns_from_fmt(get(BASE + "LABEL/MODRDR6.FMT").decode("ascii", "replace"))
-    rems.check_columns(mod_names, rems.MODRDR_COLUMNS, "MODRDR")
-    geom = rems.columns_from_fmt(get(BASE + "LABEL/ADR_GEOM6.FMT").decode("ascii", "replace"))
-    rems.check_columns(geom, rems.ADR_NEEDED, "ADR", exact=False)
-    adr_names = geom
+    mod_names, adr_names = load_formats()
     for c in a.chunks:
         if c not in chunks:
             sys.exit(f"{c} is not a chunk in the archive")

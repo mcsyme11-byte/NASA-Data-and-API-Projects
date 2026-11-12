@@ -72,6 +72,8 @@ def main() -> None:
     meta = {"rules": str(s["rules"].iloc[-1]), "first_sol": int(s["sol"].min()), "last_sol": int(s["sol"].max()),
             "first_date": s["utc_date"].iloc[0], "last_date": s["utc_date"].iloc[-1], "sols": len(s),
             "built": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "checked": (json.loads((DATA / "last_check.json").read_text()).get("checked", "")[:10]
+                        if (DATA / "last_check.json").exists() else ""),
             "uv_last_sol": int(s.loc[s["uv_abc_max"].notna(), "sol"].max()) if "uv_abc_max" in s else None}
     payload = {"meta": meta, "cols": list(cols), "rows": rows, "heat": heat}
     (OUT / "summary.json").write_text(json.dumps(payload, separators=(",", ":")))
