@@ -30,7 +30,8 @@ filter by. The Image Library has the mission photos. The globe ties places on Ea
 
 ```
 image-explorer/
-├── index.html          the page: Earth map, Globe, Picture library
+├── index.html          the project's home page: mission, the three parts, the data, how to use it
+├── explore.html        the explorer: Earth map, Globe, Picture library (explore.html#earth, #globe, #library)
 ├── explorer.css        the page's styles (on top of shared/theme.css)
 ├── app.js              the Earth map (world, Arctic, Antarctic), place search, tabs and the picture library
 ├── globe.js            the Globe tab (three.js)

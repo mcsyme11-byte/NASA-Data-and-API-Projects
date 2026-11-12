@@ -1,5 +1,14 @@
 # Change log
 
+## November 12, 2026 — Image Explorer: the project's own home page
+
+- `image-explorer/` opens on the project's home page (mock-up approved Nov 12, 2026): what the Image Explorer is and
+  why it exists, a card for each of its three parts (Earth map, Globe, Picture library) with what can be done there,
+  its data and a button into it, every data source with its agency (NASA, ESA or other), how new it is, how to use it
+  in four steps, and notes; data credits above the short footer; no back button, as on the Mars Data home page.
+- The explorer itself moved to `image-explorer/explore.html`; `#earth`, `#globe` and `#library` open that tab, and
+  switching tabs updates the address. Its back button leads to the project's home page.
+
 ## November 12, 2026 — Mars Data: a project home page
 
 - `mars-data/` opens on a project home page (approved mock-up): the mission, the data used and from which agency

@@ -37,12 +37,14 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 - [ ] Optional: if ESA's credit form or terms for the NEOCC figures are in doubt, ask the NEOCC by email
   (`neocc@esa.int`) and record the answer in `docs/DATA-SOURCES.md`.
 
-## 2. Image Explorer (version 1 live Nov 9, 2026; additions Nov 9)
+## 2. Image Explorer (version 1 live Nov 9, 2026; home page Nov 12)
 
 - [ ] Astronaut photos: the free API key (requested by email from jsc-earthweb@mail.nasa.gov; no answer by Nov 11,
   2026) would add cataloged photos with their centre points. Without it the job uses the public Latest ISS Imagery set
   (since Nov 11, 2026). If the key arrives: repository secret `EOL_API_KEY`, then Actions › Astronaut photos › Run
   workflow.
+- [ ] **Developer testing of the project's home page (Nov 12, 2026)** on a phone, a tablet and a computer: the three
+  "Open" buttons go to the right tab of the explorer, and the explorer's back button returns to the home page.
 - [ ] **Developer testing of the Nov 11, 2026 additions:** tapping the Earth map in a desert, at sea and near a town
   (country, feature, distance); the gaps between satellite passes filled; Map lines and names (borders, coastlines,
   rivers, names, grid) in all three views; the globe's earthquakes, volcanoes, launch sites, natural wonders and

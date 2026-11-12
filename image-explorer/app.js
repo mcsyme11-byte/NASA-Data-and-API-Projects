@@ -571,8 +571,12 @@ function show(v) {
   if (v === 'earth') map.updateSize(); else stop();
   document.dispatchEvent(new CustomEvent('viewchange', { detail: v }));
   window.scrollTo({ top: 0 });
+  try { history.replaceState(null, '', '#' + v); } catch { /* address bar left as it is */ }
 }
 document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('[data-view]'); if (b) show(b.dataset.view); });
+/* explore.html#earth, #globe or #library opens that tab (the project's home page links here); once the globe's module
+   has run, so it hears the change */
+window.addEventListener('DOMContentLoaded', () => { const v = location.hash.slice(1); if (v === 'globe' || v === 'library') show(v); });
 
 /* ---------- picture library: live search of NASA's Image and Video Library ---------- */
 const A = 'https://images-assets.nasa.gov/image/';
