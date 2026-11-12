@@ -62,9 +62,10 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 
 **Data and analysis**
 - [ ] REMS, the whole record in chunks (44 chunk folders, sols 1–4843 on Nov 11, 2026) with cleaning rules 1.1
-  (`mars-data/analysis/CLEANING.md`): sols 1–1293 checked with rules 1.0 and being re-run with 1.1 (humidity
-  added); sols 1294–4843 to do, in batches of about five chunks, each report checked before the next batch.
-- [ ] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): sols 1–1300 running; the rest with the REMS batches.
+  (`mars-data/analysis/CLEANING.md`): sols 1–1293 done and checked; sols 1294–4843 in batches of about five chunks,
+  each report checked before the next batch.
+- [ ] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): sols 1–1300 done and checked (row counts match NASA's
+  labels); the rest with the REMS batches.
 - [ ] Merge the cleaned summaries (`mars-data/data/rems/`) into main once checked; they are built on the
   `mars-probe` branch until then. Delete the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the branch.
 - [ ] Optional: ask ESA (data.licences@esa.int) to confirm the spelling of the Mars Express MaRS credit line
@@ -86,7 +87,7 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 **Page**
 - [ ] Mock-up awaiting approval (`mars-data/mockup.html`, real cleaned data for sols 1–1293): pressure through the
   year (with a correction for the rover's climb), daily pressure range, humidity at night (preliminary), midday UV,
-  season × time of day, one sol hour by hour, daily highs and lows, the rover's climb. Humidity and UV fill in after
-  the re-run.
+  season × time of day, one sol hour by hour, daily highs and lows, the rover's climb. Humidity and UV included
+  (sols 1–1293, rules 1.1).
 - [ ] Charts page in the project's look; a short write-up of what the patterns show.
 - [ ] `CREDITS.md`, the Credits page and the Privacy page updated for the new sources in the same change.

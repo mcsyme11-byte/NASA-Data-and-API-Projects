@@ -25,6 +25,8 @@ EXPECTED = ["SOL_NUMBER", "LMST_HOUR", "SOLAR_ZENITH_ANGLE", "SOLAR_AZIMUTH_ANGL
             "UV_ABC_UNCERTAINTY", "UV_D_UNCERTAINTY", "UV_E_UNCERTAINTY"]
 UV_LIMITS = (0.0, 30.0)   # W/m², UV_ABC; well above the largest flux possible at Mars's distance from the Sun
 MIN_PER_MINUTE = 30       # as rule 7: a one-minute median needs at least 30 readings
+MIDDAY = (10.5, 13.5)     # rule 9: a peak counts as the midday peak only between these local hours
+MIN_MINUTES = 30          # rule 9: and only on a sol with at least 30 good minutes of UV
 
 
 def summarise_sol(sol: int, minutes: dict[int, list[tuple[float, float]]]) -> dict:
@@ -33,7 +35,8 @@ def summarise_sol(sol: int, minutes: dict[int, list[tuple[float, float]]]) -> di
     if med:
         m_max = max(med, key=lambda m: med[m][0])
         out.update({"uv_abc_max": round(med[m_max][0], 3), "uv_abc_max_hour": round(m_max / 60, 2),
-                    "uv_sza_at_max": round(med[m_max][1], 1)})
+                    "uv_sza_at_max": round(med[m_max][1], 1),
+                    "uv_midday": MIDDAY[0] <= m_max / 60 <= MIDDAY[1] and len(med) >= MIN_MINUTES})
     return out
 
 

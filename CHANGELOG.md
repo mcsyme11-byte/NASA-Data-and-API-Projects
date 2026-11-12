@@ -69,7 +69,9 @@ A full check of every page at phone, tablet and computer sizes, and these fixes:
 - **Cleaning rules 1.1** (`mars-data/analysis/CLEANING.md`): NASA's quality flags read character by character,
   physical limits, coverage of each sol, daily statistics, humidity (labelled preliminary), corrected UV. Code in
   `mars-data/analysis/`; Ls and Mars Year calculated from the date (`mars_time.py`), checked against NASA's values.
-- **Mock-up** of the charts page for approval: `mars-data/mockup.html`, drawn from the cleaned data for sols 1–1293.
+- **Mock-up** of the charts page for approval: `mars-data/mockup.html`, drawn from the cleaned data for sols 1–1293,
+  including humidity (preliminary) and corrected UV. A midday UV peak counts only between 10:30 and 13:30 local time on
+  a sol with at least 30 minutes of UV.
 
 ## November 11, 2026 — Project Record
 

@@ -121,6 +121,9 @@ calibration. It covers sols 1–3423, and only times when the Sun is less than 5
 - Band used: UV_ABC (the broad band, 220–370 nm), in W/m².
 - Per sol: the midday peak (the highest one-minute median, each minute with at least 30 readings), its local hour, and
   the Sun's angle from overhead at that time (the peak depends on the season and on dust in the air).
+- The peak counts as the sol's **midday** peak only if it falls between 10:30 and 13:30 local time and the sol has at
+  least 30 good minutes of UV (`uv_midday`). A peak later in the afternoon, or a sol with only a few minutes, means
+  there were no measurements near noon; charts of the midday peak leave such sols out.
 - Each file holds 100 sols (about 1.2 GB); it is read as it downloads and not stored. Its row count is checked against
   its label.
 
