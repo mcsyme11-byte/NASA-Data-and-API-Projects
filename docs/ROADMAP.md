@@ -9,6 +9,16 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
+- [ ] **Mock-ups awaiting the developer's approval (Nov 12, 2026), then build, in one push:**
+  - Update 1: a "Visible from here" tab (location button, which close passes rise at night from there, brightness
+    and what is needed to see each) and **Sky Finder**, an installable phone web app in its own folder of this
+    repository: camera view with a marker and path for the asteroid, the Moon and planets for reference,
+    calibration on the Moon or a planet, and a how-to page inside it, linked from the tracker and the Image
+    Explorer. Camera, location and motion stay on the device; the Privacy page is updated first.
+  - Update 2: a **Spacecraft map** on the home page's large panel (a utility, not a fourth project), the asteroid
+    map as a smaller link: every active spacecraft with a public position (NASA, ESA, JAXA, ISRO, CNSA and others;
+    deep space from JPL Horizons, notable craft near Earth from CelesTrak), with details and links for each, using
+    the asteroid map's controls. Secret military craft have no published orbits and are left out.
 - [ ] Watch the scheduled "Asteroid data" runs (06:17 and the 14:47 backup, added Nov 9, 2026): at least one should
   run each day.
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
