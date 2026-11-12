@@ -57,7 +57,7 @@ async function load() {
     const copy = await neoCopy(id);              // the daily copy first (no key); otherwise NASA directly
     state.neo = copy ? copy.neo : await nasaGet('/neo/rest/v1/neo/' + id);
   } catch (e) {
-    $('#name').textContent = 'Asteroid ' + id;
+    $('#name').textContent = e.status === 404 ? 'Asteroid not found' : 'Asteroid ' + id;
     const msg = e.status === 404 ? 'NASA has no asteroid with this number. Open one from the <a href="./">Asteroid Tracker</a>.' : esc(e.message);
     notice(msg, e.status === 404 ? '' : '<button class="btn ghost" data-act="retry">Try again</button>');
     return;

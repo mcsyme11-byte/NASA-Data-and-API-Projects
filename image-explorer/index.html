@@ -9,10 +9,10 @@
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/ol-10.11.0/ol.css">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026110904">
-  <script type="module" src="../shared/footer.js?v=2026110904"></script>
-  <link rel="stylesheet" href="../asteroid-tracker/tracker.css">
-  <link rel="stylesheet" href="explorer.css">
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111201">
+  <script type="module" src="../shared/footer.js?v=2026111201"></script>
+  <link rel="stylesheet" href="../asteroid-tracker/tracker.css?v=2026111201">
+  <link rel="stylesheet" href="explorer.css?v=2026111201">
 </head>
 <body>
   <header class="topbar">
@@ -80,7 +80,7 @@
             <div class="placebox">
               <label class="bigsearch">
                 <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
-                <input type="search" id="placeQ" placeholder="A town, a mountain, a lake, or 51.1, -115.4" autocomplete="off" spellcheck="false"
+                <input type="search" id="placeQ" placeholder="A town, a mountain or a lake" autocomplete="off" spellcheck="false"
                   role="combobox" aria-expanded="false" aria-controls="placeList" aria-autocomplete="list" aria-label="Find a place or coordinates">
               </label>
               <ul class="suggest" id="placeList" role="listbox" hidden></ul>
@@ -215,7 +215,7 @@
       <div class="placebox libbox">
         <label class="bigsearch">
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.6"/></svg>
-          <input type="search" id="libQ" value="" placeholder="Search NASA's and ESA's pictures: a mission, a planet, a galaxy, a place" autocomplete="off" spellcheck="false"
+          <input type="search" id="libQ" value="" placeholder="Search NASA and ESA pictures" autocomplete="off" spellcheck="false"
             role="combobox" aria-expanded="false" aria-controls="libList" aria-autocomplete="list" aria-label="Search NASA's and ESA's pictures">
           <button class="qclear" id="libClear" type="button">Clear</button>
         </label>
@@ -224,7 +224,7 @@
       <p class="note" id="libFix" hidden></p>
       <div class="searchopts">
         <div class="popular" aria-label="Missions">
-          <span class="note" style="margin-right:4px">Missions</span>
+          <span class="barlbl">Missions</span>
           <button class="chip">Apollo 11</button><button class="chip">Hubble</button><button class="chip">James Webb</button>
           <button class="chip">Artemis</button><button class="chip">Space Station</button><button class="chip">Voyager</button>
           <button class="chip">Mars rovers</button>
@@ -232,7 +232,7 @@
       </div>
       <div class="libfilters">
         <div class="seg from" role="group" aria-label="Library">
-          <span class="note">From</span>
+          <span class="barlbl">Library</span>
           <button class="chip" aria-pressed="true" data-from="both">NASA and ESA</button>
           <button class="chip" aria-pressed="false" data-from="nasa">NASA</button>
           <button class="chip" aria-pressed="false" data-from="esa">ESA</button>

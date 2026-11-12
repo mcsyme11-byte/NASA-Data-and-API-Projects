@@ -1,5 +1,26 @@
 # Change log
 
+## November 12, 2026 — site-wide polish
+
+A full check of every page at phone, tablet and computer sizes, and these fixes:
+
+- **Feel:** quick hover and press feedback on every button, chip, tab and link; a brass glow on focused fields; a
+  solid header with a soft shadow; dark date pickers and dropdowns.
+- **Phones:** tab bars and chip rows that don't fit scroll sideways with a soft edge fade, and the selected tab
+  scrolls into view (Asteroid Tracker tabs and search chips, the Globe's and Picture library's chip rows); tap
+  targets raised to 40 px (the site name, "Its page ›", "Clear", sliders, the "Asteroid Tracker" link above titles);
+  search placeholders shortened to fit.
+- **"How to read this"** is easier to read (12 px).
+- **Asteroid Tracker:** one tab bar on every page (the map and asteroid pages gained Impact risk); the map page always
+  has its Back button; space between the Impact risk intro and its tiles; labels on the Solar System Map and the
+  orbit diagram outlined so they read clearly over dots and orbits; the orbit diagram's date no longer covers its
+  labels on phones (a map-only rule had applied to it); "Asteroid not found" as the title for an unknown number;
+  the asteroid page's tags and links in one consistent style.
+- **Image Explorer:** fewer place names on a phone-sized Earth map, so they don't crowd; the Picture library's
+  source filter is now "Library" (it shared "From" with the year), and its labels match the other rows; its Clear
+  button appears once something is typed.
+- The rules behind these are in `docs/DESIGN.md` (8a. Feel) and CLAUDE.md, so new pages follow them.
+
 ## November 12, 2026 — Asteroid Tracker: no key needed for visitors
 
 - The daily data job copies NASA's NeoWs data for the current week, the two weeks before and after it, and every

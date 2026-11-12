@@ -184,7 +184,8 @@ const nameCache = {};
 function nameStyle(f, res) {
   const deg = view === 'world' ? res : res / 111320, z = Math.log2(0.5625 / deg);     /* about the GIBS level shown */
   const { name, kind, rank } = f.getProperties(), country = kind === 'country';
-  if ((country ? rank : rank + 1) > z + 2) return null;
+  const narrow = (map.getSize() || [999])[0] < 640;                                 /* a phone-sized map shows fewer names, so they don't crowd */
+  if ((country ? rank : rank + 1) > z + (narrow ? 1 : 2)) return null;
   const k = `${kind} ${name}`;
   return nameCache[k] ??= new ol.style.Style({
     image: country ? undefined : new ol.style.Circle({ radius: kind === 'capital' ? 3 : 2, fill: new ol.style.Fill({ color: '#F2E8D5' }), stroke: new ol.style.Stroke({ color: 'rgba(14,20,31,.8)', width: 1 }) }),

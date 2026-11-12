@@ -8,6 +8,7 @@
 .linkbtn { background: none; border: 0; padding: 6px 0; color: var(--brass); font: 14px var(--font); cursor: pointer;
   text-decoration: underline; text-decoration-color: var(--brass-dim); text-underline-offset: 3px; }
 .linkbtn:hover { color: var(--brass-bright); }
+@media (max-width: 760px) { .linkbtn { min-height: 40px; } input[type=range] { height: 36px !important; } }
 
 
 .weeknav { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; }
@@ -126,8 +127,8 @@ table.neo tr.msg td::before { content: none; }
   .hide-sm { display: none; }
 }
 .howto { margin-top: 12px; border-left: 2px solid var(--brass-dim); background: rgba(192, 160, 98, .04); }
-.howto summary { list-style: none; cursor: pointer; padding: 10px 14px; font-size: 10.5px; text-transform: uppercase;
-  letter-spacing: .26em; color: var(--brass); user-select: none; display: flex; align-items: center; gap: 8px; min-height: 40px; }
+.howto summary { list-style: none; cursor: pointer; padding: 10px 14px; font-size: 12px; text-transform: uppercase;
+  letter-spacing: .22em; color: var(--brass); user-select: none; display: flex; align-items: center; gap: 8px; min-height: 40px; }
 .howto summary::-webkit-details-marker { display: none; }
 .howto summary::before { content: "›"; display: inline-block; width: 10px; font-size: 16px; line-height: 1; letter-spacing: 0; transition: transform .15s; }
 .howto[open] summary::before { transform: rotate(90deg); }
@@ -135,6 +136,7 @@ table.neo tr.msg td::before { content: none; }
 .howto p { margin: 0 14px 10px; font-size: 14px; color: var(--ink2); }
 .howto p:first-of-type { margin-top: 0; }
 .howto b { font-weight: 400; color: var(--ink); }
+#view-risk > .lede { margin-bottom: 20px; }
 #yearSel { width: auto; min-width: 120px; margin-top: 2px; text-align: center; }
 
 /* ---- one asteroid (object.html) ---- */
@@ -145,8 +147,12 @@ table.neo tr.msg td::before { content: none; }
 .backlink:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
 .backlink[hidden] { display: none; }
 .backlink:not([hidden]) + .phead { padding-top: 18px; }
-.phead .eyebrow a { color: var(--brass); }
-.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.phead .eyebrow a { color: var(--brass); display: inline-block; padding: 12px 0; margin: -12px 0; }
+.phead .eyebrow a:hover { color: var(--brass-bright); }
+.pills { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.pills .tag { display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; font-size: 13px; }
+.pills a.tag.link { font-style: normal; border-color: var(--brass-dim); }
+.pills a.tag.link:hover { border-color: var(--brass); color: var(--brass-bright); }
 .tag { color: var(--ink2); }
 .tag.warn { color: var(--amber); }
 a.tag.link { color: var(--brass); }
@@ -156,6 +162,8 @@ a.tag.link { color: var(--brass); }
 .timebar { margin: 12px 0 0; }
 .orbitframe { position: relative; }
 svg.orbit { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+/* every label in the diagram gets a dark outline, so it reads clearly over orbits and dots */
+svg.orbit text { paint-order: stroke; stroke: #0C1119; stroke-width: 3.5px; stroke-linejoin: round; }
 svg.orbit.dragging { cursor: grabbing; }
 .ovl { position: absolute; pointer-events: none; }
 .ovl-date { left: 14px; top: 10px; display: flex; flex-direction: column; gap: 1px; }
@@ -311,8 +319,8 @@ dl.mini dd { margin: 0; }
   .mapcard { padding: 10px; }
   .mapframe { height: 72vh; min-height: 340px; }
   .ovl-find { left: 10px; right: 10px; top: 76px; width: auto; }
-  .ovl-date { position: absolute; padding: 0; }
-  .ovl-date strong { font-size: 15px; }
+  .mapframe .ovl-date { position: absolute; padding: 0; }
+  .mapframe .ovl-date strong { font-size: 15px; }
   .ovl-hint { display: none; }
   .mapbar { gap: 8px; }
   .mapbar .seg { width: 100%; }
@@ -326,7 +334,7 @@ dl.mini dd { margin: 0; }
   border: 1px solid var(--brass-dim); border-radius: var(--r-card); color: var(--brass); }
 .bigsearch:focus-within { border-color: var(--brass); box-shadow: 0 0 0 3px rgba(192, 160, 98, .15); }
 .bigsearch input { flex: 1; height: 100%; border: 0; background: transparent; font-size: 20px; padding: 0; color: var(--ink); }
-.bigsearch input:focus { outline: none; }
+.bigsearch input:focus, .bigsearch input:hover { outline: none; box-shadow: none; border: 0; }
 .popular { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
 .results { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
 .result { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-top-color: var(--brass-dim);
@@ -351,7 +359,7 @@ dl.mini dd { margin: 0; }
 }
 input[type=search]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; display: none; }
 .qclear { flex: none; background: none; border: 1px solid var(--brass-dim); border-radius: var(--r-btn); color: var(--brass);
-  font: 12px var(--font); text-transform: uppercase; letter-spacing: .18em; padding: 6px 10px; cursor: pointer; }
+  font: 12px var(--font); text-transform: uppercase; letter-spacing: .18em; padding: 0 12px; min-height: 36px; cursor: pointer; }
 .qclear:hover { border-color: var(--brass); }
 @media (max-width: 760px) {
   .popular { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
@@ -412,4 +420,4 @@ body.noscroll { overflow: hidden; }
 /* share links */
 .sharemsg { font-size: 13px; font-style: italic; color: var(--muted); align-self: center; }
 .sharemsg label { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; font-style: normal; }
-.sharemsg .sharelink { width: min(340px, 72vw); font: 12.5px var(--font); color: var(--ink); background: var(--deep); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+.sharemsg .sharelink { width: min(340px, 72vw); font: 12.5px var(--font); color: var(--ink); background: var(--deep); border: 1px solid var(--line); border-radius: var(--r-btn); padding: 5px 8px; }

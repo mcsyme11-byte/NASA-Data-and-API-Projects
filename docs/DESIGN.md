@@ -108,9 +108,29 @@ Everything must look right at 375, 390, 430 (phones; 320 must not break), 768, 1
 - Images have descriptions (NASA's own captions where there are).
 - Motion is never needed to understand anything, and stops with "reduce motion".
 
+## 8a. Feel (decided Nov 12, 2026)
+
+- **Feedback:** everything pressable (buttons, chips, tabs, links, cards that open something) changes colour or border
+  over 0.15 s on hover, and buttons and chips move down 1 px while pressed. The rules are in `shared/theme.css`;
+  "reduce motion" turns them off.
+- **Tap targets:** at least 40 px tall on phones (44 px for the main buttons and fields).
+- **Rows that don't fit:** tabs and chip rows scroll sideways on phones, with a soft fade on the side where there is
+  more, and the selected tab scrolled into view (`shared/footer.js`: `.tabs`, `.popular`, `.gbar .seg`,
+  `[data-hscroll]`). Rows never run off the screen with nothing to show they continue.
+- **Labels on maps and diagrams:** a dark outline (canvas `strokeText`, SVG `paint-order: stroke`) so they stay
+  readable over orbits, dots and imagery; fewer names on a phone-sized map.
+- **Fields:** a brass glow on focus; date pickers, dropdowns and scrollbars drawn dark (`color-scheme: dark`); a
+  search box's Clear button appears only when there is something to clear; placeholders short enough for a 375 px
+  phone.
+- **The header** is solid, with a soft shadow, so nothing shows through it while scrolling.
+- **Labels on a row of controls** use the small brass capitals (`.barlbl`), never italics; no two controls on one page
+  share a label.
+
 ## 9. Quality checklist (every change)
 
 1. Look at the page at all the widths above.
 2. Check the empty, loading and error states (no results, NASA out of reach, the demo key used up).
 3. No console errors.
 4. Rows of tiles have equal heights; spacing is even.
+5. At 375 px: nothing runs off the screen, tap targets are 40 px or taller, placeholders aren't cut off.
+6. Hover, press and focus look right on every control.

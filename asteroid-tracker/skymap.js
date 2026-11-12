@@ -490,6 +490,8 @@ export class SolarMap {
       if (bx[0] < 2 || bx[2] > W - 2 || bx[1] < 2 || bx[3] > H - 2) continue;
       if (this.boxes.some((q) => bx[0] < q[2] && bx[2] > q[0] && bx[1] < q[3] && bx[3] > q[1])) continue;
       this.boxes.push(bx);
+      ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * dpr; ctx.strokeStyle = 'rgba(12,17,25,.92)';   // a dark outline keeps it readable over dots and orbits
+      ctx.strokeText(b.name, b.x + dx, b.y + dy);
       ctx.fillStyle = b.col; ctx.fillText(b.name, b.x + dx, b.y + dy);
       return;
     }

@@ -3,7 +3,8 @@
 // Adds one row of links (About, Privacy, Terms, Credits, Contact, the licence and the source code) to the top of the page's
 // <footer class="footer">, so the links are written in one place for every page. Each page loads it with
 //   <script type="module" src="<path to>/shared/footer.js"></script>
-// It also sets up the "‹ Back" button on pages that have one (see wireBack below).
+// It also sets up the "‹ Back" button on pages that have one (see wireBack below), and the soft edge fade on rows that
+// scroll sideways (wireScrollRows).
 // Links are worked out from this file's own address, so they are right at any folder depth.
 
 const REPO = 'https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects';
@@ -70,6 +71,37 @@ function wireBack() {
   });
 }
 
-function start() { addLinks(); wireBack(); }
+// Rows that scroll sideways (the tab bars, chip rows on small screens): a soft fade on the side where there is more,
+// and the selected tab scrolled into view, so nothing looks cut off. Decided Nov 12, 2026.
+const HSCROLL = '.tabs, .popular, .gbar .seg, [data-hscroll]';
+function fades(el) {
+  const more = el.scrollWidth - el.clientWidth;
+  el.classList.toggle('hs-l', more > 2 && el.scrollLeft > 2);
+  el.classList.toggle('hs-r', more > 2 && el.scrollLeft < more - 2);
+}
+function wireScrollRows() {
+  const ro = 'ResizeObserver' in window ? new ResizeObserver((es) => es.forEach((e) => fades(e.target))) : null;
+  const init = (el) => {
+    if (el.dataset.hs) return;
+    el.dataset.hs = '1';
+    el.classList.add('hscroll');
+    el.addEventListener('scroll', () => fades(el), { passive: true });
+    if (ro) ro.observe(el);
+    const sel = el.querySelector('[aria-current="page"], [aria-selected="true"]');
+    if (sel && el.scrollWidth > el.clientWidth) el.scrollLeft = Math.max(0, sel.offsetLeft - (el.clientWidth - sel.offsetWidth) / 2);
+    fades(el);
+  };
+  const scan = () => document.querySelectorAll(HSCROLL).forEach(init);
+  const all = () => document.querySelectorAll('.hscroll').forEach(fades);
+  scan();
+  addEventListener('resize', all, { passive: true });
+  document.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('.hscroll')) requestAnimationFrame(all); });
+  // rows the pages add later (search chips, a view's controls): picked up as they appear
+  let queued = false;
+  new MutationObserver(() => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; scan(); all(); }); } })
+    .observe(document.body, { childList: true, subtree: true });
+}
+
+function start() { addLinks(); wireBack(); wireScrollRows(); }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
 else start();

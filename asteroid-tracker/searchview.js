@@ -14,7 +14,7 @@ export function mountSearch(root, loadRows) {
     <div class="searchhead">
       <label class="bigsearch"><span class="sr">Search every near-Earth asteroid and comet</span>
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <input type="search" id="q" placeholder="Type a name or code, like Apophis or 2024 YR4" autocomplete="off" spellcheck="false" autocapitalize="off">
+        <input type="search" id="q" placeholder="A name or code, like 2024 YR4" autocomplete="off" spellcheck="false" autocapitalize="off">
         <button type="button" class="qclear" id="qclear" aria-label="Clear the search" hidden>Clear</button>
       </label>
       <p class="note" id="qnote">Searching every known near-Earth asteroid and comet<span id="qcount"></span>. Results appear as you type.</p>
