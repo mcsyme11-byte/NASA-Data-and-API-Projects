@@ -1,7 +1,7 @@
 # Mars Data
 
-**Project 3 of NASA and ESA Data Projects.** Status: **live**, growing as the Curiosity record is processed
-(sols 1–1293 on November 12, 2026; the whole record, sols 1–4843, in progress).
+**Project 3 of NASA and ESA Data Projects.** Status: **live**, with the whole released Curiosity record (sols
+1–4843, August 2012 to March 2026). Automatic updates for new NASA releases are planned.
 
 The weather on Mars as measured by NASA's Curiosity rover at Gale Crater since August 2012: the measurements cleaned,
 organised by season, time of day and the rover's height, summarised, and charted.

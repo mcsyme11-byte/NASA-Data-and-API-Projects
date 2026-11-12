@@ -121,3 +121,8 @@ How NASA and ESA Data Projects came about, in order.
   first) and both were built and published together: the "Visible from here" tab, **Sky Finder** and the
   **spacecraft map**, which took over the home page's large panel.
 
+- Over the night of November 11–12 the rest of the record was processed in batches of about five chunks, each checked
+  before the next, on a schedule of checks every two hours. By midday on November 12 the page held the whole released
+  Curiosity record: sols 1–4843, Mars Years 31–38, with the 2018 global dust storm and the rover's 990 m climb up
+  Mount Sharp visible in the charts. A recurring evening sensor glitch (one hour at about −120 °C) was found on 26
+  sols and set aside for review rather than published.

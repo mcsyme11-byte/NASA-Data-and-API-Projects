@@ -69,17 +69,19 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated automatically by a GitHub Actions job.
 
 **Data and analysis**
-- [ ] REMS, the whole record in chunks (44 chunk folders, sols 1–4843 on Nov 11, 2026) with cleaning rules 1.1
-  (`mars-data/analysis/CLEANING.md`): sols 1–4257 done and checked; sols 4258–4843 (the last batch) running of about five chunks,
-  each report checked before the next batch.
+- [x] REMS, the whole record (sols 1–4843, August 7, 2012 to March 22, 2026; 4,703 sols with data), cleaned with rules
+  1.1 in chunks; every cleaning report checked (Nov 12, 2026).
 - [x] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): all done and checked (row counts match NASA's labels).
-- [ ] The cleaned summaries are built on the `mars-probe` branch and copied to main after each checked batch (sols
-  1–4257 on main). When the whole record is in: the scheduled "Mars data" job on main replaces the branch job; delete
-  the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the branch.
-- [ ] Review the values set aside (`mars-data/analysis/exclusions.csv`, CLEANING.md rule 10): air temperature on 12
-  sols (2803, 2844, 4087, 4089, 4092, 4094, 4174, 4179, 4186, 4208, 4221, 4222). Each has one hour at about
-  19:00–20:00 local reading about −120 °C between hours of −35 to −50 °C: a recurring evening sensor glitch. Consider
-  an automatic rule for a single hour far out of line with the hours on both sides.
+- [ ] Next: the scheduled "Mars data" job on main (twice a week): pick up new REMS releases (sols after 4843), process
+  only new or replaced files, check, commit, and open a GitHub issue (emailed) when new data arrives or a run fails.
+  It replaces the branch job; then delete the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the
+  `mars-probe` branch.
+- [ ] Review the values set aside (`mars-data/analysis/exclusions.csv`, CLEANING.md rule 10): air temperature on 26
+  sols (2803, 2844, 4087, 4089, 4092, 4094, 4174, 4179, 4186, 4208, 4221, 4222, 4263, 4274, 4282, 4298, 4432, 4775,
+  4780, 4781, 4792, 4808, 4809, 4817, 4821, 4841). Each has one hour at about 18:00–20:00 local reading about −115 to
+  −120 °C between hours of −35 to −55 °C: a recurring evening sensor glitch, more frequent since sol 4087. Consider an
+  automatic rule for a single hour far out of line with the hours on both sides (25 K or more), applied to the
+  minute data before the daily statistics.
 - [ ] Optional: ask ESA (data.licences@esa.int) to confirm the spelling of the Mars Express MaRS credit line
   ("M. Plätzold, K. Pieter" on ESA's terms page; the archive names Martin Pätzold).
 - [ ] Add MEDA (Jezero Crater) and the MaRS profiles (ESA) to the same pipeline.
@@ -97,7 +99,6 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 - [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
 
 **Page**
-- [ ] Page live (Nov 12, 2026), now with sols 1–4257; add each new batch's summaries (`analysis/make_page_data.py`)
-  until the whole record is in.
+- [x] Page live (Nov 12, 2026) with the whole record, sols 1–4843.
 - [ ] A short write-up on the page of what the patterns show, once the whole record is in.
 - [ ] `CREDITS.md`, the Credits page and the Privacy page updated for the new sources in the same change.
