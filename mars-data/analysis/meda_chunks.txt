@@ -1,0 +1,3 @@
+# MEDA chunks to process (one per line). Rules 1.0. Saved after each chunk.
+# 2026-11-12: first chunk, to check the cleaning.
+sol_0000_0089
