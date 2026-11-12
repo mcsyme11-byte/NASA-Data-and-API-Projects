@@ -9,19 +9,20 @@ jobs:
     steps:
       - name: Astronaut photos without a key
         run: |
-          A="Mozilla/5.0 (compatible; data-check)"
-          curl -sSL -A "$A" -c j.txt -b j.txt "https://eol.jsc.nasa.gov/SearchPhotos/PhotoIdSets/PhotoIdSets.pl?set=Latest_ISS_Imagery&view=1" -o f.html -w "forwarder %{http_code} %{url_effective}\n"
-          head -c 3000 f.html; echo; echo ======
-          U=$(grep -oE "(https?://eol.jsc.nasa.gov)?/[A-Za-z/]*(ShowQueryResults|Results)[^\"' ]*" f.html | head -1); echo "next: $U"
-          [ -n "$U" ] && { case "$U" in http*) ;; *) U="https://eol.jsc.nasa.gov$U";; esac; curl -sSL -A "$A" -b j.txt "$U" -o r.html -w "results %{http_code} %{size_download}\n"; python3 - <<'PY'
+          A="Mozilla/5.0 (compatible; data-check)"; B=https://eol.jsc.nasa.gov/SearchPhotos
+          curl -sSL -A "$A" -c j.txt -b j.txt "$B/PhotoIdSets/PhotoIdSets.pl?set=Latest_ISS_Imagery&view=1" -o /dev/null
+          curl -sSL -A "$A" -b j.txt "$B/ShowQueryResults-Lightcycle.pl?results=Latest_ISS_Imagery" -o r.html -w "lightcycle %{http_code} %{size_download}\n"
+          python3 - <<'PY'
           import re
           s=open('r.html',errors='replace').read()
-          print(re.sub(r'\s+',' ',s)[:4000])
-          print('links:', sorted(set(re.findall(r'(?:href|src)="([^"]+)"', s)))[:60])
+          t=re.sub(r'<script[\s\S]*?</script>',' ',s); t=re.sub(r'<[^>]+>',' ',t); t=re.sub(r'\s+',' ',t)
+          print('TEXT:', t[:2500])
+          print('LINKS:', sorted(set(re.findall(r'(?:href|src|action)="([^"]+)"', s)))[:80])
+          print('SCRIPT bits:', [m[:300] for m in re.findall(r'<script[^>]*>([\s\S]*?)</script>', s) if len(m) > 50][:4])
           PY
-          }
+          for v in TextTable Table KML GoogleEarth Excel CSV Map; do curl -sSL -A "$A" -b j.txt "$B/ShowQueryResults-$v.pl?results=Latest_ISS_Imagery" -o v.html -w "$v %{http_code} %{size_download} %{content_type}\n"; head -c 600 v.html | tr '\n' ' '; echo; done
       - name: Other sources (CORS headers)
         run: |
-          for u in "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson" "https://gibs.earthdata.nasa.gov/wmts/epsg3413/best/BlueMarble_NextGeneration/default/default/500m/0/0/0.jpeg" "https://gibs.earthdata.nasa.gov/wmts/epsg3031/best/BlueMarble_NextGeneration/default/default/500m/0/0/0.jpeg" "https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/BlueMarble_NextGeneration/default/default/500m/0/0/0.jpeg"; do
+          for u in "https://api.wheretheiss.at/v1/satellites/25544" "http://api.open-notify.org/iss-now.json"; do
             echo "=== $u"; curl -sS -o /dev/null -D - -H "Origin: https://example.org" "$u" | grep -iE "^HTTP|access-control-allow-origin|content-type|content-length"; done
-          curl -sS https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson | head -c 900; echo
+          curl -sS https://api.wheretheiss.at/v1/satellites/25544 | head -c 600; echo
