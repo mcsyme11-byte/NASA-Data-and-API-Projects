@@ -64,6 +64,8 @@ looked at. Fixed:
   files, publishes only when every check passes, and opens a GitHub issue (emailed) for new data or a failure.
   `validate.py` also checks that no single-hour glitch is left and that no full sol has an air low below 170 K.
 - The charts page status line shows when NASA's archive was last checked; "How the data is made" covers rules 1.2.
+- The job's first test run stopped while ESA's archive is unavailable (an empty Mars Express file was counted); fixed,
+  and the second test run passed: no new data, archive check saved, no notice sent.
 
 ## November 12, 2026 — Mars Data: layout reworked
 
