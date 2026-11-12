@@ -104,13 +104,11 @@ def parse(raw: bytes, path: str, tally: Counter) -> dict | None:
 
 
 def main() -> None:
-    OUT.mkdir(parents=True, exist_ok=True)
-    try:
-        sets = season_sets()
-    except Exception as e:
-        (OUT / "report.md").write_text(f"# Mars Express\n\nThe archive's list of data sets could not be read: {e}\n")
-        print(e)
-        raise
+    # Nothing is written until profiles have been read: while ESA's archive is unavailable (or answers with a page that
+    # lists no data sets), the run stops here and the next run tries again.
+    sets = season_sets()
+    if not sets:
+        raise RuntimeError("ESA's archive answered but listed no Mars Express occultation data sets")
     print("data sets:", sets, flush=True)
     files = []
     for ds in sets:
@@ -147,6 +145,8 @@ def main() -> None:
                 continue
             if p:
                 profiles.append(p)
+    if not profiles:
+        raise RuntimeError(f"no Mars Express profiles could be read ({len(files)} files; {len(errors)} errors)")
     OUT.mkdir(parents=True, exist_ok=True)
     df = pd.DataFrame([{k: v for k, v in p.items() if k != "_profile"} for p in profiles])
     if len(df):

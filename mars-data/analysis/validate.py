@@ -5,6 +5,7 @@
 #   - the summaries exist and have the expected columns;
 #   - one row per sol, in order, and no fewer sols than the last saved version (PREV_SOLS, from the job);
 #   - every daily value within the physical limits of CLEANING.md rule 4;
+#   - no single-hour air-temperature glitch left (CLEANING.md rule 11) and no full sol with an air low below 170 K;
 #   - the season (Ls) advancing with the sol number;
 #   - every chunk processed in this run has a cleaning report and no sol with a problem.
 import json
@@ -45,6 +46,20 @@ def main() -> int:
                 bad = s[(s[c] < lo) | (s[c] > hi)]
                 if len(bad):
                     errors.append(f"{c} outside {lo}-{hi} on sols {bad['sol'].tolist()[:10]}")
+
+    # Rule 11 worked: no hourly air-temperature mean more than SPIKE_K beyond both neighbouring hours, and no full sol
+    # with a daily air low below 170 K (the evening glitch reads about 155 K; real nights at Gale stay above 175 K).
+    h = pd.read_csv(OUT / "hourly.csv", usecols=["sol", "hour", "air_temp"]).dropna()
+    h["key"] = h["sol"] * 24 + h["hour"]
+    t = h.set_index("key")["air_temp"]
+    prev_h, next_h = t.reindex(t.index - 1).to_numpy(), t.reindex(t.index + 1).to_numpy()
+    both = pd.DataFrame({"p": prev_h, "n": next_h}, index=t.index)
+    spike = (t < both.min(axis=1, skipna=False) - rems.SPIKE_K) | (t > both.max(axis=1, skipna=False) + rems.SPIKE_K)
+    if spike.any():
+        errors.append(f"single-hour air-temperature glitches left on sols {sorted(set((t.index[spike] // 24).tolist()))[:10]}")
+    cold = s[s["air_temp_full"].astype(bool) & (s["air_temp_min"] < 170)]
+    if len(cold):
+        errors.append(f"daily air low below 170 K on sols {cold['sol'].tolist()[:10]}")
 
     season = s["mars_year"] * 360 + s["ls"]
     if not season.is_monotonic_increasing:

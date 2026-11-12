@@ -31,6 +31,14 @@ from run_rems import BASE, OUT, get, listing
 NOTICE = Path(os.environ.get("RUNNER_TEMP", "/tmp")) / "mars_update_notice.md"
 
 
+def mex_profiles(out: Path) -> int:
+    """Number of Mars Express profiles saved so far (0 while none have been read)."""
+    try:
+        return int(len(pd.read_csv(out / "profiles.csv")))
+    except (FileNotFoundError, pd.errors.EmptyDataError):
+        return 0
+
+
 def main() -> None:
     manifest = pd.read_csv(OUT / "manifest.csv") if (OUT / "manifest.csv").exists() else pd.DataFrame(columns=["sol", "file"])
     sols_before = set(pd.read_csv(OUT / "sols.csv")["sol"]) if (OUT / "sols.csv").exists() else set()
@@ -92,7 +100,7 @@ def main() -> None:
             done = re.findall(r"MEX-M-MRS-5-OCC-\d{4}-V\d+\.\d+", (mex_out / "report.md").read_text())
         if not (mex_out / "profiles.csv").exists() or sorted(set(done)) != sorted(sets):
             run_mex.main()
-            mex_note = (f"ESA's Mars Express profiles were read ({len(pd.read_csv(mex_out / 'profiles.csv'))} profiles). "
+            mex_note = (f"ESA's Mars Express profiles were read ({mex_profiles(mex_out)} profiles). "
                         "A chart for them needs a mock-up before it goes on the page.")
     except Exception as e:  # ESA's archive not reachable: not a failure, tried again next run
         mex_note = ""
@@ -108,7 +116,7 @@ def main() -> None:
              "errata_sha256": errata_sha, "errata_changed": errata_changed,
              "meda_processed_chunks": m_todo, "meda_new_sols": [m_new[0], m_new[-1], len(m_new)] if m_new else [],
              "meda_last_sol": max(m_after) if m_after else None,
-             "mex_profiles": int(len(pd.read_csv(mex_out / "profiles.csv"))) if (mex_out / "profiles.csv").exists() else 0}
+             "mex_profiles": mex_profiles(mex_out)}
     (OUT / "last_check.json").write_text(json.dumps(check, indent=2) + "\n")
 
     notice = NOTICE
