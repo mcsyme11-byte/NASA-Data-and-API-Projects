@@ -1,5 +1,13 @@
 # Change log
 
+## November 12, 2026 — Mars Data: sols 2483–3068 added
+
+- Curiosity REMS sols 2483–3068 (Mars Years 35–36) and corrected UV for sols 2501–3100; every cleaning report
+  checked, nothing flagged by the automatic review.
+- New cleaning rule 10: a value that passes every rule but is plainly not weather is listed in
+  `mars-data/analysis/exclusions.csv` and left out of the page until reviewed. First entry: sol 2844 air temperature
+  (one hour at −119.6 °C between hours of −38 and −49 °C). The page now covers sols 1–3068.
+
 ## November 12, 2026 — Mars Data: sols 1870–2482 added
 
 - Curiosity REMS sols 1870–2482 (Mars Years 34–35) and corrected UV for sols 1901–2500; every cleaning report checked,
