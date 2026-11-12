@@ -67,7 +67,7 @@
 - **Layout fixes (same day):** the spacecraft map's agency and kind filters were squeezed to a sliver on desktop and
   are now full height; the craft card keeps its title and close button in view while it scrolls; a "group" of one
   craft is drawn as the craft itself; Sky Finder's place panel has a close button (and Escape); the Asteroid Tracker's
-  tabs wrap to a second line on desktop instead of running off the edge, and the map and asteroid pages list the
+  tabs wrap to a second line at every width (phones included) instead of running off the edge, and the map and asteroid pages list the
   "Visible from here" tab too. The map page no longer has a "Back" button above its title: the tracker's tabs are
   right below it.
 - **Asteroid Tracker, "Visible from here" tab** (`#visible`): choose a place ("Use my location" or a town from the
