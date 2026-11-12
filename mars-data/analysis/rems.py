@@ -14,7 +14,7 @@ import pandas as pd
 
 from mars_time import from_j2000_seconds, ls_and_year
 
-RULES_VERSION = "1.1"  # raise when a rule in CLEANING.md changes; the summaries record it
+RULES_VERSION = "1.2"  # raise when a rule in CLEANING.md changes; the summaries record it
 
 MODRDR_COLUMNS = [
     "TIMESTAMP", "LMST", "LTST", "HORIZONTAL_WIND_SPEED", "VERTICAL_WIND_SPEED", "WIND_DIRECTION",
@@ -33,6 +33,7 @@ MISSING_TEXT = {"", "UNK", "NULL", "N/A"}
 # Physical limits (CLEANING.md, rule 4): values outside them cannot be real at Gale Crater.
 LIMITS = {"pressure": (400.0, 1200.0), "air_temp": (130.0, 310.0), "ground_temp": (130.0, 330.0),
           "humidity": (0.0, 100.0), "water_vapour": (0.0, 400.0)}
+SPIKE_K = 25.0             # rule 11: an air-temperature minute this far beyond both neighbouring hours is removed
 NIGHT_HOURS = (2.0, 6.0)  # rule 7: local hours used for the night-time water vapour value
 FULL_SOL_HOURS = 22      # rule 6: a sol is "full" with good data in at least 22 of its 24 local hours
 MIN_SECONDS_PER_HOUR = 60  # rule 6: an hour counts with at least 60 good one-second readings
@@ -138,6 +139,27 @@ def clean(df: pd.DataFrame, sol: int) -> tuple[pd.DataFrame, dict]:
         keep = ok & inside
         report[f"{name}_kept"] = int(keep.sum())
         df[name] = df[col].where(keep)
+
+    # Rule 11: single-hour air-temperature glitches. In an hour whose neighbouring hours both have data, a one-minute
+    # median more than SPIKE_K colder than the colder neighbour's mean (or warmer than the warmer one's) cannot be
+    # weather; the readings of that minute are removed.
+    report["air_temp_spike_rows"] = 0
+    a = df[["hour", "air_temp"]].dropna()
+    if len(a):
+        hr = a["hour"].astype(int)
+        hm = a.groupby(hr)["air_temp"].agg(["mean", "count"])
+        hm = hm[hm["count"] >= MIN_SECONDS_PER_HOUR]["mean"]
+        minute = (a["hour"] * 60).astype(int)
+        med = a.groupby(minute)["air_temp"].transform("median")
+        # Both neighbours are required: min and max with skipna=False give NaN when either hour has no mean.
+        both = pd.concat([(hr - 1).map(hm), (hr + 1).map(hm)], axis=1)
+        lower = both.min(axis=1, skipna=False) - SPIKE_K
+        upper = both.max(axis=1, skipna=False) + SPIKE_K
+        spike = lower.notna() & upper.notna() & ((med < lower) | (med > upper))
+        if spike.any():
+            report["air_temp_spike_rows"] = int(spike.sum())
+            df.loc[spike[spike].index, "air_temp"] = float("nan")
+            report["air_temp_kept"] -= int(spike.sum())
 
     # Rule 5: information kept with the values (not used to remove them).
     report["pressure_oscillator_1"] = int((p_ok & char_is(df["PS_CONFIDENCE_LEVEL"], 0, "0")).sum())

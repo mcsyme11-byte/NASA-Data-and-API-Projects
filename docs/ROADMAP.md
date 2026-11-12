@@ -72,18 +72,12 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 
 **Data and analysis**
 - [x] REMS, the whole record (sols 1–4843, August 7, 2012 to March 22, 2026; 4,703 sols with data), cleaned with rules
-  1.1 in chunks; every cleaning report checked (Nov 12, 2026).
+  1.2 in chunks; every cleaning report checked (Nov 12, 2026). Rule 11 removes the evening air-temperature glitch
+  (34 sols); the set-aside list (`exclusions.csv`, rule 10) is empty.
 - [x] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): all done and checked (row counts match NASA's labels).
-- [ ] Next: the scheduled "Mars data" job on main (twice a week): pick up new REMS releases (sols after 4843), process
-  only new or replaced files, check, commit, and open a GitHub issue (emailed) when new data arrives or a run fails.
-  It replaces the branch job; then delete the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the
-  `mars-probe` branch.
-- [ ] Review the values set aside (`mars-data/analysis/exclusions.csv`, CLEANING.md rule 10): air temperature on 26
-  sols (2803, 2844, 4087, 4089, 4092, 4094, 4174, 4179, 4186, 4208, 4221, 4222, 4263, 4274, 4282, 4298, 4432, 4775,
-  4780, 4781, 4792, 4808, 4809, 4817, 4821, 4841). Each has one hour at about 18:00–20:00 local reading about −115 to
-  −120 °C between hours of −35 to −55 °C: a recurring evening sensor glitch, more frequent since sol 4087. Consider an
-  automatic rule for a single hour far out of line with the hours on both sides (25 K or more), applied to the
-  minute data before the daily statistics.
+- [ ] After the first scheduled run of the "Mars data" job succeeds: delete the one-off probe (`mars-data/probe/`),
+  the branch workflows (`mars-probe.yml`, `mars-chunks.yml`, `mars-meda.yml`, `mars-mex.yml`, on the `mars-probe`
+  branch) and the `mars-probe` branch itself.
 - [ ] Optional: ask ESA (data.licences@esa.int) to confirm the spelling of the Mars Express MaRS credit line
   ("M. Plätzold, K. Pieter" on ESA's terms page; the archive names Martin Pätzold).
 - [x] Perseverance MEDA (Jezero Crater), sols 0–1859, cleaned with MEDA rules 1.0 (`CLEANING-MEDA.md`); every report
@@ -94,16 +88,17 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
   `run_mex.py` and add a profiles chart (mock-up first). Alternative to check: NASA's PDS Geosciences Node copy.
 
 **Automatic updates**
-- [ ] GitHub Actions job "Mars data", twice a week to start (to be reduced to weekly once stable): check each
-  mission's archive for new or replaced files, download only those, clean and summarise with the same code, run the
-  checks, and commit the summaries if they changed.
-- [ ] Manifest of processed files (name, size, checksum), committed, so nothing is downloaded twice and replaced
-  files are reprocessed.
-- [ ] Checks before saving: expected columns, values within physical limits, sol count never decreasing, no
-  duplicate sols. On any failure the previous summaries are kept and the job stops with an error.
-- [ ] Email notice: when a run finds new data, the job opens a GitHub issue ("New Mars data: …"), which GitHub emails
-  to the repository owner; a failed run is reported the same way.
-- [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
+- [x] GitHub Actions job "Mars data" (`.github/workflows/mars-data.yml`), live Nov 12, 2026: Mondays and Thursdays
+  at 09:23 UTC (to be reduced to weekly once stable). It checks NASA's REMS and MEDA archives and ESA's Mars Express
+  archive for new or replaced files, downloads only those (manifests of name, size and checksum), cleans and
+  summarises them with the same code, runs `validate.py`, and commits only if every check passes.
+- [x] Checks before saving (`validate.py`): expected columns, values within physical limits, sol count never
+  decreasing, no duplicate sols, the season advancing, no single-hour glitch left (rule 11), no full sol with an air
+  low below 170 K, and a cleaning report for every processed chunk.
+- [x] Email notice: a run that finds new data, or fails, opens a GitHub issue ("New Mars data: …"), which GitHub
+  emails to people watching the repository.
+- [x] The charts page shows "Data up to sol X … NASA's archive checked [date]".
+- [ ] Reduce the job to weekly once it has run without trouble for a few weeks.
 
 **Page**
 - [x] Page live (Nov 12, 2026) with the whole record, sols 1–4843.

@@ -72,6 +72,8 @@ def main() -> None:
     meta = {"rules": str(s["rules"].iloc[-1]), "first_sol": int(s["sol"].min()), "last_sol": int(s["sol"].max()),
             "first_date": s["utc_date"].iloc[0], "last_date": s["utc_date"].iloc[-1], "sols": len(s),
             "built": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "checked": (json.loads((DATA / "last_check.json").read_text()).get("checked", "")[:10]
+                        if (DATA / "last_check.json").exists() else ""),
             "uv_last_sol": int(s.loc[s["uv_abc_max"].notna(), "sol"].max()) if "uv_abc_max" in s else None}
     payload = {"meta": meta, "cols": list(cols), "rows": rows, "heat": heat}
     (OUT / "summary.json").write_text(json.dumps(payload, separators=(",", ":")))
@@ -79,5 +81,30 @@ def main() -> None:
           f"hourly files: {len(list(hourly_dir.glob('MY*.json')))}")
 
 
+def meda() -> None:
+    """Perseverance MEDA (Jezero Crater): one row per sol, for the Gale and Jezero comparison."""
+    path = DATA.parent / "meda" / "sols.csv"
+    if not path.exists():
+        return
+    m = pd.read_csv(path)
+    cols = {"sol": 0, "ls": 2, "mars_year": 0, "utc_date": None, "pressure_mean": 1, "pressure_full": None,
+            "rover_z_m": 1, "humidity_max": 2, "water_vapour_night": 1}
+    rows = []
+    for _, r in m.iterrows():
+        row = []
+        for c, nd in cols.items():
+            v = r.get(c)
+            if nd is None:
+                row.append(None if pd.isna(v) else (bool(v) if c.endswith("_full") else v))
+            else:
+                row.append(num(v, nd) if nd else (None if pd.isna(v) else int(v)))
+        rows.append(row)
+    meta = {"rules": str(m["rules"].iloc[-1]), "first_sol": int(m["sol"].min()), "last_sol": int(m["sol"].max()),
+            "first_date": m["utc_date"].iloc[0], "last_date": m["utc_date"].iloc[-1], "sols": len(m)}
+    (OUT / "meda.json").write_text(json.dumps({"meta": meta, "cols": list(cols), "rows": rows}, separators=(",", ":")))
+    print(f"meda.json: {len(rows)} sols, {(OUT / 'meda.json').stat().st_size / 1024:.0f} KB")
+
+
 if __name__ == "__main__":
     main()
+    meda()

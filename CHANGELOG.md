@@ -52,6 +52,19 @@ looked at. Fixed:
 - The explorer itself moved to `image-explorer/explore.html`; `#earth`, `#globe` and `#library` open that tab, and
   switching tabs updates the address. Its back button leads to the project's home page.
 
+## November 12, 2026 — Mars Data: cleaning rules 1.2 and automatic updates
+
+- **Rule 11:** single-hour air-temperature glitches (the evening readings of about −118 °C) are removed
+  automatically; the rest of each hour and sol is kept. The whole Curiosity record was processed again: removals on
+  34 sols, all evening glitches; the 26 sols set aside by hand are back on the charts and `exclusions.csv` is empty.
+  The rule applies only when both neighbouring hours have data (a first version compared with one neighbour when the
+  next hour was empty, and removed real morning warming on sol 1418; corrected and reprocessed).
+- **Automatic updates:** the "Mars data" job (`.github/workflows/mars-data.yml`, `update.py`, `validate.py`) checks
+  NASA's REMS and MEDA archives and ESA's Mars Express archive on Mondays and Thursdays, processes only new or replaced
+  files, publishes only when every check passes, and opens a GitHub issue (emailed) for new data or a failure.
+  `validate.py` also checks that no single-hour glitch is left and that no full sol has an air low below 170 K.
+- The charts page status line shows when NASA's archive was last checked; "How the data is made" covers rules 1.2.
+
 ## November 12, 2026 — Mars Data: layout reworked
 
 - **Charts page:** a section menu (The year, Two craters, One sol, The whole mission, How it's made) stays at the top

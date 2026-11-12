@@ -1,0 +1,79 @@
+# NASA and ESA Data Projects · Mars Data: automatic update · © 2026 Malcolm Syme · mcsyme11@gmail.com
+#
+# Twice a week, checks NASA's Planetary Data System for new or replaced Curiosity REMS and Perseverance MEDA files,
+# and ESA's archive for Mars Express profiles, processes only those
+# (mars-data/analysis/update.py, cleaning rules in CLEANING.md), checks the results (validate.py), rebuilds the page
+# files and commits them. Nothing is saved if a check fails. A GitHub issue is opened when new data is added, when
+# NASA's list of re-released files changes, or when the run fails; GitHub emails issues to the repository's owner.
+# Decided Nov 11, 2026 (docs/PROJECT-NOTES.md): twice a week to start, weekly once stable.
+
+name: Mars data
+
+on:
+  schedule:
+    - cron: '23 9 * * 1,4'    # Mondays and Thursdays, 09:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: mars-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pandas
+        run: pip install pandas==2.2.3
+      - name: Count the sols saved so far
+        run: |
+          echo "PREV_SOLS=$(( $(wc -l < mars-data/data/rems/sols.csv) - 1 ))" >> "$GITHUB_ENV"
+          if [ -f mars-data/data/meda/sols.csv ]; then echo "PREV_MEDA_SOLS=$(( $(wc -l < mars-data/data/meda/sols.csv) - 1 ))" >> "$GITHUB_ENV"; fi
+      - name: Look for new data in NASA's archive and process it
+        working-directory: mars-data/analysis
+        run: python3 update.py
+      - name: Check the results before saving
+        working-directory: mars-data/analysis
+        run: python3 validate.py
+      - name: Rebuild the page files
+        run: python3 mars-data/analysis/make_page_data.py
+      - name: Commit
+        run: |
+          git add -A mars-data/data/
+          if git diff --cached --quiet; then
+            echo "No change."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Mars data: archive checked $(date -u +%Y-%m-%d)"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase --quiet && git push && exit 0
+            echo "Push attempt $attempt did not succeed; retrying."
+            sleep $((attempt * 10))
+          done
+          exit 1
+      - name: Email notice (new data or a change to review)
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          f="$RUNNER_TEMP/mars_update_notice.md"
+          if [ -f "$f" ]; then
+            gh issue create --title "Mars data: new data $(date -u +%Y-%m-%d)" --body-file "$f"
+          fi
+      - name: Email notice (the run failed)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create --title "Mars data: the update failed $(date -u +%Y-%m-%d)" \
+            --body "The Mars data job stopped with an error and saved nothing. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

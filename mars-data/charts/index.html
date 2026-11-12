@@ -343,7 +343,7 @@
 
     // ---- status ----
     const meta = M.meta;
-    document.getElementById("status").textContent = `Data up to sol ${fmt(meta.last_sol)} (${meta.last_date}) · ${fmt(meta.sols)} sols with data · cleaning rules ${meta.rules} · updated ${meta.built}`;
+    document.getElementById("status").textContent = `Data up to sol ${fmt(meta.last_sol)} (${meta.last_date}) · ${fmt(meta.sols)} sols with data · cleaning rules ${meta.rules} · ${meta.checked ? `NASA's archive checked ${meta.checked}` : `updated ${meta.built}`}`;
     const fullP = rows.filter(r => r.pressure_full), fullT = rows.filter(r => r.air_temp_full);
     const cold = fullT.reduce((a, r) => r.air_temp_min < a.air_temp_min ? r : a), warm = fullT.reduce((a, r) => r.air_temp_max > a.air_temp_max ? r : a);
     const years = [...new Set(rows.map(r => r.mars_year))];

@@ -33,10 +33,19 @@ follows `analysis/CLEANING.md` and `analysis/CLEANING-MEDA.md` and is updated wi
 | Clean | The rules in `analysis/CLEANING.md`: NASA's quality flags read character by character, physical limits, missing-value codes; every removal counted | `analysis/rems.py` |
 | Organise | Sol, Ls (season) and Mars Year (`analysis/mars_time.py`), local hour, rover height | `analysis/rems.py` |
 | Summarise | Hourly and daily statistics; a sol is "full" with good data in 22 of 24 hours | `analysis/rems.py`, `analysis/run_uv.py` |
-| Check | A cleaning report per chunk, checked before the next batch | `data/rems/reports/` |
+| Check | A cleaning report per chunk, checked before the next batch; `validate.py` checks the whole record before anything is saved | `data/rems/reports/`, `analysis/validate.py` |
 | Publish | The small files the page reads | `analysis/make_page_data.py` |
 
 Raw downloads are never committed; `data/rems/manifest.csv` lists every file used, with its size and SHA-256.
+
+## Automatic updates
+
+The "Mars data" job (`.github/workflows/mars-data.yml`) runs on Mondays and Thursdays at 09:23 UTC.
+`analysis/update.py` checks NASA's REMS and MEDA archives and ESA's Mars Express archive for new or replaced files
+(compared with the manifests), processes only those with the same code and rules, and writes
+`data/rems/last_check.json`; `analysis/validate.py` then checks the result, and only if every check passes are the
+page files rebuilt and committed. New data, or a failed run, opens a GitHub issue, which GitHub emails to people
+watching the repository.
 
 ## Files
 
@@ -45,18 +54,21 @@ mars-data/
 ├── index.html            the project home page
 ├── charts/index.html     the charts
 ├── method/index.html     how the data is made: the cleaning rules in plain words, with examples
-├── analysis/             Python: download, clean, organise, summarise (CLEANING.md: the rules)
+├── analysis/             Python: download, clean, organise, summarise (CLEANING.md: the rules); update.py and
+│                         validate.py run the automatic updates
 ├── data/summary.json     one row per sol and the season-by-hour grid, read by the page
 ├── data/hourly/          hourly means per sol, one file per Mars Year
 ├── data/rems/            sols.csv, hourly.csv, uv.csv, manifest.csv and the cleaning reports
+├── data/meda/            the same for Perseverance (MEDA)
 └── README.md             this file
 ```
 
 ## Data
 
 NASA Planetary Data System, Atmospheres Node: MSL REMS MODRDR, ADR and UVRDR data sets. Citations and checks:
-[docs/DATA-SOURCES.md](../docs/DATA-SOURCES.md). Planned next: Perseverance's weather station (MEDA) and ESA's Mars
-Express radio occultation profiles.
+[docs/DATA-SOURCES.md](../docs/DATA-SOURCES.md). Also NASA's Perseverance weather station (MEDA, derived data). Planned
+next: ESA's Mars Express radio occultation profiles, once ESA's archive returns (`analysis/run_mex.py`,
+`analysis/CLEANING-MEX.md`).
 
 ---
 

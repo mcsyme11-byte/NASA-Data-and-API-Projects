@@ -89,7 +89,7 @@
     </section>
 
     <!-- ============ REMS ============ -->
-    <div class="shead"><h2>Curiosity: which rule for which situation</h2><span class="aside">REMS, cleaning rules version 1.1</span></div>
+    <div class="shead"><h2>Curiosity: which rule for which situation</h2><span class="aside">REMS, cleaning rules version 1.2</span></div>
     <section class="card">
       <p class="intro">Curiosity's weather station (REMS) at Gale Crater. The data is NASA's highest processing level, already corrected for the rover's own heat, shadows and dust. The rules are applied in this order; the rule number is the one used in the cleaning reports.</p>
       <table class="rules">
@@ -104,7 +104,8 @@
           <tr><td>A sol has good data in fewer than 22 of its 24 hours</td><td class="n" data-label="Rule">6 · Coverage</td><td data-label="What happens">Figures given, but the sol is marked partial</td><td class="ex" data-label="Example">21 good hours: partial, left out of the daily-average charts.</td></tr>
           <tr><td>A change from one sol to the next looks too large</td><td class="n" data-label="Rule">8 · Review</td><td data-label="What happens">Listed in the report for a person to check; not removed</td><td class="ex" data-label="Example">Daily mean pressure changes by more than 15 Pa between two full sols.</td></tr>
           <tr><td>No corrected ultraviolet (the Sun more than 55° from overhead)</td><td class="n" data-label="Rule">9 · Ultraviolet</td><td data-label="What happens">No UV value for that minute</td><td class="ex" data-label="Example">Early morning and evening have no UV.</td></tr>
-          <tr><td>A value passes every rule but is plainly not weather</td><td class="n" data-label="Rule">10 · Set aside</td><td data-label="What happens">Kept in the data files, left off the charts until reviewed</td><td class="ex" data-label="Example">One hour 80 °C colder than the hours on either side.</td></tr>
+          <tr><td>A value passes every rule but is plainly not weather, and no rule catches it</td><td class="n" data-label="Rule">10 · Set aside</td><td data-label="What happens">Kept in the data files, left off the charts until reviewed</td><td class="ex" data-label="Example">None at present: the evening glitches once set aside here are now removed by rule 11.</td></tr>
+          <tr><td>Part of one hour's air temperature is far colder (or warmer) than both neighbouring hours</td><td class="n" data-label="Rule">11 · One-hour glitch</td><td data-label="What happens">Those minutes are removed; the rest of the hour and the sol are kept</td><td class="ex" data-label="Example">An evening hour reading about −118 °C between hours of −40 °C. Applied only when both neighbouring hours have data.</td></tr>
         </tbody>
       </table>
     </section>
@@ -162,6 +163,26 @@
           <li><b>The midday peak</b> is the highest one-minute median, and counts only between 10:30 and 13:30 local time on a sol with at least 30 good minutes.</li>
         </ul>
         <p class="example"><b>Example</b>A sol whose highest UV is at 15:00 had no measurements near noon, so it is left out of the midday chart instead of showing a falsely low peak.</p>
+      </section>
+
+      <section class="card">
+        <h3>One-hour glitches (rule 11)</h3>
+        <p>On some evenings the air-temperature sensor reads about −115 to −120 °C for part of one hour, between hours of about −35 to −55 °C. Air cannot cool by 70 K and warm again within an hour, and the fastest real change, the morning warm-up, is about 10–15 K an hour.</p>
+        <ul>
+          <li>Each hour is compared with the hours before and after, but only when <b>both</b> have at least 60 good readings.</li>
+          <li>A one-minute median more than <b>25 K</b> colder than the colder neighbour, or warmer than the warmer one, is removed with all its readings.</li>
+          <li>Over the whole record the rule removed readings on 34 sols, all evening glitches.</li>
+        </ul>
+        <p class="example"><b>Example</b>Hours of 237 K and 232 K on either side: anything below 207 K in the hour between is removed. A warm morning minute next to an hour with no data is kept, because there is only one neighbour to compare with.</p>
+      </section>
+
+      <section class="card">
+        <h3>Checks on every batch</h3>
+        <ul>
+          <li>Each batch's report counts the readings removed under each rule and names the sols, so any change is visible.</li>
+          <li>After the rules, the whole record is checked again: no hourly mean more than 25 K beyond both neighbouring hours, and no full sol with a daily air low below 170 K.</li>
+          <li>New sols are added twice a week by an automatic job, with the same rules and checks; it stops and reports instead of publishing if a check fails.</li>
+        </ul>
       </section>
     </div>
 

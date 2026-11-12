@@ -31,6 +31,16 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   updates, in the `data/` folders) don't start a rebuild, since none of those files are in the record; the Repository
   History counts them instead of listing them. The record is public, like the repository; its build stops if a
   personal detail would end up in it.
+- **Decided Nov 12, 2026 (Mars Data):** cleaning rules 1.2 add rule 11, which removes single-hour air-temperature
+  glitches (a one-minute median more than 25 K beyond both neighbouring hours, applied only when both neighbours have
+  data). It replaces the 26 sols set aside by hand under rule 10. The whole record was processed again and the
+  result checked sol by sol; a first version that compared with only one neighbour was corrected (sol 1418).
+- **Decided Nov 12, 2026 (Mars Data):** the "Mars data" job runs on main on Mondays and Thursdays at 09:23 UTC,
+  publishes only after `validate.py` passes, and reports new data or a failure by opening a GitHub issue, which GitHub
+  emails to people watching the repository.
+- **Decided Nov 12, 2026 (Mars Data):** the project folder opens on a home page (mission, data, how to use it, a card
+  for each part); the charts are at `mars-data/charts/` with a section menu, and the cleaning rules are explained
+  with examples at `mars-data/method/`. Approved by the developer.
 - **Decided Nov 12, 2026 (Mars Data):** the developer approved the "Two craters" chart: daily average pressure at
   Gale (Curiosity, solid lines) and Jezero (Perseverance, dashed), one colour per Mars Year, for the years both rovers
   measured.
