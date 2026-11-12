@@ -92,8 +92,27 @@ function grid(set) {
     : { origin: [-H, H], extent: [-H, -H, H, H], resolutions: res, tileSize: 512 });
 }
 const tileUrl = (S, ext) => c => `${GIBS}${V().gibs}/best/${S.layer}/default/${dayFor(S)}/${S.set}/${c[0]}/${c[2]}/${c[1]}.${ext}`;
+/* true colour comes as JPEG, so the gaps between a satellite's passes are drawn in black: those pixels (each colour 10
+   or less out of 255) are made see-through as each tile loads, so the Blue Marble picture underneath shows instead */
+function clearBlack(tile, src) {
+  const img = tile.getImage(), raw = new Image();
+  raw.crossOrigin = 'anonymous';
+  raw.onload = () => {
+    const c = document.createElement('canvas'); c.width = raw.width; c.height = raw.height;
+    const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(raw, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height), a = d.data;
+    let any = false;
+    for (let i = 0; i < a.length; i += 4) if (a[i] <= 10 && a[i + 1] <= 10 && a[i + 2] <= 10) { a[i + 3] = 0; any = true; }
+    if (!any) { img.src = src; return; }                  /* nothing to clear: the original, from the browser's cache */
+    g.putImageData(d, 0, 0);
+    c.toBlob(b => { const u = URL.createObjectURL(b); img.onload = img.onerror = () => URL.revokeObjectURL(u); img.src = u; }, 'image/png');
+  };
+  raw.onerror = () => { img.src = src; };               /* lets OpenLayers see the error as before */
+  raw.src = src;
+}
 function rasterSource(S) {
-  return new ol.source.XYZ({ projection: proj(), tileGrid: grid(S.set), crossOrigin: 'anonymous', transition: 150, tileUrlFunction: tileUrl(S, S.ext) });
+  return new ol.source.XYZ({ projection: proj(), tileGrid: grid(S.set), crossOrigin: 'anonymous', transition: 150, tileUrlFunction: tileUrl(S, S.ext),
+    ...(S.ext === 'jpg' ? { tileLoadFunction: clearBlack } : {}) });
 }
 function vectorSource(S) {
   return new ol.source.VectorTile({ projection: proj(), tileGrid: grid(S.set), format: new ol.format.MVT(), tileUrlFunction: tileUrl(S, 'mvt') });
