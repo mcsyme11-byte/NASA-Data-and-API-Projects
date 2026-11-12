@@ -9,11 +9,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
-- [ ] **Add the repository secret `NASA_API_KEY` (developer, needed for the daily NeoWs copy).** GitHub › the
-  repository › Settings › Secrets and variables › Actions › New repository secret; name `NASA_API_KEY`, value the
-  api.nasa.gov key. Then Actions › Asteroid data › Run workflow, and check the log of the step "Copy NASA NeoWs weeks
-  and asteroid pages" (it names the key used and the number of asteroid pages copied). Until then the copy holds the
-  weeks only if the demo key allows, and no asteroid pages.
 - [ ] Watch the scheduled "Asteroid data" runs (06:17 and the 14:47 backup, added Nov 9, 2026): at least one should
   run each day.
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
