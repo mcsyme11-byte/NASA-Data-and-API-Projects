@@ -1,5 +1,10 @@
 # Change log
 
+## November 12, 2026 — Mars Data: Two craters
+
+- The approved "Two craters" chart is on the Mars Data page: air pressure at Gale Crater (Curiosity) and Jezero Crater
+  (Perseverance) through the same seasons. The page's data credit names the MEDA team; the mock-up file is removed.
+
 ## November 12, 2026 — a shorter footer and a Legal page
 
 - **Footer:** one row with About, Legal, Contact and Source code ↗ and the copyright line, then one short credit line

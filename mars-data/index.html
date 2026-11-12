@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mars Data · NASA and ESA Data Projects</title>
   <meta name="theme-color" content="#141B26">
-  <meta name="description" content="The weather on Mars measured by NASA's Curiosity rover since 2012: pressure, temperature, humidity and ultraviolet by season and time of day.">
+  <meta name="description" content="The weather on Mars measured by NASA's Curiosity rover since 2012, with Perseverance at Jezero Crater: pressure, temperature, humidity and ultraviolet by season and time of day.">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../shared/theme.css?v=2026111205">
   <script type="module" src="../shared/footer.js?v=2026111205"></script>
@@ -153,6 +153,21 @@
       </figure>
     </div>
 
+    <!-- ===================== TWO CRATERS ===================== -->
+    <div class="shead"><h2>Two craters</h2><span class="aside">Curiosity at Gale, Perseverance at Jezero</span></div>
+    <div class="charts">
+      <figure class="card chartcard wide">
+        <div class="shead" style="margin-top:0"><h2>Air pressure at two sites</h2><span class="aside">daily average, the Mars Years both rovers measured</span></div>
+        <div class="legend" id="twoLegend"></div>
+        <div class="frame"><svg id="cTwo" class="chart" role="img" aria-label="Daily average air pressure at Gale Crater and Jezero Crater against the season"></svg></div>
+        <figcaption class="note" id="twoNote">Full sols only. Sources: NASA Planetary Data System, Curiosity REMS and Perseverance MEDA (cleaned).</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>Solid lines are Curiosity at Gale Crater, dashed lines Perseverance at Jezero Crater, about 3,700 km apart; each colour is one Mars Year. Both rise and fall with the seasons in step, because the carbon dioxide that freezes onto the poles is taken from the whole planet's air at once.</p>
+          <p>Jezero's line sits lower because Jezero is higher: less air lies above it. Both rovers have also been climbing (Curiosity about 1 km up Mount Sharp, Perseverance up the crater rim), which lowers each line a little year by year.</p>
+        </details>
+      </figure>
+    </div>
+
     <!-- ===================== THE DAY ===================== -->
     <div class="shead"><h2>One sol</h2><span class="aside">a single Mars day, hour by hour</span></div>
     <div class="charts">
@@ -216,7 +231,7 @@
       </figure>
     </div>
 
-    <p class="srcline">Data courtesy of NASA/JPL-Caltech and the REMS team (Centro de Astrobiología), NASA Planetary Data System, Atmospheres Node.</p>
+    <p class="srcline">Data courtesy of NASA/JPL-Caltech and the REMS team (Centro de Astrobiología), and NASA/JPL-Caltech and the MEDA team (Centro de Astrobiología), NASA Planetary Data System, Atmospheres Node.</p>
     <footer class="footer">
       <div class="ftop"><p class="copy">© 2026 <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a></p></div>
       <p class="fnote">Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA.</p>
@@ -443,7 +458,33 @@
       hover(svg, f, d.map(r => ({ x: r.sol, yy: r.rover_z_m, r })), p => `<b>Sol ${p.r.sol}</b> · ${p.r.utc_date}<br>${fmt(p.yy, 1)} m above the landing site`);
     }
 
+    // ---- two craters (Gale and Jezero) ----
+    let MD = null;
+    fetch("data/meda.json").then(r => r.ok ? r.json() : null).then(j => { MD = j; drawTwo(); }).catch(() => {});
+    function drawTwo() {
+      const svg = document.getElementById("cTwo");
+      if (!MD) return;
+      const mc = Object.fromEntries(MD.cols.map((c, i) => [c, i]));
+      const jez = MD.rows.filter(r => r[mc.pressure_full] && r[mc.pressure_mean] != null).map(r => ({ sol: r[mc.sol], ls: r[mc.ls], y: r[mc.mars_year], p: r[mc.pressure_mean], d: r[mc.utc_date] }));
+      const ys = [...new Set(jez.map(r => r.y))].sort();
+      const gale = fullP.filter(r => ys.includes(r.mars_year)).map(r => ({ sol: r.sol, ls: r.ls, y: r.mars_year, p: r.pressure_mean, d: r.utc_date }));
+      const all = gale.concat(jez).map(r => r.p);
+      const f = frame(svg, { x0: 0, x1: 360, y0: Math.floor(Math.min(...all) / 50) * 50, y1: Math.ceil(Math.max(...all) / 50) * 50, xt: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360], xlab: "Season (Ls, degrees)", ylab: "Pressure (Pa)", xfmt: v => v + "°" });
+      const pts = [];
+      ys.forEach(y => {
+        const col = S[years.indexOf(y) % S.length];
+        el("path", { d: path(gale.filter(r => r.y === y).map(r => [r.ls, r.p]), f.X, f.Y, 6), fill: "none", stroke: col, "stroke-width": 1.8 }, svg);
+        el("path", { d: path(jez.filter(r => r.y === y).map(r => [r.ls, r.p]), f.X, f.Y, 6), fill: "none", stroke: col, "stroke-width": 1.8, "stroke-dasharray": "5 4" }, svg);
+        gale.filter(r => r.y === y).forEach(r => pts.push({ x: r.ls, yy: r.p, r, site: "Gale (Curiosity)" }));
+        jez.filter(r => r.y === y).forEach(r => pts.push({ x: r.ls, yy: r.p, r, site: "Jezero (Perseverance)" }));
+      });
+      hover(svg, f, pts, p => `<b>${p.site}</b><br>Sol ${p.r.sol} · Mars Year ${p.r.y}<br>Ls ${fmt(p.r.ls, 1)}° · ${p.r.d}<br>${fmt(p.yy, 1)} Pa`);
+      document.getElementById("twoLegend").innerHTML = '<span><i style="background:var(--ink2)"></i>Gale (Curiosity)</span><span><i class="dash" style="border-color:var(--ink2)"></i>Jezero (Perseverance)</span>' + ys.map(y => `<span><i style="background:${S[years.indexOf(y) % S.length]}"></i>Mars Year ${y}</span>`).join("");
+      document.getElementById("twoNote").textContent = `Full sols only. Perseverance: sols ${MD.meta.first_sol}–${fmt(MD.meta.last_sol)} (${MD.meta.first_date} to ${MD.meta.last_date}). Sources: NASA Planetary Data System, Curiosity REMS and Perseverance MEDA (cleaned).`;
+    }
+
     function drawAll() {
+      drawTwo();
       drawPressure(); drawRange(); drawHeat(); drawHiLo(); drawClimb(); drawSol();
       seasonal("cHum", "humFrame", "humidity_max", "Relative humidity (%)", "%", 0, "Humidity appears here after the sols are re-processed with cleaning rules 1.1.");
       seasonal("cUV", "uvFrame", "uv_abc_max", "UV (W/m²)", "W/m²", 1, "Corrected UV appears here after the UV files are processed.");

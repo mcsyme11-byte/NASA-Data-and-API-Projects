@@ -27,6 +27,9 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   updates, in the `data/` folders) don't start a rebuild, since none of those files are in the record; the Repository
   History counts them instead of listing them. The record is public, like the repository; its build stops if a
   personal detail would end up in it.
+- **Decided Nov 12, 2026 (Mars Data):** the developer approved the "Two craters" chart: daily average pressure at
+  Gale (Curiosity, solid lines) and Jezero (Perseverance, dashed), one colour per Mars Year, for the years both rovers
+  measured.
 - **Decided Nov 11, 2026 (Mars Data):** the developer approved the charts page mock-up (`mars-data/mockup.html`):
   pressure through the year with a correction for the rover's climb, daily pressure range, humidity at night
   (preliminary), midday UV, season × time of day, one sol hour by hour, daily highs and lows, and the rover's climb.

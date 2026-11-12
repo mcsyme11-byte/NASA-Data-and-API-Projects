@@ -87,7 +87,7 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 - [x] Perseverance MEDA (Jezero Crater), sols 0–1859, cleaned with MEDA rules 1.0 (`CLEANING-MEDA.md`); every report
   checked (Nov 12, 2026). Reviewed, real weather: sol 1078 (+20 Pa step in the dusty season) and sol 1113 (11 hours
   measured).
-- [ ] Two-craters chart (Gale and Jezero pressure): mock-up awaiting approval, `mars-data/mockup.html`.
+- [x] Two-craters chart (Gale and Jezero pressure): approved and on the page (Nov 12, 2026).
 - [ ] Mars Express MaRS profiles (ESA): waiting for ESA's archive (401 during maintenance, Nov 12, 2026); then run
   `run_mex.py` and add a profiles chart (mock-up first). Alternative to check: NASA's PDS Geosciences Node copy.
 
