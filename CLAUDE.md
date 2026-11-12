@@ -51,13 +51,6 @@ inside its own folder.
   `shared/theme.css`); tap targets are at least 40 px tall on phones; rows of tabs or chips that don't fit a phone
   scroll sideways with a soft edge fade (`shared/footer.js` adds it to `.tabs`, `.popular`, `.gbar .seg` and anything
   marked `data-hscroll`); labels drawn over maps and diagrams get a dark outline; placeholders fit a 375 px phone.
-- **Project home tab (decided Nov 12, 2026):** each project's main page keeps its title and its row of tabs at the top,
-  and the **first tab is "Home"**, the view a visitor lands on: what the project is and why it exists; the details
-  (each data source, which agency it comes from, NASA or ESA, and how often it updates; what you can do; how to use
-  it, with short rules for the words and numbers); a few live headline numbers; and cards linking to every other tab
-  and related page. The project's numbers start on the second tab. Old links to the other tabs (`#name`) keep
-  working. Same look and shared parts as every page: the theme, the Back button, the data credits in `srcline` lines
-  and the short footer. Each project's Home tab starts as a mock-up the developer approves.
 - **ESA data (decided Nov 9, 2026):** ESA's data is added alongside NASA's where it helps; NASA stays the main source,
   and pages say which agency each number or picture comes from. For every ESA source:
   - check it against ESA's current documentation before building on it (address, format, limits, terms, credit), and

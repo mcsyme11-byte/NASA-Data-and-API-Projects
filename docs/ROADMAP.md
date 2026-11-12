@@ -9,8 +9,6 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
-- [ ] **Home tab on each project's main page** (rule decided Nov 12, 2026, in CLAUDE.md), each from a mock-up the
-  developer approves: Asteroid Tracker (mock-up awaiting approval, Nov 12, 2026), Mars Data, Image Explorer.
 - [ ] **Developer testing of the Nov 12, 2026 additions** (built and published Nov 12, 2026):
   - Asteroid Tracker, "Visible from here" tab: "Use my location" and a typed town; the passes list, the night chart,
     "Find it ›" opening Sky Finder; "Forget this place".
