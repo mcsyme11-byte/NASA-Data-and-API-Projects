@@ -55,7 +55,7 @@ def group(rows):
         r = p['row']
         try: lat, lon, cloud = float(r['frames.lat']), float(r['frames.lon']), float(r.get('frames.cldp') or 0)
         except (KeyError, TypeError, ValueError): continue
-        if (lat == 0 and lon == 0) or cloud > MAX_CLOUD or not (p['small'] or p['large']): continue
+        if (lat == 0 and lon == 0) or cloud > MAX_CLOUD or not (p['small'] or p['large']): continue   # (keyed API only)
         d, t = str(r.get('frames.pdate') or ''), str(r.get('frames.ptime') or '').zfill(6)
         out.append([pid, f'{d[:4]}-{d[4:6]}-{d[6:8]}', f'{t[:2]}:{t[2:4]}', round(lat, 1), round(lon, 1),
                     (r.get('frames.geon') or '').strip().title(), (r.get('frames.feat') or '').strip(), int(cloud),
@@ -103,6 +103,16 @@ def latest_set():
                     (r.get('geon') or '').strip().title(), (r.get('feat') or '').strip(), int(cloud or 0), small, large,
                     'centre' if centre else 'below'])
     out.sort(key=lambda x: (x[1], x[2]), reverse=True)
+    # the image files of photos not yet cataloged may not be on the site: check the newest few; if none is there,
+    # the photos are kept without pictures (the globe then shows the link to each photo's page only)
+    ok = 0
+    for ph in out[:5]:
+        try:
+            op.open(urllib.request.Request(SITE + 'DatabaseImages/' + ph[8], headers=UA, method='HEAD'), timeout=60); ok += 1
+        except OSError: pass
+    print(f'image files found for {ok} of the newest {min(5, len(out))} photos')
+    if not ok:
+        for ph in out: ph[8] = ph[9] = ''
     return out
 
 def main():

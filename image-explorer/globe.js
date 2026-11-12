@@ -463,7 +463,7 @@ function select(it) {
   if (it.kind === 'photo') {
     const [mission, roll, frame] = it.id.split('-');
     card.innerHTML = `<h2>Selected</h2><div class="eyebrow">Astronaut photo</div><h3>${esc(it.name)}</h3>
-      <a class="gphoto" href="${EOL}DatabaseImages/${esc(it.large)}" target="_blank" rel="noopener"><img onerror="this.parentNode.hidden = true" src="${EOL}DatabaseImages/${esc(it.small)}" alt="Astronaut photo of ${esc(it.name)}, ${esc(it.id)}"></a>
+      ${it.small ? `<a class="gphoto" href="${EOL}DatabaseImages/${esc(it.large)}" target="_blank" rel="noopener"><img onerror="this.parentNode.hidden = true" src="${EOL}DatabaseImages/${esc(it.small)}" alt="Astronaut photo of ${esc(it.name)}, ${esc(it.id)}"></a>` : ''}
       <dl class="facts"><dt>Taken</dt><dd>${nice(it.date)}, ${esc(it.time)} UTC</dd>
       ${it.feat ? `<dt>Shows</dt><dd>${esc(it.feat)}</dd>` : ''}
       ${it.pos === 'centre' ? `<dt>Cloud</dt><dd>${it.cloud}% of the picture</dd>` : ''}
