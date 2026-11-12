@@ -1,6 +1,3 @@
-OK   200      3951 B   0.5s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA/SOL_00001_00089/SOL00001/
-OK   200      3102 B   0.3s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA/SOL_00001_00089/SOL00001/RME_397535244ADR00010000000_______P9.LBL
-OK   200    114152 B   0.5s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA/SOL_00001_00089/SOL00001/RME_397535244ADR00010000000_______P9.TAB
-OK   200      3951 B   0.2s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA/SOL_04710_04843/SOL04843/
-OK   200      3110 B   0.3s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA/SOL_04710_04843/SOL04843/RME_827380920ADR48430000000_______P1.LBL
-OK   200   3464688 B   1.8s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA/SOL_04710_04843/SOL04843/RME_827380920ADR48430000000_______P1.TAB
+OK   200     13005 B   0.5s https://atmos.nmsu.edu/PDS/data/mslrem_1001/CATALOG/REMS_UVRDR_DS.CAT
+OK   200     24725 B   0.7s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA_UV_CORRECTED/
+OK   200      1996 B   0.2s https://atmos.nmsu.edu/PDS/data/mslrem_1001/LABEL/
