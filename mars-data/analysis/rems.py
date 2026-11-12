@@ -151,8 +151,10 @@ def clean(df: pd.DataFrame, sol: int) -> tuple[pd.DataFrame, dict]:
         hm = hm[hm["count"] >= MIN_SECONDS_PER_HOUR]["mean"]
         minute = (a["hour"] * 60).astype(int)
         med = a.groupby(minute)["air_temp"].transform("median")
-        lower = (hr - 1).map(hm).combine((hr + 1).map(hm), min) - SPIKE_K
-        upper = (hr - 1).map(hm).combine((hr + 1).map(hm), max) + SPIKE_K
+        # Both neighbours are required: min and max with skipna=False give NaN when either hour has no mean.
+        both = pd.concat([(hr - 1).map(hm), (hr + 1).map(hm)], axis=1)
+        lower = both.min(axis=1, skipna=False) - SPIKE_K
+        upper = both.max(axis=1, skipna=False) + SPIKE_K
         spike = lower.notna() & upper.notna() & ((med < lower) | (med > upper))
         if spike.any():
             report["air_temp_spike_rows"] = int(spike.sum())
