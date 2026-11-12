@@ -135,8 +135,10 @@ $('#scList').addEventListener('click', (e) => { const b = e.target.closest('[dat
 
 // ---------------------------------------------------------------- choosing a craft
 function viewFor(c) {
-  if (c.parent === 'Mars') return { v: 'mars' };
-  if (c.parent === 'Moon') return { v: 'moon' };
+  if (c.parent === 'Mars' || c.parent === 'Moon') {      // far orbits (Hope reaches 43,000 km): zoom out to fit
+    const v = c.parent === 'Mars' ? 'mars' : 'moon', r = relAt(c, map.jd);
+    return { v, viewR: r ? Math.max(VIEWS[v].viewR, Math.hypot(...r) * 1.35) : VIEWS[v].viewR };
+  }
   if (c.parent === 'Earth' && c.rec) { const r = relAt(c, map.jd); const R = r ? Math.hypot(...r) : 0.0003; return { v: 'orbit', viewR: Math.max(VIEWS.orbit.viewR, R * 1.35) }; }
   if (c.parent === 'Earth') return { v: 'near' };
   const p = map.pos(c), d = p ? Math.hypot(...p) : 6;

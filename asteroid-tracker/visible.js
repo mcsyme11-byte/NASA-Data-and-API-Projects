@@ -133,7 +133,7 @@ export function mountVisible(root, url) {
       tiles([]); chart(null); $('#visCount').textContent = ''; return;
     }
     if (!p) {
-      tb.innerHTML = objs.map((o) => `<tr><td>${esc(o.name)}<span class="sub">${fmt(o.ca_ld)} Moon distances${o.diameter_km ? ' · ' + esc(sizeOf(o.diameter_km)) + ' wide' : ''}</span></td><td data-label="Closest">${when(o.ca_jd)}</td><td colspan="3" class="ask"><span class="sub" style="margin:0">set your location to see if it is up at night where you are</span></td><td class="empty"></td></tr>`).join('');
+      tb.innerHTML = objs.map((o) => `<tr><td>${esc(o.name)}<span class="sub">${fmt(o.ca_ld, o.ca_ld < 10 ? 1 : 0)} Moon distances${o.diameter_km ? ' · ' + esc(sizeOf(o.diameter_km)) + ' wide' : ''}</span></td><td data-label="Closest">${when(o.ca_jd)}</td><td colspan="3" class="ask"><span class="sub" style="margin:0">set your location to see if it is up at night where you are</span></td><td class="empty"></td></tr>`).join('');
       tiles(objs.map((o) => ({ obj: o, visible: false }))); chart(null); $('#visCount').textContent = `${objs.length} worth looking for`;
       return;
     }
@@ -142,8 +142,8 @@ export function mountVisible(root, url) {
     tb.innerHTML = passes.map((x, i) => {
       const o = x.obj, size = o.diameter_km ? ` · ${esc(sizeOf(o.diameter_km))} wide` : '';
       const name = o.neows_id ? `<a href="object.html?id=${o.neows_id}">${esc(o.name)}</a>` : esc(o.name);
-      if (!x.visible) return `<tr class="dim" data-i="${i}" tabindex="0" aria-selected="${i === sel}"><td>${name}<span class="sub">${fmt(o.ca_ld)} Moon distances${size}</span></td><td data-label="Best moment">not from here</td><td colspan="2" data-label="Why"><span>${esc(x.reason)}</span></td><td data-label="You need">${needTag(x.need)}</td><td class="empty"></td></tr>`;
-      return `<tr data-i="${i}" tabindex="0" aria-selected="${i === sel}"><td>${name}<span class="sub">${fmt(o.ca_ld)} Moon distances${size}</span></td><td data-label="Best moment">${when(x.best.jd)}</td><td data-label="Highest">${Math.round(x.top.alt)}° up, ${esc(compassWord(x.top.az))}</td><td data-label="Brightness">magnitude ${x.best.mag.toFixed(1)}</td><td data-label="You need">${needTag(x.need)}</td><td class="go"><a class="btn ghost small" href="${skyFinder(o.des)}">Find it ›</a></td></tr>`;
+      if (!x.visible) return `<tr class="dim" data-i="${i}" tabindex="0" aria-selected="${i === sel}"><td>${name}<span class="sub">${fmt(o.ca_ld, o.ca_ld < 10 ? 1 : 0)} Moon distances${size}</span></td><td data-label="Best moment">not from here</td><td colspan="2" data-label="Why"><span>${esc(x.reason)}</span></td><td data-label="You need">${needTag(x.need)}</td><td class="empty"></td></tr>`;
+      return `<tr data-i="${i}" tabindex="0" aria-selected="${i === sel}"><td>${name}<span class="sub">${fmt(o.ca_ld, o.ca_ld < 10 ? 1 : 0)} Moon distances${size}</span></td><td data-label="Best moment">${when(x.best.jd)}</td><td data-label="Highest">${Math.round(x.top.alt)}° up, ${esc(compassWord(x.top.az))}</td><td data-label="Brightness">magnitude ${x.best.mag.toFixed(1)}</td><td data-label="You need">${needTag(x.need)}</td><td class="go"><a class="btn ghost small" href="${skyFinder(o.des)}">Find it ›</a></td></tr>`;
     }).join('');
     tiles(passes);
     chart(passes[sel] && passes[sel].visible ? passes[sel] : null);

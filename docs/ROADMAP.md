@@ -22,8 +22,8 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   (Actions logs): every craft should be found; any "not found" line (Horizons name or CelesTrak name) needs its
   `src` corrected in `spacecraft/catalogue.json`. Links reported broken in `spacecraft/data/links.json` need new
   addresses.
-- [ ] Spacecraft map, from the first data run (Nov 12, 2026): add SPHEREx and WSF-M1 by their CelesTrak catalogue
-  numbers (`#nnnnn` in `src.tle`, checked on celestrak.org); find Tianwen-1 and Tianwen-2 in Horizons if they are
+- [ ] Spacecraft map, from the first data run (Nov 12, 2026): add TESS, SPHEREx and WSF-M1, which CelesTrak did not
+  return by name (TESS not even by its catalogue number 43435), by catalogue numbers (`#nnnnn` in `src.tle`, checked on celestrak.org); find Tianwen-1 and Tianwen-2 in Horizons if they are
   added there; replace the links the check reported broken (Chandra, Einstein Probe and SOHO at ESA, Mars Odyssey,
   Curiosity, LRO, KASA) with their current addresses.
 - [ ] Review `spacecraft/catalogue.json` every few months: take missions that have ended off the list, add new ones.
