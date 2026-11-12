@@ -1,0 +1,42 @@
+# NASA and ESA Data Projects · Mars Data: process chunks of ESA Mars Express profiles · © 2026 Malcolm Syme · mcsyme11@gmail.com
+#
+# Runs on the mars-probe branch: reads every Mars Express radio occultation profile with run_mex.py when
+# mars-data/analysis/mex_run.txt changes, and commits the results to the branch.
+
+name: Mars data Mars Express (checking)
+
+on:
+  push:
+    branches: [mars-probe]
+    paths: [mars-data/analysis/mex_run.txt]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mars-mex
+  cancel-in-progress: false
+
+jobs:
+  chunks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pandas
+        run: pip install pandas==2.2.3
+      - name: Read every Mars Express profile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          (cd mars-data/analysis && python3 run_mex.py)
+          git add mars-data/data/mex
+          git commit -q -m "Mars data: Mars Express profiles processed" || echo "Nothing new"
+          for attempt in 1 2 3 4 5; do
+            git pull -q --rebase origin mars-probe && git push -q origin HEAD:mars-probe && break
+            sleep $((attempt * 10))
+          done
