@@ -1,3 +1,2 @@
-OK   200     13005 B   0.5s https://atmos.nmsu.edu/PDS/data/mslrem_1001/CATALOG/REMS_UVRDR_DS.CAT
-OK   200     24725 B   0.7s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA_UV_CORRECTED/
-OK   200      1996 B   0.2s https://atmos.nmsu.edu/PDS/data/mslrem_1001/LABEL/
+OK   200     21070 B   0.6s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA_UV_CORRECTED/REMS_UVS_0001_0100.LBL
+OK   200 1199823100 B 591.5s https://atmos.nmsu.edu/PDS/data/mslrem_1001/DATA_UV_CORRECTED/REMS_UVS_0001_0100.TAB

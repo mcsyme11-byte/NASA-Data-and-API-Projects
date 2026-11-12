@@ -1,0 +1,411 @@
+PDS_VERSION_ID                   = PDS3
+
+/* FILE DATA ELEMENTS */
+RECORD_TYPE                      = FIXED_LENGTH
+RECORD_BYTES                     = 536
+FILE_RECORDS                     = 2242660
+
+/* POINTERS TO DATA OBJECTS */
+^UVS_SCIENCE_TABLE               = "REMS_UVS_0001_0100.TAB"
+
+/* IDENTIFICATION DATA ELEMENTS */
+DATA_SET_ID                      = "MSL-M-REMS-5-UVRDR-V1.0"
+DATA_SET_NAME                    = "MSL MARS ROVER ENV MONITORING STATION 5
+                                   UVRDR V1.0"
+
+INSTRUMENT_HOST_ID               = MSL
+INSTRUMENT_HOST_NAME             = "MARS SCIENCE LABORATORY"
+INSTRUMENT_ID                    = REMS
+INSTRUMENT_NAME                  = "ROVER ENVIRONMENTAL MONITORING STATION"
+INSTRUMENT_TYPE                  = ENVIRONMENTAL_STATION
+MISSION_NAME                     = "MARS SCIENCE LABORATORY"
+
+PRODUCER_INSTITUTION_NAME        = "UNIVERSITY OF MICHIGAN, USRA/LUNAR AND 
+                                    PLANETARY INSTITUTE"
+PRODUCT_CREATION_TIME            = 2019-10-16T18:05:46
+PRODUCT_ID                       = "REMS_UVS_0001_0100"
+PRODUCT_VERSION_ID               = "V1.0"
+
+RELEASE_ID                       = "0022"
+PRODUCT_TYPE                     = REMS_RDR
+
+START_TIME                       = 2012-08-07T04:04:38.536
+STOP_TIME                        = 2012-11-17T07:32:37.390
+TARGET_NAME                      = MARS
+TARGET_TYPE                      = PLANET
+
+/* SOURCE DATA ELEMENTS */
+
+OBJECT                           = UVS_SCIENCE_TABLE
+  INTERCHANGE_FORMAT             = ASCII
+  ROWS                           = 2242660
+  COLUMNS                        = 24
+  ROW_BYTES                      = 536
+  DESCRIPTION                    = "Table with UV fluxes corrected for dust
+                                    deposition and inaccuracies in the
+                                    original angular response after applying
+                                    filters, corrections and models to
+                                    TELRDRs and ADRs products, thus
+                                    containing the best estimation of the
+                                    real UV fluxes."
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 1
+        NAME                     = "SOL_NUMBER"
+        DESCRIPTION              = "The sol number on which the measurement 
+                                    was taken, with sol 0 being the sol 
+                                    (starting at midnight local time) at the 
+                                    landing site at the time of landing"
+        DATA_TYPE                = ASCII_INTEGER
+        START_BYTE               = 1
+        BYTES                    = 4
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 2
+        NAME                     = "LMST_HOUR"
+        DESCRIPTION              = "Local Mean Solar Time. It is in the format
+                                    of fraction of hours, with an 
+                                    hour = 1/24th of a Mars sol."
+        DATA_TYPE                = CHARACTER
+        START_BYTE               = 6
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 3
+        NAME                     = "SOLAR_ZENITH_ANGLE"
+        UNIT                     = "DEGREE"
+        DESCRIPTION              = "Solar zenith angle (theta) relative to 
+                                    REMS rover frame (+X points to the front 
+                                    of the rover; +Z points up; +Y completes 
+                                    the right handed frame; the origin is on 
+                                    the rover deck, between the rover middle 
+                                    wheels) It is the angle between the 
+                                    direction of the Sun and the positive
+                                    Z-axis. A value of 0 degrees represents 
+                                    Sun at frame's zenith, while a value of
+                                    180 degrees represents Sun at 
+                                    frame's nadir. Range of 0 to 180 degrees."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 31
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 4
+        NAME                     = "SOLAR_AZIMUTH_ANGLE"
+        UNIT                     = "DEGREE"
+        DESCRIPTION              = "Solar azimuth angle relative to REMS 
+                                    rover frame (+X points to the front of the
+                                    rover; +Z points up; +Y completes the right
+                                    handed frame; the origin is on the rover 
+                                    deck, between the rover middle wheels) 
+                                    It is the angle between the positive 
+                                    X-axis and the orthogonal projection of
+                                    the Sun onto the XY plane. It increases
+                                    in the counterclockwise sense about the
+                                    positive Z-axis. Range of -180 to 180
+                                    degrees."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 56
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 5
+        NAME                     = "ROVER_YAW"
+        UNIT                     = "DEGREE"
+        DESCRIPTION              = "Rover yaw, or counterclockwise rotation
+                                    angle about the +Z-axis of the
+                                    MSL_LOCAL_LEVEL frame. MSL_LOCAL_LEVEL
+                                    frame is defined as follows: +X is along
+                                    the local north direction; +Z is along the
+                                    downward normal at the landing site; +Y
+                                    completes the right hand frame; the origin
+                                    of this frame is located between the
+                                    rover's middle wheels and moves with the
+                                    rover."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 81
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 6
+        NAME                     = "ROVER_PITCH"
+        UNIT                     = "DEGREE"
+        DESCRIPTION              = "Rover pitch, or counterclockwise rotation
+                                    angle about the +Y-axis of the
+                                    MSL_LOCAL_LEVEL frame. MSL_LOCAL_LEVEL
+                                    frame is defined as follows: +X is along
+                                    the local north direction; +Z is along the
+                                    downward normal at the landing site; +Y
+                                    completes the right hand frame; the origin
+                                    of this frame is located between the
+                                    rover's middle wheels and moves with the
+                                    rover."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 106
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 7
+        NAME                     = "ROVER_ROLL"
+        UNIT                     = "DEGREE"
+        DESCRIPTION              = "Rover roll, or counterclockwise rotation
+                                    angle about the +X-axis of the
+                                    MSL_LOCAL_LEVEL frame. MSL_LOCAL_LEVEL
+                                    frame is defined as follows: +X is along
+                                    the local north direction; +Z is along the
+                                    downward normal at the landing site; +Y
+                                    completes the right hand frame; the origin
+                                    of this frame is located between the
+                                    rover's middle wheels and moves with the
+                                    rover."        
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 131
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 8
+        NAME                     = "ROVER_VELOCITY"
+        UNIT                     = "METERS/HOUR"
+        DESCRIPTION              = "Rover speed"
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 156
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 9
+        NAME                     = "MASTHEAD_AZIMUTH"
+        UNIT                     = "DEGREE"
+        DESCRIPTION              = "Masthead azimuth angle. Range of -180 to
+                                    180 degrees.  An azimuth angle of 1 degree
+                                    represents rover looking backward, an
+                                    azimuth angle of 91 degrees represents
+                                    rover looking to the left, an azimuth
+                                    angle of -179 degrees represents rover
+                                    looking forward, and an azimuth angle of
+                                    -89 degrees represents rover looking to
+                                    the right."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 181
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 10
+        NAME                     = "MASTHEAD_ELEVATION"
+        UNIT                     = "DEGREE"
+        DESCRIPTION              = "Masthead elevation angle. Range of 0 to
+                                    180 degrees. An elevation angle of 1
+                                    degree represents rover looking down, an
+                                    elevation angle of 91 degrees represents 
+                                    rover looking forward and an elevation
+                                    angle of 181 degrees represents rover
+                                    looking at the zenith."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 206
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 11
+        NAME                     = "ARM_STILL"
+        DESCRIPTION              = "Flag to indicate whether the arm is still;
+                                    1 = still; 0 = in motion."
+        DATA_TYPE                = CHARACTER
+        START_BYTE               = 231
+        BYTES                    = 1
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 12
+        NAME                     = "ARM_STOWED"
+        DESCRIPTION              = "Flag to indicate whether the arm is
+                                    stowed; 1 = stowed; 0 = unstowed."
+        DATA_TYPE                = CHARACTER
+        START_BYTE               = 233
+        BYTES                    = 1
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 13
+        NAME                     = "UV_A"
+        UNIT                     = "W/m**2"        
+        DESCRIPTION              = "Ultraviolet radiation in band A. Values
+                                    are set to -999 for theta > 55 degrees."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 235
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 14
+        NAME                     = "UV_B"
+        UNIT                     = "W/m**2"        
+        DESCRIPTION              = "Ultraviolet radiation in band B. Values
+                                    are set to -999 for theta > 55 degrees."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 260
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 15
+        NAME                     = "UV_C"
+        UNIT                     = "W/m**2"                
+        DESCRIPTION              = "Ultraviolet radiation in band C. Values
+                                    are set to -999 for theta > 55 degrees."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 285
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 16
+        NAME                     = "UV_ABC"
+        UNIT                     = "W/m**2"                
+        DESCRIPTION              = "Ultraviolet radiation in band ABC. Values 
+                                    are set to -999 for theta > 55 degrees."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 310
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 17
+        NAME                     = "UV_D"
+        UNIT                     = "W/m**2"                
+        DESCRIPTION              = "Ultraviolet radiation in band D. Values
+                                    are set to -999 for theta > 55 degrees."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 335
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 18
+        NAME                     = "UV_E"
+        UNIT                     = "W/m**2"                
+        DESCRIPTION              = "Ultraviolet radiation in band E. Values
+                                    are set to -999 for theta > 55 degrees."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 360
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 19
+        NAME                     = "UV_A_UNCERTAINTY"
+        DESCRIPTION              = "Systematic uncertainty in the ultraviolet 
+                                    radiation band A. Values are set to -999 
+                                    for theta < 55 degrees. Additionally, 
+                                    values are set to -999 for theta < 55 
+                                    degrees when the mast or masthead of the 
+                                    rover cast a partial shadow on at least 
+                                    one of the UVS channels and interpolation 
+                                    between calculated uncertainties is not 
+                                    possible for that sol."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 385
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 20
+        NAME                     = "UV_B_UNCERTAINTY"
+        UNIT                     = "W/m**2"
+        DESCRIPTION              = "Systematic uncertainty in the ultraviolet 
+                                    radiation band B. Values are set to -999 
+                                    for theta < 55 degrees. Additionally, 
+                                    values are set to -999 for theta < 55 
+                                    degrees when the mast or masthead of the 
+                                    rover cast a partial shadow on at least 
+                                    one of the UVS channels and interpolation 
+                                    between calculated uncertainties is not
+                                    possible for that sol."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 410
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 21
+        NAME                     = "UV_C_UNCERTAINTY"
+        UNIT                     = "W/m**2"
+        DESCRIPTION              = "Systematic uncertainty in the ultraviolet 
+                                    radiation band C. Values are set to -999 
+                                    for theta < 55 degrees. Additionally, 
+                                    values are set to -999 for theta < 55 
+                                    degrees when the mast or masthead of the 
+                                    rover cast a partial shadow on at least 
+                                    one of the UVS channels and interpolation 
+                                    between calculated uncertainties is not
+                                    possible for that sol."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 435
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 22
+        NAME                     = "UV_ABC_UNCERTAINTY"
+        UNIT                     = "W/m**2"
+        DESCRIPTION              = "Systematic uncertainty in the ultraviolet
+                                    radiation band ABC. Values are set to -999
+                                    for theta < 55 degrees. Additionally,
+                                    values are set to -999 for theta < 55
+                                    degrees when the mast or masthead of the
+                                    rover cast a partial shadow on at least
+                                    one of the UVS channels and interpolation
+                                    between calculated uncertainties is not
+                                    possible for that sol."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 460
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 23
+        NAME                     = "UV_D_UNCERTAINTY"
+        UNIT                     = "W/m**2"
+        DESCRIPTION              = "Systematic uncertainty in the ultraviolet 
+                                    radiation band D. Values are set to -999 
+                                    for theta < 55 degrees. Additionally, 
+                                    values are set to -999 for theta < 55 
+                                    degrees when the mast or masthead of the
+                                    rover cast a partial shadow on at least
+                                    one of the UVS channels and interpolation 
+                                    between calculated uncertainties is not 
+                                    possible for that sol."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 485
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+  OBJECT                         = COLUMN
+        COLUMN_NUMBER            = 24
+        NAME                     = "UV_E_UNCERTAINTY"
+        UNIT                     = "W/m**2"
+        DESCRIPTION              = "Systematic uncertainty in the ultraviolet 
+                                    radiation band E. Values are set to -999 
+                                    for theta < 55 degrees. Additionally, 
+                                    values are set to -999 for theta < 55 
+                                    degrees when the mast or masthead of the
+                                    rover cast a partial shadow on at least
+                                    one of the UVS channels and interpolation 
+                                    between calculated uncertainties is not
+                                    possible for that sol."
+        DATA_TYPE                = ASCII_REAL
+        START_BYTE               = 510
+        BYTES                    = 24
+  END_OBJECT      = COLUMN
+
+END_OBJECT                       = UVS_SCIENCE_TABLE
+
+END
