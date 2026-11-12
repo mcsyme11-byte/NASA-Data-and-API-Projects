@@ -672,8 +672,9 @@ archives to the Picture library. Checked with requests from GitHub's servers and
   `weather`, `resource`, `noaa`, `goes`, `military`, `geodetic`, `active`, read in turn until every craft is found by
   its exact CelesTrak name (`src.tle`, several spellings allowed); otherwise `?NAME=<name>&FORMAT=tle`.
 - A name can also be a catalogue number (`#43435` asks `?CATNR=43435`): CelesTrak does not list TESS by name.
-  First run (Nov 12, 2026): all found except SPHEREx and WSF-M1 (names not matched), which stay off the map until
-  their catalogue numbers are added.
+  First run (Nov 12, 2026): all found except TESS, SPHEREx and WSF-M1. SPHEREx (catalogue number 63182) and WSF-M1
+  (59481, listed by CelesTrak as "WSF-M") were added by number the same day; TESS (43435) is not returned by CelesTrak
+  at all and stays off the map.
 - Usage policy (celestrak.org/usage-policy.php): data are updated about every 2 hours, and the same request repeated
   within that time is refused (HTTP 403). The job asks twice a day. Credit: "CelesTrak".
 - Written to `spacecraft/data/tle.json`: name, the two lines, NORAD catalogue number and the elements' epoch.

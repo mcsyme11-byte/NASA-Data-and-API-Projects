@@ -136,7 +136,7 @@
    "links": [
     {
      "label": "NASA: Chandra",
-     "url": "https://science.nasa.gov/mission/chandra-x-ray-observatory/"
+     "url": "https://science.nasa.gov/mission/chandra/"
     },
     {
      "label": "Chandra X-ray Center",
@@ -342,8 +342,8 @@
    "timeline": [],
    "links": [
     {
-     "label": "ESA: Einstein Probe",
-     "url": "https://www.esa.int/Science_Exploration/Space_Science/Einstein_Probe"
+     "label": "ESA: Einstein Probe factsheet",
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/Einstein_Probe_factsheet"
     }
    ],
    "src": {
@@ -397,7 +397,8 @@
    ],
    "src": {
     "tle": [
-     "SPHEREX"
+     "SPHEREX",
+     "#63182"
     ]
    }
   },
@@ -537,7 +538,7 @@
    "links": [
     {
      "label": "ESA: SOHO",
-     "url": "https://www.esa.int/Science_Exploration/Space_Science/SOHO_overview2"
+     "url": "https://www.esa.int/Science_Exploration/Space_Science/SOHO/SOHO_overview"
     },
     {
      "label": "NASA: SOHO",
@@ -1368,7 +1369,7 @@
    "links": [
     {
      "label": "NASA: Mars Odyssey",
-     "url": "https://science.nasa.gov/mission/mars-odyssey/"
+     "url": "https://science.nasa.gov/mission/odyssey/"
     }
    ],
    "src": {
@@ -1494,7 +1495,7 @@
    "links": [
     {
      "label": "NASA: Curiosity",
-     "url": "https://science.nasa.gov/mission/msl/"
+     "url": "https://science.nasa.gov/mission/msl-curiosity/"
     }
    ],
    "src": {
@@ -1546,7 +1547,7 @@
    "links": [
     {
      "label": "NASA: LRO",
-     "url": "https://science.nasa.gov/mission/lunar-reconnaissance-orbiter/"
+     "url": "https://science.nasa.gov/mission/lro/"
     }
    ],
    "src": {
@@ -1595,7 +1596,7 @@
    "links": [
     {
      "label": "Korea AeroSpace Administration",
-     "url": "https://www.kasa.go.kr/eng/"
+     "url": "https://www.kasa.go.kr/"
     }
    ],
    "src": {
@@ -2368,8 +2369,9 @@
    "links": [],
    "src": {
     "tle": [
+     "WSF-M",
      "WSF-M1",
-     "USA 355 (WSF-M1)"
+     "#59481"
     ]
    },
    "tags": [

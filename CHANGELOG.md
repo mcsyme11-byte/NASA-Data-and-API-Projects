@@ -1,5 +1,12 @@
 # Change log
 
+## November 12, 2026 — Spacecraft map: missing craft and links
+
+- SPHEREx and WSF-M1 are found by their CelesTrak catalogue numbers (63182 and 59481) and now appear on the map.
+- Seven official links that no longer answered were replaced with their current addresses: Chandra, Mars Odyssey,
+  Curiosity and LRO at NASA; Einstein Probe and SOHO at ESA; the Korea AeroSpace Administration.
+- Still missing: Tianwen-1 and Tianwen-2 (not in Horizons) and TESS (not returned by CelesTrak).
+
 ## November 12, 2026 — Asteroid Tracker home page
 
 - **A home page for the project** (`asteroid-tracker/`), the first page a visitor lands on, in the same layout as the
