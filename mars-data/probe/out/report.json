@@ -1,1 +1,10 @@
-{}
+{
+  "sftp_returncode": 255,
+  "sftp_stdout": [],
+  "sftp_stderr": [
+    "Warning: Permanently added 'psaftp.esac.esa.int' (RSA) to the list of known hosts.",
+    "anonymous@psaftp.esac.esa.int: Permission denied (password,publickey,keyboard-interactive).",
+    "Connection closed"
+  ],
+  "simplified_site_now": "FAIL HTTPError: HTTP Error 401: Unauthorized https://archives.esac.esa.int/psa/ftp/MARS-EXPRESS/MRS/"
+}

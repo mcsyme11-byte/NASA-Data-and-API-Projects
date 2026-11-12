@@ -1,3 +1,1 @@
-OK   200     19704 B   0.9s https://psaftp.esac.esa.int/
-OK   200     19704 B   2.2s https://psaftp.esac.esa.int/MARS-EXPRESS/
-OK   200     19704 B   1.4s https://psaftp.esac.esa.int/MARS-EXPRESS/MRS/
+FAIL HTTPError: HTTP Error 401: Unauthorized https://archives.esac.esa.int/psa/ftp/MARS-EXPRESS/MRS/
