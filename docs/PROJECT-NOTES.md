@@ -4,6 +4,10 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## Decisions
 
+- **Decided Nov 12, 2026 (Asteroid Tracker home page):** the project's address opens a home page in the same layout as
+  the Mars Data and Image Explorer home pages (mission, headline numbers, a card for each part, the data and its
+  agencies, what you can do, how to use it); the tracker itself is `asteroid-tracker/tracker.html`, and old links
+  with a tab or a shared view are forwarded to it.
 - **Decided Nov 12, 2026 (Sky Finder):** an installable phone web app in its own folder, `sky-finder/`, on the same
   site (not a separate repository). It marks where an asteroid is with a marker and its path: most passing asteroids
   are far too faint for a phone camera, so the asteroid itself is not shown. The Moon, planets, bright stars and the

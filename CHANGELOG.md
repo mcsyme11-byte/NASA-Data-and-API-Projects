@@ -1,5 +1,16 @@
 # Change log
 
+## November 12, 2026 — Asteroid Tracker home page
+
+- **A home page for the project** (`asteroid-tracker/`), the first page a visitor lands on, in the same layout as the
+  other projects' home pages: what the project is and why it exists, headline numbers (passes in the next 7 days
+  within 10 Moon distances, the closest coming up, objects on a risk list, potentially hazardous asteroids), a card for
+  every part (This week, By year, Impact risk, Visible from here, the map, Search, Sky Finder, the spacecraft map),
+  each data source with its agency (NASA or ESA) and how often it updates, what you can do, how to use it and the
+  words and numbers used. No Back button on the home page; data credits in `srcline` lines; the short footer.
+- **The tracker moved** to `asteroid-tracker/tracker.html`. Old links to the project's address with a tab (`#risk`,
+  `#year-2005`, `#visible`, `#search`) or a shared view (`?view=…`) open the tracker unchanged. The map and asteroid
+  pages' tabs and Sky Finder's links point to the new address; the "Back" button names both pages.
 ## November 12, 2026 — Image Explorer: the project's own home page
 
 - `image-explorer/` opens on the project's home page (mock-up approved Nov 12, 2026): what the Image Explorer is and

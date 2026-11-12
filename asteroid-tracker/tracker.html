@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!-- NASA and ESA Data Projects · Asteroid Tracker · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asteroid Tracker · NASA and ESA Data Projects</title>
+  <meta name="description" content="Every near-Earth object passing Earth this week and this year, sorted by size and distance, from NASA data.">
+  <meta name="theme-color" content="#141B26">
+  <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111207">
+  <script type="module" src="../shared/footer.js?v=2026111207"></script>
+  <link rel="stylesheet" href="tracker.css?v=2026111207">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg>
+        NASA and ESA Data Projects
+      </a>
+      <nav class="nav" aria-label="Projects">
+        <a href="../">Home</a>
+        <a href="./" aria-current="page">Asteroids</a>
+        <a href="../mars-data/">Mars</a>
+        <a href="../image-explorer/">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="phead">
+      <div class="eyebrow"><a href="./">Project 1</a></div>
+      <h1>Asteroid Tracker</h1>
+      <p class="lede">Every near-Earth object passing us, sorted by size and distance, with graphs you can explore.</p>
+    </div>
+
+    <!-- tabs -->
+    <div class="toolbar">
+      <nav class="tabs" aria-label="Asteroid Tracker">
+        <button aria-pressed="true" aria-selected="true" data-view="week">This week</button>
+        <button aria-pressed="false" aria-selected="false" data-view="year">By year</button>
+        <button aria-pressed="false" aria-selected="false" data-view="risk">Impact risk</button>
+        <button aria-pressed="false" aria-selected="false" data-view="visible">Visible from here</button>
+        <a href="map.html">Map</a>
+        <button aria-pressed="false" aria-selected="false" data-view="search">Search</button>
+      </nav>
+    </div>
+
+    <!-- ===================== THIS WEEK ===================== -->
+    <section id="view-week">
+      <div class="weeknav">
+        <button class="chip" id="prevWeek" aria-label="Previous week">‹ Prev</button>
+        <div class="weeklabel" aria-live="polite"><span class="eyebrow">Week of</span><strong id="weekLabel"></strong></div>
+        <button class="chip" id="nextWeek" aria-label="Next week">Next ›</button>
+        <button class="chip" id="thisWeek" aria-pressed="true">This week</button>
+        <button class="chip" id="shareWeek" title="A link that opens this week, with these filters and the open row">Share this week</button>
+        <span class="sharemsg" id="shareWeekMsg" role="status" aria-live="polite" hidden></span>
+      </div>
+
+      <div id="weekNotice"></div>
+      <div class="tiles" id="weekTiles"></div>
+
+      <div class="shead"><h2>Filter</h2><span class="aside" id="filterCount"></span></div>
+      <div class="filters">
+        <div class="seg" role="group" aria-label="Hazard flag">
+          <button class="chip" aria-pressed="true" data-haz="all">All</button>
+          <button class="chip" aria-pressed="false" data-haz="haz">Potentially hazardous</button>
+        </div>
+        <label>Size <select id="fSize"><option value="0">Any size</option><option value="50">Over 50 m</option><option value="140">Over 140 m</option><option value="1000">Over 1 km</option></select></label>
+        <label>Distance <select id="fDist"><option value="Infinity">Any distance</option><option value="1">Within 1 LD</option><option value="10">Within 10 LD</option><option value="50">Within 50 LD</option></select></label>
+        <label>Day <select id="fDay"><option value="">All 7 days</option></select></label>
+      </div>
+
+      <div class="charts">
+        <figure class="card chartcard wide">
+          <div class="shead" style="margin-top:0"><h2>Size against miss distance</h2><span class="aside">each line is a size range</span></div>
+          <div class="frame"><svg id="cScatter" class="chart" role="img" aria-label="Estimated size of each object against its miss distance"></svg></div>
+          <figcaption class="note">Diameter estimated from brightness, drawn min to max. ◆ flagged potentially hazardous. Source: NASA NeoWs.</figcaption>
+          <details class="howto"><summary>How to read this</summary>
+            <p>Each mark is one asteroid: <b>left to right</b> is how far away it passes, <b>bottom to top</b> how big it is. The line through each dot is its size range (NASA knows sizes only roughly). Everything left of the dashed line passed <b>closer than the Moon</b>.</p>
+            <p>The scales grow by about ×3 a step (0.3, 1, 3, 10…), so near and far objects fit on one chart. <b>Top left = big and close</b>; bottom right = small and far.</p>
+          </details>
+        </figure>
+        <figure class="card chartcard">
+          <div class="shead" style="margin-top:0"><h2>Approaches per day</h2></div>
+          <div class="frame"><svg id="cDays" class="chart" role="img" aria-label="Number of close approaches each day"></svg></div>
+          <figcaption class="note">Hatched: flagged potentially hazardous. Source: NASA NeoWs.</figcaption>
+          <details class="howto"><summary>How to read this</summary>
+            <p>One bar per day; its height is how many asteroids pass Earth that day. The striped part is how many of those NASA flags. Example: a bar of 9 with 2 striped means 9 passed and 2 were flagged.</p>
+          </details>
+        </figure>
+        <figure class="card chartcard">
+          <div class="shead" style="margin-top:0"><h2>The week's biggest</h2></div>
+          <div class="frame"><svg id="cBig" class="chart" role="img" aria-label="The largest objects of the week, as estimated size ranges"></svg></div>
+          <figcaption class="note">Estimated diameter range, metres. ◆ flagged potentially hazardous. Source: NASA NeoWs.</figcaption>
+          <details class="howto"><summary>How to read this</summary>
+            <p>The week's 7 largest, biggest at the top. Each bar runs from the smallest to the largest likely size. Example: a bar from 700 to 1,700 means between 0.7 and 1.7 km wide.</p>
+          </details>
+        </figure>
+      </div>
+
+      <div class="shead"><h2>Close approaches</h2><span class="aside">tap a row for details<span class="hide-sm"> · tap a heading to sort</span></span></div>
+      <div class="filters sortsel">
+        <label>Sort by <select id="sortSel">
+          <option value="t:1">Time, earliest first</option>
+          <option value="ld:1">Distance, closest first</option>
+          <option value="dmax:-1">Size, biggest first</option>
+          <option value="v:-1">Speed, fastest first</option>
+          <option value="name:1">Name, A to Z</option>
+        </select></label>
+      </div>
+      <div class="card tablecard">
+        <table class="neo" id="weekTable">
+          <thead><tr>
+            <th data-k="name" tabindex="0">Name</th>
+            <th data-k="t" tabindex="0">Closest (UTC)</th>
+            <th data-k="dmax" class="num" tabindex="0">Size, est.</th>
+            <th data-k="ld" class="num" tabindex="0">Miss distance</th>
+            <th data-k="v" class="num" tabindex="0">Speed</th>
+            <th>Flag</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="more" id="moreRow" hidden><button class="btn ghost" id="moreBtn">Show all</button></div>
+    </section>
+
+    <!-- ===================== THIS YEAR ===================== -->
+    <section id="view-year" hidden>
+      <div class="weeknav">
+        <button class="chip" id="prevYear" aria-label="Previous year">‹ Prev</button>
+        <div class="weeklabel"><span class="eyebrow">Year</span>
+          <select id="yearSel" aria-label="Year"></select></div>
+        <button class="chip" id="nextYear" aria-label="Next year">Next ›</button>
+        <button class="chip" id="thisYear" aria-pressed="true">This year</button>
+      </div>
+      <div id="yearNotice"></div>
+      <div class="tiles" id="yearTiles"></div>
+
+      <div class="shead"><h2>Show approaches within</h2><span class="aside">LD = the Moon's distance, 384,400 km</span></div>
+      <div class="filters">
+        <div class="seg" role="group" aria-label="Distance">
+          <button class="chip" aria-pressed="true" data-ld="1">1 LD</button>
+          <button class="chip" aria-pressed="false" data-ld="5">5 LD</button>
+          <button class="chip" aria-pressed="false" data-ld="10">10 LD</button>
+        </div>
+      </div>
+
+      <figure class="card chartcard wide" style="margin-top:22px">
+        <div class="shead" style="margin-top:0"><h2 id="yearChartTitle">Every close approach this year</h2><span class="aside">filled: passed · outlined: coming up</span></div>
+        <div class="frame"><svg id="cYear" class="chart" role="img" aria-label="Close approaches through the year by date and distance"></svg></div>
+        <figcaption class="note">Dot size shows estimated size. The dashed line is the Moon's distance. Source: NASA/JPL close-approach data, refreshed daily. <span id="yearUpdated"></span></figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>Each dot is one close approach: <b>left to right</b> is the date, <b>bottom to top</b> how far away it passed. <b>Filled</b> dots have passed, <b>hollow</b> dots are still to come, and the solid line is today. Bigger dots are bigger asteroids. A dot near the bottom passed very close. Tap a dot for its name, size and distance.</p>
+        </details>
+      </figure>
+
+      <div class="grid2">
+        <div>
+          <div class="shead"><h2 id="leftTitle">Closest of the year</h2></div>
+          <div class="card tablecard"><table class="neo" id="yearTable"><thead><tr><th>Name</th><th>Date</th><th class="num">Size, est.</th><th class="num">Distance</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div>
+          <div class="shead"><h2 id="rightTitle">Coming up</h2></div>
+          <div class="card tablecard"><table class="neo" id="nextTable"><thead><tr><th>Name</th><th>Date</th><th class="num">Size, est.</th><th class="num">Distance</th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </div>
+
+      <figure class="card chartcard wide" style="margin-top:22px">
+        <div class="shead" style="margin-top:0"><h2>Close approaches found, year by year</h2><span class="aside" id="perYearAside">within 1 LD</span></div>
+        <div class="frame"><svg id="cYears" class="chart" role="img" aria-label="Number of close approaches each year"></svg></div>
+        <figcaption class="note">Tap a bar to open that year. Source: NASA/JPL close-approach data.</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>One bar per year: how many close approaches within the chosen distance are known for that year. The rise over time comes mostly from <b>better telescopes and sky surveys finding more small asteroids</b>, not from more asteroids arriving. Next year's bar holds only the approaches already predicted, so it grows as new objects are found.</p>
+        </details>
+      </figure>
+    </section>
+
+    <!-- ===================== VISIBLE FROM HERE (NASA/JPL close approaches and Horizons) ===================== -->
+    <section id="view-visible" hidden aria-label="Visible from here: asteroids you can look for from your location"></section>
+
+    <!-- ===================== IMPACT RISK (ESA NEOCC and NASA/JPL Sentry) ===================== -->
+    <section id="view-risk" hidden aria-label="Impact risk: every object with any chance of hitting Earth">
+      <div class="shead" style="margin-top:6px"><h2>Every object with any chance of hitting Earth</h2><span class="aside">ESA and NASA, side by side</span></div>
+      <p class="lede">Two centres watch for possible impacts independently: <b>ESA's NEO Coordination Centre</b> in Italy and <b>NASA/JPL's Sentry</b> in California. Each lists every object whose orbit still allows even a tiny chance of a future impact. Almost every object leaves the lists once more observations pin its orbit down.</p>
+      <div class="tiles" id="riskTiles"></div>
+      <div class="filters" style="margin-top:18px">
+        <div class="seg" role="group" aria-label="Which list">
+          <button class="chip" aria-pressed="true" data-risklist="all">All</button>
+          <button class="chip" aria-pressed="false" data-risklist="both">On both lists</button>
+          <button class="chip" aria-pressed="false" data-risklist="esa">ESA only</button>
+          <button class="chip" aria-pressed="false" data-risklist="nasa">NASA only</button>
+        </div>
+        <label>Size <select id="riskSize">
+          <option value="0">Any size</option><option value="20">20 m or more</option><option value="50">50 m or more</option>
+          <option value="140">140 m or more</option><option value="1000">1 km or more</option></select></label>
+        <label>Name <input type="search" id="riskQ" placeholder="e.g. Bennu, 2008 JL3" autocomplete="off" spellcheck="false"></label>
+        <label class="sortsel">Sort by <select id="riskSort">
+          <option value="ps:-1">Most significant (Palermo)</option><option value="esa:-1">Highest chance, ESA</option><option value="nasa:-1">Highest chance, NASA</option>
+          <option value="d:-1">Largest</option><option value="date:1">Soonest</option><option value="name:1">Name</option></select></label>
+      </div>
+      <p class="note" id="riskCount" aria-live="polite"></p>
+      <div class="card tablecard">
+        <table class="neo" id="riskTable">
+          <thead><tr>
+            <th data-k="name" tabindex="0">Name</th>
+            <th data-k="d" tabindex="0" class="num">Size, est.</th>
+            <th data-k="esa" tabindex="0" class="num">ESA: chance, date</th>
+            <th data-k="nasa" tabindex="0" class="num">NASA: chance, date</th>
+            <th data-k="ps" tabindex="0" class="num">Palermo</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button class="btn" id="riskMore" hidden style="margin-top:12px">Show more</button>
+      <p class="note">Tap a row for both centres' figures. <span id="riskUpdated"></span> Impact-risk data: ESA NEO Coordination Centre (©ESA, neo.ssa.esa.int) and NASA/JPL Sentry (cneos.jpl.nasa.gov), refreshed daily.</p>
+
+      <details class="howto"><summary>How to read this: the rules</summary>
+        <p><b>Rule 1, the chance.</b> "1 in 2,700" is the chance of the single most likely impact date. A chance of 1 in 1,000,000 or smaller means practically nothing. The chance usually falls to zero as more observations arrive, and the object then leaves the list.</p>
+        <p><b>Rule 2, the Torino scale (0 to 10)</b> is for telling the public, and covers only the next 100 years. 0: no hazard. 1: routine, normally removed after more observations. 2 to 4: merits attention by astronomers. 5 to 7: threatening. 8 to 10: a certain collision. Blank: the possible impact is more than 100 years away.</p>
+        <p><b>Rule 3, the Palermo scale</b> is what astronomers use to rank objects: it weighs the chance, the size and how far off the date is, against the everyday background risk from all asteroids. Below −2: no concern. −2 to 0: worth careful watching. Above 0: more threatening than the background. Each step of 1 is ten times the risk. This list is sorted by it by default.</p>
+        <p><b>Rule 4, when ESA and NASA differ.</b> The two centres use different software (ESA's Aegis and NASA's Sentry-II) and may include slightly different observations, so their figures usually agree in size but not exactly, and an object can sit on one list and not the other for a while. A big difference (2023 VD3: about 1 in 430 at ESA, about 1 in 6,800 at NASA) usually means the orbit is still uncertain.</p>
+      </details>
+    </section>
+
+    <!-- ===================== SEARCH ===================== -->
+    <section id="view-search" hidden aria-label="Search every near-Earth asteroid"></section>
+
+    <div class="shead"><h2>Words on this page</h2></div>
+    <dl class="card gloss">
+      <div><dt>LD (lunar distance)</dt><dd>The average distance from Earth to the Moon, 384,400 km. 3 LD is three times farther than the Moon. Distances are measured from Earth's centre, so 7,500 km means about 1,100 km above the surface.</dd></div>
+      <div><dt>Potentially hazardous</dt><dd>NASA's flag for an object about 140 m or wider whose orbit comes within 7.5 million km of Earth's. It means "worth watching", not "on a collision course".</dd></div>
+      <div><dt>Size, est.</dt><dd>Worked out from brightness, so given as a range from the smallest to the largest likely diameter.</dd></div>
+    </dl>
+
+    <p class="srcline">Data courtesy of NASA (NeoWs) and NASA/JPL (close-approach data and Sentry) and ESA (©ESA, NEO Coordination Centre: risk list and close approaches).</p>
+    <footer class="footer">
+      <div class="ftop"><p class="copy">© 2026 <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a></p></div>
+      <p class="fnote">Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA.</p>
+    </footer>
+  </main>
+  <div class="tip" id="tip" hidden></div>
+</body>
+</html>

@@ -9,6 +9,8 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
+- [ ] Developer testing: the Asteroid Tracker's home page (`asteroid-tracker/`) on phone, tablet and computer; each
+  card's link; an old link such as `asteroid-tracker/#risk` opening the tracker.
 - [ ] **Developer testing of the Nov 12, 2026 additions** (built and published Nov 12, 2026):
   - Asteroid Tracker, "Visible from here" tab: "Use my location" and a typed town; the passes list, the night chart,
     "Find it ›" opening Sky Finder; "Forget this place".

@@ -346,7 +346,7 @@ function showRisk(n) {
     const any = r.esa || r.nasa;
     box.innerHTML = `<div class="tiles two">${side('ESA NEOCC', r.esa, 'ESA has found no chance of an impact.')}${side('NASA/JPL Sentry', r.nasa, 'NASA has found no chance of an impact.')}</div>
       ${any ? `<div class="riskcmp"><div class="label">ESA and NASA compared <span class="aside">each centre's own calculation; ■ ESA, ● NASA</span></div><svg class="chart" id="riskChart"></svg></div>` : ''}
-      <p class="note">${any ? 'An impact chance is a measure of how uncertain the orbit still is; it almost always falls to zero as more observations come in. ' : 'Neither centre has found any chance of this object hitting Earth. '}Both lists are checked daily. <a href="./#risk">Every object on the lists, and how to read the scales ›</a><br>
+      <p class="note">${any ? 'An impact chance is a measure of how uncertain the orbit still is; it almost always falls to zero as more observations come in. ' : 'Neither centre has found any chance of this object hitting Earth. '}Both lists are checked daily. <a href="tracker.html#risk">Every object on the lists, and how to read the scales ›</a><br>
       Impact-risk data: ESA NEO Coordination Centre (©ESA), list of ${esc(r.esaUpdated || 'an unknown date')}; NASA/JPL Sentry.</p>`;
     const svg = box.querySelector('#riskChart');
     if (svg) {

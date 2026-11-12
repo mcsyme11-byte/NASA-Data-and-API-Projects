@@ -60,7 +60,8 @@ connection, a personal key 1,000 an hour. Details: [docs/DATA-SOURCES.md](../doc
 
 ```
 asteroid-tracker/
-├── index.html                   the tracker: This week, By year and Search tabs
+├── index.html                   the project's home page: mission, parts, data and agencies, how to use it, headline numbers
+├── tracker.html                 the tracker: This week, By year, Impact risk, Visible from here and Search tabs
 ├── object.html                  one asteroid: facts, the orbit diagram, every close approach
 ├── map.html                     the solar system map
 ├── tracker.css                  styles for all three pages (on top of shared/theme.css)
