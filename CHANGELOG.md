@@ -10,6 +10,8 @@ A full check of every page at phone, tablet and computer sizes, and these fixes:
   scrolls into view (Asteroid Tracker tabs and search chips, the Globe's and Picture library's chip rows); tap
   targets raised to 40 px (the site name, "Its page ›", "Clear", sliders, the "Asteroid Tracker" link above titles);
   search placeholders shortened to fit.
+- **Number tiles** shrink their figures slightly on narrow tiles, so values such as "0.75–1.10 au" and "11 Nov 2026"
+  are never cut off at the tile's edge.
 - **"How to read this"** is easier to read (12 px).
 - **Asteroid Tracker:** one tab bar on every page (the map and asteroid pages gained Impact risk); the map page always
   has its Back button; space between the Impact risk intro and its tiles; labels on the Solar System Map and the
