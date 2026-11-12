@@ -1,5 +1,10 @@
 # Change log
 
+## November 12, 2026 — Mars Data: sols 3069–3644 added; corrected UV complete
+
+- Curiosity REMS sols 3069–3644 (Mars Year 36) and the last corrected UV files (to sol 3423, the end of NASA's corrected
+  UV set); every cleaning report checked, nothing flagged. The page now covers sols 1–3644.
+
 ## November 12, 2026 — Mars Data: sols 2483–3068 added
 
 - Curiosity REMS sols 2483–3068 (Mars Years 35–36) and corrected UV for sols 2501–3100; every cleaning report
