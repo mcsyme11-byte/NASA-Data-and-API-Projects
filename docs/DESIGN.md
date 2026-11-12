@@ -76,9 +76,11 @@ The classes in `shared/theme.css`:
 | How to read this | `details.howto` | Closed by default; brass caps summary with a › that turns |
 | Notice | `.notice`, `.notice.warn` | A bordered box for messages |
 | Chart / map / image frame | `.frame` | Deep navy with a hairline |
-| Footer | `.footer`, `.credit` | Site links (added by `shared/footer.js`), data acknowledgements, then the credit |
-| Site links | `.sitelinks` | About · Privacy · Terms · Credits · Contact · Licence (MIT) ↗ · Source code ↗; every page loads `shared/footer.js` |
-| Reading page | `.prose`, `.summary`, `.updated`, `table.credits` | About, Privacy, Terms and Credits: the full content width (decided Nov 9, 2026), a brass-ruled summary, the date of the last update |
+| Footer | `.footer`, `.ftop`, `.copy`, `.fnote` | Decided Nov 12, 2026: one row with the site links (added by `shared/footer.js`) and "© 2026 Malcolm Syme · email", then one short line: "Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA." Nothing else goes in the footer |
+| Site links | `.sitelinks` | About · Legal · Contact · Source code ↗; every page loads `shared/footer.js`; Legal is marked on the Legal, Privacy, Terms and Credits pages |
+| Data credits | `.srcline` | A page's detailed credits and acknowledgements (sources, ©ESA lines, the GIBS acknowledgement), in small grey italic lines just above the footer, next to the content they cover |
+| Legal page | `.legalgrid`, `.legalcard` | `legal/`: one card each for Privacy, Terms of use, Credits and the MIT licence, with a one-line summary |
+| Reading page | `.prose`, `.summary`, `.updated`, `table.credits` | About, Privacy, Terms and Credits (Privacy, Terms and Credits go back to Legal when opened directly): the full content width (decided Nov 9, 2026), a brass-ruled summary, the date of the last update |
 | Back button | `.backlink#back` | "‹ Back to …" above the heading, named for the previous page and using the browser's Back; "‹ Home" when the page was opened directly (wired by `shared/footer.js`) |
 
 ## 6. Charts

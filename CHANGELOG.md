@@ -1,5 +1,14 @@
 # Change log
 
+## November 12, 2026 — a shorter footer and a Legal page
+
+- **Footer:** one row with About, Legal, Contact and Source code ↗ and the copyright line, then one short credit line
+  ("Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA."), on every page.
+- **Legal page** (`legal/`): Privacy, Terms of use, Credits and the MIT licence, one card each with a one-line summary.
+  Their own addresses are unchanged; opened directly, they go back to Legal.
+- **Data credits:** each page's detailed credits (sources, ESA's credit lines, the GIBS acknowledgement) moved out of
+  the footer to small lines just above it, with the content they cover.
+
 ## November 12, 2026 — Mars Data: Perseverance (Jezero Crater) and a two-craters mock-up
 
 - Perseverance's weather data (MEDA, NASA PDS), sols 0–1859 (February 2021 to May 2026), cleaned with the MEDA rules

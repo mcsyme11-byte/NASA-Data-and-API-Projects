@@ -37,8 +37,10 @@ inside its own folder.
 - **Look:** the Flight Deck Suite's "old money" look (navy, brass, cream, serif type), as set out in `docs/DESIGN.md`
   and `shared/theme.css`. New pages and big visual changes start as mock-ups the developer approves.
 - **Free to run:** static pages on GitHub Pages and free NASA APIs; no paid services.
-- **Site pages (since Nov 9, 2026):** every page loads `shared/footer.js` (the links to About, Privacy, Terms, Credits,
-  Contact, the licence and the source code). A new data source or library is added to `CREDITS.md` and the Credits
+- **Site pages (since Nov 9, 2026):** every page loads `shared/footer.js` (the links to About, Legal, Contact and the
+  source code; since Nov 12, 2026 the footer is one row of those links with the copyright, then one short credit
+  line, and Privacy, Terms, Credits and the licence are reached through the Legal page, `legal/`). Each page's
+  detailed data credits sit above the footer in `<p class="srcline">` lines, never in the footer. A new data source or library is added to `CREDITS.md` and the Credits
   page (`credits/index.html`) in the same change; anything new the site stores or sends is added to the Privacy page
   first.
 - **Version tags on style files (since Nov 9, 2026; project style sheets since Nov 12):** pages link

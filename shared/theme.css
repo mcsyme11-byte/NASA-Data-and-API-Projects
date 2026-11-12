@@ -174,26 +174,41 @@ select { cursor: pointer; }
 /* ---- charts, maps, image frames ---- */
 .frame { background: var(--deep); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; }
 
-/* ---- footer ---- */
+/* ---- footer (decided Nov 12, 2026: one row of links and the copyright, then one short credit line) ---- */
 .footer {
-  margin-top: 56px; padding: 22px 0 40px; border-top: 1px solid var(--line);
-  color: var(--muted); font-size: 13px; font-style: italic;
+  margin-top: 40px; padding: 22px 0 40px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 13px;
 }
-.footer .credit { font-style: normal; color: var(--ink2); }
+.footer .ftop { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 28px; }
+.footer .copy { margin: 0; color: var(--ink2); }
+.footer .fnote { margin: 10px 0 0; font-size: 12.5px; font-style: italic; color: var(--muted); }
 
-/* the site's links, first row of every footer (added by shared/footer.js) */
-.sitelinks {
-  display: flex; flex-wrap: wrap; gap: 6px 26px;
-  padding-bottom: 16px; margin-bottom: 6px; border-bottom: 1px solid var(--line);
-  font-style: normal;
-}
+/* the site's links, in front of the copyright line (added by shared/footer.js) */
+.sitelinks { display: flex; flex-wrap: wrap; gap: 0 26px; }
 .sitelinks a {
   font-size: 11px; text-transform: uppercase; letter-spacing: .22em; color: var(--ink2);
-  padding: 6px 0; min-height: 32px; display: inline-flex; align-items: center;
+  min-height: 40px; display: inline-flex; align-items: center;
 }
 .sitelinks a:hover { color: var(--brass); }
-.sitelinks a[aria-current="page"] { color: var(--brass); }
+.sitelinks a[aria-current] { color: var(--brass); }
 .sitelinks .ext { color: var(--brass-dim); letter-spacing: 0; margin-left: 2px; }
+@media (max-width: 600px) {
+  .sitelinks { gap: 0 16px; } .sitelinks a { letter-spacing: .16em; } .footer .copy { width: 100%; }
+  .footer .copy a { display: inline-flex; align-items: center; min-height: 40px; }
+}
+
+/* a page's detailed data credits, just above the footer, next to the content they cover */
+.srcline { margin: 28px 2px 0; font-size: 12.5px; font-style: italic; color: var(--muted); max-width: 110ch; }
+.srcline + .srcline { margin-top: 8px; }
+
+/* the Legal page's cards */
+.legalgrid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.legalcard { display: flex; flex-direction: column; gap: 8px; color: var(--ink); }
+.legalcard:hover { color: var(--ink); border-color: var(--brass-dim); }
+.legalcard .t { font-size: 22px; }
+.legalcard .d { color: var(--ink2); font-size: 14.5px; flex: 1; }
+.legalcard .go { font-size: 11px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); }
+.legalcard .go .ext { color: var(--brass-dim); letter-spacing: 0; }
 
 /* ---- reading pages (About, Privacy, Terms, Credits) ---- */
 .prose { max-width: none; }

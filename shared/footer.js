@@ -1,8 +1,15 @@
 // NASA and ESA Data Projects · site links in every footer · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
-// Adds one row of links (About, Privacy, Terms, Credits, Contact, the licence and the source code) to the top of the page's
-// <footer class="footer">, so the links are written in one place for every page. Each page loads it with
+// Adds the row of site links (About, Legal, Contact and the source code) to the page's <footer class="footer">, in
+// front of the copyright line, so the links are written in one place for every page. Each page loads it with
 //   <script type="module" src="<path to>/shared/footer.js"></script>
+// and has this footer (decided Nov 12, 2026: a short footer; each page's detailed data credits sit above it, in
+// <p class="srcline"> lines next to the content they cover):
+//   <footer class="footer">
+//     <div class="ftop"><p class="copy">© 2026 <strong>Malcolm Syme</strong> · <a href="mailto:…">…</a></p></div>
+//     <p class="fnote">Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA.</p>
+//   </footer>
+// Privacy, Terms, Credits and the licence are reached through the Legal page (legal/).
 // It also sets up the "‹ Back" button on pages that have one (see wireBack below), and the soft edge fade on rows that
 // scroll sideways (wireScrollRows).
 // Links are worked out from this file's own address, so they are right at any folder depth.
@@ -10,13 +17,11 @@
 const REPO = 'https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects';
 const root = new URL("../", import.meta.url.split("?")[0]);
 
+// `pages`: the folders that count as this link's own section (the Legal link is marked on its four pages too)
 const LINKS = [
-  { label: 'About', href: new URL('about/', root).href, page: 'about' },
-  { label: 'Privacy', href: new URL('privacy/', root).href, page: 'privacy' },
-  { label: 'Terms', href: new URL('terms/', root).href, page: 'terms' },
-  { label: 'Credits', href: new URL('credits/', root).href, page: 'credits' },
-  { label: 'Contact', href: new URL('contact/', root).href, page: 'contact' },
-  { label: 'Licence (MIT)', href: REPO + '/blob/main/LICENSE.md', external: true },
+  { label: 'About', href: new URL('about/', root).href, pages: ['about'] },
+  { label: 'Legal', href: new URL('legal/', root).href, pages: ['legal', 'privacy', 'terms', 'credits'] },
+  { label: 'Contact', href: new URL('contact/', root).href, pages: ['contact'] },
   { label: 'Source code', href: REPO, external: true },
 ];
 
@@ -38,12 +43,14 @@ function addLinks() {
       a.rel = 'noopener';
       a.append(Object.assign(document.createElement('span'), { className: 'ext', textContent: ' ↗' }));
       a.setAttribute('aria-label', l.label + ' (on GitHub, opens in a new tab)');
-    } else if (here.includes('/' + l.page + '/')) {
-      a.setAttribute('aria-current', 'page');
+    } else if (l.pages.some((pg) => here.includes('/' + pg + '/'))) {
+      a.setAttribute('aria-current', here.includes('/' + l.pages[0] + '/') ? 'page' : 'true');
     }
     nav.append(a);
   }
-  footer.prepend(nav);
+  // in front of the copyright line; a page with an older footer (no .ftop) gets the row at the top
+  const top = footer.querySelector('.ftop');
+  if (top) top.prepend(nav); else footer.prepend(nav);
 }
 
 // A "‹ Back" button (<a class="backlink" id="back" href="<home>">‹ Home</a>) above the heading. When the previous page in
@@ -53,7 +60,7 @@ const NAMES = [
   [/\/asteroid-tracker\/map\.html$/, 'the map'], [/\/asteroid-tracker\/object\.html$/, 'the asteroid'],
   [/\/asteroid-tracker\/(index\.html)?$/, 'the Asteroid Tracker'], [/\/image-explorer\//, 'the Image Explorer'],
   [/\/mars-data\//, 'Mars Data'], [/\/about\//, 'About'], [/\/privacy\//, 'Privacy'], [/\/terms\//, 'Terms'],
-  [/\/credits\//, 'Credits'], [/\/contact\//, 'Contact'], [/\/sky-finder\//, 'Sky Finder'], [/\/spacecraft\//, 'the spacecraft map'],
+  [/\/credits\//, 'Credits'], [/\/contact\//, 'Contact'], [/\/legal\//, 'Legal'], [/\/sky-finder\//, 'Sky Finder'], [/\/spacecraft\//, 'the spacecraft map'],
 ];
 function wireBack() {
   const el = document.getElementById('back');

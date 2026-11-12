@@ -28,7 +28,7 @@ one uses.
 ```
 NASA-ESA-Data-and-API-Projects/
 ├── index.html          home page linking the three projects
-├── about/ privacy/ terms/ credits/ contact/   the site's information pages
+├── about/ legal/ privacy/ terms/ credits/ contact/   the site's information pages
 ├── shared/             the look (theme.css, emblem), the NASA API helper (nasa.js), the footer links (footer.js),
 │                       the sky maths (sky.js, passes.js, sats.js, place.js) and satellite.js (vendor/)
 ├── asteroid-tracker/   Project 1

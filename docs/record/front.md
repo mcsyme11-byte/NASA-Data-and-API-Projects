@@ -23,7 +23,7 @@ It is built from the project's public GitHub repository (mcsyme11-byte/NASA-ESA-
 
 # Where things stand
 
-- **Live:** the Asteroid Tracker (with its "Visible from here" tab), the Image Explorer, Mars Data (Curiosity's weather, since November 12, 2026), Sky Finder (a phone app for finding passing asteroids, since November 12, 2026) and the spacecraft map (since November 12, 2026), on the site, with the site's information pages (About, Privacy, Terms of use, Credits, Contact), linked from every page's footer.
+- **Live:** the Asteroid Tracker (with its "Visible from here" tab), the Image Explorer, Mars Data (Curiosity's weather, since November 12, 2026), Sky Finder (a phone app for finding passing asteroids, since November 12, 2026) and the spacecraft map (since November 12, 2026), on the site, with the site's information pages (About, Contact, and a Legal page gathering Privacy, Terms of use, Credits and the licence), linked from every page's footer.
 - **NASA and ESA:** since November 9, 2026 ESA's data is added alongside NASA's where it helps; NASA stays the main source. Every page credits its sources and says the project isn't endorsed by NASA or ESA.
 - **Keys:** visitors need no key. Since November 12, 2026 the Asteroid Tracker's daily data job copies the NASA data that needs one, using the developer's key kept as a GitHub repository secret (`NASA_API_KEY`), never in the code.
 - **Waiting:** the astronaut photos on the globe wait for a key from NASA's astronaut photography service, kept as a GitHub repository secret, never in the code.

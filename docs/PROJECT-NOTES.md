@@ -64,6 +64,10 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 - **Decided Nov 9, 2026:** the site has information pages (About, Privacy, Terms of use, Credits, Contact) at
   `about/`, `privacy/`, `terms/`, `credits/` and `contact/`, linked from a row of site links in every footer
   (`shared/footer.js`, one file for every page). The footer also links to the licence and the source code on GitHub.
+  **Decided Nov 12, 2026:** the footer was shortened to one row (About, Legal, Contact, Source code ↗ and the
+  copyright) and one short credit line. A Legal page (`legal/`) gathers Privacy, Terms of use, Credits and the MIT
+  licence; their own addresses are unchanged. Each page's detailed data credits (including the GIBS acknowledgement
+  and ESA's credit lines) moved out of the footer to `.srcline` lines just above it.
   The Privacy page states what the site actually does (nothing collected; the API key in local storage; the place in
   a page in session storage; GitHub Pages and NASA's and ESA's services contacted directly; the code libraries are served from the site itself since Nov 10, 2026) and is updated before the
   site stores or sends anything new.
