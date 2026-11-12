@@ -69,10 +69,14 @@ SITE = 'https://eol.jsc.nasa.gov/'
 def latest_set():
     """The public Latest ISS Imagery set, without a key."""
     op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
-    get = lambda u: op.open(urllib.request.Request(u, headers=UA), timeout=120).read()
+    def get(u, wait=300, tries=3):                        # the site can be slow: up to 5 minutes, three tries
+        for n in range(tries):
+            try: return op.open(urllib.request.Request(u, headers=UA), timeout=wait).read()
+            except OSError:
+                if n == tries - 1: raise
     get(SITE + 'SearchPhotos/PhotoIdSets/PhotoIdSets.pl?set=Latest_ISS_Imagery&view=1')
     tsv = get(SITE + 'SearchPhotos/GetTSVFromQueryResults.pl?results=Latest_ISS_Imagery').decode('iso-8859-1')
-    try: listing = get(SITE + 'temp/Latest_ISS_Imagery.json').decode('utf-8', 'replace')    # the image files, where listed
+    try: listing = get(SITE + 'temp/Latest_ISS_Imagery.json', 120, 1).decode('utf-8', 'replace')    # the image files, where listed
     except OSError: listing = ''
     rows = list(csv.DictReader(io.StringIO(tsv), delimiter='\t'))
     if not rows or 'Nadir Lat' not in rows[0]: raise SystemExit(f'Unexpected listing: {tsv[:300]}')
