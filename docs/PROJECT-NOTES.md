@@ -4,6 +4,10 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## Decisions
 
+- **Decided Nov 12, 2026 (project home tab):** every project's main page opens on a "Home" tab, the first in its
+  tab row: the project's mission, its data sources and agencies, what can be done and how, headline numbers and links
+  to every other tab. The title and tabs stay at the top of the page; the numbers start on the second tab. The rule is
+  in CLAUDE.md. A separate landing page above the tabs was considered and not chosen.
 - **Decided Nov 12, 2026 (Sky Finder):** an installable phone web app in its own folder, `sky-finder/`, on the same
   site (not a separate repository). It marks where an asteroid is with a marker and its path: most passing asteroids
   are far too faint for a phone camera, so the asteroid itself is not shown. The Moon, planets, bright stars and the
