@@ -33,7 +33,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          (cd mars-data/analysis && python3 run_mex.py)
+          (cd mars-data/analysis && python3 run_mex.py) || echo "run_mex.py stopped with an error; the report is saved"
           git add mars-data/data/mex
           git commit -q -m "Mars data: Mars Express profiles processed" || echo "Nothing new"
           for attempt in 1 2 3 4 5; do
