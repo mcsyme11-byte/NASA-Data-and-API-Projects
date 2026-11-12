@@ -85,7 +85,7 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 - [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
 
 **Page**
-- [ ] Mock-up awaiting approval (`mars-data/mockup.html`, real cleaned data for sols 1–1293): pressure through the
+- [ ] Build the page from the approved mock-up (approved Nov 11, 2026; `mars-data/mockup.html`, real cleaned data for sols 1–1293): pressure through the
   year (with a correction for the rover's climb), daily pressure range, humidity at night (preliminary), midday UV,
   season × time of day, one sol hour by hour, daily highs and lows, the rover's climb. Humidity and UV included
   (sols 1–1293, rules 1.1).

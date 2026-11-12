@@ -12,6 +12,9 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   updates, in the `data/` folders) don't start a rebuild, since none of those files are in the record; the Repository
   History counts them instead of listing them. The record is public, like the repository; its build stops if a
   personal detail would end up in it.
+- **Decided Nov 11, 2026 (Mars Data):** the developer approved the charts page mock-up (`mars-data/mockup.html`):
+  pressure through the year with a correction for the rover's climb, daily pressure range, humidity at night
+  (preliminary), midday UV, season × time of day, one sol hour by hour, daily highs and lows, and the rover's climb.
 - **Decided Nov 11, 2026 (Mars Data):** the whole Curiosity record (sol 1 to the newest released sol) is used from
   the start, not a single Mars year. It is downloaded and cleaned in chunks (a range of sols at a time), each chunk
   checked and its cleaning results recorded before the next is processed: rows kept and removed, the reason for each

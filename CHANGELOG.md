@@ -71,7 +71,7 @@ A full check of every page at phone, tablet and computer sizes, and these fixes:
   `mars-data/analysis/`; Ls and Mars Year calculated from the date (`mars_time.py`), checked against NASA's values.
 - **Mock-up** of the charts page for approval: `mars-data/mockup.html`, drawn from the cleaned data for sols 1–1293,
   including humidity (preliminary) and corrected UV. A midday UV peak counts only between 10:30 and 13:30 local time on
-  a sol with at least 30 minutes of UV.
+  a sol with at least 30 minutes of UV. Approved by the developer on November 11, 2026.
 
 ## November 11, 2026 — Project Record
 
