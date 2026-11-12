@@ -39,9 +39,3 @@ export async function neoCopy(id) {
   const neo = await file(`neo/${id}.json`);
   return neo && neo.id ? { neo, updated: i.updated } : null;
 }
-
-// the copy's date and the weeks it holds (for the key settings note), or null
-export async function copyInfo() {
-  const i = await loadIndex();
-  return i ? { updated: i.updated, weeks: i.weeks } : null;
-}

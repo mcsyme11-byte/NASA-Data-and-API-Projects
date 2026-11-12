@@ -8,7 +8,7 @@
 //              GitHub Actions once a day (the JPL close-approach API blocks direct calls from web pages).
 // Charts are in charts.js; units and the size-from-brightness rule in format.js.
 
-import { nasaGet, getKey, setKey, usingDemoKey, isoDate } from '../shared/nasa.js';
+import { nasaGet, isoDate } from '../shared/nasa.js';
 import { fmt, sizeText, dateText, sizePicture, diameterM, LD_KM, DAY_MS } from './format.js';
 import { scatter, perDay, biggest, yearChart, perYear, hideTip } from './charts.js';
 import { mountSearch } from './searchview.js';
@@ -17,7 +17,7 @@ import { COL, COMET_CODES } from './skymap.js';
 import { neowsId } from './search.js';
 import { placeKeeper, scrollBack } from './back.js';
 import { takeShared, linkWith, shareButton } from './share.js';
-import { weekCopy, copyInfo } from './neows.js';
+import { weekCopy } from './neows.js';
 import { mountRisk, chanceText } from './risk.js';
 import { esaApproach, riskOf } from './esa.js';
 
@@ -52,40 +52,6 @@ function loadingTiles(target, labels) {
 function notice(target, msg, actions = '') {
   $(target).innerHTML = msg ? `<div class="notice warn" role="alert"><span>${esc(msg)}</span><span class="seg">${actions}</span></div>` : '';
 }
-
-// ---------------------------------------------------------------- key settings
-// No key is needed: the weeks around today and their asteroids come from the daily copy (neows.js). Other weeks and
-// asteroids are asked of NASA directly, with the visitor's own key if they saved one, otherwise NASA's demo key.
-let copyNote = '';
-copyInfo().then((c) => {
-  if (!c || !c.weeks.length) return;
-  const d = (s) => dateText(Date.parse(s + 'T00:00:00Z'));
-  copyNote = `The weeks of ${d(c.weeks[0])} to ${d(c.weeks[c.weeks.length - 1])}, and the asteroids in them, come from a copy of NASA's data refreshed every day (last ${esc(c.updated)}), so they need no key and use none of your allowance. `;
-  showKeyState();
-});
-function showKeyState() {
-  const demo = usingDemoKey();
-  $('#keyPill').className = 'pill good';
-  $('#keyPill').textContent = demo ? 'No key needed' : 'Your key';
-  $('#keyNote').innerHTML = copyNote + (demo
-    ? 'Other weeks and asteroids are asked of NASA directly with NASA\'s shared demo key: 30 requests an hour and 50 a day for your connection (each week or asteroid page is 1 request). To raise that to 1,000 an hour, add your own free key from <a href="https://api.nasa.gov/" target="_blank" rel="noopener">api.nasa.gov</a>. It is optional.'
-    : 'Other weeks and asteroids are asked of NASA directly with your own key: 1,000 requests an hour. It is saved in this browser only and sent only to NASA; remove it to go back to the demo key.');
-  $('#keyRemove').disabled = demo;
-}
-function toggleKeyCard(open = $('#keyCard').hidden) {
-  $('#keyCard').hidden = !open;
-  $('#openKey').setAttribute('aria-expanded', open);
-  if (open) $('#keyInput').focus();
-}
-$('#openKey').addEventListener('click', () => toggleKeyCard());
-$('#keyForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const k = $('#keyInput').value.trim();
-  if (!k) return;
-  setKey(k); $('#keyInput').value = '';
-  showKeyState(); toggleKeyCard(false); loadWeek();
-});
-$('#keyRemove').addEventListener('click', () => { setKey(''); showKeyState(); loadWeek(); });
 
 // ---------------------------------------------------------------- this week
 function toObject(o) {
@@ -127,7 +93,6 @@ async function loadWeek() {
     if (start !== state.weekStart) return;
     state.weekError = e;
   }
-  showKeyState();
   renderWeek();
 }
 
@@ -158,8 +123,7 @@ function renderWeek() {
   $('#weekTiles').classList.remove('loading');
   if (state.weekError) {
     const e = state.weekError;
-    const keyBtn = e.status === 429 || e.status === 403 ? '<button class="btn ghost" data-act="key">Key settings</button>' : '';
-    notice('#weekNotice', e.message, keyBtn + '<button class="btn ghost" data-act="retry">Try again</button>');
+    notice('#weekNotice', e.message, '<button class="btn ghost" data-act="retry">Try again</button>');
     tiles('#weekTiles', ['Passing Earth', 'Closest', 'Biggest', 'Fastest', 'Potentially hazardous'].map((label) => ({ label, value: '—', note: 'not loaded' })));
     ['#cScatter', '#cDays', '#cBig'].forEach((s) => loadingChart(s, 'No data: NASA could not be reached.'));
     $('#weekTable tbody').innerHTML = `<tr class="msg"><td colspan="6"><div class="state small">No data to show.</div></td></tr>`;
@@ -307,7 +271,6 @@ $('#moreBtn').addEventListener('click', () => { state.showAll = !state.showAll; 
 document.addEventListener('click', (e) => {
   const act = e.target.closest('[data-act]')?.dataset.act;
   if (act === 'retry') state.view === 'year' ? loadYear(state.yearShown) : loadWeek();
-  if (act === 'key') toggleKeyCard(true);
   if (act === 'clear') clearFilters();
 });
 
@@ -494,8 +457,6 @@ addEventListener('resize', () => {
 });
 
 // ---------------------------------------------------------------- start
-showKeyState();
-if (location.hash === '#key') toggleKeyCard(true);
 
 // A shared week (index.html?view=1&week=YYYY-MM-DD&open=<NeoWs id>&haz=1&size=140&dist=10) opens that week, with
 // those filters and that row open. Read before placeKeeper, which then never applies.

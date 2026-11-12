@@ -6,7 +6,8 @@
   asteroid in them (`fetch_neows.py`, `data/neows/`), using the developer's key from the repository secret
   `NASA_API_KEY`. The "This week" list and the asteroid pages read that copy first, so visitors need no key and use
   none of their own allowance; other weeks and asteroids are still asked of NASA directly.
-- Key settings now reads "No key needed" and explains that a personal key is optional.
+- The Key settings box was removed: with the daily copy no visitor needs a key. A key saved by the earlier version
+  is deleted from the browser on the next visit; the Privacy and Terms pages say so.
 - The secret `NASA_API_KEY` was added the same day; the first run copied 5 weeks and 199 asteroid pages, and the
   live site was confirmed to open the week and asteroid pages from the copy without asking NASA.
 

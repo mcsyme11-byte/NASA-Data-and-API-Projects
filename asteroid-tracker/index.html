@@ -36,7 +36,7 @@
       <p class="lede">Every near-Earth object passing us, sorted by size and distance, with graphs you can explore.</p>
     </div>
 
-    <!-- tabs + key status -->
+    <!-- tabs -->
     <div class="toolbar">
       <nav class="tabs" aria-label="Asteroid Tracker">
         <button aria-pressed="true" aria-selected="true" data-view="week">This week</button>
@@ -45,22 +45,7 @@
         <a href="map.html">Map</a>
         <button aria-pressed="false" aria-selected="false" data-view="search">Search</button>
       </nav>
-      <div class="keystat">
-        <span class="pill good" id="keyPill">No key needed</span>
-        <button class="linkbtn" id="openKey" aria-expanded="false" aria-controls="keyCard">Key settings (optional)</button>
-      </div>
     </div>
-
-    <!-- key settings -->
-    <section class="card keycard" id="keyCard" hidden>
-      <div class="shead" style="margin-top:0"><h2>Your NASA API key</h2><span class="aside">optional; kept in this browser only</span></div>
-      <p class="note" style="margin-top:0" id="keyNote"></p>
-      <form class="keyrow" id="keyForm" autocomplete="off">
-        <input type="password" id="keyInput" placeholder="Paste your key" aria-label="NASA API key" spellcheck="false">
-        <button class="btn" type="submit">Save</button>
-        <button class="btn ghost" type="button" id="keyRemove">Remove</button>
-      </form>
-    </section>
 
     <!-- ===================== THIS WEEK ===================== -->
     <section id="view-week">

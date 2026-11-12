@@ -22,7 +22,7 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
   filters. A live preview runs on the home page.
 - **Search:** results with every letter, a "Found in" filter, and a guide to how asteroids are named, with each code
   decoded (2024 YR4: found December 16–31, 2024, the 117th new small body given a code in that half-month).
-- **Key settings:** a personal NASA key, kept in the browser only; NASA's shared demo key otherwise.
+- **No key needed:** the weeks around today and their asteroids come from the daily copy of NeoWs; anything else uses NASA's shared demo key.
 
 ## The numbers: which rule to use when
 
@@ -41,7 +41,7 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
 
 | Source | Used for | Key | How |
 |---|---|---|---|
-| NASA NeoWs `feed` (`api.nasa.gov/neo/rest/v1/`) | This week | Visitors: none for the copied weeks; the data job uses the secret `NASA_API_KEY` | Daily copy `data/neows/week-*.json` (current week ± 2 weeks); other weeks live from the page (visitor's key or `DEMO_KEY`) |
+| NASA NeoWs `feed` (`api.nasa.gov/neo/rest/v1/`) | This week | Visitors: none for the copied weeks; the data job uses the secret `NASA_API_KEY` | Daily copy `data/neows/week-*.json` (current week ± 2 weeks); other weeks live from the page (`DEMO_KEY`) |
 | NASA NeoWs `neo/{id}` | Each asteroid's page | As above | Daily copy `data/neows/neo/<id>.json` for asteroids in the copied weeks; others live, 1 request per page |
 | NASA/JPL Close-Approach Data (`ssd-api.jpl.nasa.gov/cad.api`) | By year | none | Daily files, `data/YYYY.json` and `data/years.json` (the API blocks calls from web pages) |
 | JPL approximate planetary elements | The orbit diagram's and the map's planets | none | Copied into `orbit.js` (valid 1800–2050) |

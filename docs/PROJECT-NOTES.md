@@ -141,7 +141,8 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   read and used up by anyone, so the daily data job copies the NeoWs data most visitors see (the current week, two
   weeks either side, and their asteroids) with the developer's key from the repository secret `NASA_API_KEY`. Pages
   read the copy first; other weeks and asteroids are asked of NASA directly with the visitor's own key or the demo
-  key (limit counted per connection). Key settings is optional and says so ("No key needed").
+  key (limit counted per connection). The Key settings box was removed the same day: with the copy it served no
+  purpose, and a key saved by the earlier version is deleted from the visitor's browser.
 - **Decided Nov 10, 2026 (Asteroid Tracker):** asteroids on an impact-risk list are drawn in rose on the map, a
   colour no orbit type uses, at 2 × 2 pixels; diamond outlines are added only when zoomed in, because at full view
   about 2,500 outlines covered the map. Share links carry the view in plain, readable parameters (`view=1` marks a
@@ -171,9 +172,10 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
 
 ## API keys
 
-- **Web pages:** `shared/nasa.js` keeps the visitor's own key in their browser (localStorage) and uses NASA's
-  `DEMO_KEY` until they add one. A key placed in a public page's code would be visible to anyone, which is why it
-  isn't done.
+- **Web pages:** `shared/nasa.js` calls api.nasa.gov with NASA's `DEMO_KEY` (limit counted per visitor's connection).
+  Since Nov 12, 2026 the pages have no key box: the data job copies what needs a key, with the developer's key kept
+  as a repository secret. A key placed in a public page's code would be visible to anyone, which is why it isn't
+  done.
 - **Python:** reads `NASA_API_KEY` from `.env` (copy `.env.example`). `.env` is in `.gitignore`.
 - **Check on GitHub:** `dev/check_wording.py` also fails if anything that looks like a NASA key is committed.
 

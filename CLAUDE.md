@@ -23,8 +23,10 @@ inside its own folder.
   explicitly says go.
 - **After every change that's finished and checked,** commit and push it to `main` with a short plain-English commit
   message, and update `docs/ROADMAP.md` (remove what's done), `CHANGELOG.md` and, for milestones, `docs/HISTORY.md`.
-- **Public repository: no secrets, ever.** No API key, password or token in any file. Web pages use `shared/nasa.js`
-  (the visitor's key in their browser, `DEMO_KEY` otherwise); Python reads `NASA_API_KEY` from `.env` (ignored by Git).
+- **Public repository: no secrets, ever.** No API key, password or token in any file. Visitors need no key: data that
+  needs one is copied by the GitHub data jobs with repository secrets (`NASA_API_KEY`, `EOL_API_KEY`); web pages call
+  NASA only through `shared/nasa.js` with `DEMO_KEY`; Python run by hand reads `NASA_API_KEY` from `.env` (ignored by
+  Git).
 - **Public-ready by default:** no personal details in code, docs or tests (no PC or user names, personal paths,
   callsigns or family details); use generic wording and made-up test data. **Exception: always keep "Malcolm Syme"
   and mcsyme11@gmail.com as the developer, copyright and contact credit.**

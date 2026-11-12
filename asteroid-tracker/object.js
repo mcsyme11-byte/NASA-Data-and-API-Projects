@@ -59,7 +59,7 @@ async function load() {
   } catch (e) {
     $('#name').textContent = 'Asteroid ' + id;
     const msg = e.status === 404 ? 'NASA has no asteroid with this number. Open one from the <a href="./">Asteroid Tracker</a>.' : esc(e.message);
-    notice(msg, e.status === 404 ? '' : '<button class="btn ghost" data-act="retry">Try again</button>' + (e.status === 429 || e.status === 403 ? '<a class="btn ghost" href="./#key">Key settings</a>' : ''));
+    notice(msg, e.status === 404 ? '' : '<button class="btn ghost" data-act="retry">Try again</button>');
     return;
   }
   render();

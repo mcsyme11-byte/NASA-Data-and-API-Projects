@@ -25,8 +25,8 @@ Checked November 8, 2026 (Image Explorer sources: November 9, 2026). Each projec
   developer's key from the repository secret `NASA_API_KEY` (GitHub › Settings › Secrets and variables › Actions) to
   copy the NeoWs data most visitors see into `asteroid-tracker/data/neows/`, so visitors need no key. A key cannot be
   shared through the pages instead: anything in a public page is readable by anyone, and all visitors would share one
-  key's limit. For weeks and asteroids outside the copy, web pages use `shared/nasa.js` (the visitor's own key, kept
-  in their browser only, otherwise `DEMO_KEY`, whose limit is counted per visitor's connection). Python scripts run
+  key's limit. For weeks and asteroids outside the copy, web pages use `shared/nasa.js` with `DEMO_KEY`, whose limit
+  is counted per visitor's connection (the pages no longer offer to store a visitor's own key). Python scripts run
   by hand read `NASA_API_KEY` from `.env`.
 
 ### Daily copy of NeoWs (`asteroid-tracker/data/neows/`, since Nov 12, 2026)

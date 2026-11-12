@@ -33,8 +33,8 @@ NASA-ESA-Data-and-API-Projects/
 - **Pages run in the browser,** with no build step: plain HTML, CSS and JavaScript, hosted free on GitHub Pages.
 - **One look everywhere:** the Flight Deck Suite's "old money" style (navy, brass and cream, serif type) with a
   night-sky touch. See [docs/DESIGN.md](docs/DESIGN.md).
-- **API keys are never committed.** On the web pages, each visitor's own key stays in their browser (NASA's shared
-  `DEMO_KEY` until they add one). Python scripts read `NASA_API_KEY` from a local `.env` file, which Git ignores.
+- **API keys are never committed.** Visitors need no key: the GitHub data jobs copy the data that needs
+  one, using keys kept as repository secrets, and the pages use NASA's shared `DEMO_KEY` for anything else. Python scripts read `NASA_API_KEY` from a local `.env` file, which Git ignores.
 
 ## Getting started (developers)
 

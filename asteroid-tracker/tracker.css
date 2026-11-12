@@ -4,15 +4,11 @@
 .toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 22px;
   border-bottom: 1px solid var(--line); }
 .toolbar .tabs { margin: 0; border-bottom: 0; }
-.toolbar .keystat { padding-bottom: 8px; }
 .seg { display: inline-flex; flex-wrap: wrap; gap: 8px; }
-.keystat { display: flex; align-items: center; gap: 12px; }
 .linkbtn { background: none; border: 0; padding: 6px 0; color: var(--brass); font: 14px var(--font); cursor: pointer;
   text-decoration: underline; text-decoration-color: var(--brass-dim); text-underline-offset: 3px; }
 .linkbtn:hover { color: var(--brass-bright); }
 
-.keycard { margin-bottom: 22px; }
-.keyrow { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; }
 
 .weeknav { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; }
 .weeklabel { display: flex; flex-direction: column; min-width: 190px; text-align: center; }
@@ -90,7 +86,6 @@ table.neo tr.drow > td { padding: 4px 16px 18px; }
   .grid2 { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
-  .keyrow { grid-template-columns: 1fr; }
   .weeklabel { min-width: 0; flex: 1; }
   .weeknav .chip:last-child { margin-left: 0; }
   .filters label { width: 100%; justify-content: space-between; }

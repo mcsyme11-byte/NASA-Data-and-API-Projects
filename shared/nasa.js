@@ -2,12 +2,15 @@
 //
 // One place for talking to api.nasa.gov, used by every project's page.
 //
-// The API key: these pages are static (GitHub Pages), so a key written into the code would be public. Instead each
-// visitor's own key is kept in their browser only (localStorage), and the shared DEMO_KEY is used until they add one.
-// No key is ever committed to the repository. (GIBS and the NASA Image and Video Library need no key at all.)
+// The API key: these pages are static (GitHub Pages), so a key written into the code would be public. Visitors need
+// no key: the data most of them see is copied daily by the GitHub data jobs, which use the developer's key kept as a
+// repository secret. Requests made from the pages themselves use NASA's shared DEMO_KEY, whose limit is counted per
+// visitor's connection. No key is ever committed to the repository. (GIBS and the NASA Image and Video Library need no
+// key at all.) Since Nov 12, 2026 the pages no longer offer to store a visitor's own key; one stored earlier is
+// deleted from the browser on the next visit.
 //
 // Use:
-//   import { nasaGet, getKey, setKey } from '../shared/nasa.js';
+//   import { nasaGet } from '../shared/nasa.js';
 //   const feed = await nasaGet('/neo/rest/v1/feed', { start_date: '2026-11-01', end_date: '2026-11-07' });
 
 const KEY_STORE = 'nasa-data-projects.api-key';
@@ -30,18 +33,7 @@ function toTab(id, data) {
 
 export const DEMO_KEY = 'DEMO_KEY';   // NASA's shared key: 30 requests an hour, 50 a day, per connection
 
-export function getKey() {
-  try { return localStorage.getItem(KEY_STORE) || DEMO_KEY; } catch { return DEMO_KEY; }
-}
-
-export function setKey(key) {
-  try {
-    const k = (key || '').trim();
-    if (k) localStorage.setItem(KEY_STORE, k); else localStorage.removeItem(KEY_STORE);
-  } catch { /* private browsing: the key lasts for this visit only */ }
-}
-
-export function usingDemoKey() { return getKey() === DEMO_KEY; }
+try { localStorage.removeItem(KEY_STORE); } catch { /* storage unavailable: nothing was stored */ }
 
 // The last rate-limit numbers NASA sent back (from the X-RateLimit headers). Checked Nov 8, 2026: NASA does not expose
 // these headers to web pages, so in a browser they stay null; kept for scripts and in case that changes.
@@ -56,7 +48,7 @@ export async function nasaGet(path, params = {}) {
   const url = new URL(API_ROOT + path);
   for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== null) url.searchParams.set(k, v);
   const id = url.toString();   // before the key is added: the answer is the same whichever key asks
-  url.searchParams.set('api_key', getKey());
+  url.searchParams.set('api_key', DEMO_KEY);
   if (cache.has(id)) return cache.get(id);
   const kept = fromTab(id);
   if (kept !== undefined) { cache.set(id, kept); return kept; }
@@ -84,11 +76,10 @@ export async function nasaGet(path, params = {}) {
 // What went wrong, and what to do next, in plain English.
 function plainMessage(status) {
   if (status === 429) {
-    return usingDemoKey()
-      ? 'The shared demo key has run out of requests for now. Add your own free key from api.nasa.gov, or try again in an hour.'
-      : 'Your key has reached NASA\'s limit of 1,000 requests an hour. Try again later.';
+    return 'NASA\'s shared demo key has run out of requests for your connection for now. The weeks around today and '
+      + 'their asteroids don\'t need it; for this one, try again in an hour.';
   }
-  if (status === 403) return 'NASA didn\'t accept the API key. Check it in Settings, or remove it to use the demo key.';
+  if (status === 403) return 'NASA didn\'t accept the request. Try again later.';
   if (status === 400) return 'NASA couldn\'t answer that request (check the dates: some searches allow at most 7 days).';
   if (status >= 500) return 'NASA\'s service is having trouble right now. Try again in a few minutes.';
   return 'Something went wrong (error ' + status + '). Try again.';
