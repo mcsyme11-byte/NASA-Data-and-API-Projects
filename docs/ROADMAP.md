@@ -9,14 +9,15 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
+- [ ] **Add the repository secret `NASA_API_KEY` (developer, needed for the daily NeoWs copy).** GitHub › the
+  repository › Settings › Secrets and variables › Actions › New repository secret; name `NASA_API_KEY`, value the
+  api.nasa.gov key. Then Actions › Asteroid data › Run workflow, and check the log of the step "Copy NASA NeoWs weeks
+  and asteroid pages" (it names the key used and the number of asteroid pages copied). Until then the copy holds the
+  weeks only if the demo key allows, and no asteroid pages.
 - [ ] Watch the scheduled "Asteroid data" runs (06:17 and the 14:47 backup, added Nov 9, 2026): at least one should
   run each day.
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
   "famous.json written").
-- [ ] **Developer testing of the Nov 10 additions,** on a computer and a phone: the orbit diagram turning past
-  edge-on with a mouse; the rose risk-list dots on the map, the diamonds when zoomed in, and "Show in their orbit
-  colours"; the "ESA and NASA compared" chart on an asteroid page (for example Bennu, 1950 DA, Duende); "Share this
-  view" on the map and "Share this week" on the tracker, opened on another device.
 - [ ] Watch the "Fetch impact-risk lists and ESA close approaches" step in the "Asteroid data" runs: ESA calls its
   automated access experimental, so a change of format stops the step (the previous files are kept) and needs a fix
   in `fetch_risk.py`.

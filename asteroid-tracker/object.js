@@ -1,12 +1,14 @@
 // NASA and ESA Data Projects · Asteroid Tracker · one asteroid · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // object.html?id=<NeoWs id>[&t=<close-approach time, ms UTC>]
-// One request to NASA NeoWs (/neo/rest/v1/neo/{id}) gives the asteroid's size, its orbital elements and every
-// computed close approach (1900–2200). The orbit diagram (orbitview.js) places the asteroid and the planets at any
+// NASA NeoWs (/neo/rest/v1/neo/{id}) gives the asteroid's size, its orbital elements and every computed close
+// approach (1900–2200): from the daily copy (data/neows/neo/, neows.js) for asteroids in the weeks around today, so no
+// key is needed; otherwise one request to NASA. The orbit diagram (orbitview.js) places the asteroid and the planets at any
 // date from 1900 to 2050 (the planets' elements table is valid 1800–2050).
 
 import { backLink } from './back.js';
 import { nasaGet } from '../shared/nasa.js';
+import { neoCopy } from './neows.js';
 import { fmt, sizeText, dateText, sizePicture, LD_KM } from './format.js';
 import { hoverTip, tipApi, hideTip } from './charts.js';
 import { asteroidElements, asteroidPosition, planetPosition, jdFromMs, msFromJd, dist, LD_AU, AU_KM, wrap180 } from './orbit.js';
@@ -52,7 +54,8 @@ async function load() {
   notice('');
   $('#name').textContent = 'Loading…';
   try {
-    state.neo = await nasaGet('/neo/rest/v1/neo/' + id);
+    const copy = await neoCopy(id);              // the daily copy first (no key); otherwise NASA directly
+    state.neo = copy ? copy.neo : await nasaGet('/neo/rest/v1/neo/' + id);
   } catch (e) {
     $('#name').textContent = 'Asteroid ' + id;
     const msg = e.status === 404 ? 'NASA has no asteroid with this number. Open one from the <a href="./">Asteroid Tracker</a>.' : esc(e.message);

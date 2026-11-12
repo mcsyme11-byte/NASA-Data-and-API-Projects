@@ -46,14 +46,14 @@
         <button aria-pressed="false" aria-selected="false" data-view="search">Search</button>
       </nav>
       <div class="keystat">
-        <span class="pill warn" id="keyPill">Demo key</span>
-        <button class="linkbtn" id="openKey" aria-expanded="false" aria-controls="keyCard">Key settings</button>
+        <span class="pill good" id="keyPill">No key needed</span>
+        <button class="linkbtn" id="openKey" aria-expanded="false" aria-controls="keyCard">Key settings (optional)</button>
       </div>
     </div>
 
     <!-- key settings -->
     <section class="card keycard" id="keyCard" hidden>
-      <div class="shead" style="margin-top:0"><h2>Your NASA API key</h2><span class="aside">kept in this browser only</span></div>
+      <div class="shead" style="margin-top:0"><h2>Your NASA API key</h2><span class="aside">optional; kept in this browser only</span></div>
       <p class="note" style="margin-top:0" id="keyNote"></p>
       <form class="keyrow" id="keyForm" autocomplete="off">
         <input type="password" id="keyInput" placeholder="Paste your key" aria-label="NASA API key" spellcheck="false">

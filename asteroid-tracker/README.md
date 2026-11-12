@@ -41,8 +41,8 @@ Every near-Earth object passing Earth, sorted by size and distance, with graphs 
 
 | Source | Used for | Key | How |
 |---|---|---|---|
-| NASA NeoWs `feed` (`api.nasa.gov/neo/rest/v1/`) | This week | NASA key or `DEMO_KEY` | Live from the page, 1 request per week shown |
-| NASA NeoWs `neo/{id}` | Each asteroid's page | NASA key or `DEMO_KEY` | Live, 1 request per page |
+| NASA NeoWs `feed` (`api.nasa.gov/neo/rest/v1/`) | This week | Visitors: none for the copied weeks; the data job uses the secret `NASA_API_KEY` | Daily copy `data/neows/week-*.json` (current week ± 2 weeks); other weeks live from the page (visitor's key or `DEMO_KEY`) |
+| NASA NeoWs `neo/{id}` | Each asteroid's page | As above | Daily copy `data/neows/neo/<id>.json` for asteroids in the copied weeks; others live, 1 request per page |
 | NASA/JPL Close-Approach Data (`ssd-api.jpl.nasa.gov/cad.api`) | By year | none | Daily files, `data/YYYY.json` and `data/years.json` (the API blocks calls from web pages) |
 | JPL approximate planetary elements | The orbit diagram's and the map's planets | none | Copied into `orbit.js` (valid 1800–2050) |
 | NASA/JPL Small-Body Database Query API | Map and search | none | Daily file `data/neos.json` (and `data/preview.json`) |
@@ -79,10 +79,12 @@ asteroid-tracker/
 ├── compare.js                   sizes next to familiar objects ("about the length of a school bus"), with its rules
 ├── soon.js                      the home page's "closest pass, next 7 days"
 ├── risk.js                      the Impact risk tab: ESA's and NASA's lists side by side, filters, sorting, details
+├── neows.js                     reads the daily copy of NeoWs (data/neows/) for the week view and the asteroid page
 ├── esa.js                       reads ESA's close approaches and both risk lists for the week's details, the asteroid page and the map
 ├── share.js                     "Share this view" and "Share this week": the view as a link, opened by the share sheet or copied
 ├── fetch_close_approaches.py    writes data/YYYY.json and data/years.json (daily, GitHub Actions)
 ├── fetch_map_data.py            writes data/neos.json, data/preview.json, data/spacecraft.json, data/soon.json (daily), data/famous.json (monthly)
+├── fetch_neows.py               writes data/neows/: NeoWs weeks around today and their asteroids' pages (secret NASA_API_KEY)
 ├── fetch_risk.py                writes data/risk.json (ESA NEOCC and NASA/JPL Sentry) and data/esa_close.json (daily)
 ├── data/                        the files above
 └── README.md                    this file

@@ -25,6 +25,7 @@ It is built from the project's public GitHub repository (mcsyme11-byte/NASA-ESA-
 
 - **Live:** the Asteroid Tracker and the Image Explorer, on the site, with the site's information pages (About, Privacy, Terms of use, Credits, Contact), linked from every page's footer.
 - **NASA and ESA:** since November 9, 2026 ESA's data is added alongside NASA's where it helps; NASA stays the main source. Every page credits its sources and says the project isn't endorsed by NASA or ESA.
+- **Keys:** visitors need no key. Since November 12, 2026 the Asteroid Tracker's daily data job copies the NASA data that needs one, using the developer's key kept as a GitHub repository secret (`NASA_API_KEY`), never in the code.
 - **Waiting:** the astronaut photos on the globe wait for a key from NASA's astronaut photography service, kept as a GitHub repository secret, never in the code.
 - **Next:** Mars Data, starting with the choice of datasets, checked against NASA's and ESA's documentation, and a mock-up of its page for the developer's approval.
 - **The repository:** public, with `main` protected against force pushes and deletion; GitHub checks every push for wording, personal details and keys, and rebuilds this record.

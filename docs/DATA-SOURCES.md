@@ -7,7 +7,7 @@ Checked November 8, 2026 (Image Explorer sources: November 9, 2026). Each projec
 
 | Source | Key needed? | Used by |
 |---|---|---|
-| api.nasa.gov (NeoWs and others) | Yes: a free personal key, or `DEMO_KEY` | Asteroid Tracker |
+| api.nasa.gov (NeoWs and others) | Visitors: no (daily copy). The data job: the developer's key, repository secret `NASA_API_KEY` | Asteroid Tracker |
 | JPL SSD APIs (close approaches, small-body database) | No | Asteroid Tracker |
 | PDS Atmospheres Node (Mars weather) | No (file downloads) | Mars Data |
 | GIBS (satellite imagery tiles) | No | Image Explorer |
@@ -21,8 +21,26 @@ Checked November 8, 2026 (Image Explorer sources: November 9, 2026). Each projec
   - `DEMO_KEY` (NASA's shared key for trying things out): **30 requests an hour, 50 a day**, per connection (IP).
   - A personal key: **1,000 requests an hour**.
   - Every answer carries `X-RateLimit-Limit` and `X-RateLimit-Remaining` headers; going over returns **429**.
-- **In this repository:** web pages use `shared/nasa.js` (the visitor's key in their browser only); Python reads
-  `NASA_API_KEY` from `.env`. No key is committed.
+- **In this repository:** no key is committed. Since Nov 12, 2026 the daily data job (`fetch_neows.py`) uses the
+  developer's key from the repository secret `NASA_API_KEY` (GitHub › Settings › Secrets and variables › Actions) to
+  copy the NeoWs data most visitors see into `asteroid-tracker/data/neows/`, so visitors need no key. A key cannot be
+  shared through the pages instead: anything in a public page is readable by anyone, and all visitors would share one
+  key's limit. For weeks and asteroids outside the copy, web pages use `shared/nasa.js` (the visitor's own key, kept
+  in their browser only, otherwise `DEMO_KEY`, whose limit is counted per visitor's connection). Python scripts run
+  by hand read `NASA_API_KEY` from `.env`.
+
+### Daily copy of NeoWs (`asteroid-tracker/data/neows/`, since Nov 12, 2026)
+
+- **What:** the `feed` for the current week (Sunday to Saturday, UTC) and the two weeks before and after it
+  (`week-YYYY-MM-DD.json`), and `neo/{id}` for every asteroid in those weeks (`neo/<id>.json`), in NeoWs's own shape,
+  trimmed to the fields the pages use (Earth approaches only); `index.json` lists the weeks, the asteroids, when each
+  was fetched and whether the developer's key was used.
+- **Requests:** a first run about 5 + 600; later runs only asteroids new to the window, plus copies older than 14
+  days, at most 750 a run; the script stops when NASA reports fewer than 25 requests left. Without the secret it uses
+  `DEMO_KEY` for the weeks only.
+- **If it fails:** the step is marked with a warning, the previous copy is kept, and the pages ask NASA directly.
+- **Pages:** `asteroid-tracker/neows.js` reads the copy first; the week view and the asteroid page ask NASA only for
+  what the copy does not hold.
 
 ## Asteroid Tracker
 

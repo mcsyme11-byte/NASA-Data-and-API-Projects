@@ -1,5 +1,13 @@
 # Change log
 
+## November 12, 2026 — Asteroid Tracker: no key needed for visitors
+
+- The daily data job copies NASA's NeoWs data for the current week, the two weeks before and after it, and every
+  asteroid in them (`fetch_neows.py`, `data/neows/`), using the developer's key from the repository secret
+  `NASA_API_KEY`. The "This week" list and the asteroid pages read that copy first, so visitors need no key and use
+  none of their own allowance; other weeks and asteroids are still asked of NASA directly.
+- Key settings now reads "No key needed" and explains that a personal key is optional.
+
 ## November 11, 2026 — Image Explorer: map tap card, map lines and names, gaps filled, more on the globe
 
 - **Tapping the Earth map** says where the spot is: the country (from Natural Earth outlines), a natural feature on or

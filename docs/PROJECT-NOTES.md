@@ -136,6 +136,12 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   on-screen arrow buttons for panning on phones. Neither centre's server allows calls from web pages, so the data job
   writes `data/risk.json` and `data/esa_close.json`. NASA stays the main source; every figure says which agency it
   comes from. The developer waived the mock-up step for this addition ("just do as much as you can").
+- **Decided Nov 12, 2026 (Asteroid Tracker, keys):** the site must work for every visitor without a key. NeoWs (the
+  "This week" list and each asteroid's page) needs an api.nasa.gov key, and a key placed in a public page could be
+  read and used up by anyone, so the daily data job copies the NeoWs data most visitors see (the current week, two
+  weeks either side, and their asteroids) with the developer's key from the repository secret `NASA_API_KEY`. Pages
+  read the copy first; other weeks and asteroids are asked of NASA directly with the visitor's own key or the demo
+  key (limit counted per connection). Key settings is optional and says so ("No key needed").
 - **Decided Nov 10, 2026 (Asteroid Tracker):** asteroids on an impact-risk list are drawn in rose on the map, a
   colour no orbit type uses, at 2 × 2 pixels; diamond outlines are added only when zoomed in, because at full view
   about 2,500 outlines covered the map. Share links carry the view in plain, readable parameters (`view=1` marks a

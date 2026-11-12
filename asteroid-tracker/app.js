@@ -1,8 +1,9 @@
 // NASA and ESA Data Projects · Asteroid Tracker · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
 // Two views:
-//   This week  live from NASA NeoWs (/neo/rest/v1/feed, at most 7 days per request; 1 request per week shown),
-//              through shared/nasa.js, which keeps the visitor's key in their browser and caches answers per visit.
+//   This week  NASA NeoWs (/neo/rest/v1/feed): from the daily copy (data/neows/, neows.js) for the current week and
+//              the two weeks before and after it, so no key is needed; any other week live from NASA through
+//              shared/nasa.js (the visitor's own key if saved, otherwise DEMO_KEY; answers cached per visit).
 //   By year    from data/years.json and data/YYYY.json (2000 to next year), written by fetch_close_approaches.py on
 //              GitHub Actions once a day (the JPL close-approach API blocks direct calls from web pages).
 // Charts are in charts.js; units and the size-from-brightness rule in format.js.
@@ -16,6 +17,7 @@ import { COL, COMET_CODES } from './skymap.js';
 import { neowsId } from './search.js';
 import { placeKeeper, scrollBack } from './back.js';
 import { takeShared, linkWith, shareButton } from './share.js';
+import { weekCopy, copyInfo } from './neows.js';
 import { mountRisk, chanceText } from './risk.js';
 import { esaApproach, riskOf } from './esa.js';
 
@@ -52,13 +54,22 @@ function notice(target, msg, actions = '') {
 }
 
 // ---------------------------------------------------------------- key settings
+// No key is needed: the weeks around today and their asteroids come from the daily copy (neows.js). Other weeks and
+// asteroids are asked of NASA directly, with the visitor's own key if they saved one, otherwise NASA's demo key.
+let copyNote = '';
+copyInfo().then((c) => {
+  if (!c || !c.weeks.length) return;
+  const d = (s) => dateText(Date.parse(s + 'T00:00:00Z'));
+  copyNote = `The weeks of ${d(c.weeks[0])} to ${d(c.weeks[c.weeks.length - 1])}, and the asteroids in them, come from a copy of NASA's data refreshed every day (last ${esc(c.updated)}), so they need no key and use none of your allowance. `;
+  showKeyState();
+});
 function showKeyState() {
   const demo = usingDemoKey();
-  $('#keyPill').className = 'pill ' + (demo ? 'warn' : 'good');
-  $('#keyPill').textContent = demo ? 'Demo key' : 'Your key';
-  $('#keyNote').innerHTML = demo
-    ? 'This page is using NASA\'s shared demo key: 30 requests an hour and 50 a day for your connection. A free key from <a href="https://api.nasa.gov/" target="_blank" rel="noopener">api.nasa.gov</a> allows 1,000 an hour. Each week shown costs 1 request, and so does each asteroid\'s page; the "By year" view costs none.'
-    : 'Your own key is saved in this browser only (never sent anywhere but NASA): 1,000 requests an hour. Each week shown costs 1 request, and so does each asteroid\'s page. Remove it to go back to the demo key.';
+  $('#keyPill').className = 'pill good';
+  $('#keyPill').textContent = demo ? 'No key needed' : 'Your key';
+  $('#keyNote').innerHTML = copyNote + (demo
+    ? 'Other weeks and asteroids are asked of NASA directly with NASA\'s shared demo key: 30 requests an hour and 50 a day for your connection (each week or asteroid page is 1 request). To raise that to 1,000 an hour, add your own free key from <a href="https://api.nasa.gov/" target="_blank" rel="noopener">api.nasa.gov</a>. It is optional.'
+    : 'Other weeks and asteroids are asked of NASA directly with your own key: 1,000 requests an hour. It is saved in this browser only and sent only to NASA; remove it to go back to the demo key.');
   $('#keyRemove').disabled = demo;
 }
 function toggleKeyCard(open = $('#keyCard').hidden) {
@@ -105,7 +116,9 @@ async function loadWeek() {
   $('#moreRow').hidden = true;
   fillDays();
   try {
-    const feed = await nasaGet('/neo/rest/v1/feed', { start_date: isoDate(new Date(start)), end_date: isoDate(new Date(end)) });
+    // the daily copy when it holds this week (no key, no request to NASA); otherwise NASA directly
+    const copy = await weekCopy(isoDate(new Date(start)));
+    const feed = copy ? copy.feed : await nasaGet('/neo/rest/v1/feed', { start_date: isoDate(new Date(start)), end_date: isoDate(new Date(end)) });
     if (start !== state.weekStart) return;   // the user moved on to another week meanwhile
     state.week = Object.values(feed.near_earth_objects || {}).flat().map(toObject);
     if (keepRow && keepRow.weekStart === start) { state.selected = keepRow.selected; state.showAll = keepRow.showAll; }

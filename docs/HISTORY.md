@@ -96,3 +96,9 @@ How NASA and ESA Data Projects came about, in order.
 
 - The project gained a Project Record: the whole project as one PDF, rebuilt by GitHub after every change except the
   daily data updates, in the same way as the developer's other projects.
+
+## November 12, 2026 — No key needed for visitors
+
+- The Asteroid Tracker's "This week" list and asteroid pages had relied on each visitor's NASA key, or NASA's shared
+  demo key (30 requests an hour and 50 a day per connection). The daily data job now copies that data with the
+  developer's key, kept as a GitHub secret, so the site works for every visitor without a key.
