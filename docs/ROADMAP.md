@@ -6,38 +6,31 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 ## 0. Repository (set up Nov 8, 2026)
 
 
-- [ ] Optional: a **Project Record** PDF rebuilt automatically after every push, as in the Flight Deck Suite and Hot Mic.
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)
 
-- [ ] **Developer testing**, at the developer's own pace: the live page with real data on a computer and a phone;
-  both views, the filters, sorting, row details, key settings (save and remove the personal key).
-- [ ] **Developer testing of the additions:** an asteroid's page (open one from a row's details), the orbit
-  diagram (Top / Tilted / Side, drag to turn, Play, the slider, Near Earth, tapping an approach), and past years
-  in the "By year" view.
+- [ ] **Developer testing of the Nov 12, 2026 additions** (built and published Nov 12, 2026):
+  - Asteroid Tracker, "Visible from here" tab: "Use my location" and a typed town; the passes list, the night chart,
+    "Find it ›" opening Sky Finder; "Forget this place".
+  - Sky Finder (`sky-finder/`), on a phone outdoors at night: add to the home screen (iPhone and Android); the safety
+    notice; camera, location and motion prompts; calibration on the Moon or a planet; the markers lining up with the
+    real Moon, planets and bright stars; an asteroid's diamond and path; red light; the ISS or Tiangong passes; the
+    how-to page.
+  - Spacecraft map (`spacecraft/`) and the home page's new panel: the five views, search, agency and kind filters,
+    the card for several craft, Follow, the path, Share, time controls; the asteroid map link under the panel.
+- [ ] Read the first runs of the new "Spacecraft data" workflow and the "Fetch sky positions" step of "Asteroid data"
+  (Actions logs): every craft should be found; any "not found" line (Horizons name or CelesTrak name) needs its
+  `src` corrected in `spacecraft/catalogue.json`. Links reported broken in `spacecraft/data/links.json` need new
+  addresses.
+- [ ] Spacecraft map, from the first data run (Nov 12, 2026): add TESS, SPHEREx and WSF-M1, which CelesTrak did not
+  return by name (TESS not even by its catalogue number 43435), by catalogue numbers (`#nnnnn` in `src.tle`, checked on celestrak.org); find Tianwen-1 and Tianwen-2 in Horizons if they are
+  added there; replace the links the check reported broken (Chandra, Einstein Probe and SOHO at ESA, Mars Odyssey,
+  Curiosity, LRO, KASA) with their current addresses.
+- [ ] Review `spacecraft/catalogue.json` every few months: take missions that have ended off the list, add new ones.
 - [ ] Watch the scheduled "Asteroid data" runs (06:17 and the 14:47 backup, added Nov 9, 2026): at least one should
   run each day.
-- [ ] **Developer testing of the home page's "closest pass, next 7 days" line, the size comparisons and the three new
-  famous passes** (Toutatis, 2012 TC4, 2023 BU), on a computer and a phone.
-- [ ] **Developer testing of map panning** with a mouse (right, middle and Shift drag), a trackpad (the ✥ button)
-  and a phone (two fingers), and of the "‹ Back" buttons going back exactly one page.
-- [ ] **Developer testing of the orbit diagram's close-approach rings,** the countdown, Play stopping at the approach,
-  the new speeds, and turning a famous pass off by pressing its button again.
-- [ ] **Developer testing of the map, search and home preview:** dragging, pinching and zooming on a phone and a
-  computer; Play at each speed; full screen and leaving it; Find; "Found by the end of" with Watch; "Close to Earth
-  in"; the Search tab with "Found in"; the naming guide; the live preview on the home page.
-- [ ] **Developer testing of the Nov 9 additions:** the five famous close passes on a computer and a phone (each
-  flies to Earth, plays and pauses at closest approach); zooming right in to Earth and to a selected asteroid; the
-  live clock; the full-screen and exit buttons; the "‹ Back" buttons (tracker → an asteroid → Back returns to the
-  same week, filters, open row and scroll position; the same from the map, the Search tab and the "By year" view);
-  every name in the "By year" tables opening its own page.
 - [ ] Confirm the monthly refresh of `data/famous.json` on the 1st of the month (the "Asteroid data" log shows
   "famous.json written").
-- [ ] **Developer testing of the ESA additions (Nov 9, 2026),** on a computer and a phone: the Impact risk tab
-  (filters, sorting, row details, the links to ESA's and NASA's pages), an asteroid page's "Impact risk" section, the
-  ESA tiles in a week row's details, the map's "On a risk list" filter and the arrow buttons that appear with ✥.
-- [ ] **Developer testing of the map's free tilt (Nov 10, 2026):** drag up and down past edge-on to look from
-  underneath and round again, on a computer and a phone; the Top, Tilted and Side buttons bring the view back.
 - [ ] Watch the "Fetch impact-risk lists and ESA close approaches" step in the "Asteroid data" runs: ESA calls its
   automated access experimental, so a change of format stops the step (the previous files are kept) and needs a fix
   in `fetch_risk.py`.
@@ -46,23 +39,28 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 2. Image Explorer (version 1 live Nov 9, 2026; additions Nov 9)
 
-- [ ] **Astronaut photos: request the free API key** by email from jsc-earthweb@mail.nasa.gov (Gateway to Astronaut
-  Photography of Earth), then store it on github.com as the repository secret `EOL_API_KEY` (Settings › Secrets and
-  variables › Actions › New repository secret) and run Actions › Astronaut photos › Run workflow once. Until then the
-  globe hides the astronaut photos. The first real run is the first test of `fetch_astronaut_photos.py` against the
-  API (it was tested on records shaped like the API documentation's examples).
-- [ ] Picture library: ESA's videos (esawebb.org/videos, esahubble.org/videos) beside NASA's, if wanted.
+- [ ] Astronaut photos: the free API key (requested by email from jsc-earthweb@mail.nasa.gov; no answer by Nov 11,
+  2026) would add cataloged photos with their centre points. Without it the job uses the public Latest ISS Imagery set
+  (since Nov 11, 2026). If the key arrives: repository secret `EOL_API_KEY`, then Actions › Astronaut photos › Run
+  workflow.
+- [ ] **Developer testing of the Nov 11, 2026 additions:** tapping the Earth map in a desert, at sea and near a town
+  (country, feature, distance); the gaps between satellite passes filled; Map lines and names (borders, coastlines,
+  rivers, names, grid) in all three views; the globe's earthquakes, volcanoes, launch sites, natural wonders and
+  astronaut photos.
+- [ ] **Developer testing of the Nov 10, 2026 additions,** on a computer and a phone: the Earth map's colour keys and
+  the note under the map when a layer shows another day; place search for smaller places (for example Moraine Lake,
+  Mount Rundle); the globe zoomed in close (sharper Earth) and the Day and night button; ESA videos with "Pictures and
+  videos" or "Videos".
 - [ ] Picture library: tune the ranking further as the developer reviews searches (the weights are in `scoreOf` in
   `image-explorer/app.js`).
 - [ ] Polar views: a sea ice layer that works through the polar night. GIBS's microwave sea-ice records ended
   (SSMIS Aug 2021, AMSR2 Sep 2025); the current one is MODIS (a camera, daylight only). Ice surface temperature
   (`MODIS_Terra_Ice_Surface_Temp_Night`, thermal) is an option to consider.
 - [ ] Further rounds of changes to the globe, as the developer reviews it.
-- [ ] Place search: smaller natural features (Natural Earth 1:10m leaves out, for example, Lake Louise and the Bow
-  River).
 - [ ] Picture library: subtitles for videos (NASA's files cannot be attached from another site; would need a copy).
 - [ ] Shared parts used by both projects (tabs, "How to read this", the big search box, the tooltip) moved from
   `asteroid-tracker/tracker.css` into `shared/theme.css`; the page still loads `tracker.css` for them.
+- [ ] Globe: more sky objects (fainter galaxies), if wanted.
 - [ ] Keyboard use of the globe's markers (today they are reached through Find). With reduced motion set, the globe
   does not turn by itself and moves without animation; to be rechecked on a phone.
 
@@ -71,17 +69,21 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated automatically by a GitHub Actions job.
 
 **Data and analysis**
-- [ ] Check each source against the agency's current documentation and record it in `docs/DATA-SOURCES.md` with its
-  exact credit line: Curiosity REMS (MODRDR), Perseverance MEDA, Mars Express MaRS profiles (ESA, CC BY-NC 3.0 IGO).
-- [ ] Test that GitHub's servers can reach the NASA PDS Atmospheres Node and ESA's Planetary Science Archive (the
-  project's cloud workspace cannot).
-- [ ] Download the REMS record in chunks (the whole mission, sol 1 to the newest released sol); look at the files'
-  columns on the first chunk. Confirm the newest sol in the archive (the REMS
-  page gives sol 4488, its volume list sols 1–3778).
-- [ ] Cleaning, chunk by chunk: missing and impossible values, confidence flags, units, gaps marked; a cleaning
-  report per chunk (rows kept and removed, reasons, gaps) checked before the next chunk.
-- [ ] Organise by sol, Ls (season), time of day and site.
-- [ ] Statistics: daily highs and lows, seasonal averages, relationships between measurements.
+- [x] REMS, the whole record (sols 1–4843, August 7, 2012 to March 22, 2026; 4,703 sols with data), cleaned with rules
+  1.1 in chunks; every cleaning report checked (Nov 12, 2026).
+- [x] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): all done and checked (row counts match NASA's labels).
+- [ ] Next: the scheduled "Mars data" job on main (twice a week): pick up new REMS releases (sols after 4843), process
+  only new or replaced files, check, commit, and open a GitHub issue (emailed) when new data arrives or a run fails.
+  It replaces the branch job; then delete the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the
+  `mars-probe` branch.
+- [ ] Review the values set aside (`mars-data/analysis/exclusions.csv`, CLEANING.md rule 10): air temperature on 26
+  sols (2803, 2844, 4087, 4089, 4092, 4094, 4174, 4179, 4186, 4208, 4221, 4222, 4263, 4274, 4282, 4298, 4432, 4775,
+  4780, 4781, 4792, 4808, 4809, 4817, 4821, 4841). Each has one hour at about 18:00–20:00 local reading about −115 to
+  −120 °C between hours of −35 to −55 °C: a recurring evening sensor glitch, more frequent since sol 4087. Consider an
+  automatic rule for a single hour far out of line with the hours on both sides (25 K or more), applied to the
+  minute data before the daily statistics.
+- [ ] Optional: ask ESA (data.licences@esa.int) to confirm the spelling of the Mars Express MaRS credit line
+  ("M. Plätzold, K. Pieter" on ESA's terms page; the archive names Martin Pätzold).
 - [ ] Add MEDA (Jezero Crater) and the MaRS profiles (ESA) to the same pipeline.
 
 **Automatic updates**
@@ -97,7 +99,6 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 - [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
 
 **Page**
-- [ ] Charts page mock-up for approval: pressure over the Mars year, one sol hour by hour, daily highs and lows,
-  season × time of day, one relationship; later the Mars Express profiles.
-- [ ] Charts page in the project's look; a short write-up of what the patterns show.
+- [x] Page live (Nov 12, 2026) with the whole record, sols 1–4843.
+- [ ] A short write-up on the page of what the patterns show, once the whole record is in.
 - [ ] `CREDITS.md`, the Credits page and the Privacy page updated for the new sources in the same change.

@@ -1,5 +1,192 @@
 # Change log
 
+## November 12, 2026 — Mars Data: the whole Curiosity record
+
+- Curiosity REMS sols 4258–4843 (Mars Years 37–38) added; the page now covers the whole released record: sols
+  1–4843 (August 7, 2012 to March 22, 2026), 4,703 sols with data, Mars Years 31–38. Every cleaning report checked.
+- The recurring evening air-temperature glitch was found on 26 sols in all; their air temperature is set aside for
+  review (`mars-data/analysis/exclusions.csv`).
+- The charts use eight colours, one for each Mars Year (two added to the theme's six for this page).
+
+## November 12, 2026 — Mars Data: sols 3645–4257 added; evening glitch set aside
+
+- Curiosity REMS sols 3645–4257 (Mars Year 37); every cleaning report checked. The page now covers sols 1–4257.
+- A recurring air-temperature glitch (one hour at about 19:00–20:00 local reading about −120 °C) was found on 12 sols
+  across the record; their air temperature is set aside for review (`mars-data/analysis/exclusions.csv`).
+
+## November 12, 2026 — Mars Data: sols 3069–3644 added; corrected UV complete
+
+- Curiosity REMS sols 3069–3644 (Mars Year 36) and the last corrected UV files (to sol 3423, the end of NASA's corrected
+  UV set); every cleaning report checked, nothing flagged. The page now covers sols 1–3644.
+
+## November 12, 2026 — Mars Data: sols 2483–3068 added
+
+- Curiosity REMS sols 2483–3068 (Mars Years 35–36) and corrected UV for sols 2501–3100; every cleaning report
+  checked, nothing flagged by the automatic review.
+- New cleaning rule 10: a value that passes every rule but is plainly not weather is listed in
+  `mars-data/analysis/exclusions.csv` and left out of the page until reviewed. First entry: sol 2844 air temperature
+  (one hour at −119.6 °C between hours of −38 and −49 °C). The page now covers sols 1–3068.
+
+## November 12, 2026 — Mars Data: sols 1870–2482 added
+
+- Curiosity REMS sols 1870–2482 (Mars Years 34–35) and corrected UV for sols 1901–2500; every cleaning report checked,
+  nothing flagged. Gaps with no data released: sols 2172–2199 and 2321–2346. The 2018 global dust storm (around sols
+  2085–2120) shows as very low midday UV and daily pressure swings of up to 140 Pa. The page now covers sols 1–2482.
+
+## November 12, 2026 — Mars Data: sols 1294–1869 added
+
+- Curiosity REMS sols 1294–1869 (Mars Years 33–34) and corrected UV for sols 1301–1900, cleaned with rules 1.1;
+  every cleaning report checked (no problems, nothing flagged for review; UV row counts match NASA's labels). The page
+  now covers sols 1–1869.
+
+## November 12, 2026 — Sky Finder, "Visible from here" and the spacecraft map
+
+- **Asteroid Tracker, "Visible from here" tab** (`#visible`): choose a place ("Use my location" or a town from the
+  GeoNames list); the close passes of the next 30 days that rise at least 10° above that horizon in full darkness
+  (the Sun 12° down), each with its best moment, highest point, brightness and what is needed to see it (naked eye up
+  to magnitude 6, binoculars 6–9, small telescope 9–12, large telescope 12–15, too faint above 15); a night chart of
+  its height hour by hour; "Find it ›" opens Sky Finder. Data: `data/sky.json`, written daily by `fetch_sky.py`
+  (NASA/JPL close approaches and Horizons). The place stays in the browser.
+- **Sky Finder** (`sky-finder/`): an installable phone web app. Tonight's list (asteroid passes, the Moon, the
+  planets and the ISS and Tiangong passes you can see); a camera view with a marker and the hour-by-hour path of the
+  chosen asteroid, the Moon, planets, bright stars, the stations, the horizon and the compass points, an arrow to
+  anything off the screen and a line telling which way to turn; calibration on the Moon, a planet or a bright star;
+  drag-to-look where there are no motion sensors; red light; a safety notice on first use; works offline once
+  visited; a how-to page. Linked from the tracker's new tab and the Image Explorer's globe notes. Sky maths in
+  `shared/sky.js`, checked against Astropy.
+- **Spacecraft map** (`spacecraft/`): 82 active spacecraft and stations of NASA, ESA, JAXA, ISRO, CNSA and others,
+  from low Earth orbit to the Voyagers, on the asteroid map's controls, with five views (Solar system, Near Earth,
+  Earth orbit, Moon, Mars), search, agency and kind filters, a card for each craft (figures, launch, description,
+  timeline, links to the agencies' pages), Follow, its path, Share and time controls. Small drawings show what each
+  kind of craft looks like. Data: NASA/JPL Horizons and CelesTrak, copied twice a day by the new "Spacecraft data"
+  workflow; satellites worked out in the browser with satellite.js (MIT).
+- **Home page:** the large panel now previews the spacecraft map (the asteroid map's preview takes its place if the
+  spacecraft data cannot be loaded); the asteroid map is a link under it; a Sky Finder banner.
+- **Privacy, Terms and Credits** updated first: the place, Sky Finder's settings and offline copy; camera, location
+  and motion use; safety at night and never looking at the Sun; CelesTrak and satellite.js credits.
+## November 12, 2026 — Mars Data page live
+
+- **Mars Data page** (`mars-data/index.html`), built from the approved mock-up: pressure through the Martian year
+  (with a correction for the rover's climb), the daily pressure swing, humidity at night (preliminary), midday
+  ultraviolet, temperature by season and hour, any sol hour by hour, daily highs and lows, and the rover's climb.
+  Loading and error states; charts drawn at the width they are shown.
+- **Data:** Curiosity REMS sols 1–1293 (Mars Years 31–33), cleaned with rules 1.1, with the cleaning reports
+  (`mars-data/data/rems/reports/`); page files built by `mars-data/analysis/make_page_data.py`.
+- The mock-up files are removed; the home page lists Mars Data as live.
+
+## November 12, 2026 — site-wide polish
+
+A full check of every page at phone, tablet and computer sizes, and these fixes:
+
+- **Feel:** quick hover and press feedback on every button, chip, tab and link; a brass glow on focused fields; a
+  solid header with a soft shadow; dark date pickers and dropdowns.
+- **Phones:** tab bars and chip rows that don't fit scroll sideways with a soft edge fade, and the selected tab
+  scrolls into view (Asteroid Tracker tabs and search chips, the Globe's and Picture library's chip rows); tap
+  targets raised to 40 px (the site name, "Its page ›", "Clear", sliders, the "Asteroid Tracker" link above titles);
+  search placeholders shortened to fit.
+- **Number tiles** shrink their figures slightly on narrow tiles, so values such as "0.75–1.10 au" and "11 Nov 2026"
+  are never cut off at the tile's edge.
+- **"How to read this"** is easier to read (12 px).
+- **Asteroid Tracker:** one tab bar on every page (the map and asteroid pages gained Impact risk); the map page always
+  has its Back button; space between the Impact risk intro and its tiles; labels on the Solar System Map and the
+  orbit diagram outlined so they read clearly over dots and orbits; the orbit diagram's date no longer covers its
+  labels on phones (a map-only rule had applied to it); "Asteroid not found" as the title for an unknown number;
+  the asteroid page's tags and links in one consistent style.
+- **Image Explorer:** fewer place names on a phone-sized Earth map, so they don't crowd; the Picture library's
+  source filter is now "Library" (it shared "From" with the year), and its labels match the other rows; its Clear
+  button appears once something is typed.
+- The rules behind these are in `docs/DESIGN.md` (8a. Feel) and CLAUDE.md, so new pages follow them.
+
+## November 12, 2026 — Asteroid Tracker: no key needed for visitors
+
+- The daily data job copies NASA's NeoWs data for the current week, the two weeks before and after it, and every
+  asteroid in them (`fetch_neows.py`, `data/neows/`), using the developer's key from the repository secret
+  `NASA_API_KEY`. The "This week" list and the asteroid pages read that copy first, so visitors need no key and use
+  none of their own allowance; other weeks and asteroids are still asked of NASA directly.
+- The Key settings box was removed: with the daily copy no visitor needs a key. A key saved by the earlier version
+  is deleted from the browser on the next visit; the Privacy and Terms pages say so.
+- The secret `NASA_API_KEY` was added the same day; the first run copied 5 weeks and 199 asteroid pages, and the
+  live site was confirmed to open the week and asteroid pages from the copy without asking NASA.
+
+## November 11, 2026 — Image Explorer: map tap card, map lines and names, gaps filled, more on the globe
+
+- **Tapping the Earth map** says where the spot is: the country (from Natural Earth outlines), a natural feature on or
+  near it (for example "Hamada de Tinrhert · desert · Algeria"), and the distance and direction from the nearest town
+  ("347 km south of Hassi Messaoud"); at sea, the sea or ocean. "Open water or remote land" is gone. Rivers' points
+  (their mouths) are left out of "near".
+- **Gaps between satellite passes** show a cloud-free Blue Marble picture instead of black (not under night lights).
+- **Map lines and names:** coastlines, land borders, rivers, a latitude and longitude grid, and names of countries,
+  capitals and cities (more as the map zooms in; bigger places win where names crowd), each with a button; in all three
+  views. Built from Natural Earth 1:50m by `tools/build_shapes.py`.
+- **Globe:** earthquakes of magnitude 4.5 or more in the past week (USGS, live; circles sized by magnitude), 276
+  volcanoes, 24 launch sites and 711 natural wonders (national parks, waterfalls, glaciers, gorges, caves, reefs; off at
+  first), each with its own button, card, "See it on the Earth map", pictures, and in Find
+  (`data/globe-spots.json`, `tools/build_globe_spots.py`).
+- **Astronaut photos without the key:** the daily job reads NASA's public Latest ISS Imagery set when there is no
+  `EOL_API_KEY`; photos not yet cataloged are pinned below the Station and say so.
+- Privacy and Credits list the US Geological Survey; Credits list the new Natural Earth and GeoNames uses.
+
+## November 12, 2026 — Project Record builds again
+
+- **Fixed:** the Project Record's automatic rebuild stopped on its personal-details check from Nov 11, 2026 (commit
+  01c5a37 onward), because the Mars Data notes quote ESA's licensing contact address. Every push since then failed
+  the rebuild and sent the developer an e-mail; no commit was refused, and only the PDF stayed at its earlier edition.
+  The check now allows any address at nasa.gov or esa.int (official agency contacts); any other address still stops
+  the build.
+- `mars-data/analysis/CLEANING.md` has its place in the record's Mars Data Part.
+
+## November 12, 2026 — Mars Data: sources checked, cleaning rules and a mock-up
+
+- **Sources checked** from GitHub's servers and recorded in `docs/DATA-SOURCES.md`: Curiosity REMS (NASA PDS
+  Atmospheres Node, sols 1–4843), Perseverance MEDA (NASA PDS), Mars Express MaRS profiles (ESA Planetary Science
+  Archive, CC BY-NC 3.0 IGO), with their citations and ESA's credit line.
+- **Cleaning rules 1.1** (`mars-data/analysis/CLEANING.md`): NASA's quality flags read character by character,
+  physical limits, coverage of each sol, daily statistics, humidity (labelled preliminary), corrected UV. Code in
+  `mars-data/analysis/`; Ls and Mars Year calculated from the date (`mars_time.py`), checked against NASA's values.
+- **Mock-up** of the charts page for approval: `mars-data/mockup.html`, drawn from the cleaned data for sols 1–1293,
+  including humidity (preliminary) and corrected UV. A midday UV peak counts only between 10:30 and 13:30 local time on
+  a sol with at least 30 minutes of UV. Approved by the developer on November 11, 2026.
+
+## November 11, 2026 — Project Record
+
+- **Project Record:** `docs/NASA and ESA Data Projects - Project Record.pdf`, the whole project as one PDF (cover,
+  Document control, contents, 14 Parts, glossary), built from the repository by `docs/record/`, adapted from the
+  Flight Deck Suite's and Hot Mic's records.
+- **Rebuilt automatically** by `.github/workflows/project-record.yml` after every push to main, except pushes that
+  change only data files (the daily data updates); the Repository History counts those instead of listing them.
+- The build stops if a personal detail would end up in the record; the agencies' public contact addresses quoted in
+  the data-source notes are allowed.
+- **Wording check:** data files are checked for keys only, since they hold real place and object names.
+
+## November 10, 2026 — Image Explorer: ESA's videos; smaller places in place search
+
+- **ESA's videos:** with "Pictures and videos" or "Videos", searches also ask ESA/Webb and ESA/Hubble's video
+  archives. An ESA video plays the small file from ESA's servers and links the full HD file; the viewer shows its
+  credit line (with line breaks, including the music credit), length and release date, and notes that the music has
+  its own terms. The page waits at most 12 s for each ESA archive; a slower one is left out of that search, and the
+  results line says it did not answer in time.
+- **Smaller places in place search:** about 85,000 lakes, rivers, glaciers, peaks, passes, islands, parks and other
+  natural features from GeoNames that have an English Wikipedia article (for example Lake Louise, Moraine Lake, the Bow
+  River, Mount Rundle, the Athabasca Glacier), with their English names. The list loads after the main place list;
+  a name typed in full is shown first, then the most widely named places (Antarctica's many small named features
+  last). It is built by the manual job "Build smaller places"
+  (`.github/workflows/build-places.yml`, `tools/build_geonames_features.py`).
+- The map's place card offers "Pictures of …" (NASA's and ESA's libraries) instead of "NASA pictures of …".
+
+## November 10, 2026 — Asteroid Tracker: risk colour on the map, ESA and NASA compared, share links
+
+- **Orbit diagram:** the tilt turns all the way round with a mouse, as on the map; "seen from below" labels the view
+  from underneath.
+- **Map:** asteroids on ESA's or NASA's impact-risk list are drawn in rose (2 × 2 pixels) and, zoomed in closer than
+  about 0.35 au, ringed with a small diamond; "Show in their orbit colours" under Orbit types turns this off (kept on
+  Back and reload).
+- **Asteroid page:** "ESA and NASA compared", a chart of both centres' chances (the most likely impact and all
+  possible impacts together, on a log scale) and the years in which each finds an impact possible, with the most
+  likely year marked. ESA's special risk list gives no years or total chance; the chart says "not given" there.
+- **Share links:** "Share this view" on the map (zoom, angle, centre, selection, date, filters, or the famous pass in
+  progress) and "Share this week" on the tracker (the week, filters and open row). On a phone the share sheet opens;
+  elsewhere the link is copied, or shown ready to copy. The link's settings are removed from the address once applied.
+
 ## November 11, 2026 — Projects numbered in build order; Mars Data uses the whole Curiosity record
 
 - Image Explorer is now Project 2 and Mars Data Project 3, on the home page (in that order), the project pages and
@@ -16,8 +203,9 @@
 
 ## November 10, 2026 — Image Explorer: sharper globe close up; day and night
 
-- Zooming in on the globe lays finer Blue Marble pictures over the part of the Earth in view: about 4 km a pixel
-  when close, 2 km closer, 1 km closest (from about 8 km before).
+- Zooming in on the globe lays finer Blue Marble pictures over the part of the Earth in view, about 4, 2, 1 and
+  0.5 km a pixel as the view comes closer (about 8 km before); each level starts where the one before would show
+  fewer picture pixels than screen pixels.
 - **Day and night:** the half of the Earth facing away from the Sun is shaded, with a soft edge for twilight, from the
   Sun's position at the current time; the Earth keeps turning with the time while the page is open. A "Day and night"
   button turns the shading off.

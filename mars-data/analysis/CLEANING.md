@@ -1,4 +1,4 @@
-# Cleaning rules: Curiosity REMS (version 1.1)
+# Cleaning rules: Curiosity REMS (version 1.2)
 
 Rules applied by `rems.py` to NASA's REMS MODRDR tables (Curiosity's weather station, Gale Crater). Each rule says
 what is done and why. A change to any rule raises the version number in `rems.py` (`RULES_VERSION`), and every row of
@@ -23,6 +23,7 @@ every run, and processing stops if it has changed.
 | A flag gives information, not quality | 5 | Kept, and counted in the report |
 | A sol has good data in fewer than 22 of its 24 hours | 6 | Statistics are given but marked "partial" |
 | Corrected UV is missing (Sun more than 55° from overhead) | 9 | No UV value for that minute |
+| An air-temperature minute is 25 K beyond both neighbouring hours | 11 | The readings of that minute are removed |
 
 ## Rule 0 — Missing values
 
@@ -132,6 +133,22 @@ calibration. It covers sols 1–3423, and only times when the Sun is less than 5
 A value that passes every rule but is plainly not weather (for example one hour 80 °C colder than the hours either
 side) is listed in `exclusions.csv` with the sol, the measurement and the reason. It stays in the data files but is
 left out of what the page shows until it has been reviewed. The automatic rules are not changed for a single case.
+
+## Rule 11 — Single-hour air-temperature glitches (since version 1.2)
+
+On some evenings (about 18:00–20:00 local, more often since sol 4087) the air temperature reads about −115 to −120 °C
+for part of one hour, between hours of about −35 to −55 °C. Air cannot cool by 70 K and warm again within an hour, so
+these readings are not weather. They pass rules 3 and 4 (the flags are good and the values are within the limits), so
+a separate rule removes them:
+
+- for each local hour whose neighbouring hours (before and after) both have at least 60 good readings, take the mean
+  of each neighbour;
+- a one-minute median in that hour more than 25 K colder than the colder neighbour's mean, or 25 K warmer than the
+  warmer one's, is a glitch, and every reading in that minute is removed;
+- the rest of the hour and of the sol is kept. Each cleaning report counts the readings removed and names the sols.
+
+Real changes within an hour stay well inside 25 K: the fastest real change, the morning warm-up, is about 10–15 K
+per hour. The rule replaces the 26 sols set aside by hand under rule 10 on November 12, 2026.
 
 ---
 

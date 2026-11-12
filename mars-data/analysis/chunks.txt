@@ -1,2 +1,23 @@
-# Chunks to process (one per line). Rules 1.1.
-# 2026-11-12: the whole record (sols 1-4843) is processed. New releases: the scheduled "Mars data" job on main (planned).
+# Chunks to process (one per line). Saved after each chunk.
+# 2026-11-12: re-run with cleaning rules 1.2 (rule 11), first half.
+SOL_00001_00089
+SOL_00090_00179
+SOL_00180_00269
+SOL_00270_00359
+SOL_00360_00449
+SOL_00450_00583
+SOL_00584_00707
+SOL_00708_00804
+SOL_00805_00938
+SOL_00939_01062
+SOL_01063_01159
+SOL_01160_01293
+SOL_01294_01417
+SOL_01418_01514
+SOL_01515_01648
+SOL_01649_01772
+SOL_01773_01869
+SOL_01870_02003
+SOL_02004_02127
+SOL_02128_02224
+SOL_02225_02358

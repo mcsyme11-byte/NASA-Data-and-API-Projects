@@ -91,3 +91,38 @@ How NASA and ESA Data Projects came about, in order.
   map. Neither centre's server answers web pages directly, so the twice-daily data job copies both lists.
 - The first run showed a speed given as "nan", which made the file unreadable in a browser; the job now keeps only
   finite numbers.
+
+## November 11, 2026 — Project Record
+
+- The project gained a Project Record: the whole project as one PDF, rebuilt by GitHub after every change except the
+  daily data updates, in the same way as the developer's other projects.
+
+## November 12, 2026 — No key needed for visitors
+
+- The Asteroid Tracker's "This week" list and asteroid pages had relied on each visitor's NASA key, or NASA's shared
+  demo key (30 requests an hour and 50 a day per connection). The daily data job now copies that data with the
+  developer's key, kept as a GitHub secret, so the site works for every visitor without a key.
+
+## November 11–12, 2026 — Mars Data, version 1
+
+- Mars Data was planned around Curiosity's weather station (REMS), with Perseverance (MEDA) and ESA's Mars Express
+  to follow, and the whole record from sol 1, cleaned slowly and in chunks. The archives turned out to be reachable
+  only from GitHub's servers, so the work ran there, on a separate branch, with a cleaning report for every chunk.
+- Careful checking caught several traps: a column named "solar longitude" that is the Sun's direction from the rover,
+  not the season; NASA's index stopping at sol 4133 while the data reaches sol 4843; two tables in one ancillary file;
+  quality flags whose first character is not a quality check at all.
+- The developer approved the mock-up the same night, and the page went live with Mars Years 31–33 (sols 1–1293).
+
+## November 12, 2026 — Sky Finder and the spacecraft map
+
+- The developer proposed a phone app that points the camera at a passing asteroid and a page of the passes visible
+  from the visitor's place, then a map of everything humans have sent into space that is still working. Mock-ups were
+  approved with changes (more realistic icons, a plainer banner, facts checked line by line, the phone experience
+  first) and both were built and published together: the "Visible from here" tab, **Sky Finder** and the
+  **spacecraft map**, which took over the home page's large panel.
+
+- Over the night of November 11–12 the rest of the record was processed in batches of about five chunks, each checked
+  before the next, on a schedule of checks every two hours. By midday on November 12 the page held the whole released
+  Curiosity record: sols 1–4843, Mars Years 31–38, with the 2018 global dust storm and the rover's 990 m climb up
+  Mount Sharp visible in the charts. A recurring evening sensor glitch (one hour at about −120 °C) was found on 26
+  sols and set aside for review rather than published.

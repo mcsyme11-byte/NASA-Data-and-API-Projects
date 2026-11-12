@@ -154,7 +154,10 @@ def write_report(chunk: str, results: list[dict], expected: range) -> str:
         n = tot["rows_read"] - tot["rows_duplicate_timestamp"] - tot["rows_bad_local_time"]
         lines.append(f"| {label} | {tot[f'{name}_missing']:,} | {tot[f'{name}_failed_flags']:,} | "
                      f"{tot[f'{name}_outside_limits']:,} | {tot[f'{name}_kept']:,} ({pct(tot[f'{name}_kept'], n)}) |")
-    lines += ["", "Kept with a note (not removed):", "",
+    lines += ["", f"Air temperature readings removed as single-hour glitches (rule 11): {tot['air_temp_spike_rows']:,}"
+              + (f" on sols {', '.join(str(r['sol']) for r in ok if r['report'].get('air_temp_spike_rows'))}"
+                 if tot['air_temp_spike_rows'] else ""),
+              "", "Kept with a note (not removed):", "",
               f"- Pressure readings from oscillator 1 (the sensor has two; oscillator 2 is used most of the time): "
               f"{tot['pressure_oscillator_1']:,}",
               f"- Ground temperature readings with the sensor's power supply flagged out of range: "
