@@ -643,11 +643,20 @@ archives to the Picture library. Checked with requests from GitHub's servers and
 - The page adds each craft's position to its parent's: the Sun at the origin, Earth and the planets from JPL's
   approximate elements, the Moon from Meeus (chapter 47) moved to the J2000 ecliptic.
 
+- First run (Nov 12, 2026): every Horizons craft found except Tianwen-1 and Tianwen-2 (no Horizons target by those
+  names), which stay off the map. Roman resolved to −211, Aditya-L1 to −156, IMAP to −43 and ESCAPADE to −9 (Blue).
+  Perseverance's Horizons trajectory ends on Feb 19, 2026, so the map places it at a fixed point in Jezero crater
+  (18.44° N, 77.45° E) and turns it with Mars (IAU rotation model: pole α₀ = 317.269°, δ₀ = 54.433°, prime meridian
+  W = 176.050° + 350.8919824° a day).
+
 ### CelesTrak orbital elements, checked Nov 12, 2026
 
 - `https://celestrak.org/NORAD/elements/gp.php?GROUP=<group>&FORMAT=tle` (no key), the groups `stations`, `science`,
   `weather`, `resource`, `noaa`, `goes`, `military`, `geodetic`, `active`, read in turn until every craft is found by
   its exact CelesTrak name (`src.tle`, several spellings allowed); otherwise `?NAME=<name>&FORMAT=tle`.
+- A name can also be a catalogue number (`#43435` asks `?CATNR=43435`): CelesTrak does not list TESS by name.
+  First run (Nov 12, 2026): all found except SPHEREx and WSF-M1 (names not matched), which stay off the map until
+  their catalogue numbers are added.
 - Usage policy (celestrak.org/usage-policy.php): data are updated about every 2 hours, and the same request repeated
   within that time is refused (HTTP 403). The job asks twice a day. Credit: "CelesTrak".
 - Written to `spacecraft/data/tle.json`: name, the two lines, NORAD catalogue number and the elements' epoch.

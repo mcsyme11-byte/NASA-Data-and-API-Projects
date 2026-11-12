@@ -36,8 +36,23 @@ export function parentAt(parent, jd, earth) {
   if (parent === 'Moon') { const m = moonGeo(jd); return [e[0] + m[0], e[1] + m[1], e[2] + m[2]]; }
   return planetPosition(parent, jd);
 }
+// A place on Mars's surface (latitude, east longitude), relative to Mars's centre: the IAU rotation model of Mars
+// (pole α₀ = 317.269° − 0.1093°·T, δ₀ = 54.433° − 0.0583°·T; prime meridian W = 176.050° + 350.8919824°·d, d in days
+// and T in centuries from J2000), then from the J2000 equator to the ecliptic.
+function marsSite([lat, lon], jd) {
+  const d = jd - 2451545, T = d / 36525, R = R_MARS / AU_KM;
+  const a0 = (317.269202 - 0.10927547 * T) * RAD, d0 = (54.432516 - 0.05827105 * T) * RAD, W = ((176.049863 + 350.891982443297 * d) % 360) * RAD;
+  const f = lat * RAD, l = lon * RAD + W;
+  const b = [R * Math.cos(f) * Math.cos(l), R * Math.cos(f) * Math.sin(l), R * Math.sin(f)];   // after turning by W
+  const ci = Math.sin(d0), si = Math.cos(d0);                       // tilt of the pole from the equator's pole: 90° − δ₀
+  const y1 = b[1] * ci - b[2] * si, z1 = b[1] * si + b[2] * ci, x1 = b[0];
+  const ca = Math.cos(a0 + Math.PI / 2), sa = Math.sin(a0 + Math.PI / 2);
+  const x = x1 * ca - y1 * sa, y = x1 * sa + y1 * ca, z = z1;      // equatorial J2000
+  return [x, y * CE + z * SE, -y * SE + z * CE];
+}
 // Relative to the parent (au), or null outside the data.
 export function relAt(c, jd) {
+  if (c.site) return marsSite(c.site, jd);
   if (c.rec) {
     const pv = sat.propagate(c.rec, new Date(msFromJd(jd)));
     if (!pv || !pv.position || !Number.isFinite(pv.position.x)) return null;

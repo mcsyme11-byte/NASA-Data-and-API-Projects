@@ -52,6 +52,8 @@ async function load() {
     if (info.src.tle) {
       const t = tleBy[info.key], rec = t && satrecOf(t);
       if (rec) all.push({ key: info.key, info, parent: 'Earth', rec, tle: t });
+    } else if (info.src.site) {                // a rover at a fixed place on Mars
+      all.push({ key: info.key, info, parent: info.src.center, site: info.src.site, local: true });
     } else {
       const s = P.craft && P.craft[info.key];
       if (s && s.xyz && s.xyz.length >= 6) {

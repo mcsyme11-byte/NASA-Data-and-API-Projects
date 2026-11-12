@@ -34,7 +34,7 @@ LD_AU = 384400 / 149597870.7
 
 
 def get(url, params, tries=3):
-    q = urllib.parse.urlencode(params, safe="'@%;=")
+    q = urllib.parse.urlencode(params, safe="'@%")
     for k in range(tries):
         try:
             with urllib.request.urlopen(urllib.request.Request(url + '?' + q, headers=UA), timeout=120) as r:
@@ -89,11 +89,15 @@ def main():
         dist = float(r[f['dist']])
         start, stop = max(jd_now - 1, ca - 6), min(jd_now + 31, ca + 6)
         step_h = 1 if dist < 0.02 else 3
-        res = get(HORIZONS, {
-            'format': 'json', 'COMMAND': "'DES=%s;'" % des if not des.isdigit() else "'%s;'" % des,
+        try:
+            res = get(HORIZONS, {
+            'format': 'json', 'COMMAND': ("'DES=%s;'" % des if not des.isdigit() else "'%s;'" % des).replace(' ', '%20'),
             'EPHEM_TYPE': 'VECTORS', 'CENTER': "'500@399'", 'REF_PLANE': 'FRAME', 'REF_SYSTEM': 'ICRF',
             'START_TIME': "'JD%.5f'" % start, 'STOP_TIME': "'JD%.5f'" % stop, 'STEP_SIZE': "'%d%%20h'" % step_h,
             'OUT_UNITS': 'KM-S', 'VEC_TABLE': '1', 'CSV_FORMAT': 'YES', 'OBJ_DATA': 'NO'})
+        except Exception as e:      # one asteroid that Horizons cannot answer does not stop the others
+            print('  %s: Horizons request failed (%s)' % (des, e))
+            continue
         text = (res or {}).get('result', '')
         if '$$SOE' not in text:
             print('  %s: no vectors (%s)' % (des, ((res or {}).get('error') or text[:160]).strip()[:160]))

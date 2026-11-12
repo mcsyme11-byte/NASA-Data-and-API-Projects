@@ -11,12 +11,13 @@ const getJson = (u) => fetch(u).then((r) => (r.ok ? r.json() : Promise.reject(ne
 
 export async function mountCraftPreview(canvas, base, { onCount } = {}) {
   const [cat, pos, tle] = await Promise.allSettled([getJson(base + 'catalogue.json'), getJson(base + 'data/positions.json'), getJson(base + 'data/tle.json')]);
-  if (cat.status !== 'fulfilled') throw new Error('catalogue');
+  if (cat.status !== 'fulfilled' || (pos.status !== 'fulfilled' && tle.status !== 'fulfilled')) throw new Error('no data');
   const P = pos.status === 'fulfilled' ? pos.value.craft || {} : {}, T = tle.status === 'fulfilled' ? tle.value.sats || [] : [];
   const tleBy = Object.fromEntries(T.map((s) => [s.key, s]));
   const craft = [];
   for (const info of cat.value.craft) {
     if (info.src.tle) { const rec = tleBy[info.key] && satrecOf(tleBy[info.key]); if (rec) craft.push({ key: info.key, info, parent: 'Earth', rec }); continue; }
+    if (info.src.site) { craft.push({ key: info.key, info, parent: info.src.center, site: info.src.site, local: true }); continue; }
     const s = P[info.key];
     if (s && s.xyz && s.xyz.length >= 6) craft.push({ key: info.key, id: info.key, info, parent: s.parent, local: !!info.src.local, samples: [s.jd0, s.step, ...s.xyz.map((v) => v / AU_KM)] });
   }

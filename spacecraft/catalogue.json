@@ -244,7 +244,8 @@
    ],
    "src": {
     "tle": [
-     "TESS"
+     "TESS",
+     "#43435"
     ]
    }
   },
@@ -1522,10 +1523,12 @@
     }
    ],
    "src": {
-    "horizons": "-168",
+    "site": [
+     18.44,
+     77.45
+    ],
     "center": "Mars",
-    "local": true,
-    "step_min": 30
+    "local": true
    }
   },
   {

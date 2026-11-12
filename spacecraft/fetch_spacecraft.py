@@ -173,18 +173,19 @@ def tles(wanted):
                         found[key] = pool[n.upper()]
                         break
         time.sleep(2)
-    for key, names in wanted.items():       # not in any group: ask by name
+    for key, names in wanted.items():       # not in any group: ask by name, or by catalogue number ("#43435")
         if key in found:
             continue
         for n in names:
             try:
-                text = fetch(CELESTRAK, {'NAME': n, 'FORMAT': 'tle'}, as_json=False)
+                q = {'CATNR': n[1:]} if n.startswith('#') else {'NAME': n}
+                text = fetch(CELESTRAK, {**q, 'FORMAT': 'tle'}, as_json=False)
             except Exception as e:
                 print('  CelesTrak name %r: %s' % (n, e))
                 continue
             lines = [l.rstrip() for l in text.splitlines() if l.strip()]
             sets = [(lines[i].strip(), lines[i + 1], lines[i + 2]) for i in range(0, len(lines) - 2, 3) if lines[i + 1].startswith('1 ')]
-            exact = [s for s in sets if s[0].upper() == n.upper()]
+            exact = [s for s in sets if s[0].upper() == n.upper() or n.startswith('#')]
             if exact or len(sets) == 1:
                 found[key] = (exact or sets)[0]
                 break
