@@ -4,6 +4,7 @@
 
 - The approved "Two craters" chart is on the Mars Data page: air pressure at Gale Crater (Curiosity) and Jezero Crater
   (Perseverance) through the same seasons. The page's data credit names the MEDA team; the mock-up file is removed.
+- The Mars Data page has no back button: it is the project's own home page, reached from the site's menu.
 
 ## November 12, 2026 — a shorter footer and a Legal page
 
