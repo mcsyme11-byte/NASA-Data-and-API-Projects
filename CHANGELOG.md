@@ -1,5 +1,14 @@
 # Change log
 
+## November 12, 2026 — Project Record builds again
+
+- **Fixed:** the Project Record's automatic rebuild stopped on its personal-details check from Nov 11, 2026 (commit
+  01c5a37 onward), because the Mars Data notes quote ESA's licensing contact address. Every push since then failed
+  the rebuild and sent the developer an e-mail; no commit was refused, and only the PDF stayed at its earlier edition.
+  The check now allows any address at nasa.gov or esa.int (official agency contacts); any other address still stops
+  the build.
+- `mars-data/analysis/CLEANING.md` has its place in the record's Mars Data Part.
+
 ## November 12, 2026 — Mars Data: sources checked, cleaning rules and a mock-up
 
 - **Sources checked** from GitHub's servers and recorded in `docs/DATA-SOURCES.md`: Curiosity REMS (NASA PDS

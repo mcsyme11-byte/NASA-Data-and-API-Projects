@@ -6,8 +6,8 @@
 # (.github/workflows/project-record.yml); by hand, only if that run failed:   sh docs/record/build.sh
 # Needs: python3 with pypdf and fontTools, node with the npm packages "docx" and "marked", and LibreOffice (soffice).
 # Use a clone with full history: a shallow clone cuts the Repository History chapter short.
-# Fails if a personal detail (a personal folder path, an e-mail address other than the developer's and the agencies'
-# public contact addresses) would end up in the record.
+# Fails if a personal detail (a personal folder path, an e-mail address other than the developer's and NASA's and
+# ESA's own addresses) would end up in the record.
 set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../.." && pwd)
@@ -39,15 +39,16 @@ fi
 node "$HERE/build_record.js" "$ROOT" "$WORK/extras.json" "$OUT" - "$TOC"
 rm -f "$OUT.heads.json"
 
-# personal-details check: no personal folder paths, and no e-mail address but the developer's and the agencies'
-# public contact addresses quoted in the data-source notes
+# personal-details check: no personal folder paths, and no e-mail address but the developer's and the agencies' own
+# (any address at nasa.gov or esa.int is an official NASA or ESA contact quoted in the data-source notes, never a
+# personal one; decided Nov 12, 2026, after ESA's licensing address stopped three rebuilds)
 TEXT="$WORK/text"
 ( cd "$WORK" && unzip -o -q "$OUT" word/document.xml && sed -e 's/<[^>]*>/ /g' word/document.xml > "$TEXT" )
 if grep -n -i -E 'C:\\Users\\[A-Za-z0-9]|/Users/[A-Za-z0-9]|/home/[a-z][a-z0-9_-]*/' "$TEXT" | grep -v -E '/home/(claude|user)/' >/dev/null; then
   echo "STOP: a personal folder path is in the record:"; grep -o -i -E '.{40}(C:.Users|/Users/|/home/).{40}' "$TEXT" | head; exit 1
 fi
 OTHER=$(grep -o -E '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}' "$TEXT" | sort -u \
-  | grep -v -x -E 'mcsyme11@gmail\.com|noreply@anthropic\.com|jsc-earthweb@mail\.nasa\.gov|neocc@esa\.int' || true)
+  | grep -v -x -i -E 'mcsyme11@gmail\.com|noreply@anthropic\.com|[A-Za-z0-9._%+-]+@([a-z0-9-]+\.)*(nasa\.gov|esa\.int)' || true)
 if [ -n "$OTHER" ]; then echo "STOP: an e-mail address other than the developer's is in the record: $OTHER"; exit 1; fi
 echo "personal-details check: OK"
 

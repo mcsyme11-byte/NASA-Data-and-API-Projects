@@ -29,7 +29,7 @@ const PARTS = [
   { title: 'Change Log', intro: 'Every change to the site and the projects, newest first.', docs: [['CHANGELOG.md', { title: 'Change log' }]] },
   { title: 'Asteroid Tracker', intro: 'Project 1: the near-Earth objects passing Earth, from NASA/JPL and ESA.', docs: [['asteroid-tracker/README.md', {}]] },
   { title: 'Image Explorer', intro: 'Project 2: the Earth from orbit, a globe inside the sky, and the picture libraries of NASA and ESA.', docs: [['image-explorer/README.md', {}]] },
-  { title: 'Mars Data', intro: 'Project 3: weather measured on Mars, cleaned, organised, analysed and charted.', docs: [['mars-data/README.md', {}]] },
+  { title: 'Mars Data', intro: 'Project 3: weather measured on Mars, cleaned, organised, analysed and charted.', docs: [['mars-data/README.md', {}], ['mars-data/analysis/CLEANING.md', { title: 'Mars Data: cleaning rules' }]] },
   { title: 'Data Sources', intro: 'Every NASA and ESA source the projects use: addresses, keys, limits, terms and credit lines.', docs: [['docs/DATA-SOURCES.md', { title: 'Data sources' }]] },
   { title: 'Design Language', intro: 'The navy, brass and cream look every page follows.', docs: [['docs/DESIGN.md', {}]] },
   { title: 'Decisions and Working Rules', generated: 'decisions', docs: [['docs/PROJECT-NOTES.md', { title: 'Project notes and decisions' }]] },

@@ -32,7 +32,7 @@ python3 (with pypdf and fontTools), node with the npm packages `docx` and `marke
 
 | File | What it does |
 |---|---|
-| `build.sh` | Runs everything below, then checks the record for personal details (a personal folder path, any e-mail address but the developer's and the agencies' public contact addresses) and stops if it finds one |
+| `build.sh` | Runs everything below, then checks the record for personal details (a personal folder path, any e-mail address but the developer's and NASA's and ESA's own, at nasa.gov and esa.int) and stops if it finds one |
 | `build_record.js` | Lays out the document: cover, Document control, Contents, the Parts. The list of repository documents in each Part is `PARTS` at the top |
 | `export_extras.py` | The parts that aren't Markdown files: the repository history (without the daily data updates and the record's own rebuilds, which are counted), the site's own pages (About, Privacy, Terms of use, Credits, Contact, from their HTML) and the working rules (from CLAUDE.md) |
 | `page_map.py` | Measures which page each Part and chapter starts on (a first build laid out by LibreOffice), for the page numbers in the Contents |
