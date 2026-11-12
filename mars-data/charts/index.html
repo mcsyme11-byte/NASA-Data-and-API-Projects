@@ -38,9 +38,17 @@
     .tip { position: fixed; z-index: 50; pointer-events: none; background: var(--bg2); border: 1px solid var(--brass-dim);
       border-radius: var(--r-btn); padding: 8px 12px; font-size: 13px; line-height: 1.45; max-width: 260px; color: var(--ink); }
     .tip b { font-weight: 400; color: var(--brass-bright); }
-    .gloss { margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
-    .gloss dt { color: var(--brass); font-size: 11px; text-transform: uppercase; letter-spacing: .22em; margin-bottom: 6px; }
-    .gloss dd { margin: 0; color: var(--ink2); font-size: 14.5px; }
+    .secnav { position: sticky; top: 64px; z-index: 9; margin: 0 calc(-1 * var(--gutter)) 6px; padding: 0 var(--gutter);
+      background: var(--bg2); border-bottom: 1px solid var(--line); }
+    .secrow { display: flex; gap: 4px 26px; overflow-x: auto; scrollbar-width: none; }
+    .secrow::-webkit-scrollbar { display: none; }
+    .secnav a { flex: none; display: flex; align-items: center; min-height: 48px; font-size: 11px; text-transform: uppercase;
+      letter-spacing: .24em; color: var(--ink2); text-decoration: none; border-bottom: 2px solid transparent; }
+    .secnav a:hover { color: var(--ink); }
+    .secnav a[aria-current="true"] { color: var(--brass-bright); border-bottom-color: var(--brass); }
+    .secnav a:last-child { margin-left: auto; color: var(--brass); }
+    .words { margin: 12px 0 0; }
+    [id="year"], [id="craters"], [id="sol"], [id="mission"] { scroll-margin-top: 130px; }
     .statusline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: -6px 0 18px; }
     .statusline .note { margin: 0; }
     .steps { margin: 0; padding-left: 20px; color: var(--ink2); }
@@ -50,8 +58,9 @@
     .tools input[type="number"] { width: 110px; height: 44px; padding: 0 12px; background: var(--deep); color: var(--ink);
       font: 16px var(--font); border: 1px solid var(--line); border-radius: var(--r-btn); text-transform: none; letter-spacing: 0; }
     .empty { display: flex; align-items: center; justify-content: center; min-height: 220px; color: var(--muted); font-style: italic; padding: 20px; text-align: center; }
-    @media (max-width: 1024px) { .charts { grid-template-columns: 1fr; } .gloss { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 560px) { .gloss { grid-template-columns: 1fr; } .tools select { min-width: 0; flex: 1; } .tools label { width: 100%; justify-content: space-between; } }
+    @media (max-width: 1024px) { .charts { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .chart text { font-size: 12.5px; } .chart .axt { font-size: 10.5px; } .chart .lbl { font-size: 12.5px; } .secnav a:last-child { margin-left: 0; } }
+    @media (max-width: 560px) { .tools select { min-width: 0; flex: 1; } .tools label { width: 100%; justify-content: space-between; } }
   </style>
 </head>
 <body>
@@ -75,30 +84,24 @@
     <div class="phead">
       <div class="eyebrow">Project 3 · Mars Data</div>
       <h1>Charts</h1>
-      <p class="lede">The weather on Mars, measured second by second by NASA's Curiosity rover since 2012: cleaned, organised by season and time of day, and charted.</p>
+      <p class="lede">The weather on Mars, measured second by second by NASA's Curiosity rover since 2012 and Perseverance since 2021: cleaned, organised by season and time of day, and charted.</p>
     </div>
 
     <div id="pageNotice"></div>
 
     <div class="statusline">
       <span class="pill info">Curiosity · Gale Crater</span>
+      <span class="pill info">Perseverance · Jezero Crater</span>
       <p class="note" id="status"></p>
     </div>
 
-    <div class="tiles" id="tiles"></div>
-
-    <section class="card" style="margin-top:22px">
-      <div class="shead" style="margin-top:0"><h2>Four words first</h2><span class="aside">used on every chart</span></div>
-      <dl class="gloss">
-        <div><dt>Sol</dt><dd>A Mars day: 24 h 39 min. Curiosity counts them from landing, so sol 1 was August 7, 2012.</dd></div>
-        <div><dt>Ls (season)</dt><dd>Where Mars is on its orbit, 0–360°. Ls 0° starts northern spring; Ls 90° northern summer; Ls 180° autumn; Ls 270° winter (summer in the south).</dd></div>
-        <div><dt>Mars Year</dt><dd>One trip around the Sun: 687 Earth days. Numbered from 1955; Curiosity landed in Mars Year 31.</dd></div>
-        <div><dt>Pascal (Pa)</dt><dd>The unit of air pressure. Earth's air at sea level: about 101,000 Pa. Gale Crater: about 700–950 Pa, under 1 %.</dd></div>
-      </dl>
-    </section>
+    <nav class="secnav" id="secnav" aria-label="Sections of this page">
+      <div class="secrow" data-hscroll><a href="#year">The year</a><a href="#craters">Two craters</a><a href="#sol">One sol</a><a href="#mission">The whole mission</a><a href="../method/">How it's made</a></div>
+    </nav>
+    <p class="note words">New to sol, Ls and Mars Year? <a href="../#words">The four words used on every chart</a> are on the Mars Data home page.</p>
 
     <!-- ===================== THE YEAR ===================== -->
-    <div class="shead" id="year" style="scroll-margin-top:16px"><h2>The Martian year</h2><span class="aside">how the seasons change the air</span></div>
+    <div class="shead" id="year" ><h2>The Martian year</h2><span class="aside">how the seasons change the air</span></div>
     <div class="charts">
       <figure class="card chartcard wide">
         <div class="shead" style="margin-top:0"><h2>Air pressure through the year</h2><span class="aside">daily average, one line per Mars Year</span></div>
@@ -154,7 +157,7 @@
     </div>
 
     <!-- ===================== TWO CRATERS ===================== -->
-    <div class="shead" id="craters" style="scroll-margin-top:16px"><h2>Two craters</h2><span class="aside">Curiosity at Gale, Perseverance at Jezero</span></div>
+    <div class="shead" id="craters" ><h2>Two craters</h2><span class="aside">Curiosity at Gale, Perseverance at Jezero</span></div>
     <div class="charts">
       <figure class="card chartcard wide">
         <div class="shead" style="margin-top:0"><h2>Air pressure at two sites</h2><span class="aside">daily average, the Mars Years both rovers measured</span></div>
@@ -169,7 +172,7 @@
     </div>
 
     <!-- ===================== THE DAY ===================== -->
-    <div class="shead" id="sol" style="scroll-margin-top:16px"><h2>One sol</h2><span class="aside">a single Mars day, hour by hour</span></div>
+    <div class="shead" id="sol" ><h2>One sol</h2><span class="aside">a single Mars day, hour by hour</span></div>
     <div class="charts">
       <figure class="card chartcard wide">
         <div class="tools">
@@ -198,7 +201,7 @@
     </div>
 
     <!-- ===================== THE MISSION ===================== -->
-    <div class="shead" id="mission" style="scroll-margin-top:16px"><h2>The whole mission</h2><span class="aside">sol by sol since landing</span></div>
+    <div class="shead" id="mission" ><h2>The whole mission</h2><span class="aside">sol by sol since landing</span></div>
     <div class="charts">
       <figure class="card chartcard wide">
         <div class="shead" style="margin-top:0"><h2>Daily highs and lows</h2><span class="aside">air temperature</span></div>
@@ -227,7 +230,7 @@
           <li><b>Summarised:</b> hourly averages, daily averages, highs and lows; a sol counts as "full" with data in 22 of 24 hours.</li>
           <li><b>Checked</b> chunk by chunk; a cleaning report for every 90–130 sols.</li>
         </ol>
-        <p class="note">The <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/blob/main/mars-data/analysis/CLEANING.md" target="_blank" rel="noopener">cleaning rules ↗</a>, the <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/tree/main/mars-data/data/rems/reports" target="_blank" rel="noopener">cleaning reports ↗</a> and the code are in the project's source code.</p>
+        <p class="note">Every rule, with examples: <a href="../method/">How the data is made</a>. The <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/tree/main/mars-data/data/rems/reports" target="_blank" rel="noopener">cleaning reports ↗</a> and the code are in the project's source code.</p>
       </figure>
     </div>
 
@@ -251,7 +254,7 @@
       M = await r.json();
     } catch (e) {
       main.classList.remove("loading");
-      main.querySelectorAll(".tiles, .charts, main > .shead, main > section.card").forEach(x => x.hidden = true);
+      main.querySelectorAll(".charts, main > .shead, main > section.card, .secnav, .words").forEach(x => x.hidden = true);
       notice.innerHTML = `<div class="notice warn" style="margin-bottom:18px"><span class="pill warn" style="flex:none;align-self:flex-start">Not loaded</span><span>The Mars data could not be loaded. Check the connection and reload the page.</span></div>`;
       return;
     }
@@ -262,11 +265,32 @@
     // Six series colours from the theme, plus two more so each of the eight Mars Years has its own colour.
     const S = ["--s1", "--s2", "--s3", "--s4", "--s5", "--s6"].map(css).concat(["#6FB7B0", "#E8E3D6"]);
     const NS = "http://www.w3.org/2000/svg";
+    // A link to a section (charts/#sol) is followed again once the charts above it are drawn, unless the user has
+    // already scrolled.
+    let userMoved = false;
+    ["wheel", "touchstart", "keydown"].forEach(t => addEventListener(t, () => { userMoved = true; }, { passive: true, once: true }));
+    const goToHash = () => {
+      const t = location.hash && document.getElementById(location.hash.slice(1));
+      if (t && !userMoved) requestAnimationFrame(() => t.scrollIntoView());
+    };
     const K = 273.15, R_CO2 = 188.92, G_MARS = 3.711;
     const fmt = (v, d = 0) => v == null ? "–" : v.toLocaleString("en-CA", { minimumFractionDigits: d, maximumFractionDigits: d });
     const tip = document.getElementById("tip");
-    const showTip = (e, html) => { tip.innerHTML = html; tip.hidden = false; const x = Math.min(e.clientX + 14, innerWidth - 270); tip.style.left = x + "px"; tip.style.top = (e.clientY + 14) + "px"; };
+    // The value box follows the pointer; on a touch screen it sits above the finger, so the finger does not cover it.
+    const dots = [];
+    const showTip = (e, html) => {
+      tip.innerHTML = html; tip.hidden = false;
+      const w = tip.offsetWidth, h = tip.offsetHeight, touch = e.pointerType === "touch";
+      const x = Math.max(8, Math.min(touch ? e.clientX - w / 2 : e.clientX + 14, innerWidth - w - 8));
+      let y = touch ? e.clientY - h - 32 : e.clientY + 14;
+      if (y < 72) y = e.clientY + 32;
+      if (y + h > innerHeight - 8) y = Math.max(72, e.clientY - h - 14);
+      tip.style.left = x + "px"; tip.style.top = y + "px";
+    };
     const hideTip = () => { tip.hidden = true; };
+    const hideAll = () => { hideTip(); dots.forEach(d => d.setAttribute("visibility", "hidden")); };
+    addEventListener("scroll", hideAll, { passive: true });
+    document.addEventListener("pointerdown", e => { if (!e.target.closest || !e.target.closest("svg.chart")) hideAll(); });
 
     function el(name, attrs = {}, parent) {
       const n = document.createElementNS(NS, name);
@@ -301,33 +325,27 @@
       return d;
     }
     function hover(svg, f, pts, html) { // nearest point by x
-      const r = el("rect", { x: f.m.l, y: f.m.t, width: f.w - f.m.l - f.m.r, height: f.h - f.m.t - f.m.b, fill: "transparent" }, svg);
-      const dot = el("circle", { r: 4, fill: css("--brass-bright"), visibility: "hidden" }, svg);
-      r.addEventListener("pointermove", e => {
+      const r = el("rect", { x: f.m.l, y: f.m.t, width: f.w - f.m.l - f.m.r, height: f.h - f.m.t - f.m.b, fill: "transparent", style: "touch-action: pan-y" }, svg);
+      const dot = el("circle", { r: 4, fill: css("--brass-bright"), visibility: "hidden" }, svg); dots.push(dot);
+      const at = e => {
         const b = svg.getBoundingClientRect(), sx = (e.clientX - b.left) / b.width * f.w;
         let best = null, bd = Infinity; for (const p of pts) { const d = Math.abs(f.X(p.x) - sx) + (p.yy != null ? 0 : 1e9); if (d < bd) { bd = d; best = p; } }
         if (!best || bd > 30) { dot.setAttribute("visibility", "hidden"); hideTip(); return; }
         dot.setAttribute("cx", f.X(best.x)); dot.setAttribute("cy", f.Y(best.yy)); dot.setAttribute("visibility", "visible"); showTip(e, html(best));
-      });
-      r.addEventListener("pointerleave", () => { dot.setAttribute("visibility", "hidden"); hideTip(); });
+      };
+      r.addEventListener("pointermove", at);
+      r.addEventListener("pointerdown", at);
+      // A tap leaves the value showing until the page scrolls or another place is tapped.
+      r.addEventListener("pointerleave", e => { if (e.pointerType === "touch") return; dot.setAttribute("visibility", "hidden"); hideTip(); });
     }
 
-    // ---- status and tiles ----
+    // ---- status ----
     const meta = M.meta;
     document.getElementById("status").textContent = `Data up to sol ${fmt(meta.last_sol)} (${meta.last_date}) · ${fmt(meta.sols)} sols with data · cleaning rules ${meta.rules} · ${meta.checked ? `NASA's archive checked ${meta.checked}` : `updated ${meta.built}`}`;
     const fullP = rows.filter(r => r.pressure_full), fullT = rows.filter(r => r.air_temp_full);
-    const minP = fullP.reduce((a, r) => r.pressure_mean < a.pressure_mean ? r : a), maxP = fullP.reduce((a, r) => r.pressure_mean > a.pressure_mean ? r : a);
     const cold = fullT.reduce((a, r) => r.air_temp_min < a.air_temp_min ? r : a), warm = fullT.reduce((a, r) => r.air_temp_max > a.air_temp_max ? r : a);
     const years = [...new Set(rows.map(r => r.mars_year))];
-    const zLast = rows.filter(r => r.rover_z_m != null).at(-1);
-    document.getElementById("tiles").innerHTML = [
-      ["Sols with data", fmt(meta.sols), `sols ${meta.first_sol}–${fmt(meta.last_sol)}`],
-      ["Mars Years", years.length, `Years ${years[0]} to ${years.at(-1)}`],
-      ["Pressure", `${fmt(minP.pressure_mean)}–${fmt(maxP.pressure_mean)} Pa`, `thinnest Ls ${fmt(minP.ls)}°, thickest Ls ${fmt(maxP.ls)}°`],
-      ["Coldest night", `${fmt(cold.air_temp_min - K)} °C`, `sol ${cold.sol}, Ls ${fmt(cold.ls)}°`],
-      ["Warmest afternoon", `${fmt(warm.air_temp_max - K)} °C`, `sol ${warm.sol}, Ls ${fmt(warm.ls)}°`],
-      ["Climbed", `${fmt(zLast.rover_z_m)} m`, `above the landing site by sol ${fmt(zLast.sol)}`],
-    ].map(([l, v, n]) => `<div class="tile"><div class="label">${l}</div><div class="value">${v}</div><div class="note">${n}</div></div>`).join("");
+
 
     // ---- 1. pressure through the year ----
     let corrected = false;
@@ -378,8 +396,10 @@
       const cw = f.X(10) - f.X(0), ch = f.Y(1) - f.Y(0);
       for (const [b, hr, v, n] of M.heat) {
         const c = el("rect", { x: f.X(b * 10), y: f.Y(hr), width: cw + .5, height: Math.abs(ch) + .5, fill: mix((v - lo) / (hi - lo)) }, svg);
-        c.addEventListener("pointermove", e => showTip(e, `<b>Ls ${b * 10}–${b * 10 + 10}°, ${String(hr).padStart(2, "0")}:00</b><br>${fmt(v - K, 0)} °C average<br>${n} sols`));
-        c.addEventListener("pointerleave", hideTip);
+        const at = e => showTip(e, `<b>Ls ${b * 10}–${b * 10 + 10}°, ${String(hr).padStart(2, "0")}:00</b><br>${fmt(v - K, 0)} °C average<br>${n} sols`);
+        c.addEventListener("pointermove", at);
+        c.addEventListener("pointerdown", at);
+        c.addEventListener("pointerleave", e => { if (e.pointerType !== "touch") hideTip(); });
       }
     }
 
@@ -460,7 +480,7 @@
 
     // ---- two craters (Gale and Jezero) ----
     let MD = null;
-    fetch("../data/meda.json").then(r => r.ok ? r.json() : null).then(j => { MD = j; drawTwo(); }).catch(() => {});
+    fetch("../data/meda.json").then(r => r.ok ? r.json() : null).then(j => { MD = j; drawTwo(); goToHash(); }).catch(() => {});
     function drawTwo() {
       const svg = document.getElementById("cTwo");
       if (!MD) return;
@@ -492,6 +512,23 @@
     drawAll();
     loadSol(fullT.at(-1).sol);
     let lastW = innerWidth, timer;
+    // Section menu: the section in view is marked.
+    const navLinks = [...document.querySelectorAll('#secnav a[href^="#"]')];
+    const secs = navLinks.map(a => document.getElementById(a.hash.slice(1)));
+    const markSection = () => {
+      let cur = null; for (const s of secs) if (s.getBoundingClientRect().top < 160) cur = s;
+      navLinks.forEach(a => {
+        const on = !!cur && a.hash === "#" + cur.id;
+        if (on && a.getAttribute("aria-current") !== "true") {
+          const row = a.parentElement; // keep the marked section in view in the menu on a narrow screen
+          if (row.scrollWidth > row.clientWidth) row.scrollTo({ left: Math.max(0, a.offsetLeft - row.offsetLeft - 24), behavior: "smooth" });
+        }
+        a.setAttribute("aria-current", on ? "true" : "false");
+      });
+    };
+    addEventListener("scroll", markSection, { passive: true }); markSection();
+    // The charts are drawn after the page opens, so a link to a section (charts/#sol) is followed again once they are in place.
+    goToHash();
     addEventListener("resize", () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(timer); timer = setTimeout(drawAll, 150); });
   })();
   </script>
