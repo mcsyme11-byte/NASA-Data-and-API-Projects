@@ -1,5 +1,14 @@
 # Change log
 
+## November 12, 2026 — Mars Data: Perseverance (Jezero Crater) and a two-craters mock-up
+
+- Perseverance's weather data (MEDA, NASA PDS), sols 0–1859 (February 2021 to May 2026), cleaned with the MEDA rules
+  (`mars-data/analysis/CLEANING-MEDA.md`, `run_meda.py`); a cleaning report for every chunk
+  (`mars-data/data/meda/reports/`). Page file `mars-data/data/meda.json`.
+- Mock-up for approval: a "Two craters" chart comparing air pressure at Gale and Jezero (`mars-data/mockup.html`).
+- MEDA added to `CREDITS.md`, the Credits page and `docs/DATA-SOURCES.md`. Mars Express (ESA) waits for ESA's archive,
+  down for maintenance.
+
 ## November 12, 2026 — Mars Data: the whole Curiosity record
 
 - Curiosity REMS sols 4258–4843 (Mars Years 37–38) added; the page now covers the whole released record: sols

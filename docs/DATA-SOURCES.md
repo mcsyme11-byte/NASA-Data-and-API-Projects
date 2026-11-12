@@ -187,19 +187,30 @@ each archive's own documentation. Decided Nov 11, 2026: three missions are follo
   Planetary Data System."
 - **Terms:** NASA data; generally not under copyright in the United States.
 
-### Perseverance's weather station (MEDA), NASA PDS — planned
+### Perseverance's weather station (MEDA), NASA PDS Atmospheres Node — in use
 
-- **Address:** `https://pds.nasa.gov/data/pds4/releases/atmos/mars2020_meda-<YYYYMMDD>/` (PDS4; one folder per release;
-  newest on Nov 11, 2026: `mars2020_meda-20260811`). No key, free. The folder pages are built by JavaScript, so the
-  file list is read from each collection's inventory (`collection_data_derived_env.csv`).
-- **Contents:** raw, partially processed, calibrated and derived collections; ASCII CSV tables with PDS4 XML labels.
-  The derived collection (`data_derived_env`) is the one recommended for most uses; empty columns mean the values are
-  not reliable for that time (the bundle's `readme.txt`). Coverage from February 19, 2021 (Ls 6.1, Mars Year 36),
-  ongoing.
+Checked Nov 12, 2026, from GitHub's servers.
+
+- **Address of the data files:** `https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda/data_derived_env/`
+  (PDS4), folders `sol_<first>_<last>/sol_<nnnn>/`, 16 chunk folders, sols 0–1859 on Nov 12, 2026 (May 13, 2026). No
+  key, free. The release folders at `https://pds.nasa.gov/data/pds4/releases/atmos/mars2020_meda-<YYYYMMDD>/` hold only
+  the labels and inventories.
+- **Files per sol (derived level):** `WE__<sol>___________DER_<SENSOR>___…_P<nn>.CSV` with a PDS4 `.xml` label, for
+  PS (pressure), RHS (humidity), TIRS (ground temperature and radiation) and ANCILLARY (rover position, Sun geometry).
+  Air temperature (ATS) exists only at the calibrated level. One file spans one sol.
+- **Format:** comma-separated ASCII with a header row; an empty value means not reliable for science (bundle
+  `readme.txt`); `9999999999` marks an invalid value in some columns.
+- **Coverage:** about 12 hours a sol at 1 Hz, even hours on even sols and odd hours on odd sols, with longer coverage
+  on some sols. Humidity before sol 63 and wind before sol 36 are not reliable (readme).
+- **Clock:** `SCLK`, seconds from noon on January 1, 2000; sol 1 falls on February 19, 2021 (Ls 6.2°, Mars Year 36),
+  matching NASA's stated start. The ancillary column `SOLAR_LONGITUDE_ANGLE` is the Sun's azimuth, not Ls (as for REMS).
+- **Rules:** `mars-data/analysis/CLEANING-MEDA.md`.
 - **Citation:** J.A. Rodriguez-Manfredi et al. (2021), The Mars Environmental Dynamics Analyzer, MEDA, NASA Planetary
   Data System, DOI 10.17189/1522849.
+- **Credit shown on the page:** "Data courtesy of NASA/JPL-Caltech and the MEDA team (Centro de Astrobiología), NASA
+  Planetary Data System."
 
-### Mars Express radio occultation profiles (MaRS), ESA Planetary Science Archive — planned
+### Mars Express radio occultation profiles (MaRS), ESA Planetary Science Archive — waiting for ESA
 
 - **Address:** `https://archives.esac.esa.int/psa/ftp/MARS-EXPRESS/MRS/` (PDS3). No key, free. Level 5 (derived) data
   sets on Nov 11, 2026: `MEX-M-MRS-5-OCC-9101-V1.0` and `-V2.0`, `-9102-V1.0`, `-9103-V1.0`, `-9107-V1.0`,
@@ -211,6 +222,12 @@ each archive's own documentation. Decided Nov 11, 2026: three missions are follo
 - **Terms:** data in ESA's Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence (free use with
   the credit line; commercial use needs ESA's authorisation, `data.licences@esa.int`); ESA's Science Data Centre terms
   page, `cosmos.esa.int/web/esdc/terms-and-conditions`.
+- **Access (Nov 12, 2026):** the simplified site `archives.esac.esa.int/psa/ftp/` answered "401 Unauthorized" while
+  ESA's archive was down for maintenance (psa.esa.int: "The PSA is currently down for maintenance"). ESA's other
+  documented routes, the web view `psaftp.esac.esa.int` (an interactive application) and anonymous SFTP (a password
+  prompt), are not usable from a script without credentials, so the profiles wait until the simplified site returns.
+  NASA's PDS Geosciences Node also lists Mars Express MaRS data (not yet checked). The reader (`run_mex.py`) and its
+  rules (`CLEANING-MEX.md`) are ready.
 - **Credit line, exactly as ESA's terms page gives it:** "Credit: ESA, M. Plätzold, K. Pieter". The archive itself names
   the principal investigator as Martin Pätzold (written "Paetzold"); the line is used as ESA gives it unless ESA confirms
   a corrected form.
