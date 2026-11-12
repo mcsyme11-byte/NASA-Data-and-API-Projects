@@ -133,22 +133,77 @@ D (km) = 1329 ÷ √p × 10^(−H ÷ 5)
 
 ## Mars Data
 
-### Curiosity's weather station (REMS), PDS Atmospheres Node
+Checked Nov 11, 2026, from GitHub's servers (the project's cloud workspace cannot reach these archives) and against
+each archive's own documentation. Decided Nov 11, 2026: three missions are followed (PROJECT-NOTES.md).
 
-- **Where:** NASA's Planetary Data System, Atmospheres Node (atmos.nmsu.edu › Mars › Curiosity › REMS).
-- **What:** air and ground temperature, pressure, relative humidity, wind and UV at Gale Crater, from sol 1
-  (August 7, 2012), released in batches.
-- **Which files:** the reduced data (RDR). The **MODRDR** set (environmental values, corrected) is the likely
-  starting point; units are kelvin and pascals.
-- **Rhythm:** readings once a second, usually 5-minute blocks every hour plus some full hours each sol, so the
-  data is uneven in time and needs organising before averages mean anything.
+### Curiosity's weather station (REMS), NASA PDS Atmospheres Node — in use
 
-### Other candidates
+- **Address:** `https://atmos.nmsu.edu/PDS/data/mslrem_1001/` (volume `MSLREM_1001`, PDS3). No key, no account, free.
+  Plain directory pages; folders `DATA/SOL_<first>_<last>/SOL<nnnnn>/`, one folder per sol, 44 chunk folders on
+  Nov 11, 2026, the newest `SOL_04710_04843` (sol 4843, March 22, 2026). The REMS web page still gives sol 4488 as the
+  newest; the folders are newer.
+- **Files per sol:** `RME_<clock>RMD<sol>…TAB` (MODRDR: environmental values, corrected; the set used), `…RNV…` (ENVRDR),
+  `…RTL…` (TELRDR), `…ADR…` (ancillary: rover position and Sun geometry), each with a PDS3 `.LBL` and a PDS4 `.xml`
+  label. File sizes grow over the mission: sol 1, 0.3 MB (750 rows); sol 4843, 8.5 MB (22,793 rows). Sols 1–89 with
+  their ADR files: 164 files, 1.0 GB.
+- **Format:** comma-separated ASCII, fixed-length rows, 40 columns, one row per second of measurement; text fields in
+  quotes. Column definitions: `LABEL/MODRDR6.FMT`; ADR: `LABEL/ADR_GEOM6.FMT`. Each ADR file holds two tables one after
+  the other: corrections (4 columns), then geometry (16 columns, including `ROVER_POSITION_Z`, metres above the landing
+  site, +Z up).
+- **Missing values:** `-999.00` or `-9.990E+02` since the release of September 30, 2024 (`ERRATA.TXT`); earlier files
+  used `UNK` or `NULL`.
+- **Wind:** the processed wind columns are always missing (the sensor was damaged during landing).
+- **Quality flags:** a string per sensor, one character per check (`1` good, `0` bad, `X` unknown); not every
+  character is a quality check (for pressure, the first character only says which oscillator was used). The rules
+  used are in `mars-data/analysis/CLEANING.md`.
+- **Not the season:** the ADR column `SOLAR_LONGITUDE_ANGLE` is the Sun's direction relative to the rover, not Ls. Ls is
+  calculated from the date (`mars-data/analysis/mars_time.py`, Allison and McEwen 2000) and matches the archive's stated
+  values within 0.2° (sol 1: Ls 151.0, Mars Year 31; sol 4488: Ls 60.1, Mars Year 38).
+- **Index:** `INDEX/INDEX.TAB` lists products only up to sol 4133 (last updated September 2024), so the folders, not the
+  index, are read to find new sols. Up to sol 4133, 140 sols have no data (for example sols 2–8 and 200–221).
+- **Known events:** `DOCUMENT/DATA_EVENTS.TXT` lists sols with no activity, missing hours and calibrations.
+- **Releases:** in batches every few months (`ERRATA.TXT` lists each release, its sols and any re-released files).
+- **Citation (from the archive's catalog):** Gomez-Elvira, J., Mars Science Laboratory Rover Environmental Monitoring
+  Station RDR Data V1.0, MSL-M-REMS-5-MODRDR-V1.0, NASA Planetary Data System, 2013.
+- **Credit shown on the page:** "Data courtesy of NASA/JPL-Caltech and the REMS team (Centro de Astrobiología), NASA
+  Planetary Data System."
+- **Terms:** NASA data; generally not under copyright in the United States.
+
+### Perseverance's weather station (MEDA), NASA PDS — planned
+
+- **Address:** `https://pds.nasa.gov/data/pds4/releases/atmos/mars2020_meda-<YYYYMMDD>/` (PDS4; one folder per release;
+  newest on Nov 11, 2026: `mars2020_meda-20260811`). No key, free. The folder pages are built by JavaScript, so the
+  file list is read from each collection's inventory (`collection_data_derived_env.csv`).
+- **Contents:** raw, partially processed, calibrated and derived collections; ASCII CSV tables with PDS4 XML labels.
+  The derived collection (`data_derived_env`) is the one recommended for most uses; empty columns mean the values are
+  not reliable for that time (the bundle's `readme.txt`). Coverage from February 19, 2021 (Ls 6.1, Mars Year 36),
+  ongoing.
+- **Citation:** J.A. Rodriguez-Manfredi et al. (2021), The Mars Environmental Dynamics Analyzer, MEDA, NASA Planetary
+  Data System, DOI 10.17189/1522849.
+
+### Mars Express radio occultation profiles (MaRS), ESA Planetary Science Archive — planned
+
+- **Address:** `https://archives.esac.esa.int/psa/ftp/MARS-EXPRESS/MRS/` (PDS3). No key, free. Level 5 (derived) data
+  sets on Nov 11, 2026: `MEX-M-MRS-5-OCC-9101-V1.0` and `-V2.0`, `-9102-V1.0`, `-9103-V1.0`, `-9107-V1.0`,
+  `-9124-V1.0` (one per occultation season; 9124 covers May 6 to June 21, 2022).
+- **Files:** `DATA/<day>/LEVEL04/` with `…AIX….TAB` (atmosphere: temperature, pressure and number density against
+  radius, latitude and longitude; 26 columns), `…IID…`/`…IIX…` (ionosphere), each with a `.LBL` and a `.TXT` description.
+- **Citation (from the archive's catalog):** M. Paetzold, Mars Express MRS Level 5 data, Experimental Data acquired from
+  Occultation <season>, Version V1.0.
+- **Terms:** data in ESA's Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence (free use with
+  the credit line; commercial use needs ESA's authorisation, `data.licences@esa.int`); ESA's Science Data Centre terms
+  page, `cosmos.esa.int/web/esdc/terms-and-conditions`.
+- **Credit line, exactly as ESA's terms page gives it:** "Credit: ESA, M. Plätzold, K. Pieter". The archive itself names
+  the principal investigator as Martin Pätzold (written "Paetzold"); the line is used as ESA gives it unless ESA confirms
+  a corrected form.
+
+### Other candidates (not followed)
 
 | Source | Covers | Note |
 |---|---|---|
-| InSight weather (TWINS, pressure sensor) | Elysium Planitia, 2018–2022 | The mission has ended; archived in the PDS |
+| InSight weather (TWINS, pressure sensor) | Elysium Planitia, sols 1–1188 (2018–2022) | The mission has ended; a fixed set |
 | Viking Lander meteorology | 1976–1982 | For a then-and-now comparison |
+| ExoMars Trace Gas Orbiter (ACS, NOMAD), ESA | Since 2018 | Archived mainly as calibrated spectra; gas amounts would need retrievals |
 
 ### SBDB Query API (every near-Earth object), checked Nov 8–9, 2026
 

@@ -1,5 +1,15 @@
 # Change log
 
+## November 12, 2026 — Mars Data: sources checked, cleaning rules and a mock-up
+
+- **Sources checked** from GitHub's servers and recorded in `docs/DATA-SOURCES.md`: Curiosity REMS (NASA PDS
+  Atmospheres Node, sols 1–4843), Perseverance MEDA (NASA PDS), Mars Express MaRS profiles (ESA Planetary Science
+  Archive, CC BY-NC 3.0 IGO), with their citations and ESA's credit line.
+- **Cleaning rules 1.1** (`mars-data/analysis/CLEANING.md`): NASA's quality flags read character by character,
+  physical limits, coverage of each sol, daily statistics, humidity (labelled preliminary), corrected UV. Code in
+  `mars-data/analysis/`; Ls and Mars Year calculated from the date (`mars_time.py`), checked against NASA's values.
+- **Mock-up** of the charts page for approval: `mars-data/mockup.html`, drawn from the cleaned data for sols 1–1293.
+
 ## November 11, 2026 — Project Record
 
 - **Project Record:** `docs/NASA and ESA Data Projects - Project Record.pdf`, the whole project as one PDF (cover,

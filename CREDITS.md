@@ -19,7 +19,7 @@ there in the same change.
 | d3-celestial, © 2015 Olaf Frohn | Image Explorer: stars, galaxies, nebulae, clusters and constellations | BSD 3-Clause, kept as `image-explorer/data/LICENSE-d3-celestial.txt` |
 | GeoNames (geonames.org), through the `all-the-cities` package (MIT) and GeoNames' own downloads | Image Explorer: place search (towns, cities, capitals; smaller natural features with an English Wikipedia article) | GeoNames: Creative Commons Attribution 4.0 |
 | Natural Earth (naturalearthdata.com) | Image Explorer: mountains, lakes and rivers in place search | Public domain |
-| NASA Planetary Data System (planned) | Mars Data | NASA data |
+| NASA Planetary Data System, Atmospheres Node: Curiosity's Rover Environmental Monitoring Station (REMS), data sets MSL-M-REMS-5-MODRDR-V1.0, MSL-M-REMS-6-ADR-V1.0 and MSL-M-REMS-5-UVRDR-V1.0 | Mars Data: pressure, air and ground temperature, humidity, ultraviolet and the rover's height, sol by sol | NASA data; credit "NASA/JPL-Caltech and the REMS team (Centro de Astrobiología), NASA Planetary Data System"; citations in `docs/DATA-SOURCES.md` |
 
 **GIBS acknowledgement** (NASA asks every user of GIBS to show it): We acknowledge the use of imagery provided by
 services from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data and Information System
@@ -49,6 +49,9 @@ with ESA's credit (ESA's terms and conditions, esa.int). ESA's logo is not used:
 | OpenLayers (`ol`) | 10.11.0 | Image Explorer: the Earth map | BSD 2-Clause |
 | proj4js (`proj4`) | 2.22.0 | Image Explorer: the polar map projections | MIT |
 | three.js (`three`) | 0.187.0 | Image Explorer: the globe | MIT |
+
+Analysis tools (run on GitHub's servers to prepare data; not sent to visitors): pandas (BSD 3-Clause), for the Mars
+Data cleaning and statistics in `mars-data/analysis/`.
 
 ## NASA and ESA
 

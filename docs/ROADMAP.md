@@ -52,17 +52,14 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated automatically by a GitHub Actions job.
 
 **Data and analysis**
-- [ ] Check each source against the agency's current documentation and record it in `docs/DATA-SOURCES.md` with its
-  exact credit line: Curiosity REMS (MODRDR), Perseverance MEDA, Mars Express MaRS profiles (ESA, CC BY-NC 3.0 IGO).
-- [ ] Test that GitHub's servers can reach the NASA PDS Atmospheres Node and ESA's Planetary Science Archive (the
-  project's cloud workspace cannot).
-- [ ] Download the REMS record in chunks (the whole mission, sol 1 to the newest released sol); look at the files'
-  columns on the first chunk. Confirm the newest sol in the archive (the REMS
-  page gives sol 4488, its volume list sols 1–3778).
-- [ ] Cleaning, chunk by chunk: missing and impossible values, confidence flags, units, gaps marked; a cleaning
-  report per chunk (rows kept and removed, reasons, gaps) checked before the next chunk.
-- [ ] Organise by sol, Ls (season), time of day and site.
-- [ ] Statistics: daily highs and lows, seasonal averages, relationships between measurements.
+- [ ] REMS, the whole record in chunks (44 chunk folders, sols 1–4843 on Nov 11, 2026) with cleaning rules 1.1
+  (`mars-data/analysis/CLEANING.md`): sols 1–1293 checked with rules 1.0 and being re-run with 1.1 (humidity
+  added); sols 1294–4843 to do, in batches of about five chunks, each report checked before the next batch.
+- [ ] Corrected UV (sols 1–3423, 35 files of about 1.2 GB): sols 1–1300 running; the rest with the REMS batches.
+- [ ] Merge the cleaned summaries (`mars-data/data/rems/`) into main once checked; they are built on the
+  `mars-probe` branch until then. Delete the one-off probe (`mars-data/probe/`, `mars-probe.yml`) and the branch.
+- [ ] Optional: ask ESA (data.licences@esa.int) to confirm the spelling of the Mars Express MaRS credit line
+  ("M. Plätzold, K. Pieter" on ESA's terms page; the archive names Martin Pätzold).
 - [ ] Add MEDA (Jezero Crater) and the MaRS profiles (ESA) to the same pipeline.
 
 **Automatic updates**
@@ -78,7 +75,9 @@ Plan confirmed Nov 11, 2026 (see PROJECT-NOTES.md): three missions, updated auto
 - [ ] The page shows, for each mission, "Data up to sol X · checked [date]".
 
 **Page**
-- [ ] Charts page mock-up for approval: pressure over the Mars year, one sol hour by hour, daily highs and lows,
-  season × time of day, one relationship; later the Mars Express profiles.
+- [ ] Mock-up awaiting approval (`mars-data/mockup.html`, real cleaned data for sols 1–1293): pressure through the
+  year (with a correction for the rover's climb), daily pressure range, humidity at night (preliminary), midday UV,
+  season × time of day, one sol hour by hour, daily highs and lows, the rover's climb. Humidity and UV fill in after
+  the re-run.
 - [ ] Charts page in the project's look; a short write-up of what the patterns show.
 - [ ] `CREDITS.md`, the Credits page and the Privacy page updated for the new sources in the same change.
