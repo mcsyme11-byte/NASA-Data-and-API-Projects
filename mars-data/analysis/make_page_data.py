@@ -26,6 +26,16 @@ def main() -> None:
         s = s.merge(uv, on="sol", how="left")
     h = pd.read_csv(DATA / "hourly.csv")
 
+    # Values set aside for review (CLEANING.md, rule 10): removed from what the page shows, kept in the data files.
+    ex_path = Path(__file__).resolve().parent / "exclusions.csv"
+    if ex_path.exists():
+        for e in pd.read_csv(ex_path).itertuples():
+            m = e.measurement
+            for c in [c for c in s.columns if c.startswith(m + "_")]:
+                s.loc[s["sol"] == e.sol, c] = False if s[c].dtype == bool else float("nan")
+            if m in h.columns:
+                h.loc[h["sol"] == e.sol, m] = None
+
     cols = {"sol": 0, "ls": 2, "mars_year": 0, "utc_date": None, "pressure_mean": 1, "pressure_min": 1,
             "pressure_max": 1, "pressure_full": None, "air_temp_mean": 1, "air_temp_min": 1, "air_temp_max": 1,
             "air_temp_full": None, "ground_temp_min": 1, "ground_temp_max": 1, "rover_z_m": 1, "humidity_max": 2,

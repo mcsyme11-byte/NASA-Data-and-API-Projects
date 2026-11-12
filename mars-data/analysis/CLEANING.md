@@ -127,6 +127,12 @@ calibration. It covers sols 1–3423, and only times when the Sun is less than 5
 - Each file holds 100 sols (about 1.2 GB); it is read as it downloads and not stored. Its row count is checked against
   its label.
 
+## Rule 10 — Values set aside for review
+
+A value that passes every rule but is plainly not weather (for example one hour 80 °C colder than the hours either
+side) is listed in `exclusions.csv` with the sol, the measurement and the reason. It stays in the data files but is
+left out of what the page shows until it has been reviewed. The automatic rules are not changed for a single case.
+
 ---
 
 Created by **Malcolm Syme** · <mcsyme11@gmail.com> · part of NASA and ESA Data Projects.
