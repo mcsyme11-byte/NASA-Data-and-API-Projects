@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<!-- NASA and ESA Data Projects · Mars Data · page mock-up for approval · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+<!-- Layout and look for approval, drawn from real cleaned data (mockup-data.js). Not linked from the site's menus. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mars Data (mock-up) · NASA and ESA Data Projects</title>
+  <meta name="theme-color" content="#141B26">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../shared/theme.css?v=2026110904">
+  <script type="module" src="../shared/footer.js?v=2026110904"></script>
+  <style>
+    .charts { display: grid; gap: 22px; grid-template-columns: 1fr 1fr; margin-top: 14px; }
+    .chartcard { margin: 0; }
+    .chartcard.wide { grid-column: 1 / -1; }
+    .chartcard figcaption { margin-top: 10px; }
+    .chart { display: block; width: 100%; height: auto; }
+    .chart text { font-family: var(--font); font-size: 11px; fill: var(--muted); }
+    .chart .axt { fill: var(--brass); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; }
+    .chart .grid line { stroke: var(--line); }
+    .chart .lbl { font-size: 11.5px; }
+    .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 12px; }
+    .tools label { display: flex; align-items: center; gap: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: .22em; color: var(--brass); }
+    .tools select { width: auto; min-width: 190px; text-transform: none; letter-spacing: 0; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 10px; font-size: 13px; color: var(--ink2); }
+    .legend i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 7px; border-radius: 2px; }
+    .legend i.box { height: 10px; width: 14px; }
+    .legend i.dash { background: none !important; border-top: 2px dashed; height: 0; }
+    .howto { margin-top: 12px; border-left: 2px solid var(--brass-dim); background: rgba(192, 160, 98, .04); }
+    .howto summary { list-style: none; cursor: pointer; padding: 10px 14px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
+    .howto summary::-webkit-details-marker { display: none; }
+    .howto summary::before { content: "›"; display: inline-block; width: 10px; font-size: 16px; line-height: 1; letter-spacing: 0; transition: transform .15s; }
+    .howto[open] summary::before { transform: rotate(90deg); }
+    .howto p { margin: 0 14px 10px; font-size: 14px; color: var(--ink2); }
+    .howto b { font-weight: 400; color: var(--ink); }
+    .tip { position: fixed; z-index: 50; pointer-events: none; background: var(--bg2); border: 1px solid var(--brass-dim);
+      border-radius: var(--r-btn); padding: 8px 12px; font-size: 13px; line-height: 1.45; max-width: 260px; color: var(--ink); }
+    .tip b { font-weight: 400; color: var(--brass-bright); }
+    .gloss { margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    .gloss dt { color: var(--brass); font-size: 11px; text-transform: uppercase; letter-spacing: .22em; margin-bottom: 6px; }
+    .gloss dd { margin: 0; color: var(--ink2); font-size: 14.5px; }
+    .statusline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: -6px 0 18px; }
+    .statusline .note { margin: 0; }
+    .steps { margin: 0; padding-left: 20px; color: var(--ink2); }
+    .steps li { margin: 4px 0; }
+    .empty { display: flex; align-items: center; justify-content: center; min-height: 220px; color: var(--muted); font-style: italic; padding: 20px; text-align: center; }
+    @media (max-width: 1024px) { .charts { grid-template-columns: 1fr; } .gloss { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .gloss { grid-template-columns: 1fr; } .tools select { min-width: 0; flex: 1; } .tools label { width: 100%; justify-content: space-between; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg>
+        NASA and ESA Data Projects
+      </a>
+      <nav class="nav" aria-label="Projects">
+        <a href="../">Home</a>
+        <a href="../asteroid-tracker/">Asteroids</a>
+        <a href="../mars-data/" aria-current="page">Mars</a>
+        <a href="../image-explorer/">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <a class="backlink" id="back" href="./">‹ Mars Data</a>
+    <div class="phead">
+      <div class="eyebrow">Project 3 · Mock-up</div>
+      <h1>Mars Data</h1>
+      <p class="lede">The weather on Mars, measured second by second by NASA's Curiosity rover since 2012: cleaned, organised by season and time of day, and charted.</p>
+    </div>
+
+    <div class="notice warn" style="margin-bottom:18px">
+      <span class="pill warn" style="flex:none;align-self:flex-start;white-space:nowrap">Mock-up</span>
+      <span>For approval of the layout and look. The numbers are real (NASA's REMS data after cleaning) but cover only the sols processed so far; the finished page covers the whole mission and updates itself.</span>
+    </div>
+
+    <div class="statusline">
+      <span class="pill info">Curiosity · Gale Crater</span>
+      <p class="note" id="status"></p>
+    </div>
+
+    <div class="tiles" id="tiles"></div>
+
+    <section class="card" style="margin-top:22px">
+      <div class="shead" style="margin-top:0"><h2>Four words first</h2><span class="aside">used on every chart</span></div>
+      <dl class="gloss">
+        <div><dt>Sol</dt><dd>A Mars day: 24 h 39 min. Curiosity counts them from landing, so sol 1 was August 7, 2012.</dd></div>
+        <div><dt>Ls (season)</dt><dd>Where Mars is on its orbit, 0–360°. Ls 0° starts northern spring; Ls 90° northern summer; Ls 180° autumn; Ls 270° winter (summer in the south).</dd></div>
+        <div><dt>Mars Year</dt><dd>One trip around the Sun: 687 Earth days. Numbered from 1955; Curiosity landed in Mars Year 31.</dd></div>
+        <div><dt>Pascal (Pa)</dt><dd>The unit of air pressure. Earth's air at sea level: about 101,000 Pa. Gale Crater: about 700–950 Pa, under 1 %.</dd></div>
+      </dl>
+    </section>
+
+    <!-- ===================== THE YEAR ===================== -->
+    <div class="shead"><h2>The Martian year</h2><span class="aside">how the seasons change the air</span></div>
+    <div class="charts">
+      <figure class="card chartcard wide">
+        <div class="shead" style="margin-top:0"><h2>Air pressure through the year</h2><span class="aside">daily average, one line per Mars Year</span></div>
+        <div class="tools">
+          <button class="chip" id="corrBtn" aria-pressed="false">Correct for the rover's climb</button>
+          <span class="note" id="corrNote" style="margin:0"></span>
+        </div>
+        <div class="legend" id="pLegend"></div>
+        <div class="frame"><svg id="cPressure" class="chart" role="img" aria-label="Daily average air pressure at Gale Crater against the season, one line per Mars Year"></svg></div>
+        <figcaption class="note">Full sols only (good data in at least 22 of 24 hours). Source: NASA Planetary Data System, Curiosity REMS (cleaned).</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p><b>Left to right</b> is the season (Ls); <b>bottom to top</b> is the day's average pressure. Each colour is one Mars Year, so the same season lines up across years.</p>
+          <p>The air thins in southern winter (around Ls 150°) because about a quarter of the atmosphere, carbon dioxide, freezes onto the south pole; it thickens in southern summer (around Ls 250°) when that ice turns back into gas. Example: about 740 Pa at Ls 150° and about 920 Pa at Ls 250°.</p>
+          <p><b>Correct for the rover's climb</b> adjusts each sol to the landing site's height: pressure falls as the rover climbs, by about 1 % for every 110 m.</p>
+        </details>
+      </figure>
+
+      <figure class="card chartcard">
+        <div class="shead" style="margin-top:0"><h2>How much the pressure swings in a day</h2></div>
+        <div class="frame"><svg id="cRange" class="chart" role="img" aria-label="Daily pressure range against the season"></svg></div>
+        <figcaption class="note">Highest minus lowest one-minute pressure of each full sol. Source: NASA PDS, Curiosity REMS (cleaned).</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>Each dot is one sol: how far the pressure rose and fell within that day. The Sun heats the air every day, pushing a pressure "tide" around the planet; dust in the air absorbs more sunlight and makes the tide stronger, so the swings grow in the dusty season (around Ls 180–320°).</p>
+        </details>
+      </figure>
+
+      <figure class="card chartcard">
+        <div class="shead" style="margin-top:0"><h2>Humidity at night</h2><span class="pill warn">Preliminary</span></div>
+        <div class="frame" id="humFrame"><svg id="cHum" class="chart" role="img" aria-label="Highest relative humidity of each sol against the season"></svg></div>
+        <figcaption class="note">The day's highest relative humidity (reached before dawn). NASA marks REMS humidity "preliminary". Source: NASA PDS, Curiosity REMS (cleaned).</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>Relative humidity is how close the air is to frost forming. Mars's air holds very little water, but the nights are so cold that it can come close: the highest values are in the coldest nights. In the afternoon it is under 1 %.</p>
+        </details>
+      </figure>
+
+      <figure class="card chartcard">
+        <div class="shead" style="margin-top:0"><h2>Midday ultraviolet</h2></div>
+        <div class="frame" id="uvFrame"><svg id="cUV" class="chart" role="img" aria-label="Midday peak ultraviolet against the season"></svg></div>
+        <figcaption class="note">Peak UV (220–370 nm) each sol, corrected for dust on the sensor; available to sol 3423. Source: NASA PDS, Curiosity REMS corrected UV.</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>Mars has no ozone layer, so strong ultraviolet reaches the ground. The midday peak rises when Mars is closest to the Sun (around Ls 250°) and the Sun is high, and drops when dust in the air blocks it.</p>
+        </details>
+      </figure>
+
+      <figure class="card chartcard">
+        <div class="shead" style="margin-top:0"><h2>Season and time of day</h2></div>
+        <div class="frame"><svg id="cHeat" class="chart" role="img" aria-label="Average air temperature by season and local hour"></svg></div>
+        <figcaption class="note">Average air temperature in 10° steps of Ls and each local hour. Source: NASA PDS, Curiosity REMS (cleaned).</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>The whole year and the whole day in one picture: <b>left to right</b> the season, <b>top to bottom</b> the hour (midnight at the top). Warmer colours are warmer air. The bright band is early afternoon; the darkest corner is the hour before dawn in the cold season.</p>
+        </details>
+      </figure>
+    </div>
+
+    <!-- ===================== THE DAY ===================== -->
+    <div class="shead"><h2>One sol</h2><span class="aside">a single Mars day, hour by hour</span></div>
+    <div class="charts">
+      <figure class="card chartcard wide">
+        <div class="tools">
+          <label>Sol <select id="solSel"></select></label>
+          <span class="note" id="solNote" style="margin:0"></span>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--s1)"></i>Air temperature</span>
+          <span><i style="background:var(--s4)"></i>Ground temperature (lower confidence)</span>
+          <span><i style="background:var(--s2)"></i>Pressure</span>
+        </div>
+        <div class="frame"><svg id="cSol" class="chart" role="img" aria-label="Air and ground temperature and pressure through one sol"></svg></div>
+        <figcaption class="note">Hourly averages. Ground temperature is shown as lower confidence (the sensor's power supply is often flagged). Source: NASA PDS, Curiosity REMS (cleaned).</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>The thin air holds little heat, so the temperature swings by about 70 °C in a day: from about −75 °C before dawn to just below freezing in the early afternoon. The ground warms faster than the air in the morning and cools faster at night.</p>
+          <p>The pressure (lower panel) peaks around 07:00 and dips around 16:00: the daily pressure tide.</p>
+        </details>
+      </figure>
+    </div>
+
+    <!-- ===================== THE MISSION ===================== -->
+    <div class="shead"><h2>The whole mission</h2><span class="aside">sol by sol since landing</span></div>
+    <div class="charts">
+      <figure class="card chartcard wide">
+        <div class="shead" style="margin-top:0"><h2>Daily highs and lows</h2><span class="aside">air temperature</span></div>
+        <div class="frame"><svg id="cHiLo" class="chart" role="img" aria-label="Daily highest and lowest air temperature for every sol"></svg></div>
+        <figcaption class="note">Gaps are sols with no data released (for example sols 200–221). Source: NASA PDS, Curiosity REMS (cleaned).</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>The top edge of the band is each sol's warmest minute, the bottom edge its coldest. The band rises and falls once per Mars Year. Gaps are left open: no data was released for those sols.</p>
+        </details>
+      </figure>
+
+      <figure class="card chartcard">
+        <div class="shead" style="margin-top:0"><h2>Curiosity's climb</h2></div>
+        <div class="frame"><svg id="cClimb" class="chart" role="img" aria-label="The rover's height above its landing site, sol by sol"></svg></div>
+        <figcaption class="note">Height above the landing site. Source: NASA PDS, Curiosity REMS ancillary data.</figcaption>
+        <details class="howto"><summary>How to read this</summary>
+          <p>Curiosity landed on the floor of Gale Crater and has been driving up Mount Sharp, the mountain in its middle. Higher up there is less air above the rover, so it measures a lower pressure: that is why the pressure chart can be corrected for the climb.</p>
+        </details>
+      </figure>
+
+      <figure class="card chartcard">
+        <div class="shead" style="margin-top:0"><h2>How this was made</h2></div>
+        <ol class="steps">
+          <li><b>Downloaded</b> from NASA's Planetary Data System: one file per sol, one row per second.</li>
+          <li><b>Cleaned</b> by written rules: NASA's quality flags read character by character; impossible values removed; every removal counted.</li>
+          <li><b>Organised</b> by sol, season (Ls), Mars Year, local hour and the rover's height.</li>
+          <li><b>Summarised:</b> hourly averages, daily averages, highs and lows; a sol counts as "full" with data in 22 of 24 hours.</li>
+          <li><b>Checked</b> chunk by chunk; a cleaning report for every 90–130 sols.</li>
+        </ol>
+        <p class="note">The rules, the reports and the code are in the project's source code (mars-data/analysis).</p>
+      </figure>
+    </div>
+
+    <footer class="footer">
+      <p>Data courtesy of NASA/JPL-Caltech and the REMS team (Centro de Astrobiología), NASA Planetary Data System, Atmospheres Node. This is an independent project and isn't endorsed by NASA or ESA.</p>
+      <p class="credit"><strong>NASA and ESA Data Projects</strong> · Created by <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a> · © 2026 Malcolm Syme</p>
+    </footer>
+  </main>
+  <div class="tip" id="tip" hidden></div>
+
+  <script src="mockup-data.js"></script>
+  <script>
+  (() => {
+    const M = window.MARS;
+    const C = Object.fromEntries(M.cols.map((c, i) => [c, i]));
+    const rows = M.rows.map(r => Object.fromEntries(M.cols.map((c, i) => [c, r[i]])));
+    const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const S = ["--s1", "--s2", "--s3", "--s4", "--s5", "--s6"].map(css);
+    const NS = "http://www.w3.org/2000/svg";
+    const K = 273.15, R_CO2 = 188.92, G_MARS = 3.711;
+    const fmt = (v, d = 0) => v == null ? "–" : v.toLocaleString("en-CA", { minimumFractionDigits: d, maximumFractionDigits: d });
+    const tip = document.getElementById("tip");
+    const showTip = (e, html) => { tip.innerHTML = html; tip.hidden = false; const x = Math.min(e.clientX + 14, innerWidth - 270); tip.style.left = x + "px"; tip.style.top = (e.clientY + 14) + "px"; };
+    const hideTip = () => { tip.hidden = true; };
+
+    function el(name, attrs = {}, parent) {
+      const n = document.createElementNS(NS, name);
+      for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+      if (parent) parent.appendChild(n);
+      return n;
+    }
+    function ticks(lo, hi, n = 5) {
+      const step0 = (hi - lo) / n, mag = 10 ** Math.floor(Math.log10(step0));
+      const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => s >= step0);
+      const out = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(6));
+      return out;
+    }
+    // axes frame: returns {g, x, y} scale functions
+    // Charts are drawn at the width they are shown at (redrawn when the window is resized), so text stays readable.
+    function frame(svg, { w = 900, h = 340, fixed = false, x0, x1, y0, y1, xt, yt, xlab, ylab, xfmt = v => v, yfmt = v => v, m = { l: 58, r: 18, t: 16, b: 44 } }) {
+      if (!fixed) { const cw = svg.parentElement.clientWidth; if (cw) { w = cw; h = Math.round(Math.min(h, Math.max(250, cw * .8))); } }
+      if (w < 560 && xt && xt.length > 6) xt = xt.filter((_, i) => i % 2 === 0);
+      svg.innerHTML = ""; svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+      const X = v => m.l + (v - x0) / (x1 - x0) * (w - m.l - m.r);
+      const Y = v => h - m.b - (v - y0) / (y1 - y0) * (h - m.t - m.b);
+      const g = el("g", { class: "grid" }, svg);
+      for (const t of yt ?? ticks(y0, y1)) { el("line", { x1: m.l, x2: w - m.r, y1: Y(t), y2: Y(t) }, g); el("text", { x: m.l - 8, y: Y(t) + 4, "text-anchor": "end" }, svg).textContent = yfmt(t); }
+      for (const t of xt ?? ticks(x0, x1, 8)) { el("line", { x1: X(t), x2: X(t), y1: m.t, y2: h - m.b, opacity: .5 }, g); el("text", { x: X(t), y: h - m.b + 17, "text-anchor": "middle" }, svg).textContent = xfmt(t); }
+      el("text", { x: (m.l + w - m.r) / 2, y: h - 6, "text-anchor": "middle", class: "axt" }, svg).textContent = xlab;
+      const yl = el("text", { x: 14, y: (m.t + h - m.b) / 2, "text-anchor": "middle", class: "axt", transform: `rotate(-90 14 ${(m.t + h - m.b) / 2})` }, svg); yl.textContent = ylab;
+      return { X, Y, w, h, m };
+    }
+    function path(pts, X, Y, gapX) {
+      let d = "", prev = null;
+      for (const [x, y] of pts) { if (y == null) { prev = null; continue; } d += (prev == null || (gapX && x - prev > gapX) ? "M" : "L") + X(x).toFixed(1) + "," + Y(y).toFixed(1); prev = x; }
+      return d;
+    }
+    function hover(svg, f, pts, html) { // nearest point by x
+      const r = el("rect", { x: f.m.l, y: f.m.t, width: f.w - f.m.l - f.m.r, height: f.h - f.m.t - f.m.b, fill: "transparent" }, svg);
+      const dot = el("circle", { r: 4, fill: css("--brass-bright"), visibility: "hidden" }, svg);
+      r.addEventListener("pointermove", e => {
+        const b = svg.getBoundingClientRect(), sx = (e.clientX - b.left) / b.width * f.w;
+        let best = null, bd = Infinity; for (const p of pts) { const d = Math.abs(f.X(p.x) - sx) + (p.yy != null ? 0 : 1e9); if (d < bd) { bd = d; best = p; } }
+        if (!best || bd > 30) { dot.setAttribute("visibility", "hidden"); hideTip(); return; }
+        dot.setAttribute("cx", f.X(best.x)); dot.setAttribute("cy", f.Y(best.yy)); dot.setAttribute("visibility", "visible"); showTip(e, html(best));
+      });
+      r.addEventListener("pointerleave", () => { dot.setAttribute("visibility", "hidden"); hideTip(); });
+    }
+
+    // ---- status and tiles ----
+    const meta = M.meta;
+    document.getElementById("status").textContent = `Data up to sol ${fmt(meta.last_sol)} (${meta.last_date}) · ${fmt(meta.sols)} sols with data · cleaning rules ${meta.rules} · mock-up`;
+    const fullP = rows.filter(r => r.pressure_full), fullT = rows.filter(r => r.air_temp_full);
+    const minP = fullP.reduce((a, r) => r.pressure_mean < a.pressure_mean ? r : a), maxP = fullP.reduce((a, r) => r.pressure_mean > a.pressure_mean ? r : a);
+    const cold = fullT.reduce((a, r) => r.air_temp_min < a.air_temp_min ? r : a), warm = fullT.reduce((a, r) => r.air_temp_max > a.air_temp_max ? r : a);
+    const years = [...new Set(rows.map(r => r.mars_year))];
+    const zLast = rows.filter(r => r.rover_z_m != null).at(-1);
+    document.getElementById("tiles").innerHTML = [
+      ["Sols with data", fmt(meta.sols), `sols ${meta.first_sol}–${fmt(meta.last_sol)}`],
+      ["Mars Years", years.length, `Years ${years[0]} to ${years.at(-1)}`],
+      ["Pressure", `${fmt(minP.pressure_mean)}–${fmt(maxP.pressure_mean)} Pa`, `thinnest Ls ${fmt(minP.ls)}°, thickest Ls ${fmt(maxP.ls)}°`],
+      ["Coldest night", `${fmt(cold.air_temp_min - K)} °C`, `sol ${cold.sol}, Ls ${fmt(cold.ls)}°`],
+      ["Warmest afternoon", `${fmt(warm.air_temp_max - K)} °C`, `sol ${warm.sol}, Ls ${fmt(warm.ls)}°`],
+      ["Climbed", `${fmt(zLast.rover_z_m)} m`, `above the landing site by sol ${fmt(zLast.sol)}`],
+    ].map(([l, v, n]) => `<div class="tile"><div class="label">${l}</div><div class="value">${v}</div><div class="note">${n}</div></div>`).join("");
+
+    // ---- 1. pressure through the year ----
+    let corrected = false;
+    const corr = r => r.rover_z_m == null || r.air_temp_mean == null ? r.pressure_mean : r.pressure_mean * Math.exp(r.rover_z_m / (R_CO2 * r.air_temp_mean / G_MARS));
+    function drawPressure() {
+      const svg = document.getElementById("cPressure");
+      const val = r => corrected ? corr(r) : r.pressure_mean;
+      const vs = fullP.map(val);
+      const f = frame(svg, { x0: 0, x1: 360, y0: Math.floor(Math.min(...vs) / 50) * 50, y1: Math.ceil(Math.max(...vs) / 50) * 50, xt: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360], xlab: "Season (Ls, degrees)", ylab: "Pressure (Pa)", xfmt: v => v + "°" });
+      const pts = [];
+      years.forEach((y, i) => {
+        const ys = fullP.filter(r => r.mars_year === y).map(r => [r.ls, val(r)]);
+        el("path", { d: path(ys, f.X, f.Y, 6), fill: "none", stroke: S[i % 6], "stroke-width": 1.8 }, svg);
+        fullP.filter(r => r.mars_year === y).forEach(r => pts.push({ x: r.ls, yy: val(r), r, y }));
+      });
+      hover(svg, f, pts, p => `<b>Sol ${p.r.sol}</b> · Mars Year ${p.y}<br>Ls ${fmt(p.r.ls, 1)}° · ${p.r.utc_date}<br>${fmt(p.yy, 1)} Pa${corrected ? " (at landing-site height)" : ""}<br>Rover ${fmt(p.r.rover_z_m)} m above landing site`);
+      document.getElementById("pLegend").innerHTML = years.map((y, i) => `<span><i style="background:${S[i % 6]}"></i>Mars Year ${y}</span>`).join("");
+      document.getElementById("corrNote").textContent = corrected ? "Each sol adjusted to the landing site's height: p₀ = p × e^(h/H), with H = R·T/g." : "As measured, at the rover's height that sol.";
+    }
+    document.getElementById("corrBtn").addEventListener("click", e => { corrected = !corrected; e.currentTarget.setAttribute("aria-pressed", corrected); drawPressure(); });
+
+    // ---- 5. daily pressure range ----
+    function drawRange() {
+      const svg = document.getElementById("cRange");
+      const d = fullP.filter(r => r.pressure_max != null).map(r => ({ x: r.ls, yy: r.pressure_max - r.pressure_min, r }));
+      const f = frame(svg, { w: 520, h: 300, x0: 0, x1: 360, y0: 0, y1: Math.ceil(Math.max(...d.map(p => p.yy)) / 20) * 20, xt: [0, 90, 180, 270, 360], xlab: "Season (Ls)", ylab: "Daily range (Pa)", xfmt: v => v + "°" });
+      d.forEach(p => el("circle", { cx: f.X(p.x), cy: f.Y(p.yy), r: 2.2, fill: S[years.indexOf(p.r.mars_year) % 6], opacity: .8 }, svg));
+      hover(svg, f, d, p => `<b>Sol ${p.r.sol}</b> · Ls ${fmt(p.r.ls, 1)}°<br>Range ${fmt(p.yy, 1)} Pa<br>${fmt(p.r.pressure_min, 1)} to ${fmt(p.r.pressure_max, 1)} Pa`);
+    }
+
+    // ---- 7. humidity, 8. UV (seasonal scatter) ----
+    function seasonal(svgId, frameId, key, ylab, unit, d, label) {
+      const svg = document.getElementById(svgId);
+      const pts = rows.filter(r => r[key] != null).map(r => ({ x: r.ls, yy: r[key], r }));
+      if (!pts.length) { document.getElementById(frameId).innerHTML = `<div class="empty">${label}</div>`; return; }
+      const f = frame(svg, { w: 520, h: 300, x0: 0, x1: 360, y0: 0, y1: Math.max(...pts.map(p => p.yy)) * 1.08, xt: [0, 90, 180, 270, 360], xlab: "Season (Ls)", ylab, xfmt: v => v + "°", yfmt: v => fmt(v, d) });
+      pts.forEach(p => el("circle", { cx: f.X(p.x), cy: f.Y(p.yy), r: 2.2, fill: S[years.indexOf(p.r.mars_year) % 6], opacity: .8 }, svg));
+      hover(svg, f, pts, p => `<b>Sol ${p.r.sol}</b> · Ls ${fmt(p.r.ls, 1)}°<br>${fmt(p.yy, d + 1)} ${unit}`);
+    }
+
+    // ---- 4. heat map ----
+    function drawHeat() {
+      const svg = document.getElementById("cHeat");
+      const f = frame(svg, { w: 520, h: 320, x0: 0, x1: 360, y0: 24, y1: 0, xt: [0, 90, 180, 270, 360], yt: [0, 6, 12, 18, 24], xlab: "Season (Ls)", ylab: "Local hour", xfmt: v => v + "°", yfmt: v => String(v).padStart(2, "0") + ":00" });
+      const vals = M.heat.map(h => h[2]); const lo = Math.min(...vals), hi = Math.max(...vals);
+      const deep = [12, 17, 25], blue = [138, 169, 201], brass = [226, 200, 142];
+      const mix = t => { const [a, b, u] = t < .5 ? [deep, blue, t * 2] : [blue, brass, (t - .5) * 2]; return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * u)).join(",")})`; };
+      const cw = f.X(10) - f.X(0), ch = f.Y(1) - f.Y(0);
+      for (const [b, hr, v, n] of M.heat) {
+        const c = el("rect", { x: f.X(b * 10), y: f.Y(hr), width: cw + .5, height: Math.abs(ch) + .5, fill: mix((v - lo) / (hi - lo)) }, svg);
+        c.addEventListener("pointermove", e => showTip(e, `<b>Ls ${b * 10}–${b * 10 + 10}°, ${String(hr).padStart(2, "0")}:00</b><br>${fmt(v - K, 0)} °C average<br>${n} sols`));
+        c.addEventListener("pointerleave", hideTip);
+      }
+    }
+
+    // ---- 2. one sol ----
+    const solSel = document.getElementById("solSel");
+    Object.keys(M.hourly).forEach(s => { const r = rows.find(x => x.sol === +s); const o = new Option(`Sol ${s} · Ls ${fmt(r.ls)}° · ${r.utc_date}`, s); solSel.add(o); });
+    function drawSol() {
+      const sol = +solSel.value, hrs = M.hourly[sol], r = rows.find(x => x.sol === sol);
+      document.getElementById("solNote").textContent = `Mars Year ${r.mars_year}; rover ${fmt(r.rover_z_m)} m above the landing site`;
+      const svg = document.getElementById("cSol"); svg.innerHTML = "";
+      const W = svg.parentElement.clientWidth || 900, H = W < 560 ? 380 : 420, top = W < 560 ? 240 : 270;
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+      const temps = hrs.flatMap(h => [h[2], h[3]]).filter(v => v != null).map(v => v - K);
+      const t0 = Math.floor(Math.min(...temps) / 10) * 10, t1 = Math.ceil(Math.max(...temps) / 10) * 10;
+      const sub1 = document.createElementNS(NS, "svg"); sub1.setAttribute("x", 0); sub1.setAttribute("y", 0); svg.appendChild(sub1);
+      const f1 = frame(sub1, { w: W, h: top, x0: 0, x1: 24, y0: t0, y1: t1, xt: [0, 3, 6, 9, 12, 15, 18, 21, 24], xlab: "", ylab: "°C", fixed: true, xfmt: v => String(v).padStart(2, "0") + ":00", m: { l: 58, r: 18, t: 16, b: 26 } });
+      sub1.setAttribute("width", W); sub1.setAttribute("height", top); sub1.setAttribute("viewBox", `0 0 ${W} ${top}`);
+      const at = hrs.map(h => [h[0] + .5, h[2] == null ? null : h[2] - K]), gt = hrs.map(h => [h[0] + .5, h[3] == null ? null : h[3] - K]);
+      el("path", { d: path(gt, f1.X, f1.Y, 1.5), fill: "none", stroke: S[3], "stroke-width": 1.8, "stroke-dasharray": "5 4" }, sub1);
+      el("path", { d: path(at, f1.X, f1.Y, 1.5), fill: "none", stroke: S[0], "stroke-width": 2.2 }, sub1);
+      hover(sub1, f1, hrs.filter(h => h[2] != null).map(h => ({ x: h[0] + .5, yy: h[2] - K, h })), p => `<b>${String(p.h[0]).padStart(2, "0")}:00–${String(p.h[0] + 1).padStart(2, "0")}:00</b><br>Air ${fmt(p.h[2] - K, 1)} °C<br>Ground ${p.h[3] == null ? "–" : fmt(p.h[3] - K, 1) + " °C"}<br>Pressure ${fmt(p.h[1], 1)} Pa${p.h[4] != null ? `<br>Humidity ${fmt(p.h[4], 1)} %` : ""}`);
+      const ps = hrs.map(h => h[1]).filter(v => v != null);
+      const sub2 = document.createElementNS(NS, "svg"); sub2.setAttribute("x", 0); sub2.setAttribute("y", top); sub2.setAttribute("width", W); sub2.setAttribute("height", H - top); sub2.setAttribute("viewBox", `0 0 ${W} ${H - top}`); svg.appendChild(sub2);
+      const f2 = frame(sub2, { w: W, h: H - top, x0: 0, x1: 24, y0: Math.floor(Math.min(...ps) / 10) * 10, y1: Math.ceil(Math.max(...ps) / 10) * 10, xt: [0, 3, 6, 9, 12, 15, 18, 21, 24], xlab: "Local time (Mars hours)", ylab: "Pa", fixed: true, xfmt: v => String(v).padStart(2, "0") + ":00", m: { l: 58, r: 18, t: 10, b: 40 } });
+      el("path", { d: path(hrs.map(h => [h[0] + .5, h[1]]), f2.X, f2.Y, 1.5), fill: "none", stroke: S[1], "stroke-width": 2 }, sub2);
+    }
+    solSel.addEventListener("change", drawSol);
+
+    // ---- 3. highs and lows ----
+    function drawHiLo() {
+      const svg = document.getElementById("cHiLo");
+      const d = rows.filter(r => r.air_temp_min != null && r.air_temp_max != null && r.air_temp_full);
+      const f = frame(svg, { h: 300, x0: 0, x1: Math.ceil(meta.last_sol / 100) * 100, y0: -100, y1: 10, xlab: "Sol", ylab: "°C", xfmt: v => fmt(v) });
+      let top = "", bot = "", prev = null, seg = [];
+      const flush = () => { if (seg.length > 1) { const a = seg.map(r => `${f.X(r.sol).toFixed(1)},${f.Y(r.air_temp_max - K).toFixed(1)}`), b = seg.slice().reverse().map(r => `${f.X(r.sol).toFixed(1)},${f.Y(r.air_temp_min - K).toFixed(1)}`); el("polygon", { points: a.concat(b).join(" "), fill: S[0], opacity: .35 }, svg); } seg = []; };
+      for (const r of d) { if (prev && r.sol - prev.sol > 6) flush(); seg.push(r); prev = r; } flush();
+      el("path", { d: path(d.map(r => [r.sol, r.air_temp_max - K]), f.X, f.Y, 3), fill: "none", stroke: S[0], "stroke-width": 1.2 }, svg);
+      el("path", { d: path(d.map(r => [r.sol, r.air_temp_min - K]), f.X, f.Y, 3), fill: "none", stroke: S[1], "stroke-width": 1.2 }, svg);
+      el("line", { x1: f.m.l, x2: f.w - f.m.r, y1: f.Y(0), y2: f.Y(0), stroke: css("--brass-dim"), "stroke-dasharray": "4 4" }, svg);
+      el("text", { x: f.w - f.m.r - 4, y: f.Y(0) - 6, "text-anchor": "end", class: "lbl" }, svg).textContent = "0 °C, water freezes";
+      hover(svg, f, d.map(r => ({ x: r.sol, yy: r.air_temp_max - K, r })), p => `<b>Sol ${p.r.sol}</b> · ${p.r.utc_date}<br>Ls ${fmt(p.r.ls, 1)}°, Mars Year ${p.r.mars_year}<br>High ${fmt(p.r.air_temp_max - K, 1)} °C<br>Low ${fmt(p.r.air_temp_min - K, 1)} °C`);
+    }
+
+    // ---- 6. climb ----
+    function drawClimb() {
+      const svg = document.getElementById("cClimb");
+      const d = rows.filter(r => r.rover_z_m != null);
+      const zs = d.map(r => r.rover_z_m);
+      const f = frame(svg, { w: 520, h: 300, x0: 0, x1: Math.ceil(meta.last_sol / 100) * 100, y0: Math.floor(Math.min(...zs) / 50) * 50, y1: Math.ceil(Math.max(...zs) / 50) * 50, xlab: "Sol", ylab: "Height (m)", xfmt: v => fmt(v) });
+      el("path", { d: path(d.map(r => [r.sol, r.rover_z_m]), f.X, f.Y, 30), fill: "none", stroke: S[2], "stroke-width": 2 }, svg);
+      hover(svg, f, d.map(r => ({ x: r.sol, yy: r.rover_z_m, r })), p => `<b>Sol ${p.r.sol}</b> · ${p.r.utc_date}<br>${fmt(p.yy, 1)} m above the landing site`);
+    }
+
+    function drawAll() {
+      drawPressure(); drawRange(); drawHeat(); drawHiLo(); drawClimb(); drawSol();
+      seasonal("cHum", "humFrame", "humidity_max", "Relative humidity (%)", "%", 0, "Humidity appears here after the sols are re-processed with cleaning rules 1.1.");
+      seasonal("cUV", "uvFrame", "uv_abc_max", "UV (W/m²)", "W/m²", 1, "Corrected UV appears here after the UV files are processed.");
+    }
+    drawAll();
+    let lastW = innerWidth, timer;
+    addEventListener("resize", () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(timer); timer = setTimeout(drawAll, 150); });
+  })();
+  </script>
+</body>
+</html>
