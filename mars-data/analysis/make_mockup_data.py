@@ -21,7 +21,9 @@ def num(v, nd=1):
 def main() -> None:
     s = pd.read_csv(DATA / "sols.csv")
     if (DATA / "uv.csv").exists():
-        s = s.merge(pd.read_csv(DATA / "uv.csv"), on="sol", how="left")
+        uv = pd.read_csv(DATA / "uv.csv")
+        uv.loc[~uv["uv_abc_max_hour"].between(10.5, 13.5), ["uv_abc_max", "uv_sza_at_max"]] = None  # CLEANING.md rule 9
+        s = s.merge(uv, on="sol", how="left")
     h = pd.read_csv(DATA / "hourly.csv")
 
     cols = {"sol": 0, "ls": 2, "mars_year": 0, "utc_date": None, "pressure_mean": 1, "pressure_min": 1,
