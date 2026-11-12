@@ -134,6 +134,9 @@ A value that passes every rule but is plainly not weather (for example one hour 
 side) is listed in `exclusions.csv` with the sol, the measurement and the reason. It stays in the data files but is
 left out of what the page shows until it has been reviewed. The automatic rules are not changed for a single case.
 
+Since version 1.2 the list is empty: the 26 sols set aside on November 12, 2026 (evening air-temperature glitches) are
+handled by rule 11.
+
 ## Rule 11 — Single-hour air-temperature glitches (since version 1.2)
 
 On some evenings (about 18:00–20:00 local, more often since sol 4087) the air temperature reads about −115 to −120 °C
@@ -149,6 +152,13 @@ a separate rule removes them:
 
 Real changes within an hour stay well inside 25 K: the fastest real change, the morning warm-up, is about 10–15 K
 per hour. The rule replaces the 26 sols set aside by hand under rule 10 on November 12, 2026.
+
+Checked on the whole record (November 12, 2026): rule 11 removed readings on 34 sols, all evening glitches of this
+kind: the 26 sols set aside under rule 10, and 2805, 3325, 4175, 4188, 4204, 4226, 4294 and 4823, where the glitch
+was shorter (removing it moves the daily mean by less than 0.1 K, or changes no published figure). After it, no hourly mean is more than 25 K beyond both neighbouring hours,
+and no full sol has a daily air minimum below 170 K. A first version compared an hour with only one neighbour when the
+next hour had no data; on sol 1418 that removed 39 readings of real morning warming. The rule now applies only when
+both neighbouring hours have data, as written above, and sol 1418 was processed again.
 
 ---
 
