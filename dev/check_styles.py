@@ -24,7 +24,8 @@ SHARED = ['btn', 'chip', 'chips', 'card', 'cards', 'panel', 'panels', 'seg', 'ta
           'section-head', 'shead', 'footer', 'sitelinks', 'srcline', 'lede', 'kicker', 'eyebrow', 'bigsearch', 'qclear',
           'filters', 'periodbar', 'period', 'linkbtn', 'state', 'empty', 'loading', 'ctl', 'table', 'prose', 'list',
           'terms', 'sources', 'steps', 'split', 'legend', 'tip', 'note', 'caption', 'aside', 'lbl', 'wrap', 'topbar',
-          'nav', 'brand', 'more', 'viewhead', 'actions', 'field', 'sr', 'hscroll', 'callout', 'stage', 'medal']
+          'nav', 'brand', 'more', 'viewhead', 'actions', 'field', 'sr', 'hscroll', 'callout', 'stage', 'medal',
+          'need', 'chart', 'chartcard', 'display-link', 'summary', 'updated', 'facts']
 
 def tracked():
     out = subprocess.run(['git', 'ls-files', '--cached', '--others', '--exclude-standard'], cwd=ROOT,

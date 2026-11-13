@@ -7,15 +7,9 @@
  */
 
 /* ---------- charts ---------- */
-.chartcard > .pb { padding-top: var(--sp3); }
-.chart { display: block; width: 100%; height: auto; }
-.chart text { font-family: var(--font); font-size: 11px; fill: var(--muted); }
-.chart .axt { fill: var(--brass); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; }
-.chart .grid line { stroke: var(--line); }
 .chart .lbl { font-size: 11.5px; }
 .chart.loading { opacity: .5; }
-.tip b { font-weight: 400; color: var(--brass-bright); }
-@media (max-width: 600px) { .chart text { font-size: 12.5px; } .chart .axt { font-size: 10.5px; } .chart .lbl { font-size: 12.5px; } }
+@media (max-width: 600px) { .chart text, .chart .lbl { font-size: 12.5px; } .chart .axt { font-size: 11px; } }
 
 /* the controls above a chart */
 .tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp3) var(--sp4); margin: 0 0 var(--sp3); }

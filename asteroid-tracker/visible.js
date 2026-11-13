@@ -11,10 +11,9 @@ import { fmt, sizeText } from './format.js';
 
 const msFromJd = (jd) => (jd - 2440587.5) * 86400000;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-const NEED_COL = { eye: '#E2C88E', bino: '#8FB996', small: '#8AA9C9', large: '#B79AC8', faint: '#98A0AB' };
 const when = (jd) => new Date(msFromJd(jd)).toLocaleString('en-CA', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 const timeOnly = (jd) => new Date(msFromJd(jd)).toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' });
-const needTag = (n) => `<span class="need" style="--c:${NEED_COL[n.key]}">${esc(n.label)}</span>`;
+const needTag = (n) => `<span class="need n-${n.key}">${esc(n.label)}</span>`;
 const sizeOf = (km) => sizeText({ dmin: km * 1000, dmax: km * 1000, measured: true });
 const skyFinder = (des) => `../sky-finder/?find=${encodeURIComponent(des)}`;
 

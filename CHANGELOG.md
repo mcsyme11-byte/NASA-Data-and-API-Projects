@@ -23,6 +23,11 @@ page styles inside most pages).
 - **Design guide:** `docs/DESIGN.md` rewritten as the catalogue of the components, with the "Page styles" rule and the
   rule that every addition says what it replaces.
 - Tabs wrap to a second line instead of scrolling; every segmented control scrolls with a soft fade on phones.
+- **Checked at every width** (320 to 1440 px, with data and with the data missing): the week's table fits a tablet
+  again with its "Potentially hazardous" tags whole; the map's hint sits clear of its scale; every button, chip and
+  small link is at least 40 px tall on phones; the "what you need to see it" tags are one shared component in the
+  Asteroid Tracker and Sky Finder; chart axis titles are 11 px everywhere; tables in the information pages use the
+  full width.
 
 ## November 12, 2026 — whole-site check
 

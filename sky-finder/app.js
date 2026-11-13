@@ -69,7 +69,7 @@ function upWindow(x) {
   while (b < pts.length - 1 && pts[b + 1].dark && pts[b + 1].trueAlt >= 10) b++;
   return { from: msFromJd(pts[a].jd), to: msFromJd(pts[b].jd) };
 }
-const needTag = (n) => `<span class="need" style="--c:var(--n-${n.key})">${esc(n.label)}</span>`;
+const needTag = (n) => `<span class="need n-${n.key}">${esc(n.label)}</span>`;
 const shortName = (n) => n.replace(/^\((.*)\)$/, '$1');
 
 function render() {
@@ -118,10 +118,10 @@ function render() {
   const also = [];
   const m = list.moon;
   if (m.top) also.push(`<button class="sfitem" type="button" data-t="moon" aria-pressed="${chosen === 'moon'}"><span class="ic moon" aria-hidden="true"></span><span class="t"><b>Moon</b><span>${Math.round(m.lit * 100)}% lit, ${m.waxing ? 'growing' : 'shrinking'}; highest ${Math.round(m.top.alt)}° to the ${dirText(m.top.az)} at ${hhmm(m.top.ms)}</span></span></button>`);
-  for (const p of list.planets) also.push(`<button class="sfitem" type="button" data-t="${p.name.toLowerCase()}" aria-pressed="${chosen === p.name.toLowerCase()}"><span class="ic planet" aria-hidden="true"></span><span class="t"><b>${p.name}</b><span>${p.look}; highest ${Math.round(p.top.alt)}° to the ${dirText(p.top.az)} at ${hhmm(p.top.ms)}</span></span><span class="need" style="--c:var(--n-eye)">Naked eye</span></button>`);
+  for (const p of list.planets) also.push(`<button class="sfitem" type="button" data-t="${p.name.toLowerCase()}" aria-pressed="${chosen === p.name.toLowerCase()}"><span class="ic planet" aria-hidden="true"></span><span class="t"><b>${p.name}</b><span>${p.look}; highest ${Math.round(p.top.alt)}° to the ${dirText(p.top.az)} at ${hhmm(p.top.ms)}</span></span><span class="need n-eye">Naked eye</span></button>`);
   for (const s of list.stations) {
     const ps = s.passes.slice(0, 3).map((q) => `${hhmm(q.start.ms)} (${Math.round(q.top.alt)}° up, ${Math.round((q.end.ms - q.start.ms) / 60000) || 1} min)`).join(', ');
-    also.push(`<button class="sfitem" type="button" data-t="${s.short.toLowerCase()}" aria-pressed="${chosen === s.short.toLowerCase()}"><span class="ic station" aria-hidden="true"></span><span class="t"><b>${esc(s.name)}</b><span>passes over: ${ps}; a bright moving star</span></span><span class="need" style="--c:var(--n-eye)">Naked eye</span></button>`);
+    also.push(`<button class="sfitem" type="button" data-t="${s.short.toLowerCase()}" aria-pressed="${chosen === s.short.toLowerCase()}"><span class="ic station" aria-hidden="true"></span><span class="t"><b>${esc(s.name)}</b><span>passes over: ${ps}; a bright moving star</span></span><span class="need n-eye">Naked eye</span></button>`);
   }
   if (!sky.errors.tle && sky.sats.length && !list.stations.length) also.push(`<div class="sfstate small">No space station passes you can see tonight.</div>`);
   $('#alsoList').innerHTML = also.join('') || `<div class="sfstate small">${n.noDark ? 'The sky does not get dark tonight.' : 'Nothing bright is up tonight apart from the stars.'}</div>`;

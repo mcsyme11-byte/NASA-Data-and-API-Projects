@@ -370,6 +370,10 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--brass); }
 .pill.warn, .tag.warn { border-color: rgba(209, 169, 86, .55); color: var(--amber); }
 a.tag.link, a.badge { border-color: var(--brass-dim); color: var(--brass); }
 a.tag.link:hover, a.badge:hover { border-color: var(--brass); color: var(--brass-bright); }
+/* what you need to see an object in the sky (Asteroid Tracker and Sky Finder): one colour per kind of instrument */
+.need { --c: var(--muted); display: inline-block; padding: 2px 9px; border-radius: var(--r-pill); border: 1px solid var(--c); color: var(--c);
+  font-size: 13px; line-height: 1.4; white-space: nowrap; }
+.need.n-eye { --c: #E2C88E; } .need.n-bino { --c: #8FB996; } .need.n-small { --c: #8AA9C9; } .need.n-large { --c: #B79AC8; } .need.n-faint { --c: #98A0AB; }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 
 /* ============================================================== notices and states */
@@ -406,7 +410,6 @@ a.tag.link:hover, a.badge:hover { border-color: var(--brass); color: var(--brass
 table.credits td { color: var(--ink2); }
 table.credits td:first-child { color: var(--ink); }
 .tablewrap { overflow-x: auto; margin: 0 0 var(--sp5); background: var(--deep); border: 1px solid var(--line); border-radius: var(--r); }
-.prose .tablewrap { max-width: none; }
 @media (max-width: 760px) {
   .table.stack thead, table.credits thead { display: none; }
   .table.stack, .table.stack tbody, .table.stack tr, .table.stack td,
@@ -421,7 +424,9 @@ table.credits td:first-child { color: var(--ink); }
 }
 
 /* ============================================================== writing: lists, facts, terms, sources */
-.prose { max-width: var(--prose); }
+/* reading width for the writing; tables inside the writing may use the full width */
+.prose > * { max-width: var(--prose); }
+.prose > .tablewrap { max-width: none; }
 .prose p, .prose li { color: var(--ink2); }
 .prose > p:first-child { color: var(--ink); }
 .prose ul, .prose ol { margin: 0 0 var(--sp4); padding-left: 22px; }
@@ -485,8 +490,13 @@ table.credits td:first-child { color: var(--ink); }
 .tip { position: fixed; z-index: 60; pointer-events: none; max-width: 280px; background: rgba(15, 21, 32, .97);
   border: 1px solid var(--brass-dim); border-radius: var(--r-sm); padding: var(--sp2) var(--sp3); font-size: 14px; line-height: 1.45;
   color: var(--ink); box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
-svg.chart { display: block; width: 100%; height: auto; }
-svg.chart text { font-family: var(--font); }
+svg.chart, .chart { display: block; width: 100%; height: auto; }
+.chart text { font-family: var(--font); font-size: 11px; fill: var(--muted); }
+.chart .axt { fill: var(--brass); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+.chart .grid line { stroke: var(--line); }
+.chart .dim { opacity: .25; }
+.chartcard > .pb { padding-top: var(--sp3); }
+.tip b { font-weight: 400; color: var(--brass-bright); }
 
 /* ============================================================== a large link (the Contact page's address) */
 .display-link { display: inline-block; font-size: 34px; line-height: 1.2; color: var(--brass-bright); border-bottom: 1px solid var(--brass-dim);
@@ -527,6 +537,15 @@ a.stage:hover { color: var(--ink); }
 @media (max-width: 600px) {
   .sitelinks { gap: 0 var(--sp4); } .sitelinks a { letter-spacing: .16em; } .footer .copy { width: 100%; }
   .footer .copy a { display: inline-flex; align-items: center; min-height: 40px; }
+}
+
+/* ============================================================== phones: every tap target at least 40 px tall */
+@media (max-width: 760px) {
+  .seg button, .seg a, .seg > .chip, .chip, .btn.small { min-height: 40px; }
+  input[type="range"] { min-height: 40px; }
+  .display-link { padding-top: 8px; }
+  /* small links inside kickers, callout titles and asides: a taller tap area without moving the text */
+  .kicker a, .callout h4 a, .aside a, .notice .t a { display: inline-block; padding: 12px 0; margin: -12px 0; }
 }
 
 /* ============================================================== motion: quick, quiet feedback on everything pressable */

@@ -38,7 +38,7 @@ const id = (params.get('id') || '').trim();
 const state = { neo: null, k: null, view: null, jd: null, anchor: null, approaches: [], sel: null, playing: false, showAll: false, held: null };
 
 function notice(msg, actions = '') {
-  $('#notice').innerHTML = msg ? `<div class="notice warn" role="alert"><span>${msg}</span><span class="seg">${actions}</span></div>` : '';
+  $('#notice').innerHTML = msg ? `<div class="notice warn" role="alert"><span class="t">${msg}</span>${actions}</div>` : '';
 }
 function tiles(target, list) {
   $(target).innerHTML = list.map((t) => `<div class="tile"><div class="label">${t.label}</div><div class="value">${t.value}</div><div class="note">${t.note}</div></div>`).join('');
@@ -59,7 +59,7 @@ async function load() {
   } catch (e) {
     $('#name').textContent = e.status === 404 ? 'Asteroid not found' : 'Asteroid ' + id;
     const msg = e.status === 404 ? 'NASA has no asteroid with this number. Open one from the <a href="./">Asteroid Tracker</a>.' : esc(e.message);
-    notice(msg, e.status === 404 ? '' : '<button class="btn ghost" data-act="retry">Try again</button>');
+    notice(msg, e.status === 404 ? '' : '<button class="btn outline small" data-act="retry">Try again</button>');
     return;
   }
   render();

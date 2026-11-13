@@ -2,7 +2,6 @@
    Phone first: one column up to 560 px wide, tap targets 44 px and over, the main button in reach of the thumb. */
 
 :root {
-  --n-eye: #E2C88E; --n-bino: #8FB996; --n-small: #8AA9C9; --n-large: #B79AC8; --n-faint: #98A0AB;
   --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
 }
 body.sf { background: radial-gradient(700px 380px at 50% -140px, rgba(192,160,98,.10), transparent 70%), #0F1520; }
@@ -74,7 +73,6 @@ html.viewing, html.viewing body { overflow: hidden; height: 100%; overscroll-beh
 .ic.moon { border-radius: 50%; background: radial-gradient(circle at 62% 40%, #EDE6D3 0 45%, #6E6A60 46%); width: 22px; height: 22px; }
 .ic.planet { border-radius: 50%; border: 2px solid var(--brass); width: 18px; height: 18px; }
 .ic.station { width: 16px; height: 16px; border: 2px solid var(--blue); }
-.need { display: inline-block; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; border: 1px solid var(--c); color: var(--c); border-radius: 3px; padding: 2px 6px; white-space: nowrap; }
 .sfstate { padding: 18px 16px; border: 1px dashed var(--line2); border-radius: var(--r-card); color: var(--ink2); font-size: 15px; text-align: center; }
 .sfstate.small { padding: 12px; font-size: 14px; color: var(--muted); }
 
@@ -154,5 +152,3 @@ html.viewing, html.viewing body { overflow: hidden; height: 100%; overscroll-beh
 .step .legend svg { display: block; }
 .sf-kick { margin-top: var(--sp4); }
 ol.plain { list-style: none; padding: 0; }
-.need.n-eye { --c: var(--n-eye); } .need.n-bino { --c: var(--n-bino); } .need.n-small { --c: var(--n-small); }
-.need.n-large { --c: var(--n-large); } .need.n-faint { --c: var(--n-faint); }

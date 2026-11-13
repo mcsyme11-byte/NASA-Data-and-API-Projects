@@ -48,10 +48,9 @@ function tiles(target, list) {
 }
 function loadingTiles(target, labels) {
   tiles(target, labels.map((label) => ({ label, value: '…', note: 'loading' })));
-  $(target).classList.add('loading');
 }
 function notice(target, msg, actions = '') {
-  $(target).innerHTML = msg ? `<div class="notice warn" role="alert"><span>${esc(msg)}</span><span class="seg">${actions}</span></div>` : '';
+  $(target).innerHTML = msg ? `<div class="notice warn" role="alert"><span class="t">${esc(msg)}</span>${actions}</div>` : '';
 }
 
 // ---------------------------------------------------------------- this week
@@ -121,10 +120,9 @@ function filtered() {
 }
 
 function renderWeek() {
-  $('#weekTiles').classList.remove('loading');
   if (state.weekError) {
     const e = state.weekError;
-    notice('#weekNotice', e.message, '<button class="btn ghost" data-act="retry">Try again</button>');
+    notice('#weekNotice', e.message, '<button class="btn outline small" data-act="retry">Try again</button>');
     tiles('#weekTiles', ['Passing Earth', 'Closest', 'Biggest', 'Fastest', 'Potentially hazardous'].map((label) => ({ label, value: '—', note: 'not loaded' })));
     ['#cScatter', '#cDays', '#cBig'].forEach((s) => loadingChart(s, 'No data: NASA could not be reached.'));
     $('#weekTable tbody').innerHTML = `<tr class="msg"><td colspan="6"><div class="state small">No data to show.</div></td></tr>`;
@@ -324,9 +322,8 @@ async function loadYear(year = state.yearShown || thisYearNow()) {
 }
 
 function renderYear() {
-  $('#yearTiles').classList.remove('loading');
   if (state.yearError || !state.year) {
-    notice('#yearNotice', 'The close-approach data could not be loaded. Try again in a moment.', '<button class="btn ghost" data-act="retry">Try again</button>');
+    notice('#yearNotice', 'The close-approach data could not be loaded. Try again in a moment.', '<button class="btn outline small" data-act="retry">Try again</button>');
     tiles('#yearTiles', [{ label: 'Close approaches', value: '—', note: 'not loaded' }]);
     loadingChart('#cYear', 'No data.');
     $('#yearTable tbody').innerHTML = $('#nextTable tbody').innerHTML = '';

@@ -8,17 +8,10 @@
  */
 
 /* ============================================================== charts */
-.chart { display: block; width: 100%; height: auto; }
-.chart text { font-family: var(--font); font-size: 11px; fill: var(--muted); }
-.chart .axt { fill: var(--brass); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; }
-.chart .grid line { stroke: var(--line); }
 .chart .hit { cursor: pointer; }
-.chart .dim { opacity: .25; }
-.chartcard > .pb { padding-top: var(--sp3); }
-.tip b { font-weight: 400; color: var(--brass-bright); }
 
 /* ============================================================== the asteroid tables */
-.tablecard { overflow: hidden; }
+.tablecard { overflow-x: auto; }
 .tablecard > .pb.flush { overflow-x: auto; }
 table.neo { width: 100%; border-collapse: collapse; font-size: 15.5px; }
 table.neo th { text-align: left; font-weight: 400; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--brass);
@@ -43,8 +36,14 @@ th[tabindex]:focus-visible, tr[tabindex]:focus-visible { outline: 2px solid var(
 @media (min-width: 761px) {
   table.neo td.num { white-space: nowrap; }
   table.neo td:first-child { min-width: 8em; }
+  table.neo .tag { white-space: normal; line-height: 1.3; padding-top: 3px; padding-bottom: 3px; text-align: center; }
 }
-@media (min-width: 761px) and (max-width: 1100px) { table.neo td, table.neo th { padding-left: var(--sp3); padding-right: var(--sp3); } }
+@media (min-width: 761px) and (max-width: 1100px) {
+  table.neo td, table.neo th { padding-left: var(--sp2); padding-right: var(--sp2); }
+  table.neo td:first-child, table.neo th:first-child { padding-left: var(--sp3); }
+  table.neo th { letter-spacing: .14em; }
+  table.neo .tag { letter-spacing: .1em; padding-left: 7px; padding-right: 7px; }
+}
 /* the details row under a selected asteroid */
 .dwrap .tiles { margin-top: var(--sp2); }
 .dwrap .note { margin: var(--sp3) 0 0; }
@@ -188,6 +187,8 @@ body.noscroll { overflow: hidden; }
 .ovl-hint { left: 50%; bottom: 14px; transform: translateX(-50%); font-size: 13px; font-style: italic; color: var(--muted);
   background: rgba(12, 17, 25, .85); padding: 4px 12px; border-radius: var(--r-pill); transition: opacity .6s; white-space: nowrap; }
 .ovl-hint.gone { opacity: 0; }
+/* the hint sits above the scale, clear of it at every width */
+.ovl-hint { left: 14px; bottom: 50px; transform: none; white-space: normal; max-width: calc(100% - 100px); border-radius: var(--r-sm); }
 .mapframe .loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; background: var(--deep); }
 .tourbanner { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); background: rgba(12, 17, 25, .92); border: 1px solid var(--brass-dim);
   border-radius: var(--r-pill); padding: 6px 16px; font-size: 14px; color: var(--brass-bright); pointer-events: none; white-space: nowrap; }
@@ -335,7 +336,6 @@ dl.mini dd { margin: 0; }
 .placehits button:last-child { border-bottom: 0; }
 .placehits button:hover, .placehits button[aria-selected="true"] { background: rgba(192, 160, 98, .1); color: var(--ink); }
 .placecard > .note { flex-basis: 100%; margin: 0; color: var(--amber); }
-.need { display: inline-block; padding: 2px 9px; border-radius: var(--r-pill); border: 1px solid var(--c); color: var(--c); font-size: 13px; white-space: nowrap; }
 .tile .value .need { font-size: 15px; padding: 3px 10px; }
 .visgrid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: var(--sp4); align-items: start; margin-top: var(--sp5); }
 .visside { display: grid; gap: var(--sp4); min-width: 0; }

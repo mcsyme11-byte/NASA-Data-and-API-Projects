@@ -61,7 +61,6 @@
           <div class="pb">
             <header class="pagehead compact">
               <div class="kicker">Asteroid Tracker</div>
-              <h2 class="sr">Example</h2>
               <p class="lede">Tool pages use the compact head so the tool starts high on the screen.</p>
             </header>
           </div>
@@ -202,8 +201,8 @@
         </div>
         <div class="ctl">
           <h2>Control box</h2>
-          <div class="field"><span>Date</span><input type="date" value="2026-11-13"></div>
-          <div class="field"><span>Layer</span><select><option>True colour</option><option>Night lights</option></select></div>
+          <label class="field"><span>Date</span><input type="date" value="2026-11-13"></label>
+          <label class="field"><span>Layer</span><select><option>True colour</option><option>Night lights</option></select></label>
           <p class="caption">A group of settings beside a tool.</p>
         </div>
         <div class="panel">
@@ -222,6 +221,7 @@
     <section class="section" aria-labelledby="h-msg">
       <div class="section-head"><div><div class="kicker">Section 7</div><h2 id="h-msg">Badges, notices and states</h2></div></div>
       <p class="meta badges"><span class="badge">Plain</span><span class="badge nasa">NASA</span><span class="badge esa">ESA</span><span class="badge live">Live</span><span class="badge warn">Flagged</span><span class="tag haz">Hazardous</span><span class="tag warn">Estimate</span></p>
+      <p class="meta badges"><span class="need n-eye">Naked eye</span><span class="need n-bino">Binoculars</span><span class="need n-small">Small telescope</span><span class="need n-large">Large telescope</span><span class="need n-faint">Too faint</span></p>
       <div class="notice"><span class="t">Information: the data was last updated today at 06:00 UTC.</span></div>
       <div class="notice warn"><span class="t">NASA's demo key has been used up for the hour; showing the saved copy.</span><button class="btn small outline" type="button">Try again</button></div>
       <div class="notice error"><span class="t">NASA could not be reached.</span><button class="btn small outline" type="button">Try again</button></div>

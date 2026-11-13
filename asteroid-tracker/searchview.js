@@ -54,7 +54,7 @@ export function mountSearch(root, loadRows) {
     if (!loading) {
       out.innerHTML = '<div class="state small">Loading the list of asteroids…</div>';
       loading = loadRows().then((r) => { rows = r; root.querySelector('#qcount').textContent = ` (${fmt(r.length)})`; return r; })
-        .catch(() => { loading = null; out.innerHTML = '<div class="notice warn">The list of asteroids could not be loaded. <button class="linkbtn" data-retry>Try again</button></div>'; throw new Error('load'); });
+        .catch(() => { loading = null; out.innerHTML = '<div class="notice warn"><span class="t">The list of asteroids could not be loaded.</span><button class="btn outline small" data-retry>Try again</button></div>'; throw new Error('load'); });
     }
     return loading;
   };

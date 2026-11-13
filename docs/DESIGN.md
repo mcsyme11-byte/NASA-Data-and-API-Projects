@@ -100,13 +100,14 @@ All in `shared/theme.css`, all shown on `design/index.html`. Use these; do not r
 | Fields | `input`, `select`, `.field` | 44 px, dark, brass ring on focus |
 | Search box | `label.bigsearch` › icon `svg`, `input[type=search]`, `.qclear` | Clear appears once there is something to clear; `.large` for a page's main search |
 | Badges | `.badge`, `.badge.nasa`, `.badge.esa`, `.badge.live`, `.badge.warn` | The agency of a source, a status; `.pill`, `.tag`, `.agency` are older names of the same component |
+| What you need | `.need.n-eye`, `.n-bino`, `.n-small`, `.n-large`, `.n-faint` | What is needed to see an object in the sky (Asteroid Tracker and Sky Finder), one colour per instrument |
 | Notices | `.notice`, `.notice.warn`, `.notice.error` | A message with an icon, and an action button at the end |
 | States | `.state`, `.empty`, `.loading` | No results, loading, could not be loaded |
 | Tables | `table.table` (`.stack` turns rows into cards on phones), `table.credits` | Brass small-capital headings, hairline rows; `.r` right-aligns numbers |
 | Writing | `.prose`, `.summary`, `.updated`, `.list`, `.facts` › `.f`, `.terms` (`dt`/`dd`), `.steps` | Reading pages, short facts beside text, a glossary, numbered steps |
 | Sources | `.sources` › `.s` › `.n` (name + badge), `.d`, `.u` | Where a project's data comes from |
 | Two columns | `.split` | Reading on the left, facts on the right |
-| Chart parts | `svg.chart`, `.legend`, `.tip` | A chart's key and its tooltip |
+| Chart parts | `svg.chart` (`.grid`, `.axt` axis titles, `.dim`), `.legend` (`.s1`–`.s6` swatches), `.tip` | Axis text, gridlines, a chart's key and its tooltip |
 | Callout, stage | `.pf.callout` › `.t` + a button; `a.stage` › `canvas` | A line of text with one action, at the foot of a panel; a canvas that fills a panel and opens something |
 | Data credits | `p.srcline` | A page's detailed credits, just above the footer |
 | Footer | `.footer` › `.ftop` › `.copy`, `.fnote` (links added by `shared/footer.js`) | Decided Nov 12, 2026: one row of links and the copyright, then one short credit line; nothing else |

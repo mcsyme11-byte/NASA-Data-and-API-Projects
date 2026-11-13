@@ -293,7 +293,7 @@ export function openView(root, opts) {
     let lines = '', head = '', note = '';
     if (it.kind === 'asteroid') {
       const need = needFor(it.mag);
-      head = `<b>${esc(it.name)}</b> <span class="need" style="--c:var(--n-${need.key})">${esc(need.label)}</span>`;
+      head = `<b>${esc(it.name)}</b> <span class="need n-${need.key}">${esc(need.label)}</span>`;
       lines = `<span><i>${up ? 'Up' : 'Below the horizon'}</i> ${Math.round(Math.abs(it.alt))}° · ${compass(it.az)}</span><span><i>Brightness</i> magnitude ${it.mag.toFixed(1)}</span><span><i>Closest</i> ${new Date((it.obj.ca_jd - 2440587.5) * 86400000).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })}, ${it.obj.ca_ld.toFixed(1)} Moon dist.</span>`;
       note = it.mag > 9 ? 'Too faint for the phone camera: the diamond marks where it is. ' : '';
     } else {
