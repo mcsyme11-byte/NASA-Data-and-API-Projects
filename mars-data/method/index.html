@@ -11,46 +11,7 @@
   <link rel="icon" href="../../shared/emblem.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../shared/theme.css?v=2026111303">
   <script type="module" src="../../shared/footer.js?v=2026111303"></script>
-  <style>
-    .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; }
-    .steps li { counter-increment: s; color: var(--ink2); font-size: 14.5px; }
-    .steps li::before { content: counter(s); display: block; font-size: 28px; color: var(--brass); margin-bottom: 6px; }
-    .steps b { display: block; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
-    .intro { margin: 0 0 14px; color: var(--ink2); max-width: 90ch; }
-    .card > .intro:last-child { margin-bottom: 0; }
-    table.rules { width: 100%; border-collapse: collapse; font-size: 14.5px; }
-    table.rules th { text-align: left; font-weight: 400; font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em;
-      color: var(--brass); padding: 0 14px 10px 0; border-bottom: 1px solid var(--line); }
-    table.rules td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink2); }
-    table.rules tr:last-child td { border-bottom: 0; }
-    table.rules td:first-child { color: var(--ink); }
-    table.rules td.n { color: var(--brass); white-space: nowrap; }
-    table.rules td.ex { font-style: italic; }
-    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-    .two .card h3 { margin: 0 0 10px; font-size: 20px; font-weight: 400; }
-    .two .card p, .two .card li { color: var(--ink2); font-size: 14.5px; }
-    .two .card ul { margin: 0; padding-left: 20px; }
-    .two .card li { margin: 0 0 8px; }
-    .two .card p { margin: 0 0 10px; }
-    .example { border-left: 2px solid var(--brass-dim); background: rgba(192, 160, 98, .04); padding: 10px 14px; margin: 12px 0 0;
-      font-size: 14px; color: var(--ink2); }
-    .example b { font-weight: 400; color: var(--brass); font-size: 10.5px; text-transform: uppercase; letter-spacing: .22em; display: block; margin-bottom: 4px; }
-    .links { margin: 0; padding-left: 20px; color: var(--ink2); }
-    .links li { margin: 0 0 8px; }
-    @media (max-width: 1024px) { .steps { grid-template-columns: repeat(3, 1fr); } .two { grid-template-columns: 1fr; } }
-    @media (max-width: 760px) {
-      .steps { grid-template-columns: 1fr 1fr; }
-      table.rules thead { display: none; }
-      table.rules, table.rules tbody, table.rules tr, table.rules td { display: block; width: 100%; }
-      table.rules tr { padding: 12px 0; border-bottom: 1px solid var(--line); }
-      table.rules tr:last-child { border-bottom: 0; }
-      table.rules td { border: 0; padding: 3px 0; }
-      table.rules td[data-label]::before { content: attr(data-label); display: block; font-style: normal; font-size: 10px;
-        text-transform: uppercase; letter-spacing: .22em; color: var(--brass); margin-top: 6px; }
-      table.rules td.n { white-space: normal; }
-    }
-    @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
-  </style>
+  <link rel="stylesheet" href="../mars.css?v=2026111303">
 </head>
 <body>
   <header class="topbar">
@@ -68,27 +29,25 @@
 
   <main class="wrap">
     <a class="backlink" id="back" href="../">Mars Data</a>
-    <div class="phead">
-      <div class="eyebrow">Project 3 · Mars Data</div>
+    <header class="pagehead compact">
+      <div class="kicker"><a href="../">Project 3 · Mars Data</a></div>
       <h1>How the data is made</h1>
       <p class="lede">From NASA's raw tables to the charts: the five steps, and every cleaning rule with an example. Nothing is removed silently: every batch of sols has a report that counts each removal and its reason.</p>
-    </div>
+    </header>
 
     <!-- ============ STEPS ============ -->
-    <div class="shead" style="margin-top:0"><h2>Five steps</h2><span class="aside">the same for every sol</span></div>
-    <section class="card">
-      <ol class="steps">
+    <div class="section-head first"><div><h2>Five steps</h2></div><span class="aside">the same for every sol</span></div>
+    <ol class="steps">
         <li><b>Download</b>One file per sol from NASA's Planetary Data System, one row per second of measurement. Each file's size and fingerprint (SHA-256) are recorded.</li>
         <li><b>Clean</b>The written rules below: NASA's quality flags read one character at a time, impossible values removed, missing-value codes recognised.</li>
         <li><b>Organise</b>Each reading gets its sol, season (Ls), Mars Year, local hour and the rover's height.</li>
         <li><b>Summarise</b>Hourly averages, then daily averages, highs and lows; each sol is marked full or partial.</li>
         <li><b>Check and publish</b>A cleaning report for every batch, read before the next batch; then the small files the charts read.</li>
       </ol>
-    </section>
 
     <!-- ============ REMS ============ -->
-    <div class="shead"><h2>Curiosity: which rule for which situation</h2><span class="aside">REMS, cleaning rules version 1.2</span></div>
-    <section class="card">
+    <div class="section-head"><div><h2>Curiosity: which rule for which situation</h2></div><span class="aside">REMS, cleaning rules version 1.2</span></div>
+    <section class="panel pad">
       <p class="intro">Curiosity's weather station (REMS) at Gale Crater. The data is NASA's highest processing level, already corrected for the rover's own heat, shadows and dust. The rules are applied in this order; the rule number is the one used in the cleaning reports.</p>
       <table class="rules">
         <thead><tr><th>Situation</th><th>Rule</th><th>What happens</th><th>Example</th></tr></thead>
@@ -108,8 +67,8 @@
       </table>
     </section>
 
-    <div class="two" style="margin-top:22px">
-      <section class="card">
+    <div class="two">
+      <section class="panel pad">
         <h3>Quality flags (rule 3)</h3>
         <p>Each flag is a row of characters, one per check, counted from the left: <code>1</code> good, <code>0</code> bad, <code>X</code> unknown. Not every character is a quality check, so each is read for its own meaning.</p>
         <table class="rules">
@@ -124,7 +83,7 @@
         <p class="example"><b>Example</b>An air temperature whose flag has <code>X</code> (unknown) as character 8 is removed: an unknown counts as not passing. Humidity is the exception: NASA marks its quality character unknown throughout, so only readings marked bad are removed, and humidity is labelled "preliminary" wherever it appears.</p>
       </section>
 
-      <section class="card">
+      <section class="panel pad">
         <h3>Physical limits (rule 4)</h3>
         <p>Wide on purpose: they catch values that cannot be real, not unusual ones. Unusual values are listed for review instead (rule 8).</p>
         <table class="rules">
@@ -140,7 +99,7 @@
         </table>
       </section>
 
-      <section class="card">
+      <section class="panel pad">
         <h3>A full sol, and the day's figures (rules 6 and 7)</h3>
         <ul>
           <li><b>An hour counts</b> with at least 60 good one-second readings. REMS measures for 5 minutes at the start of every hour, plus some full hours.</li>
@@ -153,7 +112,7 @@
         <p class="example"><b>Example</b>On a sol with 5 minutes in most hours and a full hour at 14:00, the 14:00 hour still counts once in the daily mean, so the warm afternoon does not outweigh the night. And a single one-second spike in a cold minute does not set the day's high: that minute's median stays cold.</p>
       </section>
 
-      <section class="card">
+      <section class="panel pad">
         <h3>Season and ultraviolet (rules 7 and 9)</h3>
         <ul>
           <li><b>Season (Ls) and Mars Year</b> are calculated from the date (method of Allison and McEwen, 2000) and checked against NASA's own values: sol 1 is Ls 151.0° in Mars Year 31; sol 4488 is Ls 60.1° in Mars Year 38.</li>
@@ -163,7 +122,7 @@
         <p class="example"><b>Example</b>A sol whose highest UV is at 15:00 had no measurements near noon, so it is left out of the midday chart instead of showing a falsely low peak.</p>
       </section>
 
-      <section class="card">
+      <section class="panel pad">
         <h3>One-hour glitches (rule 11)</h3>
         <p>On some evenings the air-temperature sensor reads about −115 to −120 °C for part of one hour, between hours of about −35 to −55 °C. Air cannot cool by 70 K and warm again within an hour, and the fastest real change, the morning warm-up, is about 10–15 K an hour.</p>
         <ul>
@@ -174,7 +133,7 @@
         <p class="example"><b>Example</b>Hours of 237 K and 232 K on either side: anything below 207 K in the hour between is removed. A warm morning minute next to an hour with no data is kept, because there is only one neighbour to compare with.</p>
       </section>
 
-      <section class="card">
+      <section class="panel pad">
         <h3>Checks on every batch</h3>
         <ul>
           <li>Each batch's report counts the readings removed under each rule and names the sols, so any change is visible.</li>
@@ -185,8 +144,8 @@
     </div>
 
     <!-- ============ MEDA ============ -->
-    <div class="shead"><h2>Perseverance: which rule for which situation</h2><span class="aside">MEDA, cleaning rules version 1.0</span></div>
-    <section class="card">
+    <div class="section-head"><div><h2>Perseverance: which rule for which situation</h2></div><span class="aside">MEDA, cleaning rules version 1.0</span></div>
+    <section class="panel pad">
       <p class="intro">Perseverance's weather station (MEDA) at Jezero Crater, from NASA's derived level, which NASA recommends for most uses. MEDA measures about 12 hours a sol (the even hours on even sols, the odd hours on odd sols), so a full sol needs fewer hours than at Gale.</p>
       <table class="rules">
         <thead><tr><th>Situation</th><th>Rule</th><th>What happens</th><th>Example</th></tr></thead>
@@ -202,8 +161,8 @@
     </section>
 
     <!-- ============ MORE ============ -->
-    <div class="shead"><h2>Read more</h2><span class="aside">in the project's source code</span></div>
-    <section class="card">
+    <div class="section-head"><div><h2>Read more</h2></div><span class="aside">in the project's source code</span></div>
+    <section class="panel pad">
       <ul class="links">
         <li>The full rules: <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/blob/main/mars-data/analysis/CLEANING.md" target="_blank" rel="noopener">Curiosity ↗</a> and <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/blob/main/mars-data/analysis/CLEANING-MEDA.md" target="_blank" rel="noopener">Perseverance ↗</a>.</li>
         <li>The cleaning reports, one per batch of sols: <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/tree/main/mars-data/data/rems/reports" target="_blank" rel="noopener">Curiosity ↗</a> and <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/tree/main/mars-data/data/meda/reports" target="_blank" rel="noopener">Perseverance ↗</a>.</li>
