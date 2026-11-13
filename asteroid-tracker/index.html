@@ -17,38 +17,6 @@
   </script>
   <link rel="stylesheet" href="../shared/theme.css?v=2026111301">
   <script type="module" src="../shared/footer.js?v=2026111301"></script>
-  <style>
-    .mission { display: grid; grid-template-columns: 3fr 2fr; gap: 28px; align-items: start; }
-    .mission p { margin: 0 0 12px; color: var(--ink2); font-size: 16px; }
-    .mission p:last-child { margin-bottom: 0; }
-    .why { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
-    .why li { border-left: 2px solid var(--brass-dim); padding: 2px 0 2px 14px; color: var(--ink2); font-size: 14.5px; }
-    .why b { display: block; font-weight: 400; color: var(--ink); margin-bottom: 2px; }
-    .project { display: flex; flex-direction: column; gap: 12px; }
-    .project .num { font-size: 11px; text-transform: uppercase; letter-spacing: .32em; color: var(--brass); }
-    .project h3 { font-size: 24px; font-weight: 400; margin: 0; }
-    .project p { margin: 0; color: var(--ink2); flex: 1; }
-    .project .foot { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    .agency { display: inline-block; font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; padding: 2px 8px;
-      border: 1px solid var(--brass-dim); border-radius: 999px; color: var(--brass); margin: 0 6px 4px 0; white-space: nowrap; }
-    .agency.esa { border-color: var(--s2); color: var(--s2); }
-    .tablewrap { overflow-x: auto; }
-    table.credits td:first-child { color: var(--ink); }
-    .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
-    .steps li { counter-increment: s; color: var(--ink2); font-size: 14.5px; }
-    .steps li::before { content: counter(s); display: block; font-size: 28px; color: var(--brass); margin-bottom: 6px; }
-    .steps b { display: block; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
-    .can { margin: 0; padding-left: 20px; color: var(--ink2); columns: 2; column-gap: 32px; }
-    .can li { margin: 0 0 8px; break-inside: avoid; }
-    .words { display: grid; grid-template-columns: auto 1fr; gap: 10px 18px; margin: 0; font-size: 14.5px; color: var(--ink2); }
-    .words dt { color: var(--ink); white-space: nowrap; }
-    .words dd { margin: 0; }
-    @media (max-width: 1024px) { .mission { grid-template-columns: 1fr; } .steps { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 560px) {
-      .steps { grid-template-columns: 1fr; } .can { columns: 1; }
-      .words { grid-template-columns: 1fr; gap: 2px; } .words dd { margin-bottom: 10px; }
-    }
-  </style>
 </head>
 <body>
   <header class="topbar">
@@ -66,132 +34,103 @@
 
   <main class="wrap">
     <a class="backlink" id="back" href="../">Home</a>
-    <div class="phead">
-      <div class="eyebrow">Project 1</div>
+    <header class="pagehead">
+      <div class="kicker">Project 1</div>
       <h1>Asteroid Tracker</h1>
       <p class="lede">The asteroids passing Earth: which ones, how big, how close, whether any could ever hit, and which you can see from your own backyard, from NASA's and ESA's open data.</p>
+      <div class="meta badges"><span class="badge nasa">NASA</span><span class="badge nasa">NASA/JPL</span><span class="badge esa">ESA</span><span class="badge live">Updated twice a day</span></div>
+    </header>
+
+    <div class="stats" id="tiles">
+      <div class="stat"><div class="label">Potentially hazardous</div><div class="value" id="tNeos">–</div><div class="note">known, all on the map</div></div>
+      <div class="stat"><div class="label">Next 7 days</div><div class="value" id="tWeek">–</div><div class="note" id="tWeekN">pass closer than ten Moon distances</div></div>
+      <div class="stat"><div class="label">Closest coming up</div><div class="value" id="tNext">–</div><div class="note" id="tNextN">within the next 30 days</div></div>
+      <div class="stat"><div class="label">On a risk list</div><div class="value" id="tRisk">–</div><div class="note" id="tRiskN">NASA Sentry and ESA together</div></div>
     </div>
 
-    <div class="tiles" id="tiles">
-      <div class="tile"><div class="label">Potentially hazardous</div><div class="value" id="tNeos">–</div><div class="note">known, all on the map</div></div>
-      <div class="tile"><div class="label">Next 7 days, within 10 LD</div><div class="value" id="tWeek">–</div><div class="note" id="tWeekN">passes closer than ten Moon distances</div></div>
-      <div class="tile"><div class="label">Closest coming up</div><div class="value" id="tNext">–</div><div class="note" id="tNextN">within the next 30 days</div></div>
-      <div class="tile"><div class="label">On a risk list</div><div class="value" id="tRisk">–</div><div class="note" id="tRiskN">NASA Sentry and ESA together</div></div>
-    </div>
+    <section class="section" aria-labelledby="hOpen">
+      <div class="section-head">
+        <div><div class="kicker">Explore</div><h2 id="hOpen">Open a part of the tracker</h2></div>
+        <a class="btn" href="tracker.html">Start with this week</a>
+      </div>
+      <div class="cards three">
+        <a class="card" href="tracker.html">
+          <div class="kicker">Tracker</div><h3>This week</h3>
+          <p>Every asteroid passing Earth in the next seven days, by size and distance, with filters and a sortable list.</p>
+          <div class="foot"><span class="badge nasa">NASA</span><span class="go">Open</span></div>
+        </a>
+        <a class="card" href="tracker.html#year">
+          <div class="kicker">Tracker</div><h3>By year</h3>
+          <p>All the close approaches of any year from 2000 to 2027: how many, how close, the biggest and the records.</p>
+          <div class="foot"><span class="badge nasa">NASA/JPL</span><span class="go">Open</span></div>
+        </a>
+        <a class="card" href="tracker.html#risk">
+          <div class="kicker">Tracker</div><h3>Impact risk</h3>
+          <p>NASA's Sentry list and ESA's risk list side by side, in plain odds, and where the two agencies differ.</p>
+          <div class="foot"><span class="badge esa">NASA · ESA</span><span class="go">Open</span></div>
+        </a>
+        <a class="card" href="tracker.html#visible">
+          <div class="kicker">Tracker</div><h3>Visible from here</h3>
+          <p>Which passes of the next 30 days rise in the dark over your town, how bright they get, and what you need to see them.</p>
+          <div class="foot"><span class="badge nasa">NASA/JPL</span><span class="go">Open</span></div>
+        </a>
+        <a class="card" href="map.html">
+          <div class="kicker">Map</div><h3>The solar system</h3>
+          <p>Every known near-Earth object with the planets and spacecraft, on any date, from any angle; turn, zoom and play time forward.</p>
+          <div class="foot"><span class="badge nasa">NASA/JPL</span><span class="go">Open</span></div>
+        </a>
+        <a class="card" href="tracker.html#search">
+          <div class="kicker">Search</div><h3>Any asteroid</h3>
+          <p>Find one by name or number and open its own page: its orbit, its past and future passes, its size and its risk.</p>
+          <div class="foot"><span class="badge esa">NASA · ESA</span><span class="go">Open</span></div>
+        </a>
+      </div>
+      <div class="cards two">
+        <a class="card" href="../sky-finder/">
+          <div class="kicker">Related · phone app</div><h3>Sky Finder</h3>
+          <p>Hold your phone up to the sky and it marks where tonight's asteroid is, with its path and the Moon and planets to guide you.</p>
+          <div class="foot"><span class="badge">Phone</span><span class="go">Open</span></div>
+        </a>
+        <a class="card" href="../spacecraft/">
+          <div class="kicker">Related · map</div><h3>Spacecraft map</h3>
+          <p>Where NASA's, ESA's and other agencies' spacecraft are right now, among them the missions on their way to asteroids.</p>
+          <div class="foot"><span class="badge">Map</span><span class="go">Open</span></div>
+        </a>
+      </div>
+    </section>
 
-    <!-- ============ MISSION ============ -->
-    <div class="shead"><h2>The mission</h2><span class="aside">what this is and why it exists</span></div>
-    <section class="card mission">
-      <div>
-        <p>Near-Earth asteroids are not rare. More than forty thousand are known, and in recent years more than a hundred have passed closer than the Moon every year. NASA and ESA track every one of them and publish the numbers, but spread across separate databases written for scientists.</p>
-        <p>This project brings those numbers together and makes them readable: this week's passes drawn by size and distance, every year since 2000, the agencies' impact-risk lists side by side in plain odds, the whole population on a map of the solar system, and the passes bright enough to look for from your own town.</p>
+    <section class="section split" aria-labelledby="hWhy">
+      <div class="prose">
+        <div class="kicker">About</div>
+        <h2 id="hWhy" class="gap">Why this exists</h2>
+        <p>Near-Earth asteroids are not rare. More than forty thousand are known, and in recent years more than a hundred have passed closer than the Moon every year. NASA and ESA track every one of them and publish the numbers, but spread across separate databases written for specialists.</p>
+        <p>This project brings those numbers together and makes them readable: this week's passes drawn by size and distance, every year since 2000, the agencies' impact-risk lists side by side in plain odds, the whole population on a map of the solar system, and the passes you can see from your own town.</p>
         <p>It is a learning project: to practise working with real agency data, from the raw services to clear pictures, on a subject people hear about mostly in headlines.</p>
       </div>
-      <ul class="why">
-        <li><b>Real data</b>Every number comes from NASA's or ESA's own services, copied twice a day; nothing is invented or modelled here.</li>
-        <li><b>Both agencies</b>NASA's and ESA's lists are shown side by side, with each number credited to the agency it comes from.</li>
-        <li><b>The risk in proportion</b>Impact chances are shown as plain odds next to how uncertain they are, without alarm.</li>
-      </ul>
-    </section>
-
-    <!-- ============ EXPLORE ============ -->
-    <div class="shead"><h2>Explore</h2><span class="aside">the parts of the project</span></div>
-    <div class="grid">
-      <article class="card project">
-        <div class="num">Tracker</div>
-        <h3>This week</h3>
-        <p>Every asteroid passing Earth in the next seven days: size against distance, the biggest, a pass-by-day chart, filters and a sortable list.</p>
-        <div class="foot"><span class="pill info">NASA</span><a class="btn ghost" href="tracker.html">Open</a></div>
-      </article>
-      <article class="card project">
-        <div class="num">Tracker</div>
-        <h3>By year</h3>
-        <p>All the close approaches of any year from 2000 to 2027: how many, how close, the biggest and the record passes.</p>
-        <div class="foot"><span class="pill info">NASA/JPL</span><a class="btn ghost" href="tracker.html#year">Open</a></div>
-      </article>
-      <article class="card project">
-        <div class="num">Tracker</div>
-        <h3>Impact risk</h3>
-        <p>NASA's Sentry list and ESA's risk list side by side: every object with any chance of hitting, in plain odds, and where the two agencies differ.</p>
-        <div class="foot"><span class="pill info">NASA · ESA</span><a class="btn ghost" href="tracker.html#risk">Open</a></div>
-      </article>
-      <article class="card project">
-        <div class="num">Tracker</div>
-        <h3>Visible from here</h3>
-        <p>From your town: which passes of the next 30 days rise in the dark, how bright they get, and whether you need your eyes, binoculars or a telescope.</p>
-        <div class="foot"><span class="pill info">NASA/JPL</span><a class="btn ghost" href="tracker.html#visible">Open</a></div>
-      </article>
-      <article class="card project">
-        <div class="num">Map</div>
-        <h3>The solar system</h3>
-        <p>Every known near-Earth object with the planets and spacecraft, on any date, from any angle: turn, tilt, zoom and play time forward.</p>
-        <div class="foot"><span class="pill info">NASA/JPL</span><a class="btn ghost" href="map.html">Open</a></div>
-      </article>
-      <article class="card project">
-        <div class="num">Search</div>
-        <h3>Any asteroid</h3>
-        <p>Find an asteroid by name or number and open its own page: its orbit, its past and future passes, its size and its risk.</p>
-        <div class="foot"><span class="pill info">NASA · ESA</span><a class="btn ghost" href="tracker.html#search">Open</a></div>
-      </article>
-      <article class="card project">
-        <div class="num">Related</div>
-        <h3>Sky Finder</h3>
-        <p>A phone app: hold it up to the sky and it marks where tonight's asteroid is, with its path and the Moon and planets to guide you.</p>
-        <div class="foot"><span class="pill info">Phone</span><a class="btn ghost" href="../sky-finder/">Open</a></div>
-      </article>
-      <article class="card project">
-        <div class="num">Related</div>
-        <h3>Spacecraft map</h3>
-        <p>Where NASA's, ESA's and other agencies' spacecraft are right now, among them the missions on their way to asteroids.</p>
-        <div class="foot"><span class="pill info">Map</span><a class="btn ghost" href="../spacecraft/">Open</a></div>
-      </article>
-    </div>
-
-    <!-- ============ DETAILS ============ -->
-    <div class="shead"><h2>The data</h2><span class="aside">where every number comes from</span></div>
-    <section class="card" style="padding:0">
-      <div class="tablewrap">
-        <table class="credits">
-          <thead><tr><th style="width:28%">Source</th><th style="width:15%">Agency</th><th>What it gives</th><th style="width:18%">Updated</th></tr></thead>
-          <tbody>
-            <tr><td>Near Earth Object Web Service (NeoWs)</td><td><span class="agency">NASA</span></td><td>Each week's passes, estimated sizes and the "potentially hazardous" flag</td><td>Twice a day</td></tr>
-            <tr><td>Close-Approach Data</td><td><span class="agency">NASA/JPL</span></td><td>Every close approach from 2000 to 2027; the passes worth looking for</td><td>Twice a day</td></tr>
-            <tr><td>Small-Body Database and Horizons</td><td><span class="agency">NASA/JPL</span></td><td>Orbits for the map and each asteroid's diagram; positions in the sky for "Visible from here"</td><td>Twice a day</td></tr>
-            <tr><td>Sentry</td><td><span class="agency">NASA/JPL</span></td><td>Objects with a chance of hitting Earth in the next hundred years or so</td><td>Twice a day</td></tr>
-            <tr><td>NEO Coordination Centre: risk list and close approaches</td><td><span class="agency esa">ESA</span></td><td>ESA's own risk list and close-approach list, to compare with NASA's</td><td>Twice a day</td></tr>
-          </tbody>
-        </table>
+      <div class="facts">
+        <div class="f"><h4>Real data</h4><p>Every number comes from NASA's or ESA's own services, copied twice a day; nothing is invented or modelled here.</p></div>
+        <div class="f"><h4>Both agencies</h4><p>NASA's and ESA's lists are shown side by side, with each number credited to the agency it comes from.</p></div>
+        <div class="f"><h4>The risk in proportion</h4><p>Impact chances are shown as plain odds next to how uncertain they are, without alarm.</p></div>
       </div>
     </section>
-    <p class="note">All free and public; the site needs no key or account. Full details: <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/blob/main/docs/DATA-SOURCES.md" target="_blank" rel="noopener">data sources ↗</a>.</p>
 
-    <div class="shead"><h2>What you can do</h2></div>
-    <section class="card">
-      <ul class="can">
-        <li>See every asteroid passing this week, and which is biggest and closest.</li>
-        <li>Find out how many passed closer than the Moon in any year since 2000.</li>
-        <li>Look up any asteroid by name, such as Apophis or Bennu, and see its orbit.</li>
-        <li>Compare NASA's and ESA's impact odds for the same object.</li>
-        <li>Watch Apophis's close pass of April 13, 2029 on the map.</li>
-        <li>Find out which passes you can see from your own town, and with what.</li>
-        <li>Share a link to a week, a year, a view of the map or an asteroid.</li>
-        <li>Point your phone at tonight's asteroid with Sky Finder.</li>
-      </ul>
+    <section class="section" aria-labelledby="hData">
+      <div class="section-head">
+        <div><div class="kicker">Sources</div><h2 id="hData">Where the data comes from</h2></div>
+        <span class="aside">all free and public; the site needs no key or account · <a href="https://github.com/mcsyme11-byte/NASA-ESA-Data-and-API-Projects/blob/main/docs/DATA-SOURCES.md" target="_blank" rel="noopener">full details ↗</a></span>
+      </div>
+      <div class="sources">
+        <div class="s"><div class="n">Near Earth Object Web Service (NeoWs) <span class="badge nasa">NASA</span></div><div class="d">Each week's passes, estimated sizes and the "potentially hazardous" flag</div><div class="u">twice a day</div></div>
+        <div class="s"><div class="n">Close-Approach Data <span class="badge nasa">NASA/JPL</span></div><div class="d">Every close approach from 2000 to 2027; the passes worth looking for</div><div class="u">twice a day</div></div>
+        <div class="s"><div class="n">Small-Body Database and Horizons <span class="badge nasa">NASA/JPL</span></div><div class="d">Orbits for the map and each asteroid's diagram; positions in the sky for "Visible from here"</div><div class="u">twice a day</div></div>
+        <div class="s"><div class="n">Sentry <span class="badge nasa">NASA/JPL</span></div><div class="d">Objects with a chance of hitting Earth in the next hundred years or so</div><div class="u">twice a day</div></div>
+        <div class="s"><div class="n">NEO Coordination Centre <span class="badge esa">ESA</span></div><div class="d">ESA's own risk list and close-approach list, to compare with NASA's</div><div class="u">twice a day</div></div>
+      </div>
     </section>
 
-    <div class="shead"><h2>How to use it</h2></div>
-    <section class="card">
-      <ol class="steps">
-        <li><b>Start with this week</b>Each dot is an asteroid: further right is further away, higher is bigger. Point at a dot, or tap it, for its name and numbers.</li>
-        <li><b>Open an asteroid</b>Tap a row in the list, then "Open this asteroid's page", for its orbit diagram and every pass.</li>
-        <li><b>Check the risk</b>The Impact risk tab lists every object either agency is watching, with its odds in plain words.</li>
-        <li><b>Look up</b>Set your town in "Visible from here", then use Sky Finder on your phone to aim at it.</li>
-      </ol>
-    </section>
-
-    <div class="shead"><h2>The words and numbers</h2><span class="aside">short rules for reading every page</span></div>
-    <section class="card">
-      <dl class="words">
+    <section class="section" aria-labelledby="hWords">
+      <div class="section-head"><div><div class="kicker">Reading the pages</div><h2 id="hWords">The words and numbers</h2></div></div>
+      <dl class="terms">
         <dt>1 LD</dt><dd>One lunar distance, the Moon's average distance from Earth: about 384,400 km. Under 1 LD means closer than the Moon.</dd>
         <dt>1 au</dt><dd>One astronomical unit, Earth's average distance from the Sun: about 149.6 million km, or 389 LD.</dd>
         <dt>Near-Earth object</dt><dd>An asteroid or comet whose orbit comes within 1.3 au of the Sun.</dd>
@@ -219,7 +158,7 @@
       $('tWeek').textContent = fmt(coming.filter((r) => r[T] < now + 7 * 864e5).length);
       const close = coming.filter((r) => r[T] < now + 30 * 864e5).sort((a, b) => a[D] - b[D])[0];
       if (close) {
-        $('tNext').textContent = `${fmt(close[D], close[D] < 10 ? 1 : 0)} LD`;
+        $('tNext').innerHTML = `${fmt(close[D], close[D] < 10 ? 1 : 0)}<small>LD</small>`;
         $('tNextN').textContent = `${close[N]}, ${new Date(close[T]).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })}`;
       }
     }).catch(() => {});
