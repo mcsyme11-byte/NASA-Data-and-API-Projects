@@ -3,7 +3,8 @@
 //
 // Reads data/soon.json (written daily: the close passes from a day ago to 15 days ahead, within 10 Moon distances)
 // and shows the closest one between now and 7 days from now, in the visitor's own time zone, with a link to the
-// asteroid's page. Nothing due: says so, with a link to this week's passes. The file cannot be loaded: nothing shown.
+// asteroid's page (its name links there). Nothing due: says so, with a link to this week's passes. The file cannot be
+// loaded: nothing shown. The element is a .t block inside a .callout (shared/theme.css).
 
 import { fmt, diameterM, LD_KM } from './format.js';
 import { compareSize } from './compare.js';
@@ -18,9 +19,9 @@ export async function mountSoon(el, url, base) {
   const now = Date.now();
   const due = data.rows.filter((r) => r[1] >= now && r[1] <= now + 7 * DAY);
   if (!due.length) {
-    el.innerHTML = `<span class="eyebrow">Next 7 days</span>
-      <span class="facts">No asteroid is due within 10 Moon distances of Earth.</span>
-      <a class="linkbtn" href="${base}">This week's passes ›</a>`;
+    el.innerHTML = `<div class="kicker">Next 7 days</div>
+      <h4>No asteroid is due within 10 Moon distances of Earth.</h4>
+      <p class="caption"><a href="${base}tracker.html">This week's passes</a></p>`;
     el.hidden = false;
     return;
   }
@@ -31,9 +32,8 @@ export async function mountSoon(el, url, base) {
   const when = new Date(t).toLocaleString('en-CA', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + ' your time';
   const km = ld * LD_KM;
   const size = h !== null && h !== undefined ? compareSize(diameterM(h, 0.25), diameterM(h, 0.05)) : '';
-  el.innerHTML = `<span class="eyebrow">Closest pass, next 7 days</span>
-    <a class="name" href="${href}"${ext}>${esc(name)}</a>
-    <span class="facts">${fmt(ld, ld < 10 ? 1 : 0)} Moon distances (${km >= 1e6 ? fmt(km / 1e6, 2) + ' million' : fmt(Math.round(km / 1000) * 1000)} km) · ${esc(when)}${size ? ' · ' + esc(size[0].toLowerCase() + size.slice(1)) : ''}</span>
-    <a class="linkbtn" href="${href}"${ext}>${id ? 'Its page' : 'JPL\'s page'} ›</a>`;
+  el.innerHTML = `<div class="kicker">Closest pass, next 7 days</div>
+    <h4><a href="${href}"${ext}>${esc(name)}</a> · ${fmt(ld, ld < 10 ? 1 : 0)} Moon distances</h4>
+    <p class="caption">${km >= 1e6 ? fmt(km / 1e6, 2) + ' million' : fmt(Math.round(km / 1000) * 1000)} km · ${esc(when)}${size ? ' · ' + esc(size[0].toLowerCase() + size.slice(1)) : ''}</p>`;
   el.hidden = false;
 }

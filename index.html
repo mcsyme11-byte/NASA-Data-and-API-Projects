@@ -8,81 +8,15 @@
   <meta name="description" content="Three ways to learn and explore with real NASA data: an asteroid tracker, a Mars data study and a NASA image explorer.">
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="shared/theme.css?v=2026111208">
-  <script type="module" src="shared/footer.js?v=2026111208"></script>
-  <style>
-    .hero { padding: 72px 0 40px; text-align: center; border-bottom: 1px solid var(--brass-dim); }
-    .hero .medal { width: 88px; height: 88px; color: var(--brass); margin: 0 auto 18px; display: block; }
-    .hero h1 { font-size: 44px; margin-top: 10px; }
-    .hero .lede { margin: 14px auto 0; }
-    .promises { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; margin-top: 26px; }
-    .promises span { font-size: 11px; text-transform: uppercase; letter-spacing: .28em; color: var(--brass); }
-
-    .project { display: flex; flex-direction: column; gap: 12px; }
-    .project .num { font-size: 11px; text-transform: uppercase; letter-spacing: .32em; color: var(--brass); }
-    .project h3 { font-size: 24px; font-weight: 400; margin: 0; }
-    .project p { margin: 0; color: var(--ink2); }
-    .project .src { font-size: 13px; color: var(--muted); font-style: italic; }
-    .project .foot { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .project svg.icon { width: 34px; height: 34px; color: var(--brass); }
-
-    .stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5; }
-
-    .livemap { margin-top: 8px; }
-    .liveframe { position: relative; display: block; height: 440px; background: #0C1119; border: 1px solid var(--line);
-      border-top-color: var(--brass-dim); border-radius: var(--r-card); overflow: hidden; color: var(--ink); }
-    .liveframe canvas { display: block; width: 100%; height: 100%; }
-    .liveframe:hover { border-color: var(--brass-dim); }
-    .liveframe:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-    .liveinfo { position: absolute; left: 14px; top: 14px; display: flex; flex-direction: column; gap: 2px; max-width: 60%; pointer-events: none;
-      background: rgba(12, 17, 25, .78); padding: 8px 12px; border-radius: var(--r-btn); }
-    .liveBtn .short { display: none; }
-    .liveinfo strong { font-weight: 400; font-size: 22px; }
-    .liveBtn { position: absolute; right: 18px; bottom: 18px; }
-    .liveframe:hover .liveBtn { filter: brightness(1.08); }
-    .livenote { margin: 10px 0 0; }
-    /* the closest asteroid pass of the coming week (asteroid-tracker/soon.js) */
-    .soon { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-top: 12px; padding: 12px 16px;
-      background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--brass-dim); border-radius: var(--r-card); }
-    .soon[hidden] { display: none; }
-    .soon .eyebrow { flex-basis: 100%; }
-    @media (max-width: 420px) { .soon .eyebrow { letter-spacing: .18em; } }
-    .soon .name { font-size: 20px; color: var(--ink); text-decoration: none; }
-    .soon .name:hover { color: var(--brass-bright); }
-    .soon .facts { color: var(--ink2); flex: 1 1 320px; }
-    .soon .linkbtn { color: var(--brass); text-decoration: none; white-space: nowrap; margin-left: auto; display: inline-flex; align-items: center; min-height: 40px; }
-    .soon .name { display: inline-block; padding: 4px 0; min-height: 40px; }
-    .soon .linkbtn:hover { color: var(--brass-bright); }
-    .soon a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-    .livenote a { white-space: nowrap; }
-    @media (max-width: 400px) { .livenote a { white-space: normal; } }
-    .sfbanner { display: flex; align-items: center; gap: 16px 20px; margin: 28px 0 8px; padding: 18px 20px; border: 1px solid var(--brass-dim);
-      border-radius: var(--r-card); background: linear-gradient(100deg, rgba(192,160,98,.10), rgba(26,35,51,.6) 60%); color: var(--ink); transition: border-color .15s, background .15s; }
-    .sfbanner:hover { border-color: var(--brass); color: var(--ink); }
-    .sfbanner img { flex: none; border-radius: 12px; }
-    .sfbanner .sft { flex: 1; display: grid; gap: 2px; }
-    .sfbanner strong { font-weight: 400; font-size: 19px; }
-    .sfbanner .btn { flex: none; }
-    @media (max-width: 760px) {
-      .sfbanner { flex-wrap: wrap; } .sfbanner .btn { width: 100%; } .sfbanner img { width: 44px; height: 44px; }
-      .liveframe { height: 340px; }
-      .liveinfo { max-width: 85%; }
-      .liveinfo strong { font-size: 18px; }
-      .liveBtn { left: 16px; right: 16px; bottom: 14px; width: auto; white-space: nowrap; }
-      .liveBtn .long { display: none; }
-      .liveBtn .short { display: inline; }
-    }
-  </style>
+  <link rel="stylesheet" href="shared/theme.css?v=2026111301">
+  <script type="module" src="shared/footer.js?v=2026111301"></script>
 </head>
 <body>
-  <svg class="stars" aria-hidden="true" id="stars"></svg>
-
+  <svg class="starfield" aria-hidden="true" id="stars"></svg>
   <header class="topbar">
     <div class="wrap">
-      <a class="brand" href="./">
-        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="shared/emblem.svg#e"/></svg>
-        NASA and ESA Data Projects
-      </a>
+      <a class="brand" href="./" aria-label="NASA and ESA Data Projects, home">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="shared/emblem.svg#e"/></svg><span class="bname">NASA and ESA Data Projects</span></a>
       <nav class="nav" aria-label="Projects">
         <a href="./" aria-current="page">Home</a>
         <a href="asteroid-tracker/">Asteroids</a>
@@ -93,77 +27,80 @@
   </header>
 
   <main class="wrap">
-    <section class="hero">
+    <header class="pagehead center">
       <svg class="medal" viewBox="0 0 64 64" aria-hidden="true"><use href="shared/emblem.svg#e"/></svg>
-      <div class="eyebrow">Learn and explore with real data</div>
+      <div class="kicker">Learn and explore with real data</div>
       <h1>NASA and ESA Data Projects</h1>
-      <p class="lede">Three ways to explore space and Earth using real data from NASA and ESA: the rocks passing Earth this week, the weather on Mars, and the planet seen from orbit.</p>
-      <div class="promises" aria-label="What these projects are">
-        <span>Real NASA and ESA data</span><span>Free</span><span>Runs in your browser</span><span>Open to learn from</span>
+      <p class="lede">Three ways to explore space and the Earth using real data from NASA and ESA: the rocks passing Earth this week, the weather on Mars, and the planet seen from orbit.</p>
+      <div class="meta badges" aria-label="What these projects are">
+        <span class="badge">Real agency data</span><span class="badge">Free</span><span class="badge">No account</span><span class="badge">Open source</span>
+      </div>
+    </header>
+
+    <div class="cards three">
+      <a class="card feature" href="asteroid-tracker/">
+        <div class="media"><img src="shared/art/asteroids.svg" alt=""></div>
+        <div class="body">
+          <div class="kicker">Project 1</div>
+          <h3>Asteroid Tracker</h3>
+          <p>Every near-Earth asteroid passing this week, by size and distance; every close pass since 2000; the impact-risk lists of NASA and ESA side by side; and a map of the inner solar system.</p>
+          <div class="foot"><span class="badges"><span class="badge nasa">NASA</span><span class="badge esa">ESA</span></span><span class="go">Open</span></div>
+        </div>
+      </a>
+      <a class="card feature" href="image-explorer/">
+        <div class="media"><img src="shared/art/earth.svg" alt=""></div>
+        <div class="body">
+          <div class="kicker">Project 2</div>
+          <h3>Image Explorer</h3>
+          <p>The Earth from orbit on any day since 2000, a globe inside the real night sky, and the picture libraries of NASA, ESA/Webb and ESA/Hubble in one search.</p>
+          <div class="foot"><span class="badges"><span class="badge nasa">NASA</span><span class="badge esa">ESA</span></span><span class="go">Open</span></div>
+        </div>
+      </a>
+      <a class="card feature" href="mars-data/">
+        <div class="media"><img src="shared/art/mars.svg" alt=""></div>
+        <div class="body">
+          <div class="kicker">Project 3</div>
+          <h3>Mars Data</h3>
+          <p>The weather measured on Mars by Curiosity since 2012 and Perseverance since 2021, cleaned and organised by season and hour, with charts anyone can read.</p>
+          <div class="foot"><span class="badges"><span class="badge nasa">NASA</span></span><span class="go">Open</span></div>
+        </div>
+      </a>
+    </div>
+
+    <section class="section" id="live" aria-labelledby="liveTitle">
+      <div class="section-head">
+        <div><div class="kicker">Right now</div><h2 id="liveTitle">Everything we have out there</h2></div>
+        <span class="aside">positions from NASA/JPL Horizons and CelesTrak, updated daily</span>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3 id="liveCount">Active spacecraft and stations</h3><span class="aside" id="liveNote">from NASA, ESA, JAXA, ISRO, CNSA and others, from the space station to the Voyagers</span></div>
+        <div class="pb"><a class="stage" id="liveFrame" href="spacecraft/" aria-label="Open the spacecraft map"><canvas id="preview" aria-hidden="true"></canvas></a></div>
+        <div class="pf callout">
+          <div class="t" id="soon" hidden></div>
+          <a class="btn outline" id="liveBtn" href="spacecraft/">Explore the spacecraft</a>
+        </div>
       </div>
     </section>
 
-    <section class="livemap" aria-labelledby="liveTitle">
-      <div class="shead"><h2 id="liveTitle">Everything we have out there, right now</h2><span class="aside">positions from NASA/JPL Horizons and CelesTrak, updated daily</span></div>
-      <a class="liveframe" id="liveFrame" href="spacecraft/" aria-label="Open the spacecraft map">
-        <canvas id="preview" aria-hidden="true"></canvas>
-        <span class="liveinfo">
-          <span class="eyebrow">Today</span>
-          <strong id="liveCount">Active spacecraft and stations</strong>
-          <span class="note" id="liveNote">from NASA, ESA, JAXA, ISRO, CNSA and others, from the space station to the Voyagers</span>
-        </span>
-        <span class="btn liveBtn"><span class="long" id="liveBtnL">Explore the spacecraft ›</span><span class="short" id="liveBtnS">Explore the map ›</span></span>
-      </a>
-      <p class="note livenote" id="liveAbout">Every active spacecraft with a public position: what it is, who sent it, where it is now, and links to its mission pages.
-        <a href="asteroid-tracker/map.html">The asteroid map: all 43,000 near-Earth asteroids ›</a></p>
-      <div class="soon" id="soon" hidden></div>
+    <section class="section" aria-labelledby="hAlso">
+      <div class="section-head"><div><div class="kicker">Also</div><h2 id="hAlso">Two smaller tools</h2></div></div>
+      <div class="cards two">
+        <a class="card" href="sky-finder/">
+          <div class="kicker">Phone app</div>
+          <h3>Sky Finder</h3>
+          <p>Point your phone at the sky to find the asteroid passing tonight, with the Moon, planets and space stations to guide you. Pin it to your home screen.</p>
+          <div class="foot"><span class="badge">Phone</span><span class="go">Open</span></div>
+        </a>
+        <a class="card" href="asteroid-tracker/map.html">
+          <div class="kicker">Map</div>
+          <h3>The solar system map</h3>
+          <p>All 43,000 known near-Earth asteroids with the planets and spacecraft, on any date and from any angle.</p>
+          <div class="foot"><span class="badge nasa">NASA/JPL</span><span class="go">Open</span></div>
+        </a>
+      </div>
     </section>
 
-    <div class="shead"><h2>The projects</h2><span class="aside">three streams, one repository</span></div>
-    <div class="grid">
-      <article class="card project">
-        <svg class="icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-          <path d="M9 18c-1-4 1-8 5-9s8 0 9 4-1 8-5 9-8 0-9-4z"/><circle cx="14" cy="14" r="1.4"/><circle cx="19" cy="18" r="1"/>
-          <path d="M3 29l6-6M6 30l3-3M2 25l3-3" stroke-linecap="round"/>
-        </svg>
-        <div class="num">Project 1</div>
-        <h3>Asteroid Tracker</h3>
-        <p>Every near-Earth object passing us this week, sorted by size and distance, with graphs to explore; every close pass since 2000; a page and an orbit diagram for each asteroid; impact-risk lists from NASA and ESA; which ones you can see from where you are; a search and a map of the whole solar system.</p>
-        <div class="src">NASA NeoWs · NASA/JPL close-approach data, Small-Body Database, Horizons and Sentry · ESA NEO Coordination Centre</div>
-        <div class="foot"><span class="pill good">Live</span><a class="btn ghost" href="asteroid-tracker/">Open</a></div>
-      </article>
-
-      <article class="card project">
-        <svg class="icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-          <rect x="4" y="6" width="24" height="20" rx="2"/><circle cx="16" cy="16" r="6"/><path d="M10 16h12M16 10c2 2 2 10 0 12M16 10c-2 2-2 10 0 12"/>
-        </svg>
-        <div class="num">Project 2</div>
-        <h3>Image Explorer</h3>
-        <p>The Earth from orbit on any day since 2000, a globe inside the real sky with NASA's events and 1,300 galaxies, nebulae and clusters, and the picture libraries of NASA and ESA/Webb and ESA/Hubble.</p>
-        <div class="src">NASA GIBS · NASA EONET · NASA Image and Video Library · ESA/Webb and ESA/Hubble</div>
-        <div class="foot"><span class="pill good">Live</span><a class="btn ghost" href="image-explorer/">Open</a></div>
-      </article>
-
-      <article class="card project">
-        <svg class="icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-          <circle cx="16" cy="16" r="11"/><path d="M8 11c3 1 5 0 7 2s5 1 8 0M7 19c4-1 6 1 9 0s5 1 9 1" stroke-linecap="round"/>
-        </svg>
-        <div class="num">Project 3</div>
-        <h3>Mars Data</h3>
-        <p>Weather measured on the surface of Mars, cleaned up and organised by time and place, with statistics and charts that show the patterns of a Martian year.</p>
-        <div class="src">NASA Planetary Data System · Curiosity's weather station (REMS) · Perseverance's weather station (MEDA)</div>
-        <div class="foot"><span class="pill good">Live</span><a class="btn ghost" href="mars-data/">Open</a></div>
-      </article>
-    </div>
-
-    <a class="sfbanner" href="sky-finder/">
-      <img src="sky-finder/icons/icon.svg" width="56" height="56" alt="">
-      <span class="sft"><span class="eyebrow">Sky Finder</span><strong>Point your phone at the sky to find the asteroid passing tonight.</strong>
-        <span class="note">With the Moon, planets and space stations to guide you. Pin it to your home screen.</span></span>
-      <span class="btn ghost">Open Sky Finder ›</span>
-    </a>
-
-    <p class="srcline">Positions courtesy of NASA/JPL and CelesTrak. Data courtesy of NASA and ESA (the European Space Agency). Satellite imagery provided by services from NASA's Global Imagery Browse Services (GIBS), part of NASA's Earth Science Data and Information System (ESDIS).</p>
+    <p class="srcline">Positions courtesy of NASA/JPL and CelesTrak. Data courtesy of NASA and ESA (the European Space Agency).</p>
     <footer class="footer">
       <div class="ftop"><p class="copy">© 2026 <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a></p></div>
       <p class="fnote">Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA.</p>
@@ -182,30 +119,17 @@
       $('liveFrame').href = 'asteroid-tracker/map.html'; $('liveFrame').setAttribute('aria-label', 'Open the solar system map');
       $('liveTitle').textContent = 'The solar system, right now';
       $('liveNote').textContent = 'and the inner planets, moving round the Sun';
-      $('liveBtnL').textContent = 'Explore the solar system ›';
+      $('liveBtn').textContent = 'Explore the solar system';
       return mountPreview($('preview'), 'asteroid-tracker/data/preview.json', {
         onCount: (n) => { $('liveCount').textContent = n.toLocaleString('en-CA') + ' potentially hazardous asteroids'; },
       });
-    }).catch(() => { document.querySelector('.livemap').hidden = true; });
+    }).catch(() => { document.getElementById('live').hidden = true; });
   </script>
   <script type="module">
     // the closest asteroid pass of the coming week (asteroid-tracker/soon.js); hidden if the data cannot be loaded
     import { mountSoon } from './asteroid-tracker/soon.js';
     mountSoon(document.getElementById('soon'), 'asteroid-tracker/data/soon.json', 'asteroid-tracker/').catch(() => {});
   </script>
-  <script>
-    // a quiet field of brass and cream stars behind the page (decoration only)
-    (function () {
-      const svg = document.getElementById('stars');
-      const w = 1440, h = 900; svg.setAttribute('viewBox', `0 0 ${w} ${h}`); svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-      let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-      let out = '';
-      for (let i = 0; i < 140; i++) {
-        const r = rnd() < .9 ? .6 + rnd() * .6 : 1.3;
-        out += `<circle cx="${(rnd() * w).toFixed(1)}" cy="${(rnd() * h).toFixed(1)}" r="${r.toFixed(2)}" fill="${rnd() < .25 ? '#C0A062' : '#EDE6D3'}" opacity="${(.15 + rnd() * .45).toFixed(2)}"/>`;
-      }
-      svg.innerHTML = out;
-    })();
-  </script>
+  <script type="module" src="shared/starfield.js"></script>
 </body>
 </html>

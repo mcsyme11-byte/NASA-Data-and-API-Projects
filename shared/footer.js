@@ -53,8 +53,8 @@ function addLinks() {
   if (top) top.prepend(nav); else footer.prepend(nav);
 }
 
-// A "‹ Back" button (<a class="backlink" id="back" href="<home>">‹ Home</a>) above the heading. When the previous page in
-// this tab is a page of this site, it is named for that page and uses the browser's own Back, so that page returns
+// A "‹ Back" button (<a class="backlink" id="back" href="<home>">Home</a>; the arrow is drawn by shared/theme.css) above
+// the heading. When the previous page in this tab is a page of this site, it is named for that page and uses the browser's own Back, so that page returns
 // where it was left; otherwise it keeps its fallback, the home page.
 const NAMES = [
   [/\/asteroid-tracker\/map\.html$/, 'the map'], [/\/asteroid-tracker\/object\.html$/, 'the asteroid'],
@@ -72,7 +72,7 @@ function wireBack() {
   const p = ref.pathname;
   const hit = NAMES.find(([rx]) => rx.test(p));
   const name = hit ? hit[1] : (p === root.pathname || p === root.pathname + 'index.html' ? 'the home page' : null);
-  el.textContent = '‹ ' + (name ? 'Back to ' + name : 'Back');
+  el.textContent = name ? 'Back to ' + name : 'Back';   // the arrow is drawn by the style sheet
   el.href = ref.href;
   el.addEventListener('click', (e) => {
     if (history.length > 1 && !e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) { e.preventDefault(); history.back(); }

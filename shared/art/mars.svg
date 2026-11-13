@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Mars, with the pressure measured through its year">
+  <!-- NASA and ESA Data Projects · illustration · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="50%" r="75%"><stop offset="0" stop-color="#1D1C25"/><stop offset="1" stop-color="#0C1119"/></radialGradient>
+    <radialGradient id="mars" cx="36%" cy="34%" r="75%"><stop offset="0" stop-color="#D88A5A"/><stop offset=".55" stop-color="#A4522F"/><stop offset="1" stop-color="#4A2218"/></radialGradient>
+    <clipPath id="c"><circle cx="200" cy="180" r="96"/></clipPath>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <g fill="#EDE6D3" opacity=".45">
+    <circle cx="40" cy="40" r="1"/><circle cx="90" cy="320" r=".8"/><circle cx="600" cy="40" r="1"/><circle cx="380" cy="30" r=".8"/>
+    <circle cx="610" cy="330" r=".8"/><circle cx="340" cy="330" r=".7"/><circle cx="30" cy="200" r=".7"/>
+  </g>
+  <circle cx="200" cy="180" r="96" fill="url(#mars)"/>
+  <g clip-path="url(#c)" fill="#3A1A12" fill-opacity=".45">
+    <path d="M120 150 q40 -18 90 -4 q30 8 60 -6 l0 26 q-40 16 -80 6 q-40 -10 -70 4z"/>
+    <circle cx="230" cy="215" r="10"/><circle cx="175" cy="232" r="6"/>
+  </g>
+  <ellipse cx="200" cy="92" rx="34" ry="8" fill="#EDE6D3" fill-opacity=".55" clip-path="url(#c)"/>
+  <circle cx="200" cy="180" r="96" fill="none" stroke="#C9784A" stroke-opacity=".6"/>
+  <g fill="none" stroke-width="2">
+    <path d="M330 150 C 380 110, 420 110, 460 160 S 540 230, 600 180" stroke="#C0A062"/>
+    <path d="M330 168 C 380 132, 420 130, 460 176 S 540 238, 600 198" stroke="#8AA9C9" stroke-opacity=".8"/>
+    <path d="M330 186 C 380 156, 420 150, 460 192 S 540 248, 600 216" stroke="#8FB996" stroke-opacity=".7"/>
+  </g>
+  <g stroke="#EDE6D3" stroke-opacity=".15"><line x1="330" y1="260" x2="600" y2="260"/><line x1="330" y1="100" x2="330" y2="260"/></g>
+</svg>

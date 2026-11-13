@@ -5,7 +5,7 @@
 // handler here would go back two pages. This only shows a button the HTML marks hidden (the map's, which is
 // useful only when the map was opened from another page of the site).
 //
-// Use:  <a class="backlink" id="back" href="./" hidden>‹ Back</a>   then   backLink(document.getElementById('back'));
+// Use:  <a class="backlink" id="back" href="./" hidden>Back</a>   then   backLink(document.getElementById('back'));
 
 export function backLink(el) {
   if (!el || !el.hidden) return;

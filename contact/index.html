@@ -8,40 +8,9 @@
   <meta name="description" content="Get in touch about NASA and ESA Data Projects: questions, ideas and bug reports.">
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111208">
-  <script type="module" src="../shared/footer.js?v=2026111208"></script>
-  <style>
-    .contact { position: relative; text-align: center; padding: 56px 0 44px; border-bottom: 1px solid var(--brass-dim); overflow: hidden; }
-    .contact .sky { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; opacity: .55; }
-    .orbit { width: 168px; height: 168px; margin: 0 auto 22px; }
-    .orbit svg { width: 100%; height: 100%; overflow: visible; }
-    .orbit .ring { fill: none; stroke: var(--brass); stroke-width: 1.4; }
-    .orbit .ring.faint { stroke: var(--brass-dim); stroke-width: 1; }
-    .orbit .planet { fill: var(--deep); stroke: var(--brass); stroke-width: 1.6; }
-    .orbit .sat { fill: var(--brass-bright); filter: drop-shadow(0 0 6px rgba(226, 200, 142, .7)); }
-    .contact h1 { font-size: 44px; margin-top: 8px; }
-    .contact .lede { margin: 12px auto 0; }
-    .address { margin: 30px auto 0; }
-    .email { display: inline-block; font-size: 34px; letter-spacing: .01em; color: var(--brass-bright);
-      border-bottom: 1px solid var(--brass-dim); padding-bottom: 4px; word-break: break-all; }
-    .email:hover { color: #F0DDB0; border-bottom-color: var(--brass); }
-    .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
-    .copied { min-height: 20px; margin: 12px 0 0; color: var(--green); font-style: italic; font-size: 13px; }
-    .topics { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-    .topic { display: flex; flex-direction: column; gap: 6px; color: var(--ink); transition: border-color .15s; }
-    .topic:hover { color: var(--ink); border-color: var(--brass-dim); border-top-color: var(--brass); }
-    .topic .label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
-    .topic .t { font-size: 20px; }
-    .topic .note { margin-top: 2px; }
-    .fineprint { margin-top: 18px; }
-    @media (max-width: 760px) {
-      .contact { padding-top: 40px; }
-      .contact h1 { font-size: 34px; }
-      .email { font-size: 24px; }
-      .orbit { width: 132px; height: 132px; }
-      .shead { flex-direction: column; align-items: flex-start; gap: 4px; }
-    }
-  </style>
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111301">
+  <script type="module" src="../shared/footer.js?v=2026111301"></script>
+  <script type="module" src="../shared/starfield.js"></script>
   <script type="module">
     // Copy the address, with a short confirmation
     const copy = document.getElementById('copy'), msg = document.getElementById('copied');
@@ -50,26 +19,14 @@
       catch { msg.textContent = 'Copy didn\'t work here: select the address above instead.'; }
       setTimeout(() => (msg.textContent = ''), 3000);
     });
-    // A quiet field of stars behind the heading (decoration only)
-    const svg = document.getElementById('sky'), w = 1440, h = 520;
-    svg.setAttribute('viewBox', `0 0 ${w} ${h}`); svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-    let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    let out = '';
-    for (let i = 0; i < 110; i++) {
-      out += `<circle cx="${(rnd() * w).toFixed(1)}" cy="${(rnd() * h).toFixed(1)}" r="${(rnd() < .9 ? .6 + rnd() * .6 : 1.4).toFixed(2)}" fill="${rnd() < .25 ? '#C0A062' : '#EDE6D3'}" opacity="${(.15 + rnd() * .45).toFixed(2)}"/>`;
-    }
-    svg.innerHTML = out;
-    // Hold the satellite still for people who ask for less motion
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelector('.orbit svg').pauseAnimations();
   </script>
 </head>
 <body>
+  <svg class="starfield" id="stars" aria-hidden="true"></svg>
   <header class="topbar">
     <div class="wrap">
-      <a class="brand" href="../">
-        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg>
-        NASA and ESA Data Projects
-      </a>
+      <a class="brand" href="../" aria-label="NASA and ESA Data Projects, home">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg><span class="bname">NASA and ESA Data Projects</span></a>
       <nav class="nav" aria-label="Projects">
         <a href="../">Home</a>
         <a href="../asteroid-tracker/">Asteroids</a>
@@ -80,53 +37,44 @@
   </header>
 
   <main class="wrap">
-    <a class="backlink" id="back" href="../">‹ Home</a>
-    <section class="contact">
-      <svg class="sky" id="sky" aria-hidden="true"></svg>
-      <div class="orbit" aria-hidden="true">
-        <svg viewBox="0 0 200 200">
-          <circle cx="100" cy="100" r="96" class="ring faint"/>
-          <ellipse cx="100" cy="100" rx="84" ry="30" class="ring" transform="rotate(-22 100 100)"/>
-          <circle cx="100" cy="100" r="34" class="planet"/>
-          <g class="sat-path" transform="rotate(-22 100 100)">
-            <circle r="5" class="sat"><animateMotion dur="9s" repeatCount="indefinite" path="M184,100 A84,30 0 1,1 16,100 A84,30 0 1,1 184,100"/></circle>
-          </g>
-        </svg>
-      </div>
-
-      <div class="eyebrow">Open a channel</div>
+    <a class="backlink" id="back" href="../">Home</a>
+    <header class="pagehead center">
+      <svg class="medal" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg>
+      <div class="kicker">Open a channel</div>
       <h1>Contact</h1>
       <p class="lede">Questions about the data, ideas for something new, or something that isn't working? Send a message.</p>
-
-      <div class="address">
-        <a class="email" href="mailto:mcsyme11@gmail.com?subject=NASA%20Data%20Projects" id="email">mcsyme11@gmail.com</a>
+      <div class="meta stack">
+        <a class="display-link" href="mailto:mcsyme11@gmail.com?subject=NASA%20and%20ESA%20Data%20Projects" id="email">mcsyme11@gmail.com</a>
         <div class="actions">
-          <a class="btn" href="mailto:mcsyme11@gmail.com?subject=NASA%20Data%20Projects">Write an email</a>
-          <button class="btn ghost" type="button" id="copy">Copy address</button>
+          <a class="btn" href="mailto:mcsyme11@gmail.com?subject=NASA%20and%20ESA%20Data%20Projects">Write an email</a>
+          <button class="btn outline" type="button" id="copy">Copy address</button>
         </div>
-        <p class="copied" id="copied" role="status" aria-live="polite"></p>
+        <p class="status" id="copied" role="status" aria-live="polite"></p>
       </div>
-    </section>
+    </header>
 
-    <div class="shead"><h2>Start with a subject</h2><span class="aside">opens your email app, subject filled in</span></div>
-    <div class="topics">
-      <a class="card topic" href="mailto:mcsyme11@gmail.com?subject=NASA%20Data%20Projects%3A%20bug%20report">
-        <span class="label">Bug report</span>
-        <span class="t">Something isn't working</span>
-        <span class="note">Say which page, what you did, and your device and browser.</span>
-      </a>
-      <a class="card topic" href="mailto:mcsyme11@gmail.com?subject=NASA%20Data%20Projects%3A%20question%20about%20the%20data">
-        <span class="label">The data</span>
-        <span class="t">A question about a number</span>
-        <span class="note">An asteroid, a picture, a layer: name it and what looks odd.</span>
-      </a>
-      <a class="card topic" href="mailto:mcsyme11@gmail.com?subject=NASA%20Data%20Projects%3A%20idea">
-        <span class="label">Ideas</span>
-        <span class="t">Something new to explore</span>
-        <span class="note">A feature, a dataset, or a way to make it clearer.</span>
-      </a>
-    </div>
-    <p class="note fineprint">Your message goes to the developer's inbox only. The site itself stores nothing (see <a href="../privacy/">Privacy</a>).</p>
+    <section class="section" aria-labelledby="hTopics">
+      <div class="section-head"><div><div class="kicker">Start with a subject</div><h2 id="hTopics">What is it about?</h2></div>
+        <span class="aside">opens your email app with the subject filled in</span></div>
+      <div class="cards three">
+        <a class="card" href="mailto:mcsyme11@gmail.com?subject=NASA%20and%20ESA%20Data%20Projects%3A%20bug%20report">
+          <div class="kicker">Bug report</div><h3>Something isn't working</h3>
+          <p>Say which page, what you did, and your device and browser.</p>
+          <div class="foot"><span></span><span class="go">Write</span></div>
+        </a>
+        <a class="card" href="mailto:mcsyme11@gmail.com?subject=NASA%20and%20ESA%20Data%20Projects%3A%20question%20about%20the%20data">
+          <div class="kicker">The data</div><h3>A question about a number</h3>
+          <p>An asteroid, a picture, a layer: name it and what looks odd.</p>
+          <div class="foot"><span></span><span class="go">Write</span></div>
+        </a>
+        <a class="card" href="mailto:mcsyme11@gmail.com?subject=NASA%20and%20ESA%20Data%20Projects%3A%20idea">
+          <div class="kicker">Ideas</div><h3>Something new to explore</h3>
+          <p>A feature, a dataset, or a way to make it clearer.</p>
+          <div class="foot"><span></span><span class="go">Write</span></div>
+        </a>
+      </div>
+      <p class="caption after">Your message goes to the developer's inbox only. The site itself stores nothing (see <a href="../privacy/">Privacy</a>).</p>
+    </section>
 
     <footer class="footer">
       <div class="ftop"><p class="copy">© 2026 <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a></p></div>

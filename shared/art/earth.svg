@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="The Earth seen from space">
+  <!-- NASA and ESA Data Projects · illustration · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="75%"><stop offset="0" stop-color="#18263A"/><stop offset="1" stop-color="#0C1119"/></radialGradient>
+    <radialGradient id="globe" cx="38%" cy="34%" r="75%"><stop offset="0" stop-color="#3A6A93"/><stop offset=".6" stop-color="#1E3A57"/><stop offset="1" stop-color="#0F1C2C"/></radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset=".72" stop-color="#8AA9C9" stop-opacity=".22"/><stop offset="1" stop-color="#8AA9C9" stop-opacity="0"/></radialGradient>
+    <clipPath id="c"><circle cx="320" cy="180" r="118"/></clipPath>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <g fill="#EDE6D3" opacity=".5">
+    <circle cx="60" cy="50" r="1"/><circle cx="140" cy="290" r=".8"/><circle cx="560" cy="70" r="1.1"/><circle cx="590" cy="280" r=".8"/>
+    <circle cx="480" cy="320" r=".9"/><circle cx="200" cy="30" r=".8"/><circle cx="90" cy="180" r=".7"/><circle cx="540" cy="180" r=".7"/>
+  </g>
+  <g fill="#C0A062" opacity=".5"><circle cx="110" cy="110" r="1.1"/><circle cx="520" cy="250" r="1"/><circle cx="470" cy="40" r="1"/></g>
+  <circle cx="320" cy="180" r="150" fill="url(#glow)"/>
+  <circle cx="320" cy="180" r="118" fill="url(#globe)"/>
+  <g clip-path="url(#c)" fill="#8FB996" fill-opacity=".55">
+    <path d="M250 110 q30 -20 60 -5 q20 12 10 32 q-14 20 -40 16 q-26 -4 -34 -20 q-4 -14 4 -23z"/>
+    <path d="M330 170 q30 -10 52 6 q16 14 4 40 q-14 30 -38 34 q-20 2 -24 -24 q-4 -30 6 -56z"/>
+    <path d="M220 200 q18 -6 30 8 q8 14 -4 30 q-12 14 -24 6 q-12 -12 -2 -44z"/>
+  </g>
+  <g clip-path="url(#c)" fill="none" stroke="#EDE6D3" stroke-opacity=".18">
+    <ellipse cx="320" cy="180" rx="118" ry="40"/><ellipse cx="320" cy="180" rx="118" ry="85"/>
+    <ellipse cx="320" cy="180" rx="40" ry="118"/><ellipse cx="320" cy="180" rx="85" ry="118"/><line x1="320" y1="62" x2="320" y2="298"/>
+  </g>
+  <path d="M232 140 q40 -16 80 2 M300 230 q40 14 86 -6" fill="none" stroke="#EDE6D3" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="320" cy="180" r="118" fill="none" stroke="#8AA9C9" stroke-opacity=".5"/>
+  <ellipse cx="320" cy="180" rx="168" ry="44" fill="none" stroke="#C0A062" stroke-opacity=".6" stroke-dasharray="2 6" transform="rotate(-18 320 180)"/>
+  <rect x="453" y="126" width="12" height="5" fill="#C0A062" transform="rotate(-18 459 128)"/><rect x="448" y="124" width="22" height="2" fill="#C0A062" opacity=".7" transform="rotate(-18 459 125)"/>
+</svg>
