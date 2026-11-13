@@ -19,7 +19,8 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
   - Sky Finder (`sky-finder/`), on a phone outdoors at night: add to the home screen (iPhone and Android); the safety
     notice; camera, location and motion prompts; calibration on the Moon or a planet; the markers lining up with the
     real Moon, planets and bright stars; an asteroid's diamond and path; red light; the ISS or Tiangong passes; the
-    how-to page.
+    how-to page. Since the Nov 13, 2026 rework: tonight's figures strip, the list grouped by night, the row of names
+    in the camera view for switching target, and the Calibrate button's green or amber dot.
   - Spacecraft map (`spacecraft/`) and the home page's new panel: the five views, search, agency and kind filters,
     the card for several craft, Follow, the path, Share, time controls; the asteroid map link under the panel.
 - [ ] Read the first runs of the new "Spacecraft data" workflow and the "Fetch sky positions" step of "Asteroid data"

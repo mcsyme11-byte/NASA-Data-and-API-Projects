@@ -1,5 +1,26 @@
 # Change log
 
+## November 13, 2026 — Sky Finder reworked
+
+Sky Finder rebuilt on the shared components (version 2 of the look) and the site's legal structure.
+
+- **Legal:** the short site footer and a detailed data-credit line on both pages, with a link to Credits; the
+  first-use notice links the Sky Finder sections of the Terms and Privacy pages and the Legal page; the how-to page
+  ends with the same links. The how-to page's credit line now holds only credits.
+- **Home:** the place in a control box with a full-width "Use my location" button, a town search with a Clear button
+  and a message when no town matches; a strip of tonight's figures (when it gets dark, how much of the Moon is lit,
+  how many asteroids are up tonight); asteroids grouped as Tonight, Coming nights and Not up at night from here; each
+  row shows what is needed to see it next to the name and an arrow into the camera view; shared notices for errors;
+  a link to all passes in the Asteroid Tracker.
+- **First-use notice:** shared list and buttons, the focus kept inside it, closed by Escape or a tap outside.
+- **Camera view:** a row of names (the brightest asteroids, the Moon, the planets and the space stations that are up)
+  to switch target without leaving the view, with the home list following the choice; the Calibrate button shows a
+  green dot once calibrated and an amber one before; the calibration sheet puts the choices and the Done button first
+  and no longer covers the circle on small phones; the off-screen arrow keeps clear of the sheets.
+- **How-to page:** shared page head, sections, segmented iPhone/Android switch (arrow keys work), numbered steps,
+  the "what you need" rules as a glossary with a worked example, and a safety list.
+- Style version tag raised to 2026111307; Sky Finder's offline copy refreshed.
+
 ## November 13, 2026 — paragraphs at full width
 
 - Paragraphs, ledes, notes, "How to read this" text and data credits now run the full width of the page content on

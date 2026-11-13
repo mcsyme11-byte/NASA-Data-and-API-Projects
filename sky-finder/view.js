@@ -51,22 +51,26 @@ export function openView(root, opts) {
     <div class="reticle" aria-hidden="true"></div>
     <div class="calring" hidden aria-hidden="true"><span>Put it here</span></div>
     <header class="vbar">
-      <button class="vbtn back" type="button" aria-label="Back to tonight's list">‹</button>
+      <button class="vbtn vback" type="button" aria-label="Back to tonight's list">‹</button>
       <div class="looking" role="status" aria-live="off"><span class="lk">Looking</span> <b id="vLook">—</b></div>
-      <button class="vbtn cal" type="button">Calibrate</button>
+      <button class="vbtn cal" type="button" aria-describedby="vCalState">Calibrate</button>
+      <span class="sr" id="vCalState"></span>
     </header>
     <div class="vwarn" role="alert" hidden></div>
-    <section class="sheet" aria-live="polite"></section>
+    <section class="sheet" aria-label="What you are looking for">
+      <div class="chips sfpick" data-hscroll role="group" aria-label="Show"></div>
+      <div class="shbody" aria-live="polite"></div>
+    </section>
     <section class="calsheet" hidden aria-label="Calibrate">
-      <h2>Line up something bright</h2>
-      <p>Phone compasses are often 5 to 15 degrees off. Put the real thing inside the brass circle, then tap Done: every marker moves by the same amount.</p>
+      <h2>Put something bright in the circle</h2>
       <div class="chips" data-hscroll role="group" aria-label="What to line up"></div>
       <p class="caloff" id="vCalOff"></p>
-      <button class="sfbtn" type="button" id="vCalDone">Done, it is in the circle</button>
+      <button class="btn" type="button" id="vCalDone">Done, it is in the circle</button>
       <div class="calrow">
         <button class="linkbtn" type="button" id="vCalSkip">Skip for now</button>
         <button class="linkbtn" type="button" id="vCalReset" hidden>Undo calibration</button>
       </div>
+      <p class="calwhy">Phone compasses are often 5 to 15 degrees off. Put the real thing inside the brass circle, then tap Done: every marker moves by the same amount.</p>
       <details class="fov"><summary>Markers too spread out or too close together?</summary>
         <label>Camera view across the long side of the screen: <b id="vFovV">${fov}°</b>
           <input type="range" min="40" max="90" step="1" value="${fov}" id="vFov"></label>
@@ -131,9 +135,7 @@ export function openView(root, opts) {
     if (!best) return;
     const it = best.it;
     if (mode === 'cal') { if (it.kind !== 'asteroid') { calPick = it.key === 'star' ? 'star:' + it.name : it.key; renderCal(); } return; }
-    target = it.kind === 'asteroid' ? it.obj.des : it.kind === 'star' ? 'star:' + it.name : it.key;
-    path = null; renderSheet(true);
-    if (navigator.vibrate) navigator.vibrate(8);
+    choose(keyOfItem(it));
   }
 
   // ------------------------------------------------------------ projection
@@ -244,10 +246,11 @@ export function openView(root, opts) {
     const want = mode === 'cal' ? calTarget() : sel;
     if (want) {
       const q = project(want.alt, want.az, fr, b), m = 34;
-      const inside = q.on && q.sx > m && q.sx < fr.W - m && q.sy > m + 50 && q.sy < fr.H - m - 150;
+      const low = mode === 'cal' ? ($('.calsheet').offsetHeight || 260) : sheetH;
+      const inside = q.on && q.sx > m && q.sx < fr.W - m && q.sy > m + 50 && q.sy < fr.H - low - 10;
       if (!inside) {
         const ang = Math.atan2(-q.y, q.x) + (q.f < 0 && Math.hypot(q.x, q.y) < 0.2 ? Math.PI : 0);
-        const cx = fr.W / 2, cy = fr.H / 2 - 40, rx = fr.W / 2 - m, ry = fr.H / 2 - m - 110;
+        const top = 64 + m, bot = fr.H - low - m, cx = fr.W / 2, cy = (top + bot) / 2, rx = fr.W / 2 - m, ry = Math.max(40, (bot - top) / 2);
         const t = Math.min(rx / Math.abs(Math.cos(ang) || 1e-6), ry / Math.abs(Math.sin(ang) || 1e-6));
         const ax = cx + Math.cos(ang) * t, ay = cy + Math.sin(ang) * t;
         ctx.save(); ctx.translate(ax, ay); ctx.rotate(ang);
@@ -280,13 +283,38 @@ export function openView(root, opts) {
     if (Math.abs(h) > 120) return `Turn around${ud ? ', then ' + ud : ''}.`;
     return `Turn ${[lr, ud].filter(Boolean).join(' and ')} to centre it.`;
   }
-  let sheetKey = '';
+  // the row of things to switch to without leaving the view: the brightest asteroids, the Moon, the planets and the
+  // space stations that are up (the chosen one is always there)
+  let pickKey = '';
+  const keyOfItem = (i) => (i.kind === 'asteroid' ? i.obj.des : i.kind === 'star' ? 'star:' + i.name : i.key);
+  function renderPick() {
+    const ast = items.filter((i) => i.kind === 'asteroid').sort((a, c) => a.mag - c.mag);
+    const pick = [...ast.filter((i) => keyOfItem(i) === target || keyOfItem(i) === opts.target || i.alt > 0).slice(0, 6),
+      ...items.filter((i) => (i.kind === 'moon' || i.kind === 'planet' || i.kind === 'station') && i.alt > 0)];
+    const sel = selected();
+    if (sel && !pick.includes(sel)) pick.unshift(sel);
+    const k = pick.map(keyOfItem).join() + '|' + target;
+    if (k === pickKey) return;
+    pickKey = k;
+    $('.sfpick').hidden = !pick.length;
+    $('.sfpick').innerHTML = pick.map((i) => `<button type="button" class="chip" data-k="${esc(keyOfItem(i))}" aria-pressed="${keyOfItem(i) === target}">${esc(i.kind === 'asteroid' ? shortName(i.name) : i.name)}</button>`).join('');
+  }
+  function choose(k) {
+    target = k; path = null; pickKey = ''; renderPick(); renderSheet(true);
+    if (opts.onTarget) opts.onTarget(k);
+    if (navigator.vibrate) navigator.vibrate(8);
+  }
+  $('.sfpick').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) choose(b.dataset.k); });
+
+  let sheetKey = '', sheetH = 150;
   function renderSheet(force) {
-    const it = selected(), sh = $('.sheet');
+    renderPick();
+    const it = selected(), sh = $('.shbody');
     if (!target || !it) {
       const k = 'none' + (target || '');
       if (!force && sheetKey === k) return; sheetKey = k;
-      sh.innerHTML = `<div class="sh1"><b>Hold the phone up to the sky</b></div><p class="shnote">${target ? 'That one is not in tonight\'s data any more.' : 'Tap a marker to see what it is.'} Diamonds are asteroids, circles planets, squares space stations.</p>`;
+      sh.innerHTML = `<div class="sh1"><b>Hold the phone up to the sky</b></div><p class="shnote">${target ? 'That one is not in tonight\'s data any more.' : 'Tap a marker, or a name above, to see what it is.'} Diamonds are asteroids, circles planets, squares space stations.</p>`;
+      sheetH = $('.sheet').offsetHeight || sheetH;
       return;
     }
     const up = it.alt >= 0;
@@ -305,6 +333,7 @@ export function openView(root, opts) {
     const hint = up ? turnHint(it) : 'It is below your horizon now; see tonight\'s list for when it rises.';
     const html = `<div class="sh1">${head}</div><div class="shl">${lines}</div><p class="shnote">${note}${esc(hint)}</p>`;
     if (html !== sh.innerHTML) sh.innerHTML = html;
+    sheetH = $('.sheet').offsetHeight || sheetH;
   }
 
   // ------------------------------------------------------------ calibration
@@ -320,8 +349,15 @@ export function openView(root, opts) {
   }
   const keyOf = (c) => (c.kind === 'star' ? 'star:' + c.name : c.key);
   let calChipsKey = '';
+  function calState() {
+    const b = $('.vbtn.cal');
+    b.classList.toggle('ok', !!cal);
+    const h = cal ? Math.round((Date.now() - cal.at) / 3600e3) : 0;
+    $('#vCalState').textContent = cal ? `Calibrated on ${cal.on} ${h < 1 ? 'less than an hour' : h === 1 ? 'an hour' : h + ' hours'} ago.` : 'Not calibrated yet.';
+    b.title = $('#vCalState').textContent;
+  }
   function renderCal() {
-    const ch = calChoices(), t = calTarget(), chips = $('.chips');
+    const ch = calChoices(), t = calTarget(), chips = $('.calsheet .chips');
     const k = ch.map(keyOf).join() + '|' + calPick;
     if (k !== calChipsKey) {
       calChipsKey = k;
@@ -334,7 +370,7 @@ export function openView(root, opts) {
     const p = pointing(basis), dA = wrap180(t.az - p.az), dH = t.alt - p.alt;
     $('#vCalOff').innerHTML = `Where the sensors say ${esc(t.kind === 'moon' ? 'the Moon' : t.name)} is: <b>${Math.abs(dA).toFixed(0)}° ${dA >= 0 ? 'right' : 'left'} · ${Math.abs(dH).toFixed(0)}° ${dH >= 0 ? 'up' : 'down'}</b> of the circle.`;
   }
-  $('.chips').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { calPick = b.dataset.k; calChipsKey = ''; renderCal(); } });
+  $('.calsheet .chips').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { calPick = b.dataset.k; calChipsKey = ''; renderCal(); } });
   function enterCal() {
     if (!alive) return;
     mode = 'cal'; root.classList.add('calibrating'); $('.calsheet').hidden = false; $('.calring').hidden = false; $('.sheet').hidden = true;
@@ -347,12 +383,12 @@ export function openView(root, opts) {
     const t = calTarget(); if (!t) return;
     const raw = altAzOf(basis.f);   // sensors only, without the old calibration
     cal = { dAz: wrap180(t.az - raw.az), dAlt: t.alt - raw.alt, at: Date.now(), on: t.kind === 'moon' ? 'Moon' : t.name };
-    store.set(CAL_KEY, cal);
+    store.set(CAL_KEY, cal); calState();
     if (navigator.vibrate) navigator.vibrate([10, 40, 10]);
     warn(`Calibrated on ${cal.on}: ${Math.abs(cal.dAz).toFixed(0)}° sideways and ${Math.abs(cal.dAlt).toFixed(0)}° up or down taken off. Kept on this phone for ${CAL_HOURS} hours.`, 4500);
     leaveCal();
   });
-  $('#vCalReset').addEventListener('click', () => { cal = null; forgetCalibration(); renderCal(); warn('Calibration undone.'); });
+  $('#vCalReset').addEventListener('click', () => { cal = null; forgetCalibration(); calState(); renderCal(); warn('Calibration undone.'); });
   $('#vFov').addEventListener('input', (e) => { fov = Number(e.target.value); $('#vFovV').textContent = fov + '°'; store.set(FOV_KEY, fov); });
 
   // ------------------------------------------------------------ open and close
@@ -370,13 +406,13 @@ export function openView(root, opts) {
   }
   const onKey = (e) => { if (e.key === 'Escape') (mode === 'cal' ? leaveCal() : close()); };
   addEventListener('keydown', onKey);
-  $('.vbtn.back').addEventListener('click', close);
+  $('.vbtn.vback').addEventListener('click', close);
 
   // aim the drag view at the target to begin with
   items = positions(sky, place, Date.now(), target); lastItemsAt = Date.now();
   const s0 = selected();
   if (s0 && s0.alt > -5) { dragAlt = Math.max(5, Math.min(80, s0.alt)); dragAz = s0.az; }
-  renderSheet(true);
+  renderSheet(true); calState();
   draw();
   startCamera(); keepAwake();
   return { close, startSensors, enterCal, get sensors() { return sensors; }, get motionAllowed() { return motionAllowed; } };

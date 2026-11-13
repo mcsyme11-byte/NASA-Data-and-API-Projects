@@ -1,7 +1,8 @@
 // NASA and ESA Data Projects · Sky Finder · tonight's list · © 2026 Malcolm Syme · mcsyme11@gmail.com
 //
-// The home screen: where you are, the asteroids passing close (tonight's first, then the coming nights), what else is
-// up tonight (Moon, planets, the space stations' passes), and the button that opens the camera view (view.js).
+// The home screen: where you are, a strip of tonight's figures (when it gets dark, the Moon, how many asteroids are up),
+// the asteroids passing close (tonight, the coming nights, then the ones not up at night from here), what else is up
+// tonight (Moon, planets, the space stations' passes), and the button that opens the camera view (view.js).
 // Opened from the Asteroid Tracker with ?find=<designation>, that asteroid is shown first and the camera view aims
 // at it. Works offline once visited (sw.js); the data files are the same for every visitor.
 
@@ -30,10 +31,14 @@ $('#red').addEventListener('click', () => setRed(!document.documentElement.class
 
 // ------------------------------------------------------------ place
 const sheet = $('#placeSheet');
-function openPlace(open) { sheet.hidden = !open; $('#changePlace').setAttribute('aria-expanded', open); if (open) setTimeout(() => $('#placeQ').focus(), 30); }
+function openPlace(open) {
+  sheet.hidden = !open; $('#changePlace').setAttribute('aria-expanded', open);
+  $('#changePlace').textContent = open ? 'Close' : 'Change';
+  if (open) setTimeout(() => $('#placeQ').focus(), 30);
+}
 $('#changePlace').addEventListener('click', () => openPlace(sheet.hidden));
 $('#closePlace').addEventListener('click', () => { openPlace(false); $('#changePlace').focus(); });
-sheet.addEventListener('keydown', (e) => { if (e.key === 'Escape') { openPlace(false); $('#changePlace').focus(); } });
+sheet.addEventListener('keydown', (e) => { if (e.key === 'Escape' && currentPlace()) { openPlace(false); $('#changePlace').focus(); } });
 const say = (m) => { $('#placeMsg').textContent = m || ''; $('#placeMsg').hidden = !m; };
 $('#useHere').addEventListener('click', async () => {
   const b = $('#useHere'); b.disabled = true; b.textContent = 'Finding you…'; say('');
@@ -46,10 +51,19 @@ function showHits() {
   const box = $('#placeHits'); box.hidden = !hits.length;
   box.innerHTML = hits.map((h, i) => `<button type="button" role="option" aria-selected="${i === cur}" data-i="${i}">${esc(h.name)}</button>`).join('');
 }
-$('#placeQ').addEventListener('input', () => {
+function searchNow() {
   clearTimeout(qt);
-  qt = setTimeout(async () => { try { hits = await searchPlaces($('#placeQ').value); cur = -1; showHits(); } catch { say('The list of towns could not be loaded. Try "Use my location".'); } }, 120);
-});
+  const q = $('#placeQ').value.trim();
+  if (!q) { hits = []; showHits(); return; }
+  qt = setTimeout(async () => {
+    try {
+      hits = await searchPlaces(q); cur = -1; showHits();
+      say(hits.length ? '' : `No town called "${q}" in the list. Try a nearby larger town, or "Use my location".`);
+    } catch { say('The list of towns could not be loaded. Try "Use my location".'); }
+  }, 120);
+}
+$('#placeQ').addEventListener('input', searchNow);
+$('#placeClear').addEventListener('click', (e) => { e.preventDefault(); $('#placeQ').value = ''; searchNow(); say(''); $('#placeQ').focus(); });
 $('#placeQ').addEventListener('keydown', (e) => {
   if (!hits.length) return;
   if (e.key === 'ArrowDown') { cur = (cur + 1) % hits.length; showHits(); e.preventDefault(); }
@@ -71,60 +85,84 @@ function upWindow(x) {
 }
 const needTag = (n) => `<span class="need n-${n.key}">${esc(n.label)}</span>`;
 const shortName = (n) => n.replace(/^\((.*)\)$/, '$1');
+const CHEV = '<svg class="chev" width="10" height="16" viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+// one row of a list: icon, name (with what is needed to see it), one line of detail, and an arrow into the camera view
+const row = (t, cls, icon, name, need, detail) => `<button class="sfitem${cls}" type="button" data-t="${esc(t)}" aria-pressed="${chosen === t}">`
+  + `<span class="ic ${icon}" aria-hidden="true"></span><span class="t"><span class="nm"><b>${esc(name)}</b>${need ? ' ' + needTag(need) : ''}</span><span class="d">${detail}</span></span>${CHEV}</button>`;
+const group = (title, rows) => (rows.length ? `<h3 class="sfgroup">${title}</h3>${rows.join('')}` : '');
+const EYE = { key: 'eye', label: 'Naked eye' };
+
+function stats(n, m, upTonight, total) {
+  const box = $('#tonightStats'); box.hidden = false;
+  const dark = n.noDark ? `<div class="value">None</div><div class="note">the Sun stays less than 12° down</div>`
+    : `<div class="value">${n.darkFrom <= Date.now() + 5 * 60e3 ? 'Now' : hhmm(n.darkFrom)}</div><div class="note">${n.darkTo ? `until ${hhmm(n.darkTo)}` : 'until dawn'}</div>`;
+  box.innerHTML = `<div class="stat"><div class="label">Dark from</div>${dark}</div>`
+    + `<div class="stat"><div class="label">Moon</div><div class="value">${Math.round(m.lit * 100)}<small>% lit</small></div><div class="note">${m.top ? `highest ${hhmm(m.top.ms)}` : 'not up while dark'}</div></div>`
+    + (total === null ? `<div class="stat"><div class="label">Asteroids</div><div class="value">–</div><div class="note">list not loaded</div></div>`
+      : `<div class="stat"><div class="label">Asteroids</div><div class="value">${upTonight}</div><div class="note">up tonight, of ${total} in 30 days</div></div>`);
+}
 
 function render() {
   const place = currentPlace();
-  $('#placeName').textContent = place ? place.name.replace(/, [^,]+$/, (m) => (place.name.length > 26 ? '' : m)) : 'where are you?';
+  $('#placeName').textContent = place ? place.name : 'Not set yet';
   $('#forgetPlace').hidden = !place;
   $('#point').disabled = !place || !sky;
   if (!place) {
-    $('#darkFrom').textContent = '';
-    $('#astList').innerHTML = `<div class="sfstate">Choose where you are to see what is up tonight. <button class="sfbtn small" type="button" data-open-place>Choose</button></div>`;
+    $('#tonightStats').hidden = true; $('#found').hidden = true;
+    $('#astList').innerHTML = `<div class="state small">Choose where you are to see what is up tonight.</div>`;
     $('#alsoList').innerHTML = '';
-    $('#astList [data-open-place]').addEventListener('click', () => openPlace(true));
     if (sheet.hidden) openPlace(true);
+    $('#closePlace').hidden = true;
+    $('#point').textContent = 'Choose where you are first';
     return;
   }
+  $('#closePlace').hidden = false;
   if (!sky) return;
   if (sky.errors.sky && sky.errors.stars) {
-    $('#astList').innerHTML = `<div class="sfstate">Tonight's data could not be loaded. Check the connection and <button class="linkbtn" type="button" data-retry>try again</button>.</div>`;
+    $('#tonightStats').hidden = true;
+    $('#astList').innerHTML = `<div class="notice error"><span class="t">Tonight's data could not be loaded. Check the connection, then try again.</span><button class="btn small" type="button" data-retry>Try again</button></div>`;
     $('#astList [data-retry]').addEventListener('click', () => { location.reload(); });
+    $('#alsoList').innerHTML = '';
     return;
   }
   list = tonightList(sky, place);
   const n = list.night;
-  $('#darkFrom').textContent = n.noDark ? ' · no full darkness tonight' : ` · dark ${hhmm(n.darkFrom)}–${hhmm(n.darkTo)}`;
-
-  // asteroids
-  const vis = list.passes.filter((x) => x.visible);
   const tonightEnd = n.to + 3600e3;
+
+  // asteroids: tonight, the coming nights, then the ones that are not up at night from here
+  const now = [], later = [], never = [];
+  for (const x of list.passes) {
+    const o = x.obj, name = shortName(o.name);
+    if (!x.visible) { never.push(row(o.des, ' dim', 'ast', name, x.need, `not up at night from here (${esc(x.reason)})`)); continue; }
+    const w = upWindow(x);
+    if (w.from <= tonightEnd) now.push(row(o.des, '', 'ast', name, x.need, `up ${hhmm(w.from)}–${hhmm(w.to)}, highest at ${hhmm(msFromJd(x.top.jd))} to the ${dirText(x.top.az)} · magnitude ${x.best.mag.toFixed(1)}`));
+    else later.push(row(o.des, '', 'ast', name, x.need, `best ${day(msFromJd(x.best.jd))} at ${hhmm(msFromJd(x.best.jd))}, to the ${dirText(x.top.az)} · magnitude ${x.best.mag.toFixed(1)}`));
+  }
+  stats(n, list.moon, now.length, sky.errors.sky ? null : list.passes.length);
   if (find && !list.passes.some((x) => x.obj.des === find)) {
-    $('#found').hidden = false; $('#found').textContent = `${find} is not among the passes worth looking for in the next 30 days.`;
+    $('#found').hidden = false;
+    $('#found').innerHTML = `<span class="t"><b>${esc(find)}</b> is not among the passes worth looking for in the next 30 days: it is too faint, or not close enough. The camera view still shows the Moon, planets and stars.</span>`;
   } else $('#found').hidden = true;
-  if (sky.errors.sky) $('#astList').innerHTML = `<div class="sfstate">The asteroid list could not be loaded just now. The Moon, planets and stars below still work.</div>`;
-  else if (!list.passes.length) $('#astList').innerHTML = `<div class="sfstate">No asteroid passing in the next 30 days is bright enough to look for from a backyard. The list is updated every day.</div>`;
+  if (sky.errors.sky) $('#astList').innerHTML = `<div class="notice error"><span class="t">The asteroid list could not be loaded just now. The Moon, planets and stars below still work.</span></div>`;
+  else if (!list.passes.length) $('#astList').innerHTML = `<div class="state small">No asteroid passing in the next 30 days is bright enough to look for from a backyard. The list is updated every day.</div>`;
   else {
-    const rows = list.passes.map((x) => {
-      const o = x.obj, sel = o.des === chosen;
-      if (!x.visible) return `<button class="sfitem dim" type="button" data-t="${esc(o.des)}" aria-pressed="${sel}"><span class="ic ast" aria-hidden="true"></span><span class="t"><b>${esc(shortName(o.name))}</b><span>not up at night from here (${esc(x.reason)})</span></span>${needTag(x.need)}</button>`;
-      const w = upWindow(x), isTonight = w.from <= tonightEnd;
-      const when = isTonight ? `up ${hhmm(w.from)}–${hhmm(w.to)}, highest ${hhmm(msFromJd(x.top.jd))}, to the ${dirText(x.top.az)}` : `best ${day(msFromJd(x.best.jd))}, ${hhmm(msFromJd(x.best.jd))}, to the ${dirText(x.top.az)}`;
-      return `<button class="sfitem${isTonight ? ' tonight' : ''}" type="button" data-t="${esc(o.des)}" aria-pressed="${sel}"><span class="ic ast" aria-hidden="true"></span><span class="t"><b>${esc(shortName(o.name))}</b><span>${when} · mag ${x.best.mag.toFixed(1)}</span></span>${needTag(x.need)}</button>`;
-    });
-    $('#astList').innerHTML = (vis.length ? '' : `<div class="sfstate small">None of the coming passes rises above your horizon at night; the markers still show where they are.</div>`) + rows.join('');
+    const none = !now.length && !later.length ? `<p class="sfnote">None of the coming passes rises above your horizon at night; the markers still show where they are.</p>` : '';
+    $('#astList').innerHTML = none + group('Tonight', now) + group('Coming nights', later) + group('Not up at night from here', never);
   }
 
-  // also up
+  // also up: the Moon, the planets, the space stations' passes
   const also = [];
   const m = list.moon;
-  if (m.top) also.push(`<button class="sfitem" type="button" data-t="moon" aria-pressed="${chosen === 'moon'}"><span class="ic moon" aria-hidden="true"></span><span class="t"><b>Moon</b><span>${Math.round(m.lit * 100)}% lit, ${m.waxing ? 'growing' : 'shrinking'}; highest ${Math.round(m.top.alt)}° to the ${dirText(m.top.az)} at ${hhmm(m.top.ms)}</span></span></button>`);
-  for (const p of list.planets) also.push(`<button class="sfitem" type="button" data-t="${p.name.toLowerCase()}" aria-pressed="${chosen === p.name.toLowerCase()}"><span class="ic planet" aria-hidden="true"></span><span class="t"><b>${p.name}</b><span>${p.look}; highest ${Math.round(p.top.alt)}° to the ${dirText(p.top.az)} at ${hhmm(p.top.ms)}</span></span><span class="need n-eye">Naked eye</span></button>`);
+  if (m.top) also.push(row('moon', '', 'moon', 'Moon', null, `${Math.round(m.lit * 100)}% lit, ${m.waxing ? 'growing' : 'shrinking'}; highest ${Math.round(m.top.alt)}° up to the ${dirText(m.top.az)} at ${hhmm(m.top.ms)}`));
+  for (const p of list.planets) also.push(row(p.name.toLowerCase(), '', 'planet', p.name, EYE, `${esc(p.look)}; highest ${Math.round(p.top.alt)}° up to the ${dirText(p.top.az)} at ${hhmm(p.top.ms)}`));
   for (const s of list.stations) {
     const ps = s.passes.slice(0, 3).map((q) => `${hhmm(q.start.ms)} (${Math.round(q.top.alt)}° up, ${Math.round((q.end.ms - q.start.ms) / 60000) || 1} min)`).join(', ');
-    also.push(`<button class="sfitem" type="button" data-t="${s.short.toLowerCase()}" aria-pressed="${chosen === s.short.toLowerCase()}"><span class="ic station" aria-hidden="true"></span><span class="t"><b>${esc(s.name)}</b><span>passes over: ${ps}; a bright moving star</span></span><span class="need n-eye">Naked eye</span></button>`);
+    also.push(row(s.short.toLowerCase(), '', 'station', s.name, EYE, `a bright moving star, passing over at ${ps}`));
   }
-  if (!sky.errors.tle && sky.sats.length && !list.stations.length) also.push(`<div class="sfstate small">No space station passes you can see tonight.</div>`);
-  $('#alsoList').innerHTML = also.join('') || `<div class="sfstate small">${n.noDark ? 'The sky does not get dark tonight.' : 'Nothing bright is up tonight apart from the stars.'}</div>`;
+  let extra = '';
+  if (sky.errors.tle) extra = `<p class="sfnote">The space stations' orbits could not be loaded just now.</p>`;
+  else if (sky.sats.length && !list.stations.length) extra = `<p class="sfnote">No space station passes you can see tonight.</p>`;
+  $('#alsoList').innerHTML = (also.join('') || `<div class="state small">${n.noDark ? 'The sky does not get dark tonight.' : 'Nothing bright is up tonight apart from the stars.'}</div>`) + extra;
   if (find) { const el = document.querySelector(`[data-t="${CSS.escape(find)}"]`); if (el && !render.scrolled) { render.scrolled = true; el.scrollIntoView({ block: 'center' }); } }
   $('#point').textContent = chosen ? `Find ${chosenName()}` : 'Point at the sky';
 }
@@ -147,27 +185,34 @@ document.addEventListener('click', (e) => {
 function accepted() { return store.get(ACCEPT_KEY) === '1'; }
 // onYes runs inside the tap on "I understand", so the iPhone can still ask for the motion sensors.
 function firstUse(onYes) {
-  {
-    const d = document.createElement('div');
-    d.className = 'sfmodal'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'fuT');
-    d.innerHTML = `<div class="sfmodal-c">
-      <h2 id="fuT">Before you start</h2>
-      <ul>
-        <li><b>Never point your eyes, binoculars or a telescope at the Sun.</b> Sky Finder marks it in red.</li>
-        <li>Look where you walk: go somewhere safe and dark, not near roads or edges. Never use it while driving.</li>
-        <li>The camera, your location and the motion sensors are used on this phone only, to draw the markers. Nothing is recorded, saved or sent.</li>
-        <li>Positions are estimates for learning and enjoyment; a phone compass can be several degrees off.</li>
-      </ul>
-      <p class="sfnote">By continuing you agree to the <a href="../terms/#sky-finder">Terms</a>. See also <a href="../privacy/#sky-finder">Privacy</a>.</p>
-      <div class="sfmodal-b"><button class="linkbtn" type="button" data-no>Not now</button><button class="sfbtn" type="button" data-yes>I understand</button></div>
-    </div>`;
-    document.body.append(d);
-    const done = (ok) => { d.remove(); if (ok) { store.set(ACCEPT_KEY, '1'); onYes(); } else $('#point').focus(); };
-    d.querySelector('[data-yes]').addEventListener('click', () => done(true));
-    d.querySelector('[data-no]').addEventListener('click', () => done(false));
-    d.addEventListener('keydown', (e) => { if (e.key === 'Escape') done(false); });
-    d.querySelector('[data-yes]').focus();
-  }
+  const back = document.activeElement;
+  const d = document.createElement('div');
+  d.className = 'sfmodal'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'fuT');
+  d.innerHTML = `<div class="sfmodal-c">
+    <div class="kicker">Before you start</div>
+    <h2 id="fuT">Safety and your data</h2>
+    <ul class="list">
+      <li><b>Never point your eyes, binoculars or a telescope at the Sun.</b> Sky Finder marks it in red.</li>
+      <li>Look where you walk: somewhere safe and dark, away from roads and edges. Never use it while driving.</li>
+      <li>The camera, your location and the motion sensors are used on this phone only, to draw the markers. Nothing is recorded, saved or sent.</li>
+      <li>Positions are estimates for learning and enjoyment; a phone compass can be several degrees off until it is calibrated.</li>
+    </ul>
+    <p class="sfnote">Continuing means you accept the <a href="../terms/#sky-finder">terms for Sky Finder</a>. How the camera, location and sensors are handled: <a href="../privacy/#sky-finder">Privacy</a>. Everything else: <a href="../legal/">Legal</a>.</p>
+    <div class="sfmodal-b"><button class="btn quiet" type="button" data-no>Not now</button><button class="btn" type="button" data-yes>I understand</button></div>
+  </div>`;
+  document.body.append(d);
+  const done = (ok) => { d.remove(); if (ok) { store.set(ACCEPT_KEY, '1'); onYes(); } else (back && back.focus ? back : $('#point')).focus(); };
+  d.querySelector('[data-yes]').addEventListener('click', () => done(true));
+  d.querySelector('[data-no]').addEventListener('click', () => done(false));
+  d.addEventListener('click', (e) => { if (e.target === d) done(false); });
+  d.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') done(false);
+    if (e.key === 'Tab') {            // keep the focus inside the notice
+      const f = [...d.querySelectorAll('a, button')], i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { f[f.length - 1].focus(); e.preventDefault(); } else if (!e.shiftKey && i === f.length - 1) { f[0].focus(); e.preventDefault(); }
+    }
+  });
+  d.querySelector('[data-yes]').focus();
 }
 let viewing = null, opening = false;
 function point() {
@@ -182,8 +227,11 @@ function go() {
   opening = true;
   const place = currentPlace();
   history.pushState({ view: 1 }, '', location.href);
-  openFromTap($('#view'), { sky, place, target: chosen, onClose: () => { viewing = null; if (history.state && history.state.view) history.back(); } })
-    .then((v) => { viewing = v; opening = false; });
+  openFromTap($('#view'), {
+    sky, place, target: chosen,
+    onTarget: (t) => { chosen = t; document.querySelectorAll('.sfitem[data-t]').forEach((x) => x.setAttribute('aria-pressed', x.dataset.t === t)); $('#point').textContent = t ? `Find ${chosenName()}` : 'Point at the sky'; },
+    onClose: () => { viewing = null; if (history.state && history.state.view) history.back(); },
+  }).then((v) => { viewing = v; opening = false; });
 }
 $('#point').addEventListener('click', point);
 addEventListener('popstate', () => { if (viewing) { const v = viewing; viewing = null; v.close(); } });

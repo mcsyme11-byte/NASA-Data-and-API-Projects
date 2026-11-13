@@ -10,9 +10,9 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111306">
-  <link rel="stylesheet" href="sky-finder.css?v=2026111306">
-  <script type="module" src="../shared/footer.js?v=2026111306"></script>
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111307">
+  <link rel="stylesheet" href="sky-finder.css?v=2026111307">
+  <script type="module" src="../shared/footer.js?v=2026111307"></script>
 </head>
 <body class="sf">
   <header class="sfbar">
@@ -20,57 +20,66 @@
       <img src="icons/icon.svg" width="28" height="28" alt="">
       <span>Sky Finder</span>
     </a>
-    <div class="sfbar-r"><a class="sfmini" href="./">Tonight</a></div>
+    <div class="sfbar-r"><a class="sfmini" href="./">Tonight's list</a></div>
   </header>
 
-  <main class="sfmain howto">
-    <a class="backlink" id="back" href="./">Back to Sky Finder</a>
-    <div class="kicker sf-kick">Sky Finder</div>
-    <h1>How to use it</h1>
-    <p class="lede">Hold your phone up to the sky and Sky Finder marks where tonight's asteroid is, with its path and the planets around it to guide you.</p>
+  <main class="sfmain sfhow">
+    <a class="backlink" id="back" href="./">Sky Finder</a>
+    <header class="pagehead compact">
+      <div class="kicker">Sky Finder</div>
+      <h1>How to use it</h1>
+      <p class="lede">Hold your phone up to the sky and Sky Finder marks where tonight's asteroid is, with its path, and the Moon, planets and bright stars around it to guide you. It is also reached from the Asteroid Tracker's <a href="../asteroid-tracker/tracker.html#visible">"Visible from here"</a> tab.</p>
+    </header>
 
-    <section class="step" aria-labelledby="s1">
-      <h2 id="s1">1 · Put it on your home screen</h2>
-      <div class="tabs2" role="tablist" aria-label="Phone">
-        <button role="tab" type="button" aria-selected="true" aria-controls="pIos" id="tIos">iPhone</button>
-        <button role="tab" type="button" aria-selected="false" aria-controls="pAnd" id="tAnd">Android</button>
+    <section class="section" aria-labelledby="s1">
+      <div class="section-head"><div><div class="kicker">Step 1</div><h2 id="s1">Put it on your home screen</h2></div></div>
+      <div class="sfcard">
+        <div class="seg" role="tablist" aria-label="Phone">
+          <button role="tab" type="button" aria-selected="true" aria-controls="pIos" id="tIos">iPhone</button>
+          <button role="tab" type="button" aria-selected="false" aria-controls="pAnd" id="tAnd" tabindex="-1">Android</button>
+        </div>
+        <ol class="steps" id="pIos" role="tabpanel" aria-labelledby="tIos">
+          <li><b>Safari</b>Open Sky Finder in Safari.</li>
+          <li><b>Share</b>Tap the Share button: the square with an arrow.</li>
+          <li><b>Add to Home Screen</b>Choose it in the list, then tap Add.</li>
+        </ol>
+        <ol class="steps" id="pAnd" role="tabpanel" aria-labelledby="tAnd" hidden>
+          <li><b>Chrome</b>Open Sky Finder in Chrome.</li>
+          <li><b>Menu</b>Tap ⋮ at the top right.</li>
+          <li><b>Add to Home screen</b>Or "Install app", depending on the phone.</li>
+        </ol>
+        <p class="sfnote">It then opens full screen, like an app, and works with a weak connection once it has been opened online.</p>
       </div>
-      <ol id="pIos" role="tabpanel" aria-labelledby="tIos">
-        <li>Open Sky Finder in <b>Safari</b>.</li>
-        <li>Tap the <b>Share</b> button (the square with an arrow).</li>
-        <li>Choose <b>Add to Home Screen</b>, then <b>Add</b>.</li>
-      </ol>
-      <ol id="pAnd" role="tabpanel" aria-labelledby="tAnd" hidden>
-        <li>Open Sky Finder in <b>Chrome</b>.</li>
-        <li>Tap <b>⋮</b> (top right).</li>
-        <li>Choose <b>Add to Home screen</b> or <b>Install app</b>.</li>
-      </ol>
-      <p class="sfnote">It then opens full screen, like an app, and works with a weak connection once it has been opened online.</p>
     </section>
 
-    <section class="step" aria-labelledby="s2">
-      <h2 id="s2">2 · Allow three things</h2>
-      <ol>
-        <li><b>Camera</b>, to show the sky behind the markers.</li>
-        <li><b>Location</b>, to work out what is above you. Or type your town instead.</li>
-        <li><b>Motion and orientation</b>, to know where the phone points. An iPhone asks for this when you first tap "Point at the sky".</li>
-      </ol>
-      <p class="sfnote">All three stay on your phone. Nothing is sent or recorded; see the <a href="../privacy/#sky-finder">Privacy page</a>. Without the camera the markers are drawn over a dark background; without the motion sensors you can drag the sky with a finger.</p>
+    <section class="section" aria-labelledby="s2">
+      <div class="section-head"><div><div class="kicker">Step 2</div><h2 id="s2">Allow three things</h2></div></div>
+      <div class="sfcard">
+        <ol class="steps">
+          <li><b>Camera</b>To show the sky behind the markers. Without it, the markers are drawn over a dark background.</li>
+          <li><b>Location</b>To work out what is above you. Or type your town instead.</li>
+          <li><b>Motion and orientation</b>To know where the phone points. An iPhone asks when you first tap "Point at the sky". Without it, drag the sky with a finger.</li>
+        </ol>
+        <p class="sfnote">All three are used on your phone only. Nothing is recorded, saved or sent: see the <a href="../privacy/#sky-finder">Privacy page</a>.</p>
+      </div>
     </section>
 
-    <section class="step" aria-labelledby="s3">
-      <h2 id="s3">3 · Find it</h2>
-      <ol>
-        <li>Pick the asteroid from tonight's list.</li>
-        <li><b>Calibrate</b> once: put the Moon or a bright planet in the circle and tap Done. Phone compasses are often 5 to 15 degrees off, and magnetic north is not true north; this fixes both. It is kept for 12 hours.</li>
-        <li>Follow the arrow until the diamond is in the middle. The dotted line is where it will be, hour by hour.</li>
-        <li>Look there with your eyes, binoculars or telescope, as the label says.</li>
-      </ol>
+    <section class="section" aria-labelledby="s3">
+      <div class="section-head"><div><div class="kicker">Step 3</div><h2 id="s3">Find it</h2></div></div>
+      <div class="sfcard">
+        <ol class="steps">
+          <li><b>Pick it</b>Tap the asteroid in tonight's list, or tap "Point at the sky" and choose it from the row of names in the camera view.</li>
+          <li><b>Calibrate once</b>Put the Moon or a bright planet in the circle and tap Done. Phone compasses are often 5 to 15 degrees off, and magnetic north is not true north; this fixes both. It is kept for 12 hours, and the dot on the Calibrate button turns green.</li>
+          <li><b>Follow the arrow</b>Turn until the diamond is in the middle. The dotted line is where it will be, hour by hour.</li>
+          <li><b>Look</b>Look there with your eyes, binoculars or a telescope, as its tag says.</li>
+        </ol>
+      </div>
     </section>
 
-    <section class="step" aria-labelledby="s4">
-      <h2 id="s4">What the marks mean</h2>
-      <div class="legend">
+    <section class="section" aria-labelledby="s4">
+      <div class="section-head"><div><div class="kicker">On the screen</div><h2 id="s4">What the marks mean</h2></div></div>
+      <div class="sfcard">
+        <div class="sflegend">
         <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="M14 4 L24 14 L14 24 L4 14 Z" fill="#E2C88E"/></svg><span>An asteroid: where it is now (the chosen one is larger, with a ring)</span>
         <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="M2 22 Q 12 16 26 6" fill="none" stroke="#E2C88E" stroke-width="2" stroke-dasharray="3 4"/><circle cx="12" cy="16" r="2.5" fill="#E2C88E"/></svg><span>Its path over the next hours, with the times</span>
         <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="7" fill="none" stroke="#C0A062" stroke-width="2"/></svg><span>A planet, or the Moon (a larger disc), to check you are pointed right</span>
@@ -78,41 +87,58 @@
         <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="M24 14 L8 4 L12 14 L8 24 Z" fill="#E2C88E"/></svg><span>Off the screen: turn this way</span>
         <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9" fill="rgba(201,103,90,.35)" stroke="#C9675A" stroke-width="2"/></svg><span>The Sun: <b>never</b> look at it, least of all with binoculars or a telescope</span>
       </div>
+      </div>
     </section>
 
-    <section class="step" aria-labelledby="s5">
-      <h2 id="s5">What you need to see it</h2>
-      <ol class="plain">
-        <li><span class="need n-eye">Naked eye</span> magnitude up to 6, from a dark place</li>
-        <li><span class="need n-bino">Binoculars</span> 6 to 9</li>
-        <li><span class="need n-small">Small telescope</span> 9 to 12 (8–15 cm)</li>
-        <li><span class="need n-large">Large telescope</span> 12 to 15 (20 cm and up)</li>
-        <li><span class="need n-faint">Too faint</span> above 15, for backyard viewing</li>
-      </ol>
-      <p class="sfnote">A bigger magnitude means fainter. A town sky or a bright Moon moves everything one step down the list.</p>
+    <section class="section" aria-labelledby="s5">
+      <div class="section-head"><div><div class="kicker">The rules</div><h2 id="s5">What you need to see it</h2></div></div>
+      <div class="sfcard">
+        <dl class="terms">
+          <div><dt><span class="need n-eye">Naked eye</span></dt><dd>Magnitude up to 6, from a dark place.</dd></div>
+          <div><dt><span class="need n-bino">Binoculars</span></dt><dd>Magnitude 6 to 9.</dd></div>
+          <div><dt><span class="need n-small">Small telescope</span></dt><dd>Magnitude 9 to 12 (8 to 15 cm across).</dd></div>
+          <div><dt><span class="need n-large">Large telescope</span></dt><dd>Magnitude 12 to 15 (20 cm and up).</dd></div>
+          <div><dt><span class="need n-faint">Too faint</span></dt><dd>Above 15, for backyard viewing.</dd></div>
+        </dl>
+        <p class="sfnote">A bigger magnitude means fainter. Example: an asteroid at magnitude 10.4 needs a small telescope; under a town sky or a bright Moon, count it one step down the list (a large telescope).</p>
+      </div>
     </section>
 
-    <section class="step" aria-labelledby="s6">
-      <h2 id="s6">Good to know</h2>
-      <ol class="plain">
-        <li>Most asteroids are far too faint for a phone camera, so you will see the marker rather than the asteroid. A few bright passes, like Apophis in April 2029, can be seen with the naked eye.</li>
-        <li>Go somewhere dark, give your eyes 20 minutes, and use <b>Red light</b> (top of the list) to keep them used to the dark.</li>
-        <li>Keep the phone away from metal and magnets, which upset the compass; calibrate again if the markers drift.</li>
-        <li>Look where you walk, stay away from roads, and never use it while driving.</li>
-      </ol>
+    <section class="section" aria-labelledby="s6">
+      <div class="section-head"><div><div class="kicker">Safety and tips</div><h2 id="s6">Good to know</h2></div></div>
+      <div class="sfcard">
+        <ul class="list">
+          <li><b>Never look at the Sun</b>, least of all with binoculars or a telescope. Sky Finder marks it in red.</li>
+          <li>Look where you walk, stay away from roads and edges, and never use it while driving.</li>
+          <li>Most asteroids are far too faint for a phone camera, so you see the marker rather than the asteroid. A few bright passes, like Apophis in April 2029, can be seen with the naked eye.</li>
+          <li>Go somewhere dark, give your eyes 20 minutes, and use <b>Red light</b> (top right) to keep them used to the dark.</li>
+          <li>Keep the phone away from metal and magnets, which upset the compass; calibrate again if the markers drift.</li>
+        </ul>
+        <p class="sfnote">Using Sky Finder means accepting its <a href="../terms/#sky-finder">terms</a>. Privacy, terms, credits and the licence are all on the <a href="../legal/">Legal page</a>.</p>
+      </div>
     </section>
 
-    <p class="srcline">Linked from the Asteroid Tracker's <a href="../asteroid-tracker/tracker.html#visible">"Visible from here"</a> tab and the <a href="../image-explorer/">Image Explorer</a>. Positions: NASA/JPL; space stations: CelesTrak; stars: Hipparcos (d3-celestial). Data courtesy of NASA.</p>
-    <footer class="footer sffoot">
+    <p class="srcline">Asteroid positions and the planets' orbits: NASA/JPL. Space stations' orbits: CelesTrak. Stars: the Hipparcos catalogue (d3-celestial). Data courtesy of NASA. All sources: <a href="../credits/">Credits</a>.</p>
+    <footer class="footer">
       <div class="ftop"><p class="copy">© 2026 <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a></p></div>
       <p class="fnote">Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA.</p>
     </footer>
   </main>
   <script>
     // NASA and ESA Data Projects · iPhone / Android steps · © 2026 Malcolm Syme · mcsyme11@gmail.com
-    const tabs = [...document.querySelectorAll('.tabs2 [role=tab]')];
-    const pick = (t) => tabs.forEach((x) => { const on = x === t; x.setAttribute('aria-selected', on); document.getElementById(x.getAttribute('aria-controls')).hidden = !on; });
-    tabs.forEach((t) => t.addEventListener('click', () => pick(t)));
+    const tabs = [...document.querySelectorAll('.sfhow .seg [role=tab]')];
+    const pick = (t, focus) => tabs.forEach((x) => {
+      const on = x === t;
+      x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+      if (on && focus) x.focus();
+    });
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => pick(t));
+      t.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { pick(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length], true); e.preventDefault(); }
+      });
+    });
     if (/Android/i.test(navigator.userAgent)) pick(tabs[1]);
   </script>
 </body>

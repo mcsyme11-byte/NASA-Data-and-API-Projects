@@ -6,7 +6,7 @@
 // Only this site's own files are saved, in this browser's cache. Nothing about the visitor is stored or sent.
 // Raise VERSION when the list of app files changes.
 
-const VERSION = 'sky-finder-2026111306';
+const VERSION = 'sky-finder-2026111307';
 const APP = [
   './', './index.html', './how-to.html', './sky-finder.css', './app.js', './view.js', './orient.js', './targets.js',
   './manifest.webmanifest', './icons/icon.svg', './icons/icon-192.png', './data/stars.json',
