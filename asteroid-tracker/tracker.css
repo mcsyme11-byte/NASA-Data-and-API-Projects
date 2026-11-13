@@ -14,10 +14,8 @@
 .chart .grid line { stroke: var(--line); }
 .chart .hit { cursor: pointer; }
 .chart .dim { opacity: .25; }
-.chartcard { margin: 0; }
 .chartcard > .pb { padding-top: var(--sp3); }
 .tip b { font-weight: 400; color: var(--brass-bright); }
-.tip { position: fixed; }
 
 /* ============================================================== the asteroid tables */
 .tablecard { overflow: hidden; }

@@ -1,8 +1,9 @@
 # NASA and ESA Data Projects · checks · © 2026 Malcolm Syme · mcsyme11@gmail.com
 #
 # After every push to main (and on pull requests), checks the repository against CLAUDE.md's rules with
-# dev/check_wording.py: neutral wording, no personal paths or user names, and no NASA API key (the repository is
-# public). If it finds anything, the check fails and GitHub emails the developer. It never changes anything itself.
+# dev/check_wording.py (neutral wording, no personal paths or user names, no NASA API key: the repository is public)
+# and dev/check_styles.py (every page on the shared components of docs/DESIGN.md, no page styles of its own, one
+# version tag). If either finds anything, the check fails and GitHub emails the developer. It never changes anything.
 
 name: Checks
 
@@ -23,3 +24,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Wording, personal details and keys
         run: python3 dev/check_wording.py
+      - name: Shared components and page styles
+        run: python3 dev/check_styles.py

@@ -7,7 +7,6 @@
  */
 
 /* ---------- charts ---------- */
-.chartcard { margin: 0; }
 .chartcard > .pb { padding-top: var(--sp3); }
 .chart { display: block; width: 100%; height: auto; }
 .chart text { font-family: var(--font); font-size: 11px; fill: var(--muted); }
@@ -15,7 +14,6 @@
 .chart .grid line { stroke: var(--line); }
 .chart .lbl { font-size: 11.5px; }
 .chart.loading { opacity: .5; }
-.tip { position: fixed; }
 .tip b { font-weight: 400; color: var(--brass-bright); }
 @media (max-width: 600px) { .chart text { font-size: 12.5px; } .chart .axt { font-size: 10.5px; } .chart .lbl { font-size: 12.5px; } }
 
@@ -26,10 +24,10 @@
 .solnav { display: inline-flex; gap: var(--sp2); flex-wrap: wrap; }
 .tools .note { margin: 0; }
 /* a chart's key: short lines, boxes or dashes */
-.legend { margin: 0 0 var(--sp3); }
-.legend i { width: 18px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 7px; }
-.legend i.box { height: 10px; width: 14px; }
-.legend i.dash { background: none !important; border-top: 2px dashed; height: 0; }
+.chartcard .legend { margin: 0 0 var(--sp3); }
+.chartcard .legend i { width: 18px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 7px; }
+.chartcard .legend i.box { height: 10px; width: 14px; }
+.chartcard .legend i.dash { background: none !important; border-top: 2px dashed; height: 0; }
 
 /* the bar of section links, held under the top bar while the page scrolls */
 .secnav { position: sticky; top: 60px; z-index: 9; margin: 0 calc(-1 * var(--gutter)) var(--sp2); padding: 0 var(--gutter);
@@ -50,7 +48,6 @@
 .panel ol.howsteps li { margin: 6px 0; }
 .panel ol.howsteps b { color: var(--ink); font-weight: 400; }
 @media (max-width: 560px) { .tools label { width: 100%; justify-content: space-between; } .tools label input { flex: 1; max-width: 62%; } }
-.legend i.s1 { background: var(--s1); } .legend i.s2 { background: var(--s2); } .legend i.s4 { background: var(--s4); }
 
 /* ---------- How the data is made (method/) ---------- */
 .section-head.first { margin-top: var(--sp3); }

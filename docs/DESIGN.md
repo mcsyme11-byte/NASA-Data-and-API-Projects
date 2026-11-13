@@ -1,138 +1,172 @@
 # Design guide — "old money", under a night sky
 
 NASA and ESA Data Projects share the look of the developer's other projects (the Flight Deck Suite and Hot Mic): navy,
-brass and cream, serif type and thin brass rules; calm and precise, like a well-kept paper logbook. The one addition
-is a quiet night sky: a faint field of brass and cream stars behind the home page.
+brass and cream, serif type; calm and precise, like a well-kept paper logbook. The one addition is a quiet night sky:
+a faint field of brass and cream stars behind the home page and the Contact page.
 
-The values live in `shared/theme.css`. When in doubt, copy an existing component rather than inventing a new one.
+**Version 2 (decided Nov 13, 2026).** The site was rebuilt on one shared set of components after pieces added page by
+page had left several versions of the same thing (four kinds of tiles, three tables, three "How to read this" boxes,
+page styles inside most pages). Since then:
+
+- every component exists **once**, in `shared/theme.css`, and is shown on the component page, `design/index.html`
+  (open it at `/design/` on the site);
+- pages use only those components; a project style sheet holds only **the inside of its tools** (see "Page styles");
+- a new component is added to `shared/theme.css` and the component page first, after a mock-up the developer approves,
+  **saying which existing piece it replaces or why none fits**;
+- `python3 dev/check_styles.py` checks this, and GitHub runs it after every push.
 
 ## 1. Principles
 
-1. **Calm and readable at a glance.** Big numbers, small labels, short notes. No paragraph where a number will do.
-2. **Numbers people can picture.** "3.2 Moon distances", "as wide as two football fields", next to the exact value.
-3. **Brass is for meaning, not decoration.** Labels, rules, the main button, selected states, the first chart series.
-4. **Plain English.** Explain every science word the first time it appears (sol, Ls, LD), behind an ⓘ where possible.
-5. **Honest data.** Estimates look like estimates (ranges, "about"), gaps in the data stay visible, and every chart
+1. **Calm and readable at a glance.** Real headings, big numbers, small labels, short notes.
+2. **A box means something.** A card (`.card`) is a thing you open; a panel (`.panel`) holds one chart, map or table;
+   a control box (`.ctl`) holds a group of settings beside a tool. Writing, figures and lists sit on the page itself.
+3. **Numbers people can picture.** "3.2 Moon distances", "as wide as two football fields", next to the exact value.
+4. **Brass is for meaning, not decoration.** Kickers, labels, the main button, the chosen state, the first chart series.
+5. **Plain English.** Every science word explained the first time it appears (sol, Ls, LD).
+6. **Honest data.** Estimates look like estimates (ranges, "about"), gaps in the data stay visible, and every chart
    says where its numbers came from.
+7. **Nothing added without something considered for removal.** A new section or control says what it replaces; if it
+   repeats what is already on the page (a list of what the page can do beside cards that say the same), it is left out.
 
 ## 2. Colour
 
 | Role | Token | Value |
 |---|---|---|
 | Background (navy) | `--bg` | `#141B26` |
-| Bars | `--bg2` | `#0F1520` |
-| Card | `--card` | `#1A2333` |
-| Charts, maps, image frames | `--deep` | `#0C1119` |
+| Bars, fields | `--bg2` | `#0F1520` |
+| Card / card on hover | `--card` / `--card2` | `#1A2333` / `#1E2839` |
+| Panels: charts, maps, tables, image frames | `--deep` | `#0C1119` |
 | Hairline / stronger border | `--line` / `--line2` | `#2A3446` / `#3A465C` |
-| **Brass** (labels, accents, main button) | `--brass` | `#C0A062`; bright `#E2C88E`; dim `#7E6A45` |
+| **Brass** (kickers, accents, main button) | `--brass` | `#C0A062`; bright `#E2C88E`; dim `#7E6A45` |
 | Cream text / secondary / muted | `--ink` / `--ink2` / `--muted` | `#EDE6D3` / `#B4AFA2` / `#98A0AB` |
-| Faint (disabled) | `--faint` | `#5E6775` |
+| Faint (disabled, placeholders) | `--faint` | `#5E6775` |
 
-**Status:** good `#8FB996`, problem `#C9675A`, caution `#D1A956`, information `#8AA9C9`.
+**Status:** good `#8FB996`, problem `#C9675A`, caution `#D1A956`, information and ESA `#8AA9C9`.
 
-**Page background:** navy with a faint brass glow at the top,
-`radial-gradient(800px 420px at 50% -160px, rgba(192,160,98,.10), transparent 70%), #141B26`.
+**Page background:** navy with a faint brass glow at the top.
 
 ## 3. Type
 
-- **Everything is serif:** `Georgia, "Palatino", "Palatino Linotype", "Book Antiqua", serif`.
+- **Everything is serif:** `Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif`.
 - **Numbers:** `lining-nums tabular-nums`, so digits line up and don't jump as they change.
-- **Code-like text** (IDs, coordinates, URLs): monospace, 12.5px, muted.
+- **Three heading sizes and five text sizes**, nothing in between:
 
-| Use | Style |
-|---|---|
-| Page title | 34px (44px on the home page), weight 400 |
-| Eyebrow / section label | 11px, uppercase, brass, letter-spacing .32–.42em |
-| Tile label | 10.5px, uppercase, brass, letter-spacing .26em |
-| Big number | 26px |
-| Body | 16px/1.5 |
-| Note | 12.5–13px, italic, muted |
-| Buttons | 14px, uppercase, letter-spacing .2em |
+| Use | Size (phone) | Class |
+|---|---|---|
+| Page title | 46 px (34); tool pages 38 px (30) | `h1`, `.pagehead.compact` |
+| Section heading | 30 px (25) | `h2` |
+| Card, panel and step title | 21 px (19); in a panel 18 px | `h3` |
+| Lede, under the page title | 20 px (18) | `.lede` |
+| Body | 17 px | |
+| Small | 14.5 px | `.small` |
+| Caption, note, aside (italic, muted) | 13.5 px | `.caption`, `.note`, `.aside` |
+| Kicker, label, tab, button (small capitals) | 11–12 px | `.kicker`, `.label`, `.lbl`, `.tabs`, `.btn` |
+
+**Small capitals only for kickers, labels, tabs and buttons, never as a section's heading.** Every section has a real
+`h2`. The one exception is the small title of a control box (`.ctl > h2`), which names a group of settings.
 
 ## 4. Spacing and shape
 
-- Page gutter 16px; content at most 1440px wide.
-- Card padding 22px; gaps of 22px between cards; tiles joined by 1px hairlines.
-- Corners: 3px on buttons, chips and fields; 6px on cards, tiles and frames.
-- Cards have a dim-brass top rule. No drop shadows.
+- **One spacing scale:** 4, 8, 12, 16, 24, 32, 48, 72 px (`--sp1` to `--sp8`; on phones 48 and 72 become 36 and 52).
+  Every margin and padding is one of these.
+- Content at most 1200 px wide, with a 32 px gutter (16 px on phones); reading text at most 68 characters a line.
+- Sections are 72 px apart (52 on phones); a section's heading sits 24 px above its content.
+- Corners: 4 px on buttons, fields and segmented controls; 6 px on cards, panels and boxes; round on chips and badges.
+- No drop shadows except on things that float (tooltips, the picture viewer, suggestion lists).
 
 ## 5. Components
 
-The classes in `shared/theme.css`:
+All in `shared/theme.css`, all shown on `design/index.html`. Use these; do not restyle them in a page.
 
-| Component | Class | Notes |
+| Component | Class | Use |
 |---|---|---|
-| Top bar | `.topbar`, `.brand`, `.nav` | Sticky, 64px; the open page brass and underlined |
-| Page head | `.phead`, `.eyebrow`, `h1`, `.lede` | A dim-brass rule under it |
-| Section header | `.shead` with `h2` and `.aside` | Brass caps left, italic muted aside right |
-| Card | `.card` | |
-| Tiles (KPIs) | `.tiles` › `.tile` › `.label`, `.value`, `.note` | Label → big number → italic note |
-| Buttons | `.btn`, `.btn.ghost` | Main = brass gradient with navy text; ghost = dim-brass outline |
-| Filter chips | `.chip[aria-pressed]` | 36px; the chosen one brass |
-| Fields | `input`, `select` | 44px, deep navy, brass border on focus |
-| Status pill | `.pill.good/.bad/.warn/.info` | Caps, coloured outline |
-| Tag | `.tag` | Italic, outlined (for example "Potentially hazardous") |
-| Tabs | `.tabs` | Caps, brass underline on the open tab. The Asteroid Tracker's tabs wrap to a second line at every width (decided Nov 12, 2026); other tab rows scroll sideways on narrow screens |
-| How to read this | `details.howto` | Closed by default; brass caps summary with a › that turns |
-| Notice | `.notice`, `.notice.warn` | A bordered box for messages |
-| Chart / map / image frame | `.frame` | Deep navy with a hairline |
-| Footer | `.footer`, `.ftop`, `.copy`, `.fnote` | Decided Nov 12, 2026: one row with the site links (added by `shared/footer.js`) and "© 2026 Malcolm Syme · email", then one short line: "Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA." Nothing else goes in the footer |
-| Site links | `.sitelinks` | About · Legal · Contact · Source code ↗; every page loads `shared/footer.js`; Legal is marked on the Legal, Privacy, Terms and Credits pages |
-| Data credits | `.srcline` | A page's detailed credits and acknowledgements (sources, ©ESA lines, the GIBS acknowledgement), in small grey italic lines just above the footer, next to the content they cover |
-| Legal page | `.legalgrid`, `.legalcard` | `legal/`: one card each for Privacy, Terms of use, Credits and the MIT licence, with a one-line summary |
-| Reading page | `.prose`, `.summary`, `.updated`, `table.credits` | About, Privacy, Terms and Credits (Privacy, Terms and Credits go back to Legal when opened directly): the full content width (decided Nov 9, 2026), a brass-ruled summary, the date of the last update |
-| Back button | `.backlink#back` | "‹ Back to …" above the heading, named for the previous page and using the browser's Back; "‹ Home" when the page was opened directly (wired by `shared/footer.js`). Every page except the site's home page has one (checked Nov 12, 2026) |
+| Top bar | `.topbar`, `.brand` › `.emblem` + `.bname`, `.nav` | Sticky, 60 px; on phones only the emblem shows beside the four links |
+| Back | `.backlink#back` | Above the page head on every page except the site's home page; the arrow is drawn by the style sheet; named for the previous page by `shared/footer.js` |
+| Page head | `header.pagehead` › `.kicker`, `h1`, `.lede`, `.meta` | `.compact` for tool pages, `.center` for the home and Contact pages, `.medal` for the emblem above a centred head |
+| Section | `section.section` › `.section-head` › `div` (`.kicker` + `h2`), then `.aside` or a button | `.section-head.sub` for a heading inside a tool view |
+| View heading | `.viewhead` › `h2`, `.lede` | The top of one tab of a tool |
+| Stats | `.stats` › `.stat` › `.label`, `.value` (unit in `small`), `.note` | A strip of up to five figures, not boxes; `.tiles`/`.tile` are the same component under their older names |
+| Cards | `.cards` (`.three`, `.two`) › `a.card` › `.kicker`, `h3`, `p`, `.foot` (badges + `.go`) | Something you open; the whole card is the link. `.card.feature` adds a picture on top (`.media`); `.card.muted` is a dashed card for something planned |
+| Panel | `.panel` › `.ph` (`h3` + `.aside`), `.pb` (`.flush` for tables), `.pf`, `details.howto` | One chart, map or table; `.panels` lays them out two across (`.wide` spans both) |
+| How to read this | `details.howto` › `summary` + paragraphs | At the foot of a panel, or as a box of its own; closed by default |
+| Control box | `.ctl` › `h2` (small title), controls, `.caption` | A group of settings beside a tool (the Earth map's layers, the globe's selection) |
+| Buttons | `.btn`, `.btn.outline`, `.btn.quiet`; `.small` | Primary (brass), outline, quiet; `.ghost` is the older name of `.outline` |
+| Text button | `.linkbtn` | An underlined action inside text ("Try again") |
+| Segmented control | `.seg` › `button` (or `.chip`), optional `.lbl` inside | One choice of a few (a time step, a view, a distance); scrolls sideways with a fade if it does not fit |
+| Chips | `.chips` › `.chip[aria-pressed]` | Filters that turn on and off independently |
+| Tabs | `nav.tabs` | The views of one tool; wrap to a second line when they don't fit |
+| Period bar | `.periodbar` › `.seg`, `.period` (`.lbl` + `strong` or a field), `.grow`, a button | Step through weeks, years or days |
+| Filters | `.filters` › `.seg`, `label` + `select`/`input`, `.count` | The filter row above a chart or list |
+| Fields | `input`, `select`, `.field` | 44 px, dark, brass ring on focus |
+| Search box | `label.bigsearch` › icon `svg`, `input[type=search]`, `.qclear` | Clear appears once there is something to clear; `.large` for a page's main search |
+| Badges | `.badge`, `.badge.nasa`, `.badge.esa`, `.badge.live`, `.badge.warn` | The agency of a source, a status; `.pill`, `.tag`, `.agency` are older names of the same component |
+| Notices | `.notice`, `.notice.warn`, `.notice.error` | A message with an icon, and an action button at the end |
+| States | `.state`, `.empty`, `.loading` | No results, loading, could not be loaded |
+| Tables | `table.table` (`.stack` turns rows into cards on phones), `table.credits` | Brass small-capital headings, hairline rows; `.r` right-aligns numbers |
+| Writing | `.prose`, `.summary`, `.updated`, `.list`, `.facts` › `.f`, `.terms` (`dt`/`dd`), `.steps` | Reading pages, short facts beside text, a glossary, numbered steps |
+| Sources | `.sources` › `.s` › `.n` (name + badge), `.d`, `.u` | Where a project's data comes from |
+| Two columns | `.split` | Reading on the left, facts on the right |
+| Chart parts | `svg.chart`, `.legend`, `.tip` | A chart's key and its tooltip |
+| Callout, stage | `.pf.callout` › `.t` + a button; `a.stage` › `canvas` | A line of text with one action, at the foot of a panel; a canvas that fills a panel and opens something |
+| Data credits | `p.srcline` | A page's detailed credits, just above the footer |
+| Footer | `.footer` › `.ftop` › `.copy`, `.fnote` (links added by `shared/footer.js`) | Decided Nov 12, 2026: one row of links and the copyright, then one short credit line; nothing else |
 
-## 6. Charts
+## 6. Page styles
 
-- **Background** `--deep`, gridlines `--line`, axis text 11px muted serif, axis titles in brass caps.
+Decided Nov 13, 2026: **a page adds no styles of its own** (no `<style>` block, no `style="…"` attribute). A project's
+style sheet (`asteroid-tracker/tracker.css`, `image-explorer/explorer.css`, `mars-data/mars.css`,
+`spacecraft/spacecraft.css`, `sky-finder/sky-finder.css`) holds only the inside of its tools: the chart drawing, the
+maps and their buttons, the orbit diagram, the globe, the picture viewer, the asteroid tables. It may adjust a shared
+component inside its own parts (`.mapbar .seg`, `.chip.play`), never restyle one on its own (`.btn { … }`). Values a
+script works out from data (a key's colour, a tooltip's position) are set by the script.
+
+Sky Finder is a home-screen app with its own app bar and full-screen view; its style sheet keeps those, on the same
+colours, type and buttons.
+
+## 7. Charts
+
+- **Background** `--deep` (the panel), gridlines `--line`, axis text 11 px muted serif, axis titles in brass capitals.
 - **Series colours, in order:** brass `#C0A062`, blue `#8AA9C9`, green `#8FB996`, copper `#C9784A`, lilac `#B79AC8`,
   amber `#D1A956` (`--s1` to `--s6`). Never more than six; group the rest as "Other".
 - **Highlight** with brass-bright `#E2C88E`; everything else dims.
 - **Hazard / warning** uses `--red` only for things that are actually flagged (for example NASA's "potentially
   hazardous" flag), never for decoration.
-- **Every chart** has a title, units on its axes, a one-line source note under it (italic, muted), and a tooltip
-  with exact values. Colour is never the only way to tell series apart (labels or shapes too).
+- **Every chart** sits in a panel with a title, units on its axes, a source line under it, a tooltip with exact values
+  and a "How to read this". Colour is never the only way to tell series apart (labels or shapes too).
 - **Estimates** (asteroid diameters) are drawn as a range (a bar from min to max), not one point.
+- **Agencies:** every source line names the agency the numbers come from (NASA, NASA/JPL, ESA). No agency logos or
+  agency colours; NASA and ESA data share the same series colours.
+- **Labels drawn over maps and diagrams** get a dark outline (canvas `strokeText`, SVG `paint-order: stroke`).
 
-- **Agencies:** every source note names the agency the numbers come from (NASA, NASA/JPL, ESA). There are no agency
-  logos or agency colours; NASA and ESA data share the same series colours.
+## 8. Screen sizes
 
-## 7. Screen sizes
+Everything must look right at 320, 375, 390 (phones), 768, 1024 (tablets), 1280 and 1440 (computers).
 
-Everything must look right at 375, 390, 430 (phones; 320 must not break), 768, 1024 (tablets), 1280 and 1440+
-(computers). Below 760px the nav collapses and buttons go full width.
-
-## 8. Accessibility
+## 9. Accessibility
 
 - Text contrast at least 4.5 : 1 (cream and brass on navy both pass).
-- Every control reachable and usable from the keyboard, with a visible focus ring.
-- Images have descriptions (NASA's own captions where there are).
+- Every control reachable and usable from the keyboard, with a visible brass focus ring.
+- Images have descriptions (NASA's own captions where there are); decorative pictures have empty `alt`.
+- One `h1` per page; headings in order.
 - Motion is never needed to understand anything, and stops with "reduce motion".
 
-## 8a. Feel (decided Nov 12, 2026)
+## 10. Feel (decided Nov 12, 2026; version 2 since Nov 13)
 
-- **Feedback:** everything pressable (buttons, chips, tabs, links, cards that open something) changes colour or border
-  over 0.15 s on hover, and buttons and chips move down 1 px while pressed. The rules are in `shared/theme.css`;
-  "reduce motion" turns them off.
+- **Feedback:** everything pressable changes colour or border over 0.15 s on hover; buttons, chips and segments move
+  down 1 px while pressed; cards and pictures lift 2 px on hover. "Reduce motion" turns this off.
 - **Tap targets:** at least 40 px tall on phones (44 px for the main buttons and fields).
-- **Rows that don't fit:** tabs and chip rows scroll sideways on phones (except the Asteroid Tracker's tabs, which wrap), with a soft fade on the side where there is
-  more, and the selected tab scrolled into view (`shared/footer.js`: `.tabs`, `.popular`, `.gbar .seg`,
-  `[data-hscroll]`). Rows never run off the screen with nothing to show they continue.
-- **Labels on maps and diagrams:** a dark outline (canvas `strokeText`, SVG `paint-order: stroke`) so they stay
-  readable over orbits, dots and imagery; fewer names on a phone-sized map.
-- **Fields:** a brass glow on focus; date pickers, dropdowns and scrollbars drawn dark (`color-scheme: dark`); a
-  search box's Clear button appears only when there is something to clear; placeholders short enough for a 375 px
-  phone.
-- **The header** is solid, with a soft shadow, so nothing shows through it while scrolling.
-- **Labels on a row of controls** use the small brass capitals (`.barlbl`), never italics; no two controls on one page
-  share a label.
+- **Rows that don't fit:** segmented controls and chip rows scroll sideways on phones with a soft fade on the side where
+  there is more, and the chosen button scrolled into view (`shared/footer.js`: `.seg`, `.popular`, `[data-hscroll]`).
+  Tabs wrap instead.
+- **Fields:** a brass ring on focus; date pickers, dropdowns and scrollbars drawn dark (`color-scheme: dark`); short
+  placeholders that fit a 375 px phone.
+- **The top bar** is solid, so nothing shows through it while scrolling.
 
-## 9. Quality checklist (every change)
+## 11. Quality checklist (every change)
 
-1. Look at the page at all the widths above.
-2. Check the empty, loading and error states (no results, NASA out of reach, the demo key used up).
+1. `python3 dev/check_styles.py` and `python3 dev/check_wording.py` pass.
+2. Look at the page at all the widths above, with real data, with the data missing and with NASA out of reach.
 3. No console errors.
-4. Rows of tiles have equal heights; spacing is even.
-5. At 375 px: nothing runs off the screen, tap targets are 40 px or taller, placeholders aren't cut off.
-6. Hover, press and focus look right on every control.
+4. At 320 and 375 px: nothing runs off the screen, nothing is cut off inside its box, tap targets are 40 px or taller.
+5. Hover, press and focus look right on every control.
+6. The page uses only the components above; anything new went through the component page first.

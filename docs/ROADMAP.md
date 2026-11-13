@@ -5,6 +5,8 @@ Everything finished moves to [CHANGELOG.md](../CHANGELOG.md).
 
 ## 0. Repository (set up Nov 8, 2026)
 
+- [ ] Developer testing: the site-wide redesign of Nov 13, 2026 (version 2 of the look) on phone, tablet and
+  computer, page by page, and the component page (`design/`).
 
 
 ## 1. Asteroid Tracker (version 1 live Nov 8, 2026)

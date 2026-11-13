@@ -70,7 +70,7 @@
 .pop .btn { width: 100%; min-height: 36px; margin-top: 10px; font-size: 12px; letter-spacing: .16em; }
 .pop .x { position: absolute; top: 6px; right: 8px; background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer; }
 
-.legend { margin-top: var(--sp3); display: grid; gap: 10px; }
+.mapcol .legend { margin-top: var(--sp3); display: grid; gap: 10px; }
 .legend .row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; }
 .legend .row > span:first-child { font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: var(--muted); }
 .legend img { width: 100%; max-width: 420px; height: auto; display: block; background: var(--ink); border-radius: var(--r-btn); padding: 4px 8px; }

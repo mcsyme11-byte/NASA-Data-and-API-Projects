@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!-- NASA and ESA Data Projects · Components · © 2026 Malcolm Syme · mcsyme11@gmail.com -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Components · NASA and ESA Data Projects</title>
+  <meta name="description" content="Every shared component of the site, drawn from the real style sheet, for building and checking pages.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#141B26">
+  <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111304">
+  <script type="module" src="../shared/footer.js?v=2026111304"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../" aria-label="NASA and ESA Data Projects, home">
+        <svg class="emblem" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><use href="../shared/emblem.svg#e"/></svg><span class="bname">NASA and ESA Data Projects</span></a>
+      <nav class="nav" aria-label="Projects">
+        <a href="../">Home</a>
+        <a href="../asteroid-tracker/">Asteroids</a>
+        <a href="../mars-data/">Mars</a>
+        <a href="../image-explorer/">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <a class="backlink" id="back" href="../">Home</a>
+    <header class="pagehead">
+      <div class="kicker">For building pages</div>
+      <h1>Components</h1>
+      <p class="lede">Every shared component of the site, drawn from the real style sheet (<code>shared/theme.css</code>). Pages use only these; the rules are in <code>docs/DESIGN.md</code>.</p>
+      <p class="meta"><span class="badge">Version 2</span><span class="badge">Nov 13, 2026</span></p>
+    </header>
+
+    <section class="section" aria-labelledby="h-type">
+      <div class="section-head"><div><div class="kicker">Section 1</div><h2 id="h-type">Type</h2></div><p class="aside">Three heading sizes, five text sizes.</p></div>
+      <div class="split">
+        <div class="prose">
+          <h3>Card, panel and step title (h3)</h3>
+          <p class="lede">Lede, under a page title: one or two sentences saying what the page is for.</p>
+          <p>Body text. Apophis will pass 0.10 Moon distances from Earth on Apr 13, 2029, about <strong>32,000 km</strong> above the surface, closer than the satellites that carry television signals.</p>
+          <p class="small">Small text, for secondary lines in cards and lists.</p>
+          <p class="caption">Caption: an italic, muted note under a chart or picture.</p>
+          <p><span class="kicker">Kicker</span> · <span class="lbl">Label</span></p>
+        </div>
+        <div class="facts">
+          <div class="f"><h4>Numbers line up</h4><p>Digits are all the same width, so 1,111.1 and 8,888.8 take the same space.</p></div>
+          <div class="f"><h4>Small capitals</h4><p>Only for kickers, labels, tabs and buttons, never as a section heading.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-head">
+      <div class="section-head"><div><div class="kicker">Section 2</div><h2 id="h-head">Page heads and sections</h2></div></div>
+      <div class="panels">
+        <div class="panel">
+          <div class="ph"><h3>Compact page head</h3><span class="aside">.pagehead.compact</span></div>
+          <div class="pb">
+            <header class="pagehead compact">
+              <div class="kicker">Asteroid Tracker</div>
+              <h2 class="sr">Example</h2>
+              <p class="lede">Tool pages use the compact head so the tool starts high on the screen.</p>
+            </header>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><h3>Section head with an action</h3><span class="aside">.section-head</span></div>
+          <div class="pb">
+            <div class="section-head sub"><h2>Closest this week</h2><a class="btn outline small" href="#h-head">See all</a></div>
+            <div class="viewhead"><h2>View heading</h2><p class="lede">The top of one tab of a tool.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-stats">
+      <div class="section-head"><div><div class="kicker">Section 3</div><h2 id="h-stats">Stats</h2></div><p class="aside">A strip of figures, not boxes. Two columns on phones.</p></div>
+      <div class="stats">
+        <div class="stat"><div class="label">Close approaches</div><div class="value">27</div><div class="note">This week</div></div>
+        <div class="stat"><div class="label">Closest</div><div class="value">0.8 <small>LD</small></div><div class="note">Moon distances</div></div>
+        <div class="stat"><div class="label">Largest</div><div class="value">410 <small>m</small></div><div class="note">Estimated width</div></div>
+        <div class="stat"><div class="label">Flagged</div><div class="value warn">2</div><div class="note">Potentially hazardous</div></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-cards">
+      <div class="section-head"><div><div class="kicker">Section 4</div><h2 id="h-cards">Cards</h2></div><p class="aside">Something you open. The whole card is the link.</p></div>
+      <div class="cards three">
+        <a class="card" href="#h-cards">
+          <div class="kicker">Tool</div>
+          <h3>A plain card</h3>
+          <p>A short description of what opens, in one or two sentences.</p>
+          <div class="foot"><span class="badges"><span class="badge nasa">NASA</span><span class="badge esa">ESA</span></span><span class="go">Open</span></div>
+        </a>
+        <a class="card feature" href="#h-cards">
+          <div class="media"><img src="../shared/art/mars.svg" alt=""></div>
+          <div class="body">
+            <div class="kicker">Project</div>
+            <h3>A feature card</h3>
+            <p>A card with a picture on top, for the main ways into a project.</p>
+            <div class="foot"><span class="badge live">Live</span><span class="go">Open</span></div>
+          </div>
+        </a>
+        <div class="card muted">
+          <div class="kicker">Planned</div>
+          <h3>A muted card</h3>
+          <p>A dashed card for something planned but not built yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-panels">
+      <div class="section-head"><div><div class="kicker">Section 5</div><h2 id="h-panels">Panels</h2></div><p class="aside">One chart, map or table each.</p></div>
+      <div class="panels">
+        <figure class="panel">
+          <div class="ph"><h3>A chart panel</h3><span class="aside">Moon distances</span></div>
+          <div class="pb">
+            <svg class="chart" viewBox="0 0 520 170" role="img" aria-label="Example bar chart with four bars">
+              <g stroke="#2A3446"><line x1="34" y1="140" x2="520" y2="140"/><line x1="34" y1="85" x2="520" y2="85"/><line x1="34" y1="30" x2="520" y2="30"/></g>
+              <g fill="#98A0AB" font-size="11"><text x="26" y="144" text-anchor="end">0</text><text x="26" y="89" text-anchor="end">5</text><text x="26" y="34" text-anchor="end">10</text></g>
+              <rect x="70" y="52" width="70" height="88" fill="#C0A062"/>
+              <rect x="180" y="96" width="70" height="44" fill="#8AA9C9"/>
+              <rect x="290" y="74" width="70" height="66" fill="#8FB996"/>
+              <rect x="400" y="113" width="70" height="27" fill="#C9784A"/>
+            </svg>
+            <div class="legend"><span><i class="s1"></i>Series 1</span><span><i class="s2"></i>Series 2</span><span><i class="s3"></i>Series 3</span><span><i class="s4"></i>Series 4</span></div>
+          </div>
+          <figcaption class="pf caption">Source: made-up numbers, for this page only.</figcaption>
+          <details class="howto"><summary>How to read this</summary><p>Each bar is one group; taller bars are larger. The key below the chart names the colours.</p></details>
+        </figure>
+        <div class="panel">
+          <div class="ph"><h3>A table panel</h3><span class="aside">.table.stack</span></div>
+          <div class="pb flush">
+              <table class="table stack">
+                <thead><tr><th>Name</th><th class="r">Width</th><th class="r">Distance</th><th>Flag</th></tr></thead>
+                <tbody>
+                  <tr><td data-l="Name">Example A</td><td data-l="Width" class="r">410 m</td><td data-l="Distance" class="r">3.2 LD</td><td data-l="Flag"><span class="tag haz">Hazardous</span></td></tr>
+                  <tr><td data-l="Name">Example B</td><td data-l="Width" class="r">35 m</td><td data-l="Distance" class="r">0.8 LD</td><td data-l="Flag">—</td></tr>
+                  <tr><td data-l="Name">Example C</td><td data-l="Width" class="r">120 m</td><td data-l="Distance" class="r">12.6 LD</td><td data-l="Flag">—</td></tr>
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+      <details class="howto"><summary>How to read this, as a box of its own</summary><p>Used where a page explains a whole view rather than one panel. Closed by default.</p></details>
+    </section>
+
+    <section class="section" aria-labelledby="h-ctl">
+      <div class="section-head"><div><div class="kicker">Section 6</div><h2 id="h-ctl">Controls</h2></div></div>
+      <div class="panels">
+        <div class="panel">
+          <div class="ph"><h3>Buttons</h3></div>
+          <div class="pb">
+            <div class="actions">
+              <button class="btn" type="button">Primary</button>
+              <button class="btn outline" type="button">Outline</button>
+              <button class="btn quiet" type="button">Quiet</button>
+              <button class="btn small" type="button">Small</button>
+              <button class="btn" type="button" disabled>Disabled</button>
+            </div>
+            <p class="caption after">An action inside text: <button class="linkbtn" type="button">Try again</button></p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><h3>Choices</h3></div>
+          <div class="pb">
+            <p class="caption">Segmented control: one choice of a few.</p>
+            <div class="actions">
+              <div class="seg" role="group" aria-label="Distance">
+                <button type="button" aria-pressed="true">Moon distances</button><button type="button" aria-pressed="false">km</button><button type="button" aria-pressed="false">miles</button>
+              </div>
+            </div>
+            <p class="caption after">Chips: each one turns on and off.</p>
+            <div class="chips">
+              <button class="chip" type="button" aria-pressed="true">Hazardous</button>
+              <button class="chip" type="button" aria-pressed="false">Larger than 100 m</button>
+              <button class="chip" type="button" aria-pressed="false">ESA risk list</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel wide">
+          <div class="ph"><h3>Tabs, period bar and filters</h3></div>
+          <div class="pb">
+            <nav class="tabs" aria-label="Example views">
+              <a href="#h-ctl" aria-current="page">This week</a><a href="#h-ctl">Sizes</a><a href="#h-ctl">Risk list</a><a href="#h-ctl">Glossary</a>
+            </nav>
+            <div class="periodbar">
+              <div class="seg" role="group" aria-label="Step"><button type="button">Prev</button><button type="button" aria-pressed="true">This week</button><button type="button">Next</button></div>
+              <div class="period"><span class="lbl">Week of</span> <strong>Nov 9 – Nov 15, 2026</strong></div>
+              <span class="grow"></span>
+              <button class="btn outline small" type="button">Share</button>
+            </div>
+            <div class="filters">
+              <div class="seg" role="group" aria-label="Show"><button type="button" aria-pressed="true">All</button><button type="button">Hazardous</button></div>
+              <label>Sort by <select><option>Closest first</option><option>Largest first</option></select></label>
+              <span class="count">27 asteroids</span>
+            </div>
+          </div>
+        </div>
+        <div class="ctl">
+          <h2>Control box</h2>
+          <div class="field"><span>Date</span><input type="date" value="2026-11-13"></div>
+          <div class="field"><span>Layer</span><select><option>True colour</option><option>Night lights</option></select></div>
+          <p class="caption">A group of settings beside a tool.</p>
+        </div>
+        <div class="panel">
+          <div class="ph"><h3>Search box</h3></div>
+          <div class="pb">
+            <label class="bigsearch large">
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span class="sr">Search</span><input type="search" placeholder="Name or number" value="Apophis">
+              <button class="qclear" type="button" aria-label="Clear">×</button>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-msg">
+      <div class="section-head"><div><div class="kicker">Section 7</div><h2 id="h-msg">Badges, notices and states</h2></div></div>
+      <p class="meta badges"><span class="badge">Plain</span><span class="badge nasa">NASA</span><span class="badge esa">ESA</span><span class="badge live">Live</span><span class="badge warn">Flagged</span><span class="tag haz">Hazardous</span><span class="tag warn">Estimate</span></p>
+      <div class="notice"><span class="t">Information: the data was last updated today at 06:00 UTC.</span></div>
+      <div class="notice warn"><span class="t">NASA's demo key has been used up for the hour; showing the saved copy.</span><button class="btn small outline" type="button">Try again</button></div>
+      <div class="notice error"><span class="t">NASA could not be reached.</span><button class="btn small outline" type="button">Try again</button></div>
+      <div class="panels">
+        <div class="panel"><div class="pb"><p class="state">No asteroids match these filters.</p></div></div>
+        <div class="panel"><div class="pb"><p class="loading">Loading the week's close approaches…</p></div></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-write">
+      <div class="section-head"><div><div class="kicker">Section 8</div><h2 id="h-write">Writing</h2></div></div>
+      <div class="split">
+        <div class="prose">
+          <h3>List</h3>
+          <ul class="list"><li><b>Close approach:</b> the moment an object passes nearest to Earth.</li><li><b>LD:</b> lunar distance, about 384,400 km.</li></ul>
+          <h3>Glossary</h3>
+          <dl class="terms">
+            <div><dt>Sol</dt><dd>A day on Mars, 24 hours 39 minutes.</dd></div>
+            <div><dt>Ls</dt><dd>Solar longitude: where Mars is in its year, from 0° to 360°.</dd></div>
+          </dl>
+        </div>
+        <div>
+          <h3>Steps</h3>
+          <ol class="steps"><li><b>Pick a week.</b> Use Prev and Next.</li><li><b>Filter.</b> Choose what to show.</li><li><b>Open one.</b> See its orbit.</li></ol>
+        </div>
+      </div>
+      <div class="section-head sub"><h2>Sources</h2></div>
+      <div class="sources">
+        <div class="s"><div class="n">Close approaches <span class="badge nasa">NASA/JPL</span></div><p class="d">Every pass within 0.2 au of Earth, from the Small-Body Database.</p><p class="u">ssd-api.jpl.nasa.gov/cad.api</p></div>
+        <div class="s"><div class="n">Risk list <span class="badge esa">ESA</span></div><p class="d">Objects with a non-zero chance of impact, from ESA's NEO Coordination Centre.</p><p class="u">neo.ssa.esa.int</p></div>
+      </div>
+      <div class="section-head sub"><h2>Callout</h2></div>
+      <div class="panel">
+        <div class="pf callout"><div class="t"><h4><a href="#h-write">A callout</a></h4><p class="caption">One line of text with one action, at the foot of a panel.</p></div><a class="btn outline" href="#h-write">Open</a></div>
+      </div>
+    </section>
+
+    <p class="srcline">Data credits sit here, just above the footer: one line per source.</p>
+    <footer class="footer">
+      <div class="ftop"><p class="copy">© 2026 <strong>Malcolm Syme</strong> · <a href="mailto:mcsyme11@gmail.com">mcsyme11@gmail.com</a></p></div>
+      <p class="fnote">Data courtesy of NASA and ESA. An independent project, not endorsed by NASA or ESA.</p>
+    </footer>
+  </main>
+</body>
+</html>

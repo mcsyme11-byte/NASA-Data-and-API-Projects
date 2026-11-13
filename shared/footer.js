@@ -61,7 +61,7 @@ const NAMES = [
   [/\/asteroid-tracker\/tracker\.html$/, 'the Asteroid Tracker'], [/\/asteroid-tracker\/(index\.html)?$/, 'the Asteroid Tracker home page'], [/\/image-explorer\/explore\.html$/, 'the Image Explorer'],
   [/\/image-explorer\/(index\.html)?$/, 'the Image Explorer home page'], [/\/mars-data\/charts\//, 'the Mars charts'],
   [/\/mars-data\/method\//, 'How the data is made'], [/\/mars-data\//, 'Mars Data'], [/\/about\//, 'About'], [/\/privacy\//, 'Privacy'], [/\/terms\//, 'Terms'],
-  [/\/credits\//, 'Credits'], [/\/contact\//, 'Contact'], [/\/legal\//, 'Legal'], [/\/sky-finder\/how-to\.html$/, 'How to use Sky Finder'], [/\/sky-finder\//, 'Sky Finder'], [/\/spacecraft\//, 'the spacecraft map'],
+  [/\/credits\//, 'Credits'], [/\/contact\//, 'Contact'], [/\/legal\//, 'Legal'], [/\/sky-finder\/how-to\.html$/, 'How to use Sky Finder'], [/\/sky-finder\//, 'Sky Finder'], [/\/spacecraft\//, 'the spacecraft map'], [/\/design\//, 'Components'],
 ];
 function wireBack() {
   const el = document.getElementById('back');

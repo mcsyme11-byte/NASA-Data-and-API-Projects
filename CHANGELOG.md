@@ -1,5 +1,29 @@
 # Change log
 
+## November 13, 2026 — site-wide redesign (version 2 of the look)
+
+Every page rebuilt on one shared set of components, keeping the navy, brass and cream look. Pieces added page by page
+had left several versions of the same thing (four kinds of tiles, three tables, three "How to read this" boxes, and
+page styles inside most pages).
+
+- **One set of components** in `shared/theme.css`: page head, sections with real headings, a stats strip, cards,
+  panels for charts, maps and tables, buttons, segmented controls, chips, tabs, period bars, filters, fields, badges,
+  notices, states, tables, glossary, steps and sources. One spacing scale, three heading sizes and five text sizes.
+- **Boxes only where they mean something:** cards are things you open, panels hold one chart, map or table; writing
+  and figures sit on the page itself.
+- **Pages:** the site home page, the information pages, the three project home pages, the Asteroid Tracker's tracker,
+  asteroid and map pages, the Image Explorer, the Mars charts and method pages, the spacecraft map and Sky Finder.
+  Repeated sections were removed where cards already said the same ("What you can do", "How to use it" on the
+  Asteroid Tracker's home page); no explanation was lost.
+- **No page styles:** every `<style>` block and `style="…"` attribute is gone; the Mars pages' styles moved to
+  `mars-data/mars.css`, and the project style sheets keep only the inside of their tools.
+- **Component page:** `design/` shows every component, drawn from the real style sheet.
+- **New check:** `dev/check_styles.py` (run by GitHub after every push) refuses page styles, restyled shared
+  components in project style sheets, and mismatched version tags.
+- **Design guide:** `docs/DESIGN.md` rewritten as the catalogue of the components, with the "Page styles" rule and the
+  rule that every addition says what it replaces.
+- Tabs wrap to a second line instead of scrolling; every segmented control scrolls with a soft fade on phones.
+
 ## November 12, 2026 — whole-site check
 
 Every page and view checked at 320, 375, 390, 768, 1024 and 1440 px, with its data missing and with NASA out of

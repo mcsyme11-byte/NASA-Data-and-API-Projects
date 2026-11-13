@@ -29,6 +29,7 @@ next one used.
 NASA-ESA-Data-and-API-Projects/
 ├── index.html          home page linking the three projects
 ├── about/ legal/ privacy/ terms/ credits/ contact/   the site's information pages
+├── design/             the component page: every shared component, from the real style sheet
 ├── shared/             the look (theme.css, emblem), the NASA API helper (nasa.js), the footer links (footer.js),
 │                       the sky maths (sky.js, passes.js, sats.js, place.js) and satellite.js (vendor/)
 ├── asteroid-tracker/   Project 1
@@ -42,7 +43,8 @@ NASA-ESA-Data-and-API-Projects/
 
 - **Pages run in the browser,** with no build step: plain HTML, CSS and JavaScript, hosted free on GitHub Pages.
 - **One look everywhere:** the Flight Deck Suite's "old money" style (navy, brass and cream, serif type) with a
-  night-sky touch. See [docs/DESIGN.md](docs/DESIGN.md).
+  night-sky touch, built from one set of shared components (`shared/theme.css`, shown at `design/`). See
+  [docs/DESIGN.md](docs/DESIGN.md).
 - **API keys are never committed.** Visitors need no key: the GitHub data jobs copy the data that needs
   one, using keys kept as repository secrets, and the pages use NASA's shared `DEMO_KEY` for anything else. Python scripts read `NASA_API_KEY` from a local `.env` file, which Git ignores.
 
@@ -60,7 +62,7 @@ NASA-ESA-Data-and-API-Projects/
 
 | Document | What's in it |
 |---|---|
-| [docs/DESIGN.md](docs/DESIGN.md) | Colours, type, components and chart colours |
+| [docs/DESIGN.md](docs/DESIGN.md) | Colours, type, the shared components, page styles and chart colours |
 | [docs/DATA-SOURCES.md](docs/DATA-SOURCES.md) | Every NASA and ESA source used: endpoints, keys, limits, terms and credit lines |
 | [docs/PROJECT-NOTES.md](docs/PROJECT-NOTES.md) | How it's built, decisions, how to run and publish |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | What's next and every pending to-do |

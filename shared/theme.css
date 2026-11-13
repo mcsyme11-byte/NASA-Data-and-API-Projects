@@ -203,6 +203,7 @@ a.card:hover .go { color: var(--brass-bright); }
 .ctl > .caption { margin: var(--sp3) 0 0; }
 
 /* ============================================================== panels: one chart, map or table */
+figure.panel { margin: 0; }
 .panel, .frame { background: var(--deep); border: 1px solid var(--line); border-radius: var(--r); min-width: 0; }
 .frame { overflow: hidden; }
 .panel > .ph { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: var(--sp1) var(--sp4);
@@ -463,6 +464,7 @@ table.credits td:first-child { color: var(--ink); }
 @media (max-width: 760px) { .sources .s { grid-template-columns: 1fr; gap: 4px; } .sources .s .u { text-align: left; } }
 
 .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--sp5); grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); counter-reset: step; }
+* + .steps { margin-top: var(--sp4); }
 .steps li { counter-increment: step; color: var(--ink2); font-size: 15.5px; }
 .steps li::before { content: counter(step); display: block; font-size: 30px; line-height: 1; color: var(--brass); margin-bottom: var(--sp2); }
 .steps li b { display: block; color: var(--ink); font-weight: 400; font-size: 17px; margin-bottom: 4px; }
@@ -478,7 +480,9 @@ table.credits td:first-child { color: var(--ink); }
 /* ============================================================== chart pieces */
 .legend { display: flex; flex-wrap: wrap; gap: var(--sp2) var(--sp4); font-size: 13.5px; color: var(--ink2); }
 .legend i, .legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
-.tip { position: absolute; z-index: 20; pointer-events: none; max-width: 280px; background: rgba(15, 21, 32, .97);
+.legend .s1 { background: var(--s1); } .legend .s2 { background: var(--s2); } .legend .s3 { background: var(--s3); }
+.legend .s4 { background: var(--s4); } .legend .s5 { background: var(--s5); } .legend .s6 { background: var(--s6); }
+.tip { position: fixed; z-index: 60; pointer-events: none; max-width: 280px; background: rgba(15, 21, 32, .97);
   border: 1px solid var(--brass-dim); border-radius: var(--r-sm); padding: var(--sp2) var(--sp3); font-size: 14px; line-height: 1.45;
   color: var(--ink); box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
 svg.chart { display: block; width: 100%; height: auto; }

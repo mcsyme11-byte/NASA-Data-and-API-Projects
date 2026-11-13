@@ -126,8 +126,8 @@ html.viewing, html.viewing body { overflow: hidden; height: 100%; overscroll-beh
 .calsheet h2 { margin: 2px 0 6px; }
 .calsheet p { margin: 0 0 10px; color: var(--ink2); font-size: 14px; }
 .calsheet .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; scrollbar-width: none; }
-.chip { flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line2); background: transparent; color: var(--ink2); font: 14px var(--font); cursor: pointer; }
-.chip[aria-pressed="true"] { border-color: var(--brass); color: var(--brass-bright); background: rgba(192,160,98,.12); }
+.sfmain .chip, .sheet .chip { flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line2); background: transparent; color: var(--ink2); font: 14px var(--font); cursor: pointer; }
+.sfmain .chip[aria-pressed="true"], .sheet .chip[aria-pressed="true"] { border-color: var(--brass); color: var(--brass-bright); background: rgba(192,160,98,.12); }
 .caloff { font-size: 14px; color: var(--ink) !important; }
 .caloff b { font-weight: 400; color: var(--brass-bright); }
 .calrow { display: flex; justify-content: space-between; margin-top: 4px; }
@@ -150,5 +150,9 @@ html.viewing, html.viewing body { overflow: hidden; height: 100%; overscroll-beh
 .tabs2 { display: flex; gap: 6px; margin-bottom: 12px; }
 .tabs2 button { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line2); background: none; color: var(--ink2); font: 14px var(--font); cursor: pointer; }
 .tabs2 button[aria-selected="true"] { border-color: var(--brass); color: var(--brass-bright); }
-.legend { display: grid; grid-template-columns: 34px 1fr; gap: 12px 10px; align-items: center; color: var(--ink2); }
-.legend svg { display: block; }
+.step .legend { display: grid; grid-template-columns: 34px 1fr; gap: 12px 10px; align-items: center; color: var(--ink2); }
+.step .legend svg { display: block; }
+.sf-kick { margin-top: var(--sp4); }
+ol.plain { list-style: none; padding: 0; }
+.need.n-eye { --c: var(--n-eye); } .need.n-bino { --c: var(--n-bino); } .need.n-small { --c: var(--n-small); }
+.need.n-large { --c: var(--n-large); } .need.n-faint { --c: var(--n-faint); }

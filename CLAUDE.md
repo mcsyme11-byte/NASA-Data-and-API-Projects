@@ -36,6 +36,12 @@ inside its own folder.
   and mcsyme11@gmail.com as the developer, copyright and contact credit.**
 - **Look:** the Flight Deck Suite's "old money" look (navy, brass, cream, serif type), as set out in `docs/DESIGN.md`
   and `shared/theme.css`. New pages and big visual changes start as mock-ups the developer approves.
+- **Shared components (version 2 of the look, decided Nov 13, 2026):** pages are built only from the components in
+  `shared/theme.css`, listed in `docs/DESIGN.md` and shown on the component page (`design/index.html`). Pages carry
+  no styles of their own (no `<style>` block, no `style="…"` attribute); project style sheets hold only the inside of
+  their tools and never restyle a shared component on its own. A new component is added to the theme and the
+  component page first, after an approved mock-up, and every addition to a page says what it replaces or why nothing
+  already there fits. `python3 dev/check_styles.py` checks this, and GitHub runs it after every push.
 - **Free to run:** static pages on GitHub Pages and free NASA APIs; no paid services.
 - **Site pages (since Nov 9, 2026):** every page loads `shared/footer.js` (the links to About, Legal, Contact and the
   source code; since Nov 12, 2026 the footer is one row of those links with the copyright, then one short credit
@@ -44,13 +50,15 @@ inside its own folder.
   page (`credits/index.html`) in the same change; anything new the site stores or sends is added to the Privacy page
   first.
 - **Version tags on style files (since Nov 9, 2026; project style sheets since Nov 12):** pages link
-  `shared/theme.css`, `shared/footer.js`, `asteroid-tracker/tracker.css` and `image-explorer/explorer.css` with a
-  version tag (`?v=YYYYMMDDNN`). After changing any of them, raise the tag in every page (one search-and-replace), so
-  browsers fetch the new copy instead of an old saved one.
+  `shared/theme.css`, `shared/footer.js`, `asteroid-tracker/tracker.css`, `image-explorer/explorer.css`,
+  `mars-data/mars.css`, `spacecraft/spacecraft.css` and `sky-finder/sky-finder.css` with one version tag
+  (`?v=YYYYMMDDNN`). After changing any of them, raise the tag in every page (one search-and-replace), and Sky
+  Finder's `VERSION` in `sky-finder/sw.js` with it, so browsers fetch the new copy instead of an old saved one.
+  `dev/check_styles.py` refuses a page whose tags differ.
 - **Feel (since Nov 12, 2026):** everything pressable gives quick feedback (the shared hover and press transitions in
-  `shared/theme.css`); tap targets are at least 40 px tall on phones; rows of tabs or chips that don't fit a phone
-  scroll sideways with a soft edge fade (the Asteroid Tracker's tabs wrap instead, decided Nov 12, 2026) (`shared/footer.js` adds it to `.tabs`, `.popular`, `.gbar .seg` and anything
-  marked `data-hscroll`); labels drawn over maps and diagrams get a dark outline; placeholders fit a 375 px phone; every page except the
+  `shared/theme.css`); tap targets are at least 40 px tall on phones; segmented controls and chip rows that don't
+  fit a phone scroll sideways with a soft edge fade (`shared/footer.js` adds it to `.seg`, `.popular` and anything
+  marked `data-hscroll`), and tab bars wrap to a second line instead (since Nov 13, 2026); labels drawn over maps and diagrams get a dark outline; placeholders fit a 375 px phone; every page except the
   site's home page has a Back button (`.backlink#back`).
 - **ESA data (decided Nov 9, 2026):** ESA's data is added alongside NASA's where it helps; NASA stays the main source,
   and pages say which agency each number or picture comes from. For every ESA source:
@@ -109,4 +117,5 @@ done, not by who in a chat did it. `python3 dev/check_wording.py` checks this, a
 ```
 python3 -m http.server 8000     # then open http://localhost:8000
 python3 dev/check_wording.py    # wording, personal details and keys
+python3 dev/check_styles.py     # shared components, page styles and version tags
 ```

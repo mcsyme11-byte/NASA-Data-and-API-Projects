@@ -126,3 +126,12 @@ How NASA and ESA Data Projects came about, in order.
   Curiosity record: sols 1–4843, Mars Years 31–38, with the 2018 global dust storm and the rover's 990 m climb up
   Mount Sharp visible in the charts. A recurring evening sensor glitch (one hour at about −120 °C) was found on 26
   sols and set aside for review rather than published.
+
+## November 13, 2026 — version 2 of the look
+
+- After a whole-site check on November 12, the developer judged that the site no longer looked like one design:
+  pieces had been added page by page without considering what they replaced. A full redesign was decided, keeping
+  the same general look, and approved from mock-ups the same day.
+- Every page was rebuilt on one set of shared components (`shared/theme.css`, shown on the component page `design/`),
+  with real headings, one spacing scale and boxes only for things that are opened or for a single chart, map or
+  table. Page styles were removed everywhere, and a new automatic check (`dev/check_styles.py`) keeps them out.

@@ -97,6 +97,10 @@ How NASA and ESA Data Projects is built, the decisions made so far, and how to r
   as a portfolio. Rule that follows: no API key, password or personal detail is ever committed.
 - **Decided Nov 8, 2026:** the look follows the Flight Deck Suite and Hot Mic ("old money": navy, brass, cream,
   serif type), see [DESIGN.md](DESIGN.md).
+- **Decided Nov 13, 2026 (version 2 of the look):** every page is built from the shared components in
+  `shared/theme.css`, shown on the component page (`design/`); pages carry no styles of their own, and project style
+  sheets hold only the inside of their tools. A new component is added to the theme and the component page first,
+  after an approved mock-up, saying what it replaces. `dev/check_styles.py` checks this after every push.
 - **Suggested order (Nov 8, 2026):** Asteroid Tracker, then Image Explorer, then Mars Data.
 - **Each project is built in its own chat** inside the Claude project "NASA and ESA Data Projects"; a general chat is for
   questions and exploring.
@@ -244,6 +248,14 @@ One-time setting, done on github.com: the repository's **Settings › Pages › 
 - no NASA API key.
 
 Run it by hand: `python3 dev/check_wording.py`.
+
+Since Nov 13, 2026 the same workflow also runs `dev/check_styles.py`:
+- no `<style>` block or `style="…"` attribute in any page (scripts may still set values worked out from data);
+- every page links `shared/theme.css` and `shared/footer.js`, and all its version tags are the same;
+- no project style sheet restyles a shared component on its own (`.btn { … }`); it may adjust one inside its own
+  parts (`.mapbar .seg`).
+
+Run it by hand: `python3 dev/check_styles.py`.
 
 `.github/workflows/astronaut-photos.yml` runs once a day (07:41 UTC) and on demand: it fetches the newest astronaut
 photos of Earth into `image-explorer/data/astronaut.json` if the secret `EOL_API_KEY` is set, and commits the file if
