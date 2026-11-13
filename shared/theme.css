@@ -197,6 +197,11 @@ a.card:hover .go { color: var(--brass-bright); }
 .card .list.small { gap: 6px; font-size: 14.5px; margin: var(--sp2) 0 0; }
 .card.feature .body > p { color: var(--ink2); font-size: 15.5px; line-height: 1.55; margin: 0; flex: 1; }
 
+/* ============================================================== control boxes: a group of settings beside a tool, with a small title */
+.ctl { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: var(--sp4) var(--sp5); min-width: 0; }
+.ctl > h2:first-child, .ctl > .ctl-title { font-size: 11.5px; line-height: 1.4; letter-spacing: .24em; text-transform: uppercase; color: var(--brass); margin: 0 0 var(--sp3); }
+.ctl > .caption { margin: var(--sp3) 0 0; }
+
 /* ============================================================== panels: one chart, map or table */
 .panel, .frame { background: var(--deep); border: 1px solid var(--line); border-radius: var(--r); min-width: 0; }
 .frame { overflow: hidden; }
@@ -334,9 +339,21 @@ select { cursor: pointer; padding-right: var(--sp6); }
 input:hover, select:hover { border-color: var(--brass-dim); }
 input:focus, select:focus { outline: none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(192, 160, 98, .15); }
 input::placeholder { color: var(--faint); font-style: italic; opacity: 1; }
-.search { position: relative; display: flex; }
-.search input { flex: 1; width: 100%; padding-left: 42px; font-size: 18px; min-height: 52px; }
-.search::before { content: "⌕"; position: absolute; left: 14px; top: 50%; transform: translateY(-54%); color: var(--brass); font-size: 21px; pointer-events: none; }
+/* the search box: an icon, the field and a Clear button that appears once there is something to clear */
+.bigsearch { display: flex; align-items: center; gap: var(--sp3); min-height: 52px; padding: 0 var(--sp3) 0 var(--sp4); background: var(--bg2);
+  border: 1px solid var(--line2); border-radius: var(--r); color: var(--brass); }
+.bigsearch:hover { border-color: var(--brass-dim); }
+.bigsearch:focus-within { border-color: var(--brass); box-shadow: 0 0 0 3px rgba(192, 160, 98, .15); }
+.bigsearch > svg { flex: none; }
+.bigsearch input { flex: 1; min-width: 0; min-height: 48px; border: 0; background: transparent; font-size: 18px; padding: 0; color: var(--ink); }
+.bigsearch input:focus, .bigsearch input:hover { outline: none; box-shadow: none; border: 0; }
+.bigsearch.large { min-height: 60px; } .bigsearch.large input { min-height: 56px; font-size: 20px; }
+input[type=search]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; display: none; }
+.qclear { flex: none; background: none; border: 1px solid var(--brass-dim); border-radius: var(--r-sm); color: var(--brass);
+  font: 11.5px var(--font); text-transform: uppercase; letter-spacing: .18em; padding: 0 var(--sp3); min-height: 36px; cursor: pointer; }
+.qclear:hover { border-color: var(--brass); color: var(--brass-bright); }
+.bigsearch:has(input:placeholder-shown) .qclear { display: none; }
+@media (max-width: 760px) { .qclear { min-height: 40px; } .bigsearch input { font-size: 16px; } .bigsearch.large input { font-size: 17px; } }
 input[type="range"] { accent-color: var(--brass); }
 input[type="checkbox"], input[type="radio"] { accent-color: var(--brass); }
 

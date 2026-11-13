@@ -9,10 +9,10 @@
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/ol-10.11.0/ol.css">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111302">
-  <script type="module" src="../shared/footer.js?v=2026111302"></script>
-  <link rel="stylesheet" href="../asteroid-tracker/tracker.css?v=2026111302">
-  <link rel="stylesheet" href="explorer.css?v=2026111302">
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111303">
+  <script type="module" src="../shared/footer.js?v=2026111303"></script>
+  <link rel="stylesheet" href="../asteroid-tracker/tracker.css?v=2026111303">
+  <link rel="stylesheet" href="explorer.css?v=2026111303">
 </head>
 <body>
   <header class="topbar">
@@ -30,34 +30,34 @@
 
   <main class="wrap">
     <a class="backlink" id="back" href="./">Image Explorer</a>
-    <div class="phead">
-      <div class="eyebrow">Project 2</div>
-      <h1>Image Explorer</h1>
+    <header class="pagehead compact">
+      <div class="kicker"><a href="./">Project 2 · Image Explorer</a></div>
+      <h1>The explorer</h1>
       <p class="lede">The Earth from orbit on any day since 2000, a globe inside the real sky with NASA's events, galaxies and nebulae, and NASA's and ESA's picture libraries.</p>
-    </div>
+    </header>
 
-    <div class="toolbar">
-      <nav class="tabs" aria-label="Image Explorer" role="tablist">
+    <nav class="tabs" aria-label="Image Explorer" role="tablist">
         <button role="tab" aria-selected="true" aria-pressed="true" data-view="earth">Earth map</button>
         <button role="tab" aria-selected="false" aria-pressed="false" data-view="globe">Globe</button>
         <button role="tab" aria-selected="false" aria-pressed="false" data-view="library">Picture library</button>
-      </nav>
-    </div>
+    </nav>
 
     <!-- ===================== EARTH MAP ===================== -->
     <section id="view-earth">
-      <div class="datebar">
-        <button class="chip" id="dPrev" aria-label="Previous day">‹ Day</button>
-        <input type="date" id="dPick" aria-label="Date of the imagery">
-        <button class="chip" id="dNext" aria-label="Next day">Day ›</button>
-        <button class="chip" id="dLatest" aria-pressed="true">Latest</button>
+      <div class="periodbar datebar">
+        <div class="seg" role="group" aria-label="Day">
+          <button class="chip" id="dPrev" aria-label="Previous day">‹ Day</button>
+          <button class="chip" id="dLatest" aria-pressed="true">Latest</button>
+          <button class="chip" id="dNext" aria-label="Next day">Day ›</button>
+        </div>
+        <label class="period"><span class="lbl">Date (UTC)</span><input type="date" id="dPick" aria-label="Date of the imagery"></label>
         <span class="grow"></span>
         <select id="speed" aria-label="Playback speed">
           <option value="1000">1 day a second</option>
           <option value="500" selected>2 days a second</option>
           <option value="250">4 days a second</option>
         </select>
-        <button class="btn ghost play" id="play" aria-pressed="false">▶ Play</button>
+        <button class="btn outline small play" id="play" aria-pressed="false">▶ Play</button>
       </div>
       <div class="slider">
         <span class="end" id="sFrom"></span>
@@ -72,9 +72,9 @@
         <div class="tile"><div class="label">On top</div><div class="value" id="tOver">—</div><div class="note" id="tOverNote">—</div></div>
       </div>
 
-      <div class="explore" style="margin-top:22px">
+      <div class="explore">
         <div class="side">
-          <div class="card place">
+          <div class="ctl place">
             <h2>Find a place</h2>
             <div class="placebox">
               <label class="bigsearch">
@@ -84,40 +84,40 @@
               </label>
               <ul class="suggest" id="placeList" role="listbox" hidden></ul>
             </div>
-            <p class="note" style="margin:10px 0 0">Towns of 10,000 people or more, countries, mountains, ranges, lakes, rivers, glaciers, islands, parks and seas (about 89,000 natural features), or coordinates (latitude, longitude). Tap the map to see what is there.</p>
+            <p class="caption">Towns of 10,000 people or more, countries, mountains, ranges, lakes, rivers, glaciers, islands, parks and seas (about 89,000 natural features), or coordinates (latitude, longitude). Tap the map to see what is there.</p>
           </div>
 
-          <div class="card">
+          <div class="ctl">
             <h2>Picture</h2>
             <div class="lyr" id="baseList" role="radiogroup" aria-label="Picture"></div>
           </div>
 
-          <div class="card">
+          <div class="ctl">
             <h2>On top</h2>
             <div class="lyr multi" id="overList" aria-label="On top"></div>
-            <p class="note" style="margin:10px 0 0">Fires go with anything; the coloured layers show one at a time.</p>
+            <p class="caption">Fires go with anything; the coloured layers show one at a time.</p>
           </div>
 
-          <div class="card">
+          <div class="ctl">
             <h2>Map lines and names</h2>
-            <div class="views lines" role="group" aria-label="Map lines and names">
+            <div class="chips lines" role="group" aria-label="Map lines and names">
               <button class="chip" aria-pressed="true" data-line="borders">Borders</button>
               <button class="chip" aria-pressed="true" data-line="coast">Coastlines</button>
               <button class="chip" aria-pressed="false" data-line="rivers">Rivers</button>
               <button class="chip" aria-pressed="true" data-line="names">Names</button>
               <button class="chip" aria-pressed="false" data-line="grid">Grid</button>
             </div>
-            <p class="note" style="margin:10px 0 0">Drawn from Natural Earth. More names appear as you zoom in.</p>
+            <p class="caption">Drawn from Natural Earth. More names appear as you zoom in.</p>
           </div>
 
-          <div class="card">
+          <div class="ctl">
             <h2>View</h2>
-            <div class="views">
+            <div class="seg" role="group" aria-label="View">
               <button class="chip" aria-pressed="true" data-proj="world">World</button>
               <button class="chip" aria-pressed="false" data-proj="arctic">Arctic</button>
               <button class="chip" aria-pressed="false" data-proj="antarctic">Antarctic</button>
             </div>
-            <p class="note" style="margin:10px 0 0">Arctic and Antarctic look straight down on the poles, which the world view stretches out of shape. Around each winter the pole is in darkness for months, so the photographs show a black area there. Sea temperature and smoke are world view only; fires are not shown around Antarctica.</p>
+            <p class="caption">Arctic and Antarctic look straight down on the poles, which the world view stretches out of shape. Around each winter the pole is in darkness for months, so the photographs show a black area there. Sea temperature and smoke are world view only; fires are not shown around Antarctica.</p>
           </div>
         </div>
 
@@ -128,7 +128,7 @@
             <div class="cursor" id="cursor" hidden></div>
           </div>
           <div class="legend" id="legend"></div>
-          <p class="note" id="mapSrc" style="margin:10px 0 0"></p>
+          <p class="caption after" id="mapSrc"></p>
           <details class="howto">
             <summary>How to read this</summary>
             <p><b>One day at a time.</b> Each satellite photographs the Earth in strips as it circles, about 14 times a day, so
@@ -149,7 +149,7 @@
     <!-- ===================== GLOBE ===================== -->
     <section id="view-globe" hidden>
       <div class="gbar">
-        <div class="seg" role="group" aria-label="Show on the globe">
+        <div class="chips gshow" role="group" aria-label="Show on the globe" data-hscroll>
           <button class="chip" aria-pressed="true" data-show="events"><i class="key ev"></i>Events on Earth</button>
           <button class="chip" aria-pressed="true" data-show="photos" hidden><i class="key ph"></i>Astronaut photos</button>
           <button class="chip" aria-pressed="true" data-show="quake"><i class="key qk"></i>Earthquakes</button>
@@ -185,12 +185,12 @@
             <button class="chip" id="gHome" aria-label="Back to the starting view">⌂</button>
           </div>
         </div>
-        <aside class="card gcard" id="gCard" aria-live="polite">
+        <aside class="ctl gcard" id="gCard" aria-live="polite">
           <h2>Selected</h2>
-          <p class="note" style="margin:0">Tap a pin on the Earth or a marker in the sky. Zoom out to see the sky around the Earth.</p>
+          <p class="caption">Tap a pin on the Earth or a marker in the sky. Zoom out to see the sky around the Earth.</p>
         </aside>
       </div>
-      <p class="note" id="gSrc" style="margin:10px 0 0"></p>
+      <p class="caption after" id="gSrc"></p>
       <details class="howto">
         <summary>How to read this</summary>
         <p><b>The Earth</b> is NASA's Blue Marble, a cloud-free picture made from many days of satellite images. It is
@@ -231,7 +231,7 @@
           <button class="chip">Mars rovers</button>
         </div>
       </div>
-      <div class="libfilters">
+      <div class="libfilters filters">
         <div class="seg from" role="group" aria-label="Library">
           <span class="barlbl">Library</span>
           <button class="chip" aria-pressed="true" data-from="both">NASA and ESA</button>
@@ -253,11 +253,11 @@
         </div>
       </div>
 
-      <div class="shead"><h2>Results</h2><span class="aside" id="libCount"></span></div>
-      <div class="gallery" id="gallery"><div class="state small" style="grid-column:1/-1">Type a mission, a planet, a galaxy or a place, or pick a mission. Results appear as you type.</div></div>
-      <div class="more" hidden><button class="btn ghost" type="button">Show more</button></div>
+      <div class="section-head sub"><h2>Results</h2><span class="aside" id="libCount"></span></div>
+      <div class="gallery" id="gallery"><div class="state small wide">Type a mission, a planet, a galaxy or a place, or pick a mission. Results appear as you type.</div></div>
+      <div class="more" hidden><button class="btn outline" type="button">Show more</button></div>
       <div class="bts" id="bts" hidden>
-        <button class="btn ghost" id="btsToggle" type="button" aria-expanded="false" aria-controls="gallery2">Behind the scenes</button>
+        <button class="btn outline" id="btsToggle" type="button" aria-expanded="false" aria-controls="gallery2">Behind the scenes</button>
         <p class="note">Launches, people, testing, events, and artists' illustrations: pictures about a mission rather than taken by it.</p>
         <div class="gallery" id="gallery2" hidden></div>
       </div>
@@ -287,7 +287,7 @@
     <dialog class="viewer" id="viewer" aria-labelledby="vTitle">
       <div class="vbar">
         <span class="eyebrow" id="vKind">Picture</span>
-        <button class="btn ghost vclose" id="vClose" type="button">Close</button>
+        <button class="btn outline vclose" id="vClose" type="button">Close</button>
       </div>
       <div class="vbody"><div class="vwrap">
         <div class="vimg"><img id="vImg" alt=""><video id="vVid" controls preload="metadata" playsinline hidden></video></div>
@@ -299,8 +299,8 @@
           <dl class="vcredit" id="vCredit" hidden><dt>Credit</dt><dd id="vCreditText"></dd><dt>Licence</dt><dd id="vLicence"></dd></dl>
           <p class="note" id="vNote" hidden></p>
           <div class="vbtns">
-            <a class="btn ghost" id="vFull" href="#" target="_blank" rel="noopener">Open large size</a>
-            <button class="btn ghost" id="vSky" type="button" hidden>See it in the sky</button>
+            <a class="btn outline" id="vFull" href="#" target="_blank" rel="noopener">Open large size</a>
+            <button class="btn outline" id="vSky" type="button" hidden>See it in the sky</button>
           </div>
         </div>
       </div></div>

@@ -471,7 +471,7 @@ function select(it) {
       <dt>${it.pos === 'centre' ? 'Centre' : 'Station above'}</dt><dd class="mono">${Math.abs(it.lat).toFixed(1)}° ${it.lat >= 0 ? 'N' : 'S'}, ${Math.abs(it.lon).toFixed(1)}° ${it.lon >= 0 ? 'E' : 'W'}</dd></dl>
       <a class="btn ghost" href="${EOL}SearchPhotos/photo.pl?mission=${encodeURIComponent(mission)}&roll=${encodeURIComponent(roll)}&frame=${encodeURIComponent(frame)}" target="_blank" rel="noopener">The photo on NASA's site</a>
       <button class="btn ghost" id="gEarth">See it on the Earth map</button>
-      <p class="note" style="margin:12px 0 0">${/^ISS/.test(it.id) ? 'Taken from the International Space Station. ' : ''}${it.pos === 'below' ? 'Not yet cataloged: the pin marks where the Station was, and the photo may show a place some way off. ' : ''}Image courtesy of the Earth Science and Remote Sensing Unit, NASA Johnson Space Center.</p>`;
+      <p class="caption after">${/^ISS/.test(it.id) ? 'Taken from the International Space Station. ' : ''}${it.pos === 'below' ? 'Not yet cataloged: the pin marks where the Station was, and the photo may show a place some way off. ' : ''}Image courtesy of the Earth Science and Remote Sensing Unit, NASA Johnson Space Center.</p>`;
     $('gEarth').addEventListener('click', () => focusEarth(it.lat, it.lon, it.date, null));
   } else if (it.kind === 'spot') {
     const pos = `${Math.abs(it.lat).toFixed(2)}° ${it.lat >= 0 ? 'N' : 'S'}, ${Math.abs(it.lon).toFixed(2)}° ${it.lon >= 0 ? 'E' : 'W'}`;
@@ -481,8 +481,8 @@ function select(it) {
     card.innerHTML = `<h2>Selected</h2><div class="eyebrow">${esc(SPOT[it.sub][1])}</div><h3>${esc(it.name)}</h3>
       <dl class="facts">${facts}<dt>Position</dt><dd class="mono">${pos}</dd></dl>
       <button class="btn" id="gEarth">See it on the Earth map</button>
-      ${it.sub === 'quake' ? `<p class="note" style="margin:12px 0 0">From the <a href="${esc(it.url)}" target="_blank" rel="noopener">US Geological Survey</a>.</p>`
-        : `<div class="shead" style="margin:14px 0 8px"><h2>Pictures</h2><span class="aside" id="gCount">searching…</span></div><div class="gpics" id="gPics"></div>`}`;
+      ${it.sub === 'quake' ? `<p class="caption after">From the <a href="${esc(it.url)}" target="_blank" rel="noopener">US Geological Survey</a>.</p>`
+        : `<div class="gsub"><span class="lbl">Pictures</span><span class="aside" id="gCount">searching…</span></div><div class="gpics" id="gPics"></div>`}`;
     $('gEarth').addEventListener('click', () => focusEarth(it.lat, it.lon, null, null));
     if (it.sub !== 'quake') { it.term = it.name; pictures(it); }
   } else if (it.kind === 'event') {
@@ -491,7 +491,7 @@ function select(it) {
       ${it.mag ? `<dt>Size</dt><dd>${Number(it.mag).toLocaleString('en-GB')} ${esc(it.unit || '')}</dd>` : ''}
       <dt>Position</dt><dd class="mono">${Math.abs(it.lat).toFixed(2)}° ${it.lat >= 0 ? 'N' : 'S'}, ${Math.abs(it.lon).toFixed(2)}° ${it.lon >= 0 ? 'E' : 'W'}</dd></dl>
       <button class="btn" id="gEarth">See it on the Earth map</button>
-      ${it.src ? `<p class="note" style="margin:12px 0 0">Reported by NASA EONET from <a href="${esc(it.src)}" target="_blank" rel="noopener">its source</a>.</p>` : ''}`;
+      ${it.src ? `<p class="caption after">Reported by NASA EONET from <a href="${esc(it.src)}" target="_blank" rel="noopener">its source</a>.</p>` : ''}`;
     $('gEarth').addEventListener('click', () => focusEarth(it.lat, it.lon, it.date, it.cat === 'wildfires' ? 'fires' : it.cat === 'seaLakeIce' ? 'ice' : it.cat === 'snow' ? 'snow' : null));
   } else {
     card.innerHTML = `<h2>Selected</h2><div class="eyebrow">${esc(it.type)}</div><h3>${esc(it.name)}</h3>
@@ -499,7 +499,7 @@ function select(it) {
       ${it.mag != null ? `<dt>Brightness</dt><dd>Magnitude ${it.mag}${it.mag <= 6 ? ' · visible without a telescope from a dark place' : ''}</dd>` : ''}
       ${it.dim ? `<dt>Size in the sky</dt><dd>${esc(it.dim.replace('x', ' × '))} arcminutes${moons(it.dim)}</dd>` : ''}
       <dt>Sky position</dt><dd class="mono">RA ${raStr(it.ra)} · Dec ${decStr(it.dec)}</dd></dl>
-      <div class="shead" style="margin:6px 0 8px"><h2>Pictures</h2><span class="aside" id="gCount">searching…</span></div>
+      <div class="gsub"><span class="lbl">Pictures</span><span class="aside" id="gCount">searching…</span></div>
       <div class="gpics" id="gPics"></div>
       <button class="btn ghost" id="gLib">All pictures in the library</button>`;
     $('gLib').addEventListener('click', () => { $('libQ').value = it.term; show('library'); libSearch(); });
@@ -513,7 +513,7 @@ async function pictures(it) {
     if (selected !== it) return;
     $('gCount').textContent = items.counts.length ? items.counts.map(([w, n]) => `${w} ${n.toLocaleString('en-GB')}`).join(' · ') : 'none found';
     box.innerHTML = items.list.map((p, j) => `<button data-j="${j}" aria-label="${esc(p[1])} (${esc(srcName(p))})"><img src="${esc(thumbOf(p))}" data-id="${esc(p[0])}" data-try="${p.lib ? 'esa' : 'thumb'}" alt="" loading="lazy"></button>`).join('')
-      || '<p class="note" style="grid-column:1/-1;margin:0">NASA’s and ESA’s libraries have no pictures under this name.</p>';
+      || '<p class="caption wide">NASA’s and ESA’s libraries have no pictures under this name.</p>';
     box.onclick = e => { const b = e.target.closest('[data-j]'); if (b) openViewer(items.list[+b.dataset.j]); };
   } catch { if (selected === it) $('gCount').textContent = 'library out of reach'; }
 }

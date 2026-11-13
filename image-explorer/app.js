@@ -1020,7 +1020,7 @@ async function runSearch(q, page, st) {
 const card = (x, j) => `<button class="pic${x[7] === 'video' ? ' video' : ''}" data-j="${j}">
       <span class="ph"><img src="${esc(thumbOf(x))}" data-id="${esc(x[0])}" data-base="${assets(x[7])}" data-try="${x.lib ? 'esa' : 'thumb'}" alt="${esc(x[1])}" loading="lazy"><span class="src${x.lib ? ' esa' : ''}">${srcName(x)}</span></span>
       <span class="pt"><h3>${esc(x[1])}</h3><span class="meta">${x.lib ? `${esc(x.potw || String(x.year || 'No date'))} · ${srcName(x)}` : `${x[2] ? nice(x[2]) : 'No date'} · ${esc(x[3] || 'NASA')}`}${x[7] === 'video' ? ' · Video' : ''}</span></span></button>`;
-const say = (el, text) => { el.innerHTML = `<div class="state small" style="grid-column:1/-1">${text}</div>`; };
+const say = (el, text) => { el.innerHTML = `<div class="state small wide">${text}</div>`; };
 function render(append, list) {
   if (!append) { PICS.length = 0; $('gallery').innerHTML = ''; $('gallery2').innerHTML = ''; }
   $('gallery').querySelector('.state')?.remove();
