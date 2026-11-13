@@ -1,5 +1,12 @@
 # Change log
 
+## November 13, 2026 — paragraphs at full width
+
+- Paragraphs, ledes, notes, "How to read this" text and data credits now run the full width of the page content on
+  every page, instead of stopping at a reading width of about 68 characters (about half the page on a wide screen).
+  Two-column sections (`.split`) still divide the width between their columns. Sky Finder keeps its phone-width
+  column.
+
 ## November 13, 2026 — site-wide redesign (version 2 of the look)
 
 Every page rebuilt on one shared set of components, keeping the navy, brass and cream look. Pieces added page by page

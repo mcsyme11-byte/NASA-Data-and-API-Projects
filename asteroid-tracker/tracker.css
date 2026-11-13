@@ -88,7 +88,7 @@ th[tabindex]:focus-visible, tr[tabindex]:focus-visible { outline: 2px solid var(
 @media (max-width: 760px) { .tiles.two { grid-template-columns: 1fr; } .tiles.two .tile:nth-child(even) { padding-left: 0; border-left: 0; } .tiles.two .tile + .tile { border-top: 1px solid var(--line); } }
 
 /* ============================================================== one asteroid (object.html) */
-.pagehead .decode { font-size: 14.5px; font-style: italic; color: var(--muted); max-width: 72ch; margin: var(--sp3) 0 0; }
+.pagehead .decode { font-size: 14.5px; font-style: italic; color: var(--muted); margin: var(--sp3) 0 0; }
 .pills { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp2); margin-top: var(--sp4); }
 #facts { margin-bottom: var(--sp6); }
 .orbitbar, .timebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp3); }

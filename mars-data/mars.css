@@ -52,7 +52,7 @@
 .panel.pad li { margin: 0 0 var(--sp2); }
 .panel.pad p { margin: 0 0 var(--sp3); }
 .panel.pad > :last-child { margin-bottom: 0; }
-.intro { margin: 0 0 var(--sp4); color: var(--ink2); max-width: 90ch; }
+.intro { margin: 0 0 var(--sp4); color: var(--ink2); }
 .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp4); margin-top: var(--sp4); }
 table.rules { width: 100%; border-collapse: collapse; font-size: 15px; }
 table.rules th { text-align: left; font-weight: 400; font-size: 11px; text-transform: uppercase; letter-spacing: .2em;
