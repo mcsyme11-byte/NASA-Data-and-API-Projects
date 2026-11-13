@@ -6,6 +6,9 @@
   every page, instead of stopping at a reading width of about 68 characters (about half the page on a wide screen).
   Two-column sections (`.split`) still divide the width between their columns. Sky Finder keeps its phone-width
   column.
+- Centred text (the home and Contact page heads, empty and loading messages) stays narrower, at most 40 em, with
+  its lines balanced to even lengths, so a centred lede no longer ends on a short second line. Headings are balanced
+  the same way, and paragraphs no longer end on a single word.
 
 ## November 13, 2026 — site-wide redesign (version 2 of the look)
 

@@ -69,8 +69,10 @@ page styles inside most pages). Since then:
 
 - **One spacing scale:** 4, 8, 12, 16, 24, 32, 48, 72 px (`--sp1` to `--sp8`; on phones 48 and 72 become 36 and 52).
   Every margin and padding is one of these.
-- Content at most 1200 px wide, with a 32 px gutter (16 px on phones). Decided Nov 13, 2026: paragraphs, ledes and
-  notes run the full width of the content (no shorter reading width); only a two-column layout (`.split`) narrows them.
+- Content at most 1200 px wide, with a 32 px gutter (16 px on phones). Decided Nov 13, 2026: left-aligned text
+  (paragraphs, ledes, notes) runs the full width of the content; only a two-column layout (`.split`) narrows it.
+  Centred text (the centred page heads, empty and loading states) stays narrower, at most 40 em, with its lines
+  balanced to even lengths. Headings are balanced too, and paragraphs never end on a single word.
 - Sections are 72 px apart (52 on phones); a section's heading sits 24 px above its content.
 - Corners: 4 px on buttons, fields and segmented controls; 6 px on cards, panels and boxes; round on chips and badges.
 - No drop shadows except on things that float (tooltips, the picture viewer, suggestion lists).

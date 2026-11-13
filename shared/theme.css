@@ -71,6 +71,8 @@ a { color: var(--brass); text-decoration: none; }
 a:hover { color: var(--brass-bright); }
 :focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 2px; }
 p { margin: 0 0 var(--sp4); }
+/* no lone word on a paragraph's last line */
+p, li, dd, figcaption { text-wrap: pretty; }
 img { max-width: 100%; }
 code, .mono { font-family: var(--mono); font-size: 13px; color: var(--muted); }
 [hidden] { display: none !important; }
@@ -79,7 +81,7 @@ code, .mono { font-family: var(--mono); font-size: 13px; color: var(--muted); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 
 /* ============================================================== type: five text sizes, three heading sizes */
-h1, h2, h3, h4 { font-weight: 400; color: var(--ink); letter-spacing: .005em; margin: 0; }
+h1, h2, h3, h4 { font-weight: 400; color: var(--ink); letter-spacing: .005em; margin: 0; text-wrap: balance; }
 h1 { font-size: 46px; line-height: 1.08; }
 h2 { font-size: 30px; line-height: 1.15; }
 h3 { font-size: 21px; line-height: 1.25; }
@@ -122,7 +124,8 @@ h4 { font-size: 17px; line-height: 1.35; }
 .pagehead h1 + .lede, .phead h1 + .lede { margin-top: var(--sp4); }
 .pagehead .meta { margin-top: var(--sp4); display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp2) var(--sp4); }
 .pagehead.center { text-align: center; padding-top: var(--sp7); }
-.pagehead.center .lede { margin-left: auto; margin-right: auto; }
+/* centred text stays narrower than the page, with lines of even length (decided Nov 13, 2026) */
+.pagehead.center .lede { margin-left: auto; margin-right: auto; max-width: 40em; text-wrap: balance; }
 .pagehead.center .meta, .pagehead.center .actions { justify-content: center; }
 .pagehead.center .meta.stack { align-items: center; }
 .pagehead .meta.stack { flex-direction: column; gap: var(--sp5); margin-top: var(--sp6); }
@@ -389,10 +392,10 @@ a.tag.link:hover, a.badge:hover { border-color: var(--brass); color: var(--brass
 .notice.error, .notice.bad { border-color: rgba(201, 103, 90, .42); background: rgba(201, 103, 90, .08); }
 .notice.error::before, .notice.bad::before { content: "×"; border-color: var(--red); color: var(--red); font-style: normal; }
 .state { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--sp2); min-height: 220px; padding: var(--sp5);
-  text-align: center; color: var(--muted); font-style: italic; }
+  text-align: center; color: var(--muted); font-style: italic; text-wrap: balance; }
 .state.small { min-height: 120px; }
 .notice { margin-bottom: var(--sp4); }
-.empty, .loading { padding: var(--sp7) var(--sp5); text-align: center; color: var(--muted); font-style: italic; }
+.empty, .loading { padding: var(--sp7) var(--sp5); text-align: center; color: var(--muted); font-style: italic; text-wrap: balance; }
 .loading::before { content: ""; display: block; width: 26px; height: 26px; margin: 0 auto var(--sp3);
   border: 2px solid var(--line2); border-top-color: var(--brass); border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
