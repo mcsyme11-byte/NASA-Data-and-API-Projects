@@ -8,9 +8,9 @@
   <meta name="description" content="Where the active spacecraft of NASA, ESA and others are right now, from the space stations to the Voyagers, with what each one does and links to its mission pages.">
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111303">
-  <script type="module" src="../shared/footer.js?v=2026111303"></script>
-  <link rel="stylesheet" href="spacecraft.css?v=2026111303">
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111304">
+  <script type="module" src="../shared/footer.js?v=2026111304"></script>
+  <link rel="stylesheet" href="spacecraft.css?v=2026111304">
   <script type="module" src="app.js?v=2026111202"></script>
 </head>
 <body>
@@ -29,9 +29,9 @@
 
   <main class="wrap">
     <a class="backlink" id="back" href="../">Home</a>
-    <div class="phead sc-head">
+    <header class="pagehead compact sc-head">
       <div>
-        <div class="eyebrow">Spacecraft map</div>
+        <div class="kicker">Spacecraft map</div>
         <h1>Spacecraft, right now</h1>
         <p class="updated" id="scCount">Loading the positions…</p>
       </div>
@@ -42,17 +42,17 @@
         <button type="button" data-v="moon" aria-pressed="false">Moon</button>
         <button type="button" data-v="mars" aria-pressed="false">Mars</button>
       </nav>
-    </div>
+    </header>
 
     <div class="sc-grid">
       <aside class="sc-side" aria-label="Find a spacecraft">
         <label class="lbl" for="scQ">Find a spacecraft</label>
         <input id="scQ" type="search" placeholder="Name, agency or place" autocomplete="off" spellcheck="false">
-        <div class="lbl" style="margin-top:14px">Agency</div>
+        <div class="lbl sc-gap">Agency</div>
         <div class="chips" id="scAgency" role="group" aria-label="Agency" data-hscroll></div>
-        <div class="lbl" style="margin-top:12px">Kind</div>
+        <div class="lbl sc-gap">Kind</div>
         <div class="chips" id="scKind" role="group" aria-label="Kind" data-hscroll></div>
-        <div class="shead sc-lh"><h2>Spacecraft</h2><span class="aside" id="scListN"></span></div>
+        <div class="sc-lh"><h2 class="lbl">Spacecraft</h2><span class="aside" id="scListN"></span></div>
         <div class="sc-list" id="scList" role="list"><div class="state small">Loading…</div></div>
       </aside>
 
@@ -80,12 +80,13 @@
             <button type="button" data-speed="864000">10 days/s</button>
           </div>
         </div>
-        <p class="note sc-help">Drag to turn · scroll or pinch to zoom · ✥ or right-drag to move · tap a craft for its story.</p>
+        <p class="caption sc-help">Drag to turn · scroll or pinch to zoom · ✥ or right-drag to move · tap a craft for its story.</p>
       </section>
     </div>
 
-    <section class="sc-about" aria-labelledby="scAboutT">
-      <h2 id="scAboutT">About this map</h2>
+    <section class="section sc-about prose" aria-labelledby="scAboutT">
+      <div class="kicker">About</div>
+      <h2 id="scAboutT" class="gap">About this map</h2>
       <p>Every active spacecraft with a public position that this map follows: crewed stations, telescopes, missions to the Sun,
         the Moon, Mars, Jupiter and beyond, and satellites watching Earth. Military satellites appear only where their orbits are
         published; ordinary communication and navigation satellites (such as Starlink or GPS) are left out.</p>
@@ -93,7 +94,7 @@
         twice a day; satellites in Earth orbit are worked out in your browser from CelesTrak's published orbital elements with
         the SGP4 model. Sizes are not to scale: each craft is drawn as an icon, while the Sun, planets and Moon are drawn at
         their true size once you zoom in far enough.</p>
-      <p class="note">Mission facts checked November 12, 2026. A mission that ends is taken off the map.</p>
+      <p class="caption">Mission facts checked November 12, 2026. A mission that ends is taken off the map.</p>
     </section>
 
     <p class="srcline">Positions courtesy of NASA/JPL (Horizons) and CelesTrak; mission facts from NASA, ESA, JAXA, ISRO, CNSA and the other agencies, linked from each craft. Data courtesy of NASA. Not endorsed by any of these agencies.</p>

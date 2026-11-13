@@ -1,25 +1,23 @@
-/* NASA and ESA Data Projects · Spacecraft map page styles, on top of shared/theme.css · © 2026 Malcolm Syme · mcsyme11@gmail.com */
-[hidden] { display: none !important; }
-.lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: .26em; color: var(--brass); }
-.linkbtn { background: none; border: 0; padding: 6px 0; min-height: 40px; color: var(--brass); font: 14px var(--font); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-.seg { display: inline-flex; flex-wrap: wrap; gap: 8px; }
-.seg button { min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--r-btn); background: transparent; color: var(--ink2); font: 14px var(--font); cursor: pointer; white-space: nowrap; }
-.seg button:hover { border-color: var(--brass-dim); color: var(--ink); }
-.seg button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass-bright); background: rgba(192,160,98,.08); }
-.state.small { padding: 18px; color: var(--muted); font-style: italic; text-align: center; }
+/* NASA and ESA Data Projects · the spacecraft map: the inside of its tool, on top of shared/theme.css ·
+ * © 2026 Malcolm Syme · mcsyme11@gmail.com
+ *
+ * Version 2 (decided Nov 13, 2026): general components (page head, segmented controls, chips, labels, text buttons,
+ * states, share links) come from shared/theme.css. This file holds only the map, its list and its card.
+ */
 
-.sc-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; }
-.sc-head .updated { color: var(--muted); font-style: italic; margin: 6px 0 0; font-size: 14px; }
-.views { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+.sc-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--sp4) var(--sp5); }
+.sc-head .updated { margin: var(--sp2) 0 0; }
 
 .sc-grid { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 22px; align-items: start; }
-.sc-side { position: sticky; top: 84px; max-height: calc(100vh - 100px); display: flex; flex-direction: column; min-width: 0; }
+.sc-side { position: sticky; top: 80px; max-height: calc(100vh - 100px); display: flex; flex-direction: column; min-width: 0; }
 .sc-side > * { flex-shrink: 0; }
 .sc-side > .sc-list { flex: 1 1 auto; flex-shrink: 1; }
 .sc-side input { margin-top: 6px; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-.chips .chip { height: 34px; padding: 0 11px; font-size: 13.5px; }
-.sc-lh { margin: 18px 0 8px; }
+.sc-side .chips { gap: 6px; margin-top: 6px; }
+.sc-side .chip { min-height: 34px; padding: 0 12px; font-size: 13.5px; }
+.sc-gap { margin-top: var(--sp4); }
+.sc-lh { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp2); margin: var(--sp5) 0 var(--sp2); }
+.sc-lh h2 { font-size: 11.5px; letter-spacing: .24em; }
 .sc-list { overflow-y: auto; min-height: 120px; border-top: 1px solid var(--line); }
 .sc-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; width: 100%; padding: 10px 6px; min-height: 52px; text-align: left; border: 0;
   border-bottom: 1px solid var(--line); background: none; color: var(--ink); font: inherit; cursor: pointer; transition: background .12s; }
@@ -40,7 +38,7 @@
 .sc-zoom button:hover, .sc-zoom button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass-bright); }
 .sc-angle { position: absolute; left: 12px; bottom: 12px; }
 @media (max-width: 900px) { .sc-angle { top: 12px; bottom: auto; } .sc-state { top: 64px; } }
-.sc-angle button { background: rgba(15,21,32,.85); }
+.sc-angle { background: rgba(15,21,32,.9); }
 
 .sc-card { position: absolute; right: 12px; top: 12px; bottom: 12px; width: min(380px, calc(100% - 80px)); overflow-y: auto; padding: 16px 18px;
   background: rgba(20,27,38,.95); border: 1px solid var(--brass-dim); border-radius: var(--r-card); box-shadow: 0 12px 34px rgba(0,0,0,.45);
@@ -69,8 +67,8 @@
 .cc-act .btn { min-height: 40px; padding: 0 14px; font-size: 12px; }
 .cc-act .btn[aria-pressed="true"].ghost { border-color: var(--brass); color: var(--brass-bright); }
 .sc-card .note { margin: 12px 0 0; }
-.sharemsg { font-size: 13px; font-style: italic; color: var(--muted); }
-.sharemsg .sharelink { width: 100%; font: 12.5px var(--font); color: var(--ink); background: var(--deep); border: 1px solid var(--line); border-radius: var(--r-btn); padding: 5px 8px; }
+.sharemsg { font-size: 13.5px; font-style: italic; color: var(--muted); }
+.sharemsg .sharelink { width: 100%; min-height: 36px; font-size: 13px; }
 
 .sc-time { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 18px; margin-top: 12px; }
 .sc-date b { font-weight: 400; font-size: 16px; }
@@ -78,7 +76,7 @@
 .sc-date .live::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 6px; vertical-align: 1px; animation: pulse 2s infinite; }
 @keyframes pulse { 50% { opacity: .35; } }
 .sc-help { margin: 8px 0 0; }
-.sc-about { margin-top: 30px; max-width: 80ch; color: var(--ink2); }
+
 
 @media (max-width: 1100px) { .sc-grid { grid-template-columns: 260px minmax(0, 1fr); } }
 @media (max-width: 900px) {
@@ -86,18 +84,16 @@
   .sc-mapcol { order: -1; }
   .sc-side { position: static; max-height: none; }
   .sc-list { max-height: 60vh; }
-  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
-  .chips .chip { flex: none; height: 40px; }
+  .sc-side .chips { flex-wrap: nowrap; }
+  .sc-side .chip { flex: none; min-height: 40px; }
   .sc-frame { height: 64vh; min-height: 360px; }
   /* the card becomes a sheet over the bottom of the map */
   .sc-card { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 62%; border-radius: 14px 14px 0 0; border-width: 1px 0 0; }
   .sc-card:not([hidden]) ~ .sc-zoom { right: 12px; top: 12px; }
   .sc-card:not([hidden]) ~ .sc-angle { display: none; }
-  .sc-time .seg { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
   .sc-row { min-height: 56px; }
 }
 @media (max-width: 480px) {
-  .sc-head h1 { font-size: 28px; }
   .cc-top h3 { font-size: 21px; }
   .cc-fig dd { font-size: 16px; }
 }
