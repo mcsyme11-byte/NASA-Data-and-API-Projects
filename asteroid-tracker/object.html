@@ -8,9 +8,9 @@
   <meta name="description" content="One near-Earth asteroid: its size, its orbit around the Sun drawn to scale, and every close approach to Earth.">
   <meta name="theme-color" content="#141B26">
   <link rel="icon" href="../shared/emblem.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../shared/theme.css?v=2026111301">
-  <script type="module" src="../shared/footer.js?v=2026111301"></script>
-  <link rel="stylesheet" href="tracker.css?v=2026111301">
+  <link rel="stylesheet" href="../shared/theme.css?v=2026111302">
+  <script type="module" src="../shared/footer.js?v=2026111302"></script>
+  <link rel="stylesheet" href="tracker.css?v=2026111302">
   <script type="module" src="object.js"></script>
 </head>
 <body>
@@ -29,13 +29,13 @@
 
   <main class="wrap">
     <a class="backlink" id="back" href="./">Asteroid Tracker</a>
-    <div class="phead">
-      <div class="eyebrow"><a href="./">Asteroid Tracker</a> · Asteroid</div>
+    <header class="pagehead compact">
+      <div class="kicker"><a href="./">Asteroid Tracker</a> · Asteroid</div>
       <h1 id="name">Loading…</h1>
       <p class="lede" id="lede">Its size, its path around the Sun, and every time it passes Earth.</p>
       <p class="decode" id="decode" hidden></p>
       <div class="pills" id="pills"></div>
-    </div>
+    </header>
 
     <nav class="tabs" aria-label="Asteroid Tracker">
       <a href="tracker.html">This week</a>
@@ -52,8 +52,9 @@
       <div class="tiles" id="facts"></div>
 
       <!-- ===================== ORBIT DIAGRAM ===================== -->
-      <section class="card orbitcard" aria-labelledby="orbitTitle">
-        <div class="shead" style="margin-top:0"><h2 id="orbitTitle">Its orbit around the Sun</h2><span class="aside">drawn to scale · drag to turn</span></div>
+      <section class="panel orbitcard" aria-labelledby="orbitTitle">
+        <div class="ph"><h2 id="orbitTitle">Its orbit around the Sun</h2><span class="aside">drawn to scale · drag to turn</span></div>
+        <div class="pb">
 
         <div class="orbitbar">
           <div class="seg" role="group" aria-label="View">
@@ -114,6 +115,7 @@
           </aside>
         </div>
 
+        </div>
         <details class="howto"><summary>How to read this</summary>
           <p><b>Top view:</b> the solar system seen from above. The Sun is in the middle; the blue ring is Earth's orbit (1 au, 150 million km). The brass line is the asteroid's orbit. Everything moves anticlockwise. Press <b>Play</b> or move the slider to watch Earth and the asteroid travel; the dashed line between them gives their distance.</p>
           <p><b>The close approach:</b> two bright rings, joined by a line, mark where Earth (blue ring) and the asteroid (brass ring) will be at the moment they are closest. As they travel, each heads for its own ring; Play stops when they arrive, and the rings turn solid. Choose another approach from the list below to move the rings.</p>
@@ -123,33 +125,35 @@
       </section>
 
       <!-- ===================== EVERY APPROACH ===================== -->
-      <section>
-        <div class="shead"><h2>Every close approach to Earth</h2><span class="aside" id="caAside"></span></div>
-        <figure class="card chartcard wide" style="margin:0">
-          <div class="frame"><svg id="cApproaches" class="chart" role="img" aria-label="Every close approach to Earth by date and distance"></svg></div>
-          <figcaption class="note">Tap a dot to show that date in the orbit diagram. Source: NASA NeoWs (computed by NASA/JPL).</figcaption>
+      <section class="section" aria-labelledby="caTitle">
+        <div class="section-head"><div><div class="kicker">Close approaches</div><h2 id="caTitle">Every close approach to Earth</h2></div><span class="aside" id="caAside"></span></div>
+        <figure class="panel chartcard">
+          <div class="pb"><svg id="cApproaches" class="chart" role="img" aria-label="Every close approach to Earth by date and distance"></svg></div>
+          <figcaption class="pf caption">Tap a dot to show that date in the orbit diagram. Source: NASA NeoWs (computed by NASA/JPL).</figcaption>
           <details class="howto"><summary>How to read this</summary>
             <p>Each dot is one pass by Earth: <b>left to right</b> is the year, <b>bottom to top</b> how far away it passed, in Moon distances (each step up is ×10 farther). Filled dots have happened, hollow dots are predictions. The ringed dot is the one shown in the diagram; the grey area lies outside the diagram's range (1900 to 2050).</p>
           </details>
         </figure>
-        <div class="shead"><h2>The list</h2><span class="aside">tap a row to show it in the diagram</span></div>
-        <div class="card tablecard">
+        <div class="section-head sub"><h2>The list</h2><span class="aside">tap a row to show it in the diagram</span></div>
+        <div class="panel tablecard">
           <table class="neo" id="caTable">
             <thead><tr><th>Date (UTC)</th><th class="num">Distance</th><th class="num">Speed</th><th></th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
-        <div class="more" id="caMore" hidden><button class="btn ghost" id="caMoreBtn">Show all</button></div>
+        <div class="more" id="caMore" hidden><button class="btn outline" id="caMoreBtn">Show all</button></div>
       </section>
 
       <!-- ===================== IMPACT RISK ===================== -->
-      <section aria-labelledby="riskTitle">
-        <div class="shead"><h2 id="riskTitle">Impact risk</h2><span class="aside">ESA and NASA, each from its own calculation</span></div>
-        <div class="card riskcard" id="riskCard"></div>
+      <section class="section" aria-labelledby="riskTitle">
+        <div class="section-head"><div><div class="kicker">ESA and NASA</div><h2 id="riskTitle">Impact risk</h2></div><span class="aside">each from its own calculation</span></div>
+        <div class="panel riskcard" id="riskCard"></div>
       </section>
 
-      <div class="shead"><h2>About this orbit</h2></div>
-      <dl class="card gloss" id="about"></dl>
+      <section class="section" aria-labelledby="aboutTitle">
+        <div class="section-head"><div><div class="kicker">The numbers</div><h2 id="aboutTitle">About this orbit</h2></div></div>
+        <dl class="terms" id="about"></dl>
+      </section>
     </div>
 
     <p class="srcline">Data courtesy of NASA (NeoWs, with orbits and approaches computed by NASA/JPL; Sentry impact monitoring) and ESA (©ESA, NEO Coordination Centre: risk list and close approaches). Planet positions from JPL's approximate planetary elements.</p>

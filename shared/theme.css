@@ -207,7 +207,7 @@ a.card:hover .go { color: var(--brass-bright); }
 .panel > .pb { padding: var(--sp4) var(--sp5); }
 .panel > .pb.flush { padding: 0; }
 .panel > .pf { padding: 0 var(--sp5) var(--sp4); }
-.panels { display: grid; gap: var(--sp4); grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+.panels { display: grid; gap: var(--sp4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); }
 .panels > .wide { grid-column: 1 / -1; }
 @media (max-width: 760px) {
   .panel > .ph, .panel > .pb, .panel > .pf { padding-left: var(--sp4); padding-right: var(--sp4); }
@@ -226,6 +226,10 @@ details.howto > :not(summary) { margin: 0; padding: 0 var(--sp5) var(--sp4); fon
 details.howto > :not(summary) + :not(summary) { padding-top: 0; }
 @media (max-width: 760px) { details.howto > summary, details.howto > :not(summary) { padding-left: var(--sp4); padding-right: var(--sp4); } }
 
+/* outside a panel, "How to read this" is a box of its own */
+details.howto:not(.panel > details) { border: 1px solid var(--line); border-radius: var(--r); background: var(--deep); margin-top: var(--sp4); }
+details.howto b { color: var(--ink); font-weight: 400; }
+
 /* ============================================================== buttons: primary, outline, quiet */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--sp2); min-height: 44px; padding: 0 var(--sp5);
   font: inherit; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; white-space: nowrap; cursor: pointer;
@@ -238,6 +242,10 @@ details.howto > :not(summary) + :not(summary) { padding-top: 0; }
 .btn.small { min-height: 36px; padding: 0 var(--sp4); font-size: 11px; }
 .btn[disabled], .btn:disabled { opacity: .45; cursor: default; }
 @media (max-width: 760px) { .btn.small { min-height: 40px; } }
+.linkbtn { background: none; border: 0; padding: 0; font: inherit; font-size: inherit; color: var(--brass); cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--brass-dim); text-underline-offset: 3px; }
+.linkbtn:hover { color: var(--brass-bright); text-decoration-color: var(--brass); }
+@media (max-width: 760px) { .linkbtn { min-height: 40px; } }
 .actions { display: flex; flex-wrap: wrap; gap: var(--sp3); align-items: center; }
 
 /* ============================================================== choices */
@@ -251,7 +259,13 @@ details.howto > :not(summary) + :not(summary) { padding-top: 0; }
 .seg [aria-pressed="true"], .seg [aria-selected="true"], .seg [aria-current] { background: var(--card2); color: var(--brass-bright);
   box-shadow: inset 0 0 0 1px var(--brass-dim); }
 .seg button:disabled { opacity: .4; cursor: default; }
-@media (max-width: 760px) { .seg button, .seg a { min-height: 38px; } }
+/* chips inside a segmented control take its look; a label inside it sits at its start */
+.seg > .chip { border: 0; border-radius: 3px; min-height: 34px; padding: 0 var(--sp4); font-size: 14.5px; background: transparent; }
+.seg > .chip:hover { background: rgba(255, 255, 255, .04); }
+.seg > .chip[aria-pressed="true"] { background: var(--card2); color: var(--brass-bright); box-shadow: inset 0 0 0 1px var(--brass-dim); }
+.seg > .barlbl, .seg > .lbl { align-self: center; padding: 0 var(--sp2) 0 var(--sp3); white-space: nowrap; font-size: 11px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--muted); }
+@media (max-width: 760px) { .seg button, .seg a, .seg > .chip { min-height: 38px; } }
 
 /* chips: filters that turn on and off */
 .chips { display: flex; flex-wrap: wrap; gap: var(--sp2); }
@@ -278,6 +292,38 @@ details.howto > :not(summary) + :not(summary) { padding-top: 0; }
 .toolbar .grow { flex: 1; }
 .toolbar .lbl, .field > span, .lbl { font-size: 11.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
 
+/* period bar: step through weeks, years or dates, with the period shown beside */
+.periodbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp3) var(--sp5); margin: 0 0 var(--sp5); }
+.periodbar .grow { flex: 1; }
+.period { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.period strong { font-weight: 400; font-size: 22px; line-height: 1.2; }
+.period select { min-height: 40px; }
+@media (max-width: 600px) { .periodbar > .seg { width: 100%; } .periodbar > .seg > * { flex: 1; justify-content: center; } .periodbar .btn { width: 100%; } }
+
+/* filter row: segmented choices, labelled dropdowns, a count at the end */
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp3) var(--sp5); margin: var(--sp6) 0 var(--sp4); }
+.filters label { display: inline-flex; align-items: center; gap: var(--sp2); font-size: 11.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+.filters select, .filters input { text-transform: none; letter-spacing: 0; }
+.filters input[type="search"] { width: 220px; }
+.filters .count { margin-left: auto; }
+@media (max-width: 760px) {
+  .filters { gap: var(--sp3); }
+  .filters > .seg { width: 100%; }
+  .filters label { width: 100%; justify-content: space-between; }
+  .filters label select, .filters label input { flex: 1; max-width: 62%; width: auto; }
+  .filters .count { margin-left: 0; width: 100%; }
+}
+/* "Show all" under a list */
+.more { display: flex; justify-content: center; margin-top: var(--sp4); }
+.more:empty { display: none; }
+
+/* the heading of one view of a tool (a tab) */
+.viewhead { margin: var(--sp2) 0 var(--sp5); }
+.viewhead h2 { margin-bottom: var(--sp3); }
+.viewhead .lede { font-size: 17px; max-width: var(--prose); }
+.section-head.sub { margin: var(--sp7) 0 var(--sp4); align-items: baseline; }
+.section-head.sub h2 { font-size: 25px; }
+
 /* ============================================================== forms */
 .field { display: inline-flex; flex-direction: column; gap: 6px; }
 .field.row { flex-direction: row; align-items: center; gap: var(--sp2); }
@@ -302,8 +348,10 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--brass); }
 .badge.esa, .agency.esa, .pill.info { border-color: rgba(138, 169, 201, .55); color: var(--blue); }
 .badge.live, .pill.good { border-color: rgba(143, 185, 150, .5); color: var(--green); }
 .badge.live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-right: 7px; }
-.badge.warn, .pill.bad, .tag.bad { border-color: rgba(201, 103, 90, .6); color: var(--red); }
-.pill.warn { border-color: rgba(209, 169, 86, .55); color: var(--amber); }
+.badge.warn, .pill.bad, .tag.bad, .tag.haz { border-color: rgba(201, 103, 90, .6); color: var(--red); }
+.pill.warn, .tag.warn { border-color: rgba(209, 169, 86, .55); color: var(--amber); }
+a.tag.link, a.badge { border-color: var(--brass-dim); color: var(--brass); }
+a.tag.link:hover, a.badge:hover { border-color: var(--brass); color: var(--brass-bright); }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 
 /* ============================================================== notices and states */
@@ -319,6 +367,10 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--brass); }
 .notice.warn::before { content: "!"; border-color: var(--amber); color: var(--amber); font-style: normal; }
 .notice.error, .notice.bad { border-color: rgba(201, 103, 90, .42); background: rgba(201, 103, 90, .08); }
 .notice.error::before, .notice.bad::before { content: "×"; border-color: var(--red); color: var(--red); font-style: normal; }
+.state { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--sp2); min-height: 220px; padding: var(--sp5);
+  text-align: center; color: var(--muted); font-style: italic; }
+.state.small { min-height: 120px; }
+.notice { margin-bottom: var(--sp4); }
 .empty, .loading { padding: var(--sp7) var(--sp5); text-align: center; color: var(--muted); font-style: italic; }
 .loading::before { content: ""; display: block; width: 26px; height: 26px; margin: 0 auto var(--sp3);
   border: 2px solid var(--line2); border-top-color: var(--brass); border-radius: 50%; animation: spin 1s linear infinite; }
@@ -380,6 +432,7 @@ table.credits td:first-child { color: var(--ink); }
 .facts .f p { margin: 0; font-size: 15px; color: var(--ink2); }
 
 .terms { display: grid; grid-template-columns: max-content 1fr; gap: var(--sp3) var(--sp6); margin: 0; }
+.terms > div { display: contents; }
 .terms dt { color: var(--brass); }
 .terms dd { margin: 0; color: var(--ink2); }
 @media (max-width: 600px) { .terms { grid-template-columns: 1fr; gap: 2px; } .terms dd { margin-bottom: var(--sp3); } }

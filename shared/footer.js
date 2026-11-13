@@ -79,9 +79,10 @@ function wireBack() {
   });
 }
 
-// Rows that scroll sideways (the tab bars, chip rows on small screens): a soft fade on the side where there is more,
-// and the selected tab scrolled into view, so nothing looks cut off. Decided Nov 12, 2026.
-const HSCROLL = '.tabs, .popular, .gbar .seg, [data-hscroll]';
+// Rows that scroll sideways (segmented controls and chip rows that don't fit a small screen): a soft fade on the side
+// where there is more, and the chosen button scrolled into view, so nothing looks cut off. Decided Nov 12, 2026; since
+// Nov 13, 2026 (version 2 of the look) tab bars wrap instead and every segmented control (.seg) gets the fade.
+const HSCROLL = '.seg, .popular, [data-hscroll]';
 function fades(el) {
   const more = el.scrollWidth - el.clientWidth;
   el.classList.toggle('hs-l', more > 2 && el.scrollLeft > 2);
@@ -95,7 +96,7 @@ function wireScrollRows() {
     el.classList.add('hscroll');
     el.addEventListener('scroll', () => fades(el), { passive: true });
     if (ro) ro.observe(el);
-    const sel = el.querySelector('[aria-current="page"], [aria-selected="true"]');
+    const sel = el.querySelector('[aria-current="page"], [aria-selected="true"], [aria-pressed="true"]');
     if (sel && el.scrollWidth > el.clientWidth) el.scrollLeft = Math.max(0, sel.offsetLeft - (el.clientWidth - sel.offsetWidth) / 2);
     fades(el);
   };

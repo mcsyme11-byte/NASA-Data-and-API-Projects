@@ -21,9 +21,11 @@ const skyFinder = (des) => `../sky-finder/?find=${encodeURIComponent(des)}`;
 export function mountVisible(root, url) {
   let data = null, err = null, sel = 0, passes = [];
   root.innerHTML = `
-    <div class="shead" style="margin-top:6px"><h2>Asteroids you can look for from where you are</h2><span class="aside">the next 30 days</span></div>
-    <p class="lede">The close passes that rise above your horizon at night, how bright they get and what you need to see them. Most asteroids passing Earth are far too faint for anything but a large telescope; this list shows the ones worth trying.</p>
-    <section class="card placecard" aria-label="Your location">
+    <div class="viewhead">
+      <h2>Asteroids you can look for from where you are</h2>
+      <p class="lede">The close passes of the next 30 days that rise above your horizon at night, how bright they get and what you need to see them. Most asteroids passing Earth are far too faint for anything but a large telescope; this list shows the ones worth trying.</p>
+    </div>
+    <section class="panel placecard" aria-label="Your location">
       <div class="placewho">
         <div class="label">Your location</div>
         <div class="value" id="visPlace">Not set yet</div>
@@ -32,7 +34,7 @@ export function mountVisible(root, url) {
       <div class="placeact">
         <button class="btn" id="visLocate" type="button">Use my location</button>
         <div class="placesearch">
-          <label class="barlbl" for="visQ">or a town</label>
+          <label class="lbl" for="visQ">or a town</label>
           <input id="visQ" type="search" placeholder="Town or city" autocomplete="off" spellcheck="false" aria-controls="visHits" aria-autocomplete="list">
           <div class="placehits" id="visHits" role="listbox" hidden></div>
         </div>
@@ -40,23 +42,23 @@ export function mountVisible(root, url) {
       </div>
       <p class="note" id="visMsg" role="status" aria-live="polite" hidden></p>
     </section>
-    <div class="tiles" id="visTiles"></div>
-    <div class="grid2 visgrid">
-      <section class="card" aria-labelledby="visListTitle">
-        <div class="shead" style="margin-top:0"><h2 id="visListTitle">Passes you can look for</h2><span class="aside" id="visCount"></span></div>
-        <div class="tablewrap"><table class="neo vistable" id="visTable"><thead><tr><th>Asteroid</th><th>Best moment</th><th>Highest</th><th>Brightness</th><th>You need</th><th><span class="sr">Sky Finder</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="note" id="visSource"></p>
+    <div class="stats" id="visTiles"></div>
+    <div class="visgrid">
+      <section class="panel" aria-labelledby="visListTitle">
+        <div class="ph"><h3 id="visListTitle">Passes you can look for</h3><span class="aside" id="visCount"></span></div>
+        <div class="pb flush"><table class="neo vistable" id="visTable"><thead><tr><th>Asteroid</th><th>Best moment</th><th>Highest</th><th>Brightness</th><th>You need</th><th><span class="sr">Sky Finder</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="pf"><p class="caption" id="visSource"></p></div>
       </section>
       <aside class="visside">
-        <section class="card" aria-labelledby="visNightTitle">
-          <div class="shead" style="margin-top:0"><h2 id="visNightTitle">Its best night</h2></div>
-          <svg class="chart" id="visChart" role="img"></svg>
-          <p class="note">Height above your horizon through the night; the darker band is full darkness (the Sun more than 12° down). The line is dotted below 10°, where haze and trees get in the way.</p>
+        <section class="panel" aria-labelledby="visNightTitle">
+          <div class="ph"><h3 id="visNightTitle">Its best night</h3></div>
+          <div class="pb"><svg class="chart" id="visChart" role="img"></svg></div>
+          <div class="pf"><p class="caption">Height above your horizon through the night; the darker band is full darkness (the Sun more than 12° down). The line is dotted below 10°, where haze and trees get in the way.</p></div>
         </section>
-        <section class="card" aria-labelledby="visRules">
-          <div class="shead" style="margin-top:0"><h2 id="visRules">What you need: the rules</h2></div>
-          <div class="needrules">${NEEDS.map((n, i) => `<span>${i === 0 ? 'Magnitude up to 6' : i === NEEDS.length - 1 ? 'Above 15' : `${NEEDS[i - 1].max} to ${n.max}`}</span><span>${needTag(n)} ${esc(n.note)}</span>`).join('')}</div>
-          <p class="note">Bigger magnitude means fainter. A city sky or a bright Moon moves everything one step down the list. <a href="../sky-finder/">Sky Finder</a>, on a phone, points you to it (<a href="../sky-finder/how-to.html">how to use it</a>).</p>
+        <section class="panel" aria-labelledby="visRules">
+          <div class="ph"><h3 id="visRules">What you need: the rules</h3></div>
+          <div class="pb"><div class="needrules">${NEEDS.map((n, i) => `<span>${i === 0 ? 'Magnitude up to 6' : i === NEEDS.length - 1 ? 'Above 15' : `${NEEDS[i - 1].max} to ${n.max}`}</span><span>${needTag(n)} ${esc(n.note)}</span>`).join('')}</div></div>
+          <div class="pf"><p class="caption">Bigger magnitude means fainter. A city sky or a bright Moon moves everything one step down the list. <a href="../sky-finder/">Sky Finder</a>, on a phone, points you to it (<a href="../sky-finder/how-to.html">how to use it</a>).</p></div>
         </section>
       </aside>
     </div>`;
